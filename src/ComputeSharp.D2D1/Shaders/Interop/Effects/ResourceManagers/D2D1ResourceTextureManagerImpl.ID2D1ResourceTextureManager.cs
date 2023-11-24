@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using ComputeSharp.Win32;
 
@@ -125,28 +126,28 @@ unsafe partial struct D2D1ResourceTextureManagerImpl
     private static class ID2D1ResourceTextureManagerMethods
     {
         /// <inheritdoc cref="D2D1ResourceTextureManagerImpl.QueryInterface"/>
-        [UnmanagedCallersOnly]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         public static int QueryInterface(D2D1ResourceTextureManagerImpl* @this, Guid* riid, void** ppvObject)
         {
             return @this->QueryInterface(riid, ppvObject);
         }
 
         /// <inheritdoc cref="D2D1ResourceTextureManagerImpl.AddRef"/>
-        [UnmanagedCallersOnly]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         public static uint AddRef(D2D1ResourceTextureManagerImpl* @this)
         {
             return @this->AddRef();
         }
 
         /// <inheritdoc cref="D2D1ResourceTextureManagerImpl.Release"/>
-        [UnmanagedCallersOnly]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         public static uint Release(D2D1ResourceTextureManagerImpl* @this)
         {
             return @this->Release();
         }
 
         /// <inheritdoc cref="ID2D1ResourceTextureManager.Initialize"/>
-        [UnmanagedCallersOnly]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         public static int Initialize(
             D2D1ResourceTextureManagerImpl* @this,
             Guid* resourceId,
@@ -165,7 +166,7 @@ unsafe partial struct D2D1ResourceTextureManagerImpl
         }
 
         /// <inheritdoc cref="ID2D1ResourceTextureManager.Update"/>
-        [UnmanagedCallersOnly]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         public static int Update(
             D2D1ResourceTextureManagerImpl* @this,
             uint* minimumExtents,

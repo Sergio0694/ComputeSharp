@@ -52,20 +52,20 @@ internal static unsafe partial class IWICStreamExtensions
         {
             void** lpVtbl = (void**)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(IStreamWrapper), sizeof(void*) * 14);
 
-            lpVtbl[0] = (delegate* unmanaged<IStreamWrapper*, Guid*, void**, int>)&QueryInterface;
-            lpVtbl[1] = (delegate* unmanaged<IStreamWrapper*, uint>)&AddRef;
-            lpVtbl[2] = (delegate* unmanaged<IStreamWrapper*, uint>)&Release;
-            lpVtbl[3] = (delegate* unmanaged<IStreamWrapper*, void*, uint, uint*, HRESULT>)&Read;
-            lpVtbl[4] = (delegate* unmanaged<IStreamWrapper*, void*, uint, uint*, HRESULT>)&Write;
-            lpVtbl[5] = (delegate* unmanaged<IStreamWrapper*, LARGE_INTEGER, uint, ULARGE_INTEGER*, HRESULT>)&Seek;
-            lpVtbl[6] = (delegate* unmanaged<IStreamWrapper*, ULARGE_INTEGER, HRESULT>)&SetSize;
-            lpVtbl[7] = (delegate* unmanaged<IStreamWrapper*, IStream*, ULARGE_INTEGER, ULARGE_INTEGER*, ULARGE_INTEGER*, HRESULT>)&CopyTo;
-            lpVtbl[8] = (delegate* unmanaged<IStreamWrapper*, uint, HRESULT>)&Commit;
-            lpVtbl[9] = (delegate* unmanaged<IStreamWrapper*, HRESULT>)&Revert;
-            lpVtbl[10] = (delegate* unmanaged<IStreamWrapper*, ULARGE_INTEGER, ULARGE_INTEGER, uint, HRESULT>)&LockRegion;
-            lpVtbl[11] = (delegate* unmanaged<IStreamWrapper*, ULARGE_INTEGER, ULARGE_INTEGER, uint, HRESULT>)&UnlockRegion;
-            lpVtbl[12] = (delegate* unmanaged<IStreamWrapper*, STATSTG*, uint, HRESULT>)&Stat;
-            lpVtbl[13] = (delegate* unmanaged<IStreamWrapper*, IStream**, HRESULT>)&Clone;
+            lpVtbl[0] = (delegate* unmanaged[MemberFunction]<IStreamWrapper*, Guid*, void**, int>)&QueryInterface;
+            lpVtbl[1] = (delegate* unmanaged[MemberFunction]<IStreamWrapper*, uint>)&AddRef;
+            lpVtbl[2] = (delegate* unmanaged[MemberFunction]<IStreamWrapper*, uint>)&Release;
+            lpVtbl[3] = (delegate* unmanaged[MemberFunction]<IStreamWrapper*, void*, uint, uint*, HRESULT>)&Read;
+            lpVtbl[4] = (delegate* unmanaged[MemberFunction]<IStreamWrapper*, void*, uint, uint*, HRESULT>)&Write;
+            lpVtbl[5] = (delegate* unmanaged[MemberFunction]<IStreamWrapper*, LARGE_INTEGER, uint, ULARGE_INTEGER*, HRESULT>)&Seek;
+            lpVtbl[6] = (delegate* unmanaged[MemberFunction]<IStreamWrapper*, ULARGE_INTEGER, HRESULT>)&SetSize;
+            lpVtbl[7] = (delegate* unmanaged[MemberFunction]<IStreamWrapper*, IStream*, ULARGE_INTEGER, ULARGE_INTEGER*, ULARGE_INTEGER*, HRESULT>)&CopyTo;
+            lpVtbl[8] = (delegate* unmanaged[MemberFunction]<IStreamWrapper*, uint, HRESULT>)&Commit;
+            lpVtbl[9] = (delegate* unmanaged[MemberFunction]<IStreamWrapper*, HRESULT>)&Revert;
+            lpVtbl[10] = (delegate* unmanaged[MemberFunction]<IStreamWrapper*, ULARGE_INTEGER, ULARGE_INTEGER, uint, HRESULT>)&LockRegion;
+            lpVtbl[11] = (delegate* unmanaged[MemberFunction]<IStreamWrapper*, ULARGE_INTEGER, ULARGE_INTEGER, uint, HRESULT>)&UnlockRegion;
+            lpVtbl[12] = (delegate* unmanaged[MemberFunction]<IStreamWrapper*, STATSTG*, uint, HRESULT>)&Stat;
+            lpVtbl[13] = (delegate* unmanaged[MemberFunction]<IStreamWrapper*, IStream**, HRESULT>)&Clone;
 
             return lpVtbl;
         }
@@ -130,7 +130,7 @@ internal static unsafe partial class IWICStreamExtensions
         }
 
         /// <inheritdoc cref="IStream.QueryInterface(Guid*, void**)"/>
-        [UnmanagedCallersOnly]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         private static int QueryInterface(IStreamWrapper* @this, Guid* riid, void** ppvObject)
         {
             if (ppvObject is null)
@@ -155,14 +155,14 @@ internal static unsafe partial class IWICStreamExtensions
         }
 
         /// <inheritdoc cref="IStream.AddRef"/>
-        [UnmanagedCallersOnly]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         private static uint AddRef(IStreamWrapper* @this)
         {
             return (uint)Interlocked.Increment(ref @this->referenceCount);
         }
 
         /// <inheritdoc cref="IStream.Release"/>
-        [UnmanagedCallersOnly]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         private static uint Release(IStreamWrapper* @this)
         {
             uint referenceCount = (uint)Interlocked.Decrement(ref @this->referenceCount);
@@ -178,7 +178,7 @@ internal static unsafe partial class IWICStreamExtensions
         }
 
         /// <inheritdoc cref="IStream.Read(void*, uint, uint*)"/>
-        [UnmanagedCallersOnly]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         private static HRESULT Read(IStreamWrapper* @this, void* pv, uint cb, uint* pcbRead)
         {
             if (pv == null)
@@ -226,7 +226,7 @@ internal static unsafe partial class IWICStreamExtensions
         }
 
         /// <inheritdoc cref="IStream.Write(void*, uint, uint*)"/>
-        [UnmanagedCallersOnly]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         private static HRESULT Write(IStreamWrapper* @this, void* pv, uint cb, uint* pcbWritten)
         {
             if (pv == null)
@@ -262,7 +262,7 @@ internal static unsafe partial class IWICStreamExtensions
         }
 
         /// <inheritdoc cref="IStream.Seek(LARGE_INTEGER, uint, ULARGE_INTEGER*)"/>
-        [UnmanagedCallersOnly]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         private static HRESULT Seek(IStreamWrapper* @this, LARGE_INTEGER dlibMove, uint dwOrigin, ULARGE_INTEGER* plibNewPosition)
         {
             SeekOrigin origin = (SeekOrigin)dwOrigin;
@@ -300,7 +300,7 @@ internal static unsafe partial class IWICStreamExtensions
         }
 
         /// <inheritdoc cref="IStream.SetSize(ULARGE_INTEGER)"/>
-        [UnmanagedCallersOnly]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         private static HRESULT SetSize(IStreamWrapper* @this, ULARGE_INTEGER libNewSize)
         {
             if (libNewSize.QuadPart > long.MaxValue)
@@ -321,14 +321,14 @@ internal static unsafe partial class IWICStreamExtensions
         }
 
         /// <inheritdoc cref="IStream.CopyTo(IStream*, ULARGE_INTEGER, ULARGE_INTEGER*, ULARGE_INTEGER*)"/>
-        [UnmanagedCallersOnly]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         private static HRESULT CopyTo(IStreamWrapper* @this, IStream* pstm, ULARGE_INTEGER cb, ULARGE_INTEGER* pcbRead, ULARGE_INTEGER* pcbWritten)
         {
             return E_NOTIMPL;
         }
 
         /// <inheritdoc cref="IStream.Commit(uint)"/>
-        [UnmanagedCallersOnly]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         private static HRESULT Commit(IStreamWrapper* @this, uint grfCommitFlags)
         {
             try
@@ -344,28 +344,28 @@ internal static unsafe partial class IWICStreamExtensions
         }
 
         /// <inheritdoc cref="IStream.Revert"/>
-        [UnmanagedCallersOnly]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         private static HRESULT Revert(IStreamWrapper* @this)
         {
             return STG_E_INVALIDFUNCTION;
         }
 
         /// <inheritdoc cref="IStream.LockRegion(ULARGE_INTEGER, ULARGE_INTEGER, uint)"/>
-        [UnmanagedCallersOnly]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         private static HRESULT LockRegion(IStreamWrapper* @this, ULARGE_INTEGER libOffset, ULARGE_INTEGER cb, uint dwLockType)
         {
             return STG_E_INVALIDFUNCTION;
         }
 
         /// <inheritdoc cref="IStream.UnlockRegion(ULARGE_INTEGER, ULARGE_INTEGER, uint)"/>
-        [UnmanagedCallersOnly]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         private static HRESULT UnlockRegion(IStreamWrapper* @this, ULARGE_INTEGER libOffset, ULARGE_INTEGER cb, uint dwLockType)
         {
             return STG_E_INVALIDFUNCTION;
         }
 
         /// <inheritdoc cref="IStream.Stat(STATSTG*, uint)"/>
-        [UnmanagedCallersOnly]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         private static HRESULT Stat(IStreamWrapper* @this, STATSTG* pstatstg, uint grfStatFlag)
         {
             if (pstatstg == null)
@@ -433,7 +433,7 @@ internal static unsafe partial class IWICStreamExtensions
         }
 
         /// <inheritdoc cref="IStream.Clone(IStream**)"/>
-        [UnmanagedCallersOnly]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         private static HRESULT Clone(IStreamWrapper* @this, IStream** ppstm)
         {
             return STG_E_INVALIDFUNCTION;

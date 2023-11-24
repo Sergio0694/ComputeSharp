@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using ComputeSharp.D2D1.Extensions;
 using ComputeSharp.D2D1.Shaders.Interop.Effects.ResourceManagers;
@@ -18,28 +19,28 @@ internal unsafe partial struct PixelShaderEffect
     private static class ID2D1EffectImplMethods
     {
         /// <inheritdoc cref="ID2D1EffectImpl.QueryInterface"/>
-        [UnmanagedCallersOnly]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         public static int QueryInterface(PixelShaderEffect* @this, Guid* riid, void** ppvObject)
         {
             return @this->QueryInterface(riid, ppvObject);
         }
 
         /// <inheritdoc cref="ID2D1EffectImpl.AddRef"/>
-        [UnmanagedCallersOnly]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         public static uint AddRef(PixelShaderEffect* @this)
         {
             return @this->AddRef();
         }
 
         /// <inheritdoc cref="ID2D1EffectImpl.Release"/>
-        [UnmanagedCallersOnly]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         public static uint Release(PixelShaderEffect* @this)
         {
             return @this->Release();
         }
 
         /// <inheritdoc cref="ID2D1EffectImpl.Initialize"/>
-        [UnmanagedCallersOnly]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         public static int Initialize(PixelShaderEffect* @this, ID2D1EffectContext* effectContext, ID2D1TransformGraph* transformGraph)
         {
             try
@@ -81,7 +82,7 @@ internal unsafe partial struct PixelShaderEffect
         }
 
         /// <inheritdoc cref="ID2D1EffectImpl.PrepareForRender"/>
-        [UnmanagedCallersOnly]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         public static int PrepareForRender(PixelShaderEffect* @this, D2D1_CHANGE_TYPE changeType)
         {
             try
@@ -145,7 +146,7 @@ internal unsafe partial struct PixelShaderEffect
         }
 
         /// <inheritdoc cref="ID2D1EffectImpl.SetGraph"/>
-        [UnmanagedCallersOnly]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         public static int SetGraph(PixelShaderEffect* @this, ID2D1TransformGraph* transformGraph)
         {
             return E.E_NOTIMPL;

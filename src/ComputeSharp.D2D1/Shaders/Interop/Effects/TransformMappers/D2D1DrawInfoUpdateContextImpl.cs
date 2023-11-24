@@ -31,18 +31,18 @@ internal unsafe partial struct D2D1DrawInfoUpdateContextImpl
         void** lpVtbl = (void**)D2D1AssemblyAssociatedMemory.Allocate(sizeof(void*) * 10);
 
         // ID2D1ResourceTextureManager
-        lpVtbl[0] = (delegate* unmanaged<D2D1DrawInfoUpdateContextImpl*, Guid*, void**, int>)&ID2D1DrawInfoUpdateContextMethods.QueryInterface;
-        lpVtbl[1] = (delegate* unmanaged<D2D1DrawInfoUpdateContextImpl*, uint>)&ID2D1DrawInfoUpdateContextMethods.AddRef;
-        lpVtbl[2] = (delegate* unmanaged<D2D1DrawInfoUpdateContextImpl*, uint>)&ID2D1DrawInfoUpdateContextMethods.Release;
-        lpVtbl[3] = (delegate* unmanaged<D2D1DrawInfoUpdateContextImpl*, uint*, int>)&ID2D1DrawInfoUpdateContextMethods.GetConstantBufferSize;
-        lpVtbl[4] = (delegate* unmanaged<D2D1DrawInfoUpdateContextImpl*, byte*, uint, int>)&ID2D1DrawInfoUpdateContextMethods.GetConstantBuffer;
-        lpVtbl[5] = (delegate* unmanaged<D2D1DrawInfoUpdateContextImpl*, byte*, uint, int>)&ID2D1DrawInfoUpdateContextMethods.SetConstantBuffer;
+        lpVtbl[0] = (delegate* unmanaged[MemberFunction]<D2D1DrawInfoUpdateContextImpl*, Guid*, void**, int>)&ID2D1DrawInfoUpdateContextMethods.QueryInterface;
+        lpVtbl[1] = (delegate* unmanaged[MemberFunction]<D2D1DrawInfoUpdateContextImpl*, uint>)&ID2D1DrawInfoUpdateContextMethods.AddRef;
+        lpVtbl[2] = (delegate* unmanaged[MemberFunction]<D2D1DrawInfoUpdateContextImpl*, uint>)&ID2D1DrawInfoUpdateContextMethods.Release;
+        lpVtbl[3] = (delegate* unmanaged[MemberFunction]<D2D1DrawInfoUpdateContextImpl*, uint*, int>)&ID2D1DrawInfoUpdateContextMethods.GetConstantBufferSize;
+        lpVtbl[4] = (delegate* unmanaged[MemberFunction]<D2D1DrawInfoUpdateContextImpl*, byte*, uint, int>)&ID2D1DrawInfoUpdateContextMethods.GetConstantBuffer;
+        lpVtbl[5] = (delegate* unmanaged[MemberFunction]<D2D1DrawInfoUpdateContextImpl*, byte*, uint, int>)&ID2D1DrawInfoUpdateContextMethods.SetConstantBuffer;
 
         // ID2D1ResourceTextureManagerInternal
-        lpVtbl[6 + 0] = (delegate* unmanaged<D2D1DrawInfoUpdateContextImpl*, Guid*, void**, int>)&ID2D1DrawInfoUpdateContextInternalMethods.QueryInterface;
-        lpVtbl[6 + 1] = (delegate* unmanaged<D2D1DrawInfoUpdateContextImpl*, uint>)&ID2D1DrawInfoUpdateContextInternalMethods.AddRef;
-        lpVtbl[6 + 2] = (delegate* unmanaged<D2D1DrawInfoUpdateContextImpl*, uint>)&ID2D1DrawInfoUpdateContextInternalMethods.Release;
-        lpVtbl[6 + 3] = (delegate* unmanaged<D2D1DrawInfoUpdateContextImpl*, int>)&ID2D1DrawInfoUpdateContextInternalMethods.Close;
+        lpVtbl[6 + 0] = (delegate* unmanaged[MemberFunction]<D2D1DrawInfoUpdateContextImpl*, Guid*, void**, int>)&ID2D1DrawInfoUpdateContextInternalMethods.QueryInterface;
+        lpVtbl[6 + 1] = (delegate* unmanaged[MemberFunction]<D2D1DrawInfoUpdateContextImpl*, uint>)&ID2D1DrawInfoUpdateContextInternalMethods.AddRef;
+        lpVtbl[6 + 2] = (delegate* unmanaged[MemberFunction]<D2D1DrawInfoUpdateContextImpl*, uint>)&ID2D1DrawInfoUpdateContextInternalMethods.Release;
+        lpVtbl[6 + 3] = (delegate* unmanaged[MemberFunction]<D2D1DrawInfoUpdateContextImpl*, int>)&ID2D1DrawInfoUpdateContextInternalMethods.Close;
 
         return lpVtbl;
     }

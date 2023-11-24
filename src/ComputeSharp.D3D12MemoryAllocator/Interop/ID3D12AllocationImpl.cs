@@ -27,10 +27,10 @@ internal unsafe struct ID3D12AllocationImpl
     {
         void** lpVtbl = (void**)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(ID3D12AllocationImpl), sizeof(void*) * 4);
 
-        lpVtbl[0] = (delegate* unmanaged<ID3D12AllocationImpl*, Guid*, void**, int>)&QueryInterface;
-        lpVtbl[1] = (delegate* unmanaged<ID3D12AllocationImpl*, uint>)&AddRef;
-        lpVtbl[2] = (delegate* unmanaged<ID3D12AllocationImpl*, uint>)&Release;
-        lpVtbl[3] = (delegate* unmanaged<ID3D12AllocationImpl*, ID3D12Resource**, int>)&GetD3D12Resource;
+        lpVtbl[0] = (delegate* unmanaged[MemberFunction]<ID3D12AllocationImpl*, Guid*, void**, int>)&QueryInterface;
+        lpVtbl[1] = (delegate* unmanaged[MemberFunction]<ID3D12AllocationImpl*, uint>)&AddRef;
+        lpVtbl[2] = (delegate* unmanaged[MemberFunction]<ID3D12AllocationImpl*, uint>)&Release;
+        lpVtbl[3] = (delegate* unmanaged[MemberFunction]<ID3D12AllocationImpl*, ID3D12Resource**, int>)&GetD3D12Resource;
 
         return lpVtbl;
     }
@@ -99,7 +99,7 @@ internal unsafe struct ID3D12AllocationImpl
     }
 
     /// <inheritdoc cref="IUnknown.QueryInterface"/>
-    [UnmanagedCallersOnly]
+    [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
     private static int QueryInterface(ID3D12AllocationImpl* @this, Guid* riid, void** ppvObject)
     {
         if (ppvObject is null)
@@ -123,14 +123,14 @@ internal unsafe struct ID3D12AllocationImpl
     }
 
     /// <inheritdoc cref="IUnknown.AddRef"/>
-    [UnmanagedCallersOnly]
+    [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
     private static uint AddRef(ID3D12AllocationImpl* @this)
     {
         return (uint)Interlocked.Increment(ref @this->referenceCount);
     }
 
     /// <inheritdoc cref="IUnknown.Release"/>
-    [UnmanagedCallersOnly]
+    [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
     private static uint Release(ID3D12AllocationImpl* @this)
     {
         uint referenceCount = (uint)Interlocked.Decrement(ref @this->referenceCount);
@@ -154,7 +154,7 @@ internal unsafe struct ID3D12AllocationImpl
     }
 
     /// <inheritdoc cref="ID3D12Allocation.GetD3D12Resource"/>
-    [UnmanagedCallersOnly]
+    [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
     private static int GetD3D12Resource(ID3D12AllocationImpl* @this, ID3D12Resource** resource)
     {
         if (resource is null)

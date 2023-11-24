@@ -50,20 +50,20 @@ unsafe partial class IWICStreamExtensions
         {
             void** lpVtbl = (void**)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(IBufferWriterWrapper), sizeof(void*) * 14);
 
-            lpVtbl[0] = (delegate* unmanaged<IBufferWriterWrapper*, Guid*, void**, int>)&QueryInterface;
-            lpVtbl[1] = (delegate* unmanaged<IBufferWriterWrapper*, uint>)&AddRef;
-            lpVtbl[2] = (delegate* unmanaged<IBufferWriterWrapper*, uint>)&Release;
-            lpVtbl[3] = (delegate* unmanaged<IBufferWriterWrapper*, void*, uint, uint*, HRESULT>)&Read;
-            lpVtbl[4] = (delegate* unmanaged<IBufferWriterWrapper*, void*, uint, uint*, HRESULT>)&Write;
-            lpVtbl[5] = (delegate* unmanaged<IBufferWriterWrapper*, LARGE_INTEGER, uint, ULARGE_INTEGER*, HRESULT>)&Seek;
-            lpVtbl[6] = (delegate* unmanaged<IBufferWriterWrapper*, ULARGE_INTEGER, HRESULT>)&SetSize;
-            lpVtbl[7] = (delegate* unmanaged<IBufferWriterWrapper*, IStream*, ULARGE_INTEGER, ULARGE_INTEGER*, ULARGE_INTEGER*, HRESULT>)&CopyTo;
-            lpVtbl[8] = (delegate* unmanaged<IBufferWriterWrapper*, uint, HRESULT>)&Commit;
-            lpVtbl[9] = (delegate* unmanaged<IBufferWriterWrapper*, HRESULT>)&Revert;
-            lpVtbl[10] = (delegate* unmanaged<IBufferWriterWrapper*, ULARGE_INTEGER, ULARGE_INTEGER, uint, HRESULT>)&LockRegion;
-            lpVtbl[11] = (delegate* unmanaged<IBufferWriterWrapper*, ULARGE_INTEGER, ULARGE_INTEGER, uint, HRESULT>)&UnlockRegion;
-            lpVtbl[12] = (delegate* unmanaged<IBufferWriterWrapper*, STATSTG*, uint, HRESULT>)&Stat;
-            lpVtbl[13] = (delegate* unmanaged<IBufferWriterWrapper*, IStream**, HRESULT>)&Clone;
+            lpVtbl[0] = (delegate* unmanaged[MemberFunction]<IBufferWriterWrapper*, Guid*, void**, int>)&QueryInterface;
+            lpVtbl[1] = (delegate* unmanaged[MemberFunction]<IBufferWriterWrapper*, uint>)&AddRef;
+            lpVtbl[2] = (delegate* unmanaged[MemberFunction]<IBufferWriterWrapper*, uint>)&Release;
+            lpVtbl[3] = (delegate* unmanaged[MemberFunction]<IBufferWriterWrapper*, void*, uint, uint*, HRESULT>)&Read;
+            lpVtbl[4] = (delegate* unmanaged[MemberFunction]<IBufferWriterWrapper*, void*, uint, uint*, HRESULT>)&Write;
+            lpVtbl[5] = (delegate* unmanaged[MemberFunction]<IBufferWriterWrapper*, LARGE_INTEGER, uint, ULARGE_INTEGER*, HRESULT>)&Seek;
+            lpVtbl[6] = (delegate* unmanaged[MemberFunction]<IBufferWriterWrapper*, ULARGE_INTEGER, HRESULT>)&SetSize;
+            lpVtbl[7] = (delegate* unmanaged[MemberFunction]<IBufferWriterWrapper*, IStream*, ULARGE_INTEGER, ULARGE_INTEGER*, ULARGE_INTEGER*, HRESULT>)&CopyTo;
+            lpVtbl[8] = (delegate* unmanaged[MemberFunction]<IBufferWriterWrapper*, uint, HRESULT>)&Commit;
+            lpVtbl[9] = (delegate* unmanaged[MemberFunction]<IBufferWriterWrapper*, HRESULT>)&Revert;
+            lpVtbl[10] = (delegate* unmanaged[MemberFunction]<IBufferWriterWrapper*, ULARGE_INTEGER, ULARGE_INTEGER, uint, HRESULT>)&LockRegion;
+            lpVtbl[11] = (delegate* unmanaged[MemberFunction]<IBufferWriterWrapper*, ULARGE_INTEGER, ULARGE_INTEGER, uint, HRESULT>)&UnlockRegion;
+            lpVtbl[12] = (delegate* unmanaged[MemberFunction]<IBufferWriterWrapper*, STATSTG*, uint, HRESULT>)&Stat;
+            lpVtbl[13] = (delegate* unmanaged[MemberFunction]<IBufferWriterWrapper*, IStream**, HRESULT>)&Clone;
 
             return lpVtbl;
         }
@@ -128,7 +128,7 @@ unsafe partial class IWICStreamExtensions
         }
 
         /// <inheritdoc cref="IStream.QueryInterface(Guid*, void**)"/>
-        [UnmanagedCallersOnly]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         private static int QueryInterface(IBufferWriterWrapper* @this, Guid* riid, void** ppvObject)
         {
             if (ppvObject is null)
@@ -153,14 +153,14 @@ unsafe partial class IWICStreamExtensions
         }
 
         /// <inheritdoc cref="IStream.AddRef"/>
-        [UnmanagedCallersOnly]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         private static uint AddRef(IBufferWriterWrapper* @this)
         {
             return (uint)Interlocked.Increment(ref @this->referenceCount);
         }
 
         /// <inheritdoc cref="IStream.Release"/>
-        [UnmanagedCallersOnly]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         private static uint Release(IBufferWriterWrapper* @this)
         {
             uint referenceCount = (uint)Interlocked.Decrement(ref @this->referenceCount);
@@ -176,14 +176,14 @@ unsafe partial class IWICStreamExtensions
         }
 
         /// <inheritdoc cref="IStream.Read(void*, uint, uint*)"/>
-        [UnmanagedCallersOnly]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         private static HRESULT Read(IBufferWriterWrapper* @this, void* pv, uint cb, uint* pcbRead)
         {
             return STG_E_INVALIDFUNCTION;
         }
 
         /// <inheritdoc cref="IStream.Write(void*, uint, uint*)"/>
-        [UnmanagedCallersOnly]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         private static HRESULT Write(IBufferWriterWrapper* @this, void* pv, uint cb, uint* pcbWritten)
         {
             if (pv == null)
@@ -219,56 +219,56 @@ unsafe partial class IWICStreamExtensions
         }
 
         /// <inheritdoc cref="IStream.Seek(LARGE_INTEGER, uint, ULARGE_INTEGER*)"/>
-        [UnmanagedCallersOnly]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         private static HRESULT Seek(IBufferWriterWrapper* @this, LARGE_INTEGER dlibMove, uint dwOrigin, ULARGE_INTEGER* plibNewPosition)
         {
             return STG_E_INVALIDFUNCTION;
         }
 
         /// <inheritdoc cref="IStream.SetSize(ULARGE_INTEGER)"/>
-        [UnmanagedCallersOnly]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         private static HRESULT SetSize(IBufferWriterWrapper* @this, ULARGE_INTEGER libNewSize)
         {
             return STG_E_INVALIDFUNCTION;
         }
 
         /// <inheritdoc cref="IStream.CopyTo(IStream*, ULARGE_INTEGER, ULARGE_INTEGER*, ULARGE_INTEGER*)"/>
-        [UnmanagedCallersOnly]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         private static HRESULT CopyTo(IBufferWriterWrapper* @this, IStream* pstm, ULARGE_INTEGER cb, ULARGE_INTEGER* pcbRead, ULARGE_INTEGER* pcbWritten)
         {
             return E_NOTIMPL;
         }
 
         /// <inheritdoc cref="IStream.Commit(uint)"/>
-        [UnmanagedCallersOnly]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         private static HRESULT Commit(IBufferWriterWrapper* @this, uint grfCommitFlags)
         {
             return S_OK;
         }
 
         /// <inheritdoc cref="IStream.Revert"/>
-        [UnmanagedCallersOnly]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         private static HRESULT Revert(IBufferWriterWrapper* @this)
         {
             return STG_E_INVALIDFUNCTION;
         }
 
         /// <inheritdoc cref="IStream.LockRegion(ULARGE_INTEGER, ULARGE_INTEGER, uint)"/>
-        [UnmanagedCallersOnly]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         private static HRESULT LockRegion(IBufferWriterWrapper* @this, ULARGE_INTEGER libOffset, ULARGE_INTEGER cb, uint dwLockType)
         {
             return STG_E_INVALIDFUNCTION;
         }
 
         /// <inheritdoc cref="IStream.UnlockRegion(ULARGE_INTEGER, ULARGE_INTEGER, uint)"/>
-        [UnmanagedCallersOnly]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         private static HRESULT UnlockRegion(IBufferWriterWrapper* @this, ULARGE_INTEGER libOffset, ULARGE_INTEGER cb, uint dwLockType)
         {
             return STG_E_INVALIDFUNCTION;
         }
 
         /// <inheritdoc cref="IStream.Stat(STATSTG*, uint)"/>
-        [UnmanagedCallersOnly]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         private static HRESULT Stat(IBufferWriterWrapper* @this, STATSTG* pstatstg, uint grfStatFlag)
         {
             if (pstatstg == null)
@@ -300,7 +300,7 @@ unsafe partial class IWICStreamExtensions
         }
 
         /// <inheritdoc cref="IStream.Clone(IStream**)"/>
-        [UnmanagedCallersOnly]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         private static HRESULT Clone(IBufferWriterWrapper* @this, IStream** ppstm)
         {
             return STG_E_INVALIDFUNCTION;

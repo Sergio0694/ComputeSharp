@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using ComputeSharp.Win32;
 
@@ -13,28 +14,28 @@ partial struct D2D1DrawInfoUpdateContextImpl
     private static unsafe class ID2D1DrawInfoUpdateContextMethods
     {
         /// <inheritdoc cref="D2D1DrawInfoUpdateContextImpl.QueryInterface"/>
-        [UnmanagedCallersOnly]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         public static int QueryInterface(D2D1DrawInfoUpdateContextImpl* @this, Guid* riid, void** ppvObject)
         {
             return @this->QueryInterface(riid, ppvObject);
         }
 
         /// <inheritdoc cref="D2D1DrawInfoUpdateContextImpl.AddRef"/>
-        [UnmanagedCallersOnly]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         public static uint AddRef(D2D1DrawInfoUpdateContextImpl* @this)
         {
             return @this->AddRef();
         }
 
         /// <inheritdoc cref="D2D1DrawInfoUpdateContextImpl.Release"/>
-        [UnmanagedCallersOnly]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         public static uint Release(D2D1DrawInfoUpdateContextImpl* @this)
         {
             return @this->Release();
         }
 
         /// <inheritdoc cref="ID2D1DrawInfoUpdateContext.GetConstantBufferSize"/>
-        [UnmanagedCallersOnly]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         public static int GetConstantBufferSize(D2D1DrawInfoUpdateContextImpl* @this, uint* size)
         {
             if (size is null)
@@ -53,7 +54,7 @@ partial struct D2D1DrawInfoUpdateContextImpl
         }
 
         /// <inheritdoc cref="ID2D1DrawInfoUpdateContext.GetConstantBuffer"/>
-        [UnmanagedCallersOnly]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         public static int GetConstantBuffer(D2D1DrawInfoUpdateContextImpl* @this, byte* buffer, uint bufferCount)
         {
             if (buffer is null)
@@ -85,7 +86,7 @@ partial struct D2D1DrawInfoUpdateContextImpl
         }
 
         /// <inheritdoc cref="ID2D1DrawInfoUpdateContext.SetConstantBuffer"/>
-        [UnmanagedCallersOnly]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         public static int SetConstantBuffer(D2D1DrawInfoUpdateContextImpl* @this, byte* buffer, uint bufferCount)
         {
             if (buffer is null)

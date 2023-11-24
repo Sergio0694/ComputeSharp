@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using ComputeSharp.D2D1.Extensions;
 using ComputeSharp.D2D1.Shaders.Interop.Extensions;
@@ -15,7 +16,7 @@ partial struct D2D1ResourceTextureManagerImpl
     private static unsafe class ID2D1ResourceTextureManagerInternalMethods
     {
         /// <inheritdoc cref="D2D1ResourceTextureManagerImpl.QueryInterface"/>
-        [UnmanagedCallersOnly]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         public static int QueryInterface(D2D1ResourceTextureManagerImpl* @this, Guid* riid, void** ppvObject)
         {
             @this = (D2D1ResourceTextureManagerImpl*)&((void**)@this)[-1];
@@ -24,7 +25,7 @@ partial struct D2D1ResourceTextureManagerImpl
         }
 
         /// <inheritdoc cref="D2D1ResourceTextureManagerImpl.AddRef"/>
-        [UnmanagedCallersOnly]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         public static uint AddRef(D2D1ResourceTextureManagerImpl* @this)
         {
             @this = (D2D1ResourceTextureManagerImpl*)&((void**)@this)[-1];
@@ -33,7 +34,7 @@ partial struct D2D1ResourceTextureManagerImpl
         }
 
         /// <inheritdoc cref="D2D1ResourceTextureManagerImpl.Release"/>
-        [UnmanagedCallersOnly]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         public static uint Release(D2D1ResourceTextureManagerImpl* @this)
         {
             @this = (D2D1ResourceTextureManagerImpl*)&((void**)@this)[-1];
@@ -42,7 +43,7 @@ partial struct D2D1ResourceTextureManagerImpl
         }
 
         /// <inheritdoc cref="ID2D1ResourceTextureManagerInternal.Initialize"/>
-        [UnmanagedCallersOnly]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         public static int Initialize(D2D1ResourceTextureManagerImpl* @this, ID2D1EffectContext* effectContext, uint* dimensions)
         {
             @this = (D2D1ResourceTextureManagerImpl*)&((void**)@this)[-1];
@@ -105,7 +106,7 @@ partial struct D2D1ResourceTextureManagerImpl
         }
 
         /// <inheritdoc cref="ID2D1ResourceTextureManagerInternal.GetResourceTexture"/>
-        [UnmanagedCallersOnly]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         public static int GetResourceTexture(D2D1ResourceTextureManagerImpl* @this, ID2D1ResourceTexture** resourceTexture)
         {
             @this = (D2D1ResourceTextureManagerImpl*)&((void**)@this)[-1];
