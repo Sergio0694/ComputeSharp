@@ -1,6 +1,6 @@
 using ComputeSharp;
 
-float[] numbers = Enumerable.Range(0, 128).Select(i => (float)i).ToArray();
+float[] numbers = [.. Enumerable.Range(0, 128)];
 
 using GraphicsDevice device = GraphicsDevice.GetDefault();
 using ReadWriteBuffer<float> buffer = device.AllocateReadWriteBuffer(numbers);

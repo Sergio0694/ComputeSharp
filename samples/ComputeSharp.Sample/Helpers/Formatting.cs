@@ -27,7 +27,7 @@ internal static class Formatting
 
         for (int i = 0; i < height; i++)
         {
-            float[] row = array.AsSpan(i * width, width).ToArray();
+            float[] row = [.. array.AsSpan(i * width, width)];
             string text = string.Join(",", row.Select(x => x.ToString(CultureInfo.InvariantCulture).PadLeft(numberWidth)));
 
             Console.WriteLine(text);
