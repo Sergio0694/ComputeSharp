@@ -1,4 +1,4 @@
-using ComputeSharp.Core.Helpers;
+using ComputeSharp.Graphics.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ComputeSharp.Tests.Internals;
@@ -33,7 +33,20 @@ public class AlignmentHelperTests
     [DataRow(24, 8, 16, 24)]
     public void AlignToBoundary(int offset, int size, int alignment, int expected)
     {
-        int result = AlignmentHelper.AlignToBoundary(offset, size, alignment);
+        // Note: this method is defined in AlignmentHelper, but it's only compiled when referenced
+        // by the source generator, so it's not available here. Just for the sake of the additional
+        // testing, and because the method is very small, it's just mirrored here for validation.
+        static int AlignToBoundary(int offset, int size, int alignment)
+        {
+            if ((uint)offset / (uint)alignment == (uint)(offset + size - 1) / (uint)alignment)
+            {
+                return offset;
+            }
+
+            return (offset + alignment - 1) & ~(alignment - 1);
+        }
+
+        int result = AlignToBoundary(offset, size, alignment);
 
         Assert.AreEqual(result, expected);
     }

@@ -1,5 +1,5 @@
 using System.Collections.Immutable;
-using ComputeSharp.Core.Helpers;
+using ComputeSharp.Graphics.Helpers;
 using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Helpers;
 using ComputeSharp.SourceGeneration.Models;

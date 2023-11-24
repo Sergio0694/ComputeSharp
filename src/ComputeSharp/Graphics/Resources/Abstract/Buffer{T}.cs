@@ -3,7 +3,6 @@ using System.Buffers;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using ComputeSharp.Core.Helpers;
 using ComputeSharp.Graphics.Commands.Interop;
 using ComputeSharp.Graphics.Extensions;
 using ComputeSharp.Graphics.Helpers;

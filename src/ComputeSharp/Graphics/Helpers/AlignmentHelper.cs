@@ -1,6 +1,6 @@
 using System.Runtime.CompilerServices;
 
-namespace ComputeSharp.Core.Helpers;
+namespace ComputeSharp.Graphics.Helpers;
 
 /// <summary>
 /// A <see langword="class"/> with helper methods to work with alignment and padding.
@@ -31,6 +31,7 @@ internal static class AlignmentHelper
         return (size + alignment - 1) & ~(alignment - 1);
     }
 
+#if SOURCE_GENERATOR
     /// <summary>
     /// Aligns a given offset to a specified boundary, if a given size increment would have crossed it.
     /// </summary>
@@ -41,6 +42,8 @@ internal static class AlignmentHelper
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static int AlignToBoundary(int offset, int size, int alignment)
     {
+        // This method is mirrored in AlignmentHelperTests, so it can be tested individually
+        // as well. Any changes done here should be applied to that standalone copy as well.
         if ((uint)offset / (uint)alignment == (uint)(offset + size - 1) / (uint)alignment)
         {
             return offset;
@@ -48,4 +51,5 @@ internal static class AlignmentHelper
 
         return (offset + alignment - 1) & ~(alignment - 1);
     }
+#endif
 }
