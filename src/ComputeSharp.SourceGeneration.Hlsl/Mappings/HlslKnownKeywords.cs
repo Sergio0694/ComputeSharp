@@ -4,6 +4,8 @@ using System.Linq;
 using System.Reflection;
 using ComputeSharp.Core.Intrinsics.Attributes;
 
+#pragma warning disable IDE0055
+
 namespace ComputeSharp.SourceGeneration.Mappings;
 
 /// <summary>
@@ -22,8 +24,8 @@ internal static partial class HlslKnownKeywords
     private static IReadOnlyCollection<string> BuildKnownKeywordsMap()
     {
         // HLSL keywords
-        HashSet<string> knownKeywords = new(new[]
-        {
+        HashSet<string> knownKeywords = new(
+        [
             "asm", "asm_fragment", "cbuffer", "buffer", "texture", "centroid",
             "column_major", "compile", "discard", "dword", "export", "fxgroup",
             "groupshared", "half", "inline", "inout", "line", "lineadj", "linear",
@@ -40,9 +42,9 @@ internal static partial class HlslKnownKeywords
             "Texture3D", "Texture2DMS", "Texture2DMSArray", "TextureCube", "TextureCubeArray",
             "SV_DispatchThreadID", "SV_DomainLocation", "SV_GroupID", "SV_GroupIndex", "SV_GroupThreadID",
             "SV_GSInstanceID", "SV_InsideTessFactor", "SV_OutputControlPointID", "SV_TessFactor",
-            "SV_InnerCoverage", "SV_StencilRef"
+            "SV_InnerCoverage", "SV_StencilRef", "globallycoherent"
 
-        });
+        ]);
 
         // HLSL primitive names
         foreach (Type? type in HlslKnownTypes.KnownVectorTypes.Concat(HlslKnownTypes.KnownMatrixTypes))
