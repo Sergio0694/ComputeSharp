@@ -2,7 +2,6 @@ using System;
 using System.Buffers;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using ComputeSharp;
 using ComputeSharp.D2D1;
 using ComputeSharp.D2D1.Interop;
 using ComputeSharp.D2D1.Tests.Effects;
@@ -323,7 +322,6 @@ namespace ComputeSharp.D2D1.Tests
         [D2DInputComplex(3)]
         [D2DShaderProfile(D2D1ShaderProfile.PixelShader50)]
         [D2DGeneratedPixelShaderDescriptor]
-        [AutoConstructor]
         internal partial struct ShaderWithoutResourceTextures : ID2D1PixelShader
         {
             public Float4 Execute()
@@ -335,7 +333,6 @@ namespace ComputeSharp.D2D1.Tests
         [D2DInputCount(0)]
         [D2DShaderProfile(D2D1ShaderProfile.PixelShader50)]
         [D2DGeneratedPixelShaderDescriptor]
-        [AutoConstructor]
         internal readonly partial struct ShaderWithJustOneResourceTextures : ID2D1PixelShader
         {
             [D2DResourceTextureIndex(0)]
@@ -354,11 +351,8 @@ namespace ComputeSharp.D2D1.Tests
         [D2DInputComplex(3)]
         [D2DShaderProfile(D2D1ShaderProfile.PixelShader50)]
         [D2DGeneratedPixelShaderDescriptor]
-        [AutoConstructor]
-        internal readonly partial struct ShaderWithResourceTextures : ID2D1PixelShader
+        internal readonly partial struct ShaderWithResourceTextures(float number) : ID2D1PixelShader
         {
-            readonly float number;
-
             [D2DResourceTextureIndex(4)]
             readonly D2D1ResourceTexture1D<float4> myTexture1;
 
@@ -381,7 +375,7 @@ namespace ComputeSharp.D2D1.Tests
                 float4 pixel6 = this.myTexture3.Sample(0.4f, 0.5f, 0.6f);
                 float number1 = this.myTexture4[0, 2];
                 float number2 = this.myTexture4.Sample(0.4f, 0.6f);
-                float number3 = this.number;
+                float number3 = number;
 
                 return 0;
             }
@@ -1128,7 +1122,6 @@ namespace ComputeSharp.D2D1.Tests
                         {
                             [D2DInputCount(0)]
                             [D2DGeneratedPixelShaderDescriptor]
-                            [AutoConstructor]
                             public readonly partial struct DeeplyNestedShader : ID2D1PixelShader
                             {
                                 public float4 Execute()

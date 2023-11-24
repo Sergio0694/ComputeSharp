@@ -21,13 +21,10 @@ if (!numbers.SequenceEqual(result))
 
 Console.WriteLine("Test passed successfully!");
 
-[AutoConstructor]
 [ThreadGroupSize(DefaultThreadGroupSizes.X)]
 [GeneratedComputeShaderDescriptor]
-public readonly partial struct ApplyFunctionShader : IComputeShader
+public readonly partial struct ApplyFunctionShader(ReadWriteBuffer<float> sourceTexture) : IComputeShader
 {
-    private readonly ReadWriteBuffer<float> sourceTexture;
-
     public static float AddHalf(float input)
     {
         return input + 0.5f;
@@ -35,6 +32,6 @@ public readonly partial struct ApplyFunctionShader : IComputeShader
 
     public void Execute()
     {
-        this.sourceTexture[ThreadIds.X] = AddHalf(this.sourceTexture[ThreadIds.X]);
+        sourceTexture[ThreadIds.X] = AddHalf(sourceTexture[ThreadIds.X]);
     }
 }

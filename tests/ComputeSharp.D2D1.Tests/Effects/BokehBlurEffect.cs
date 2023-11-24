@@ -493,10 +493,9 @@ public sealed partial class BokehBlurEffect
         [D2DShaderProfile(D2D1ShaderProfile.PixelShader50)]
         [D2DRequiresScenePosition]
         [D2DGeneratedPixelShaderDescriptor]
-        [AutoConstructor]
-        public readonly partial struct Shader : ID2D1PixelShader
+        public readonly partial struct Shader(int kernelLength) : ID2D1PixelShader
         {
-            public readonly int kernelLength;
+            public readonly int kernelLength = kernelLength;
 
             [D2DResourceTextureIndex(1)]
             private readonly D2D1ResourceTexture1D<float> kernel;
@@ -543,12 +542,12 @@ public sealed partial class BokehBlurEffect
         [D2DShaderProfile(D2D1ShaderProfile.PixelShader50)]
         [D2DRequiresScenePosition]
         [D2DGeneratedPixelShaderDescriptor]
-        [AutoConstructor]
-        public readonly partial struct Shader : ID2D1PixelShader
+        public readonly partial struct Shader(
+            int kernelLength,
+            float z,
+            float w) : ID2D1PixelShader
         {
-            public readonly int kernelLength;
-            private readonly float z;
-            private readonly float w;
+            public readonly int kernelLength = kernelLength;
 
             [D2DResourceTextureIndex(2)]
             private readonly D2D1ResourceTexture1D<float> kernelReals;
@@ -574,7 +573,7 @@ public sealed partial class BokehBlurEffect
                     result.Imaginary += (Vector4)((realFactor * sourceImaginary) + (imaginaryFactor * sourceReal));
                 }
 
-                return result.WeightedSum(this.z, this.w);
+                return result.WeightedSum(z, w);
             }
         }
     }
@@ -588,7 +587,6 @@ public sealed partial class BokehBlurEffect
     [D2DOutputBuffer(D2D1BufferPrecision.Float32, D2D1ChannelDepth.Four)]
     [D2DShaderProfile(D2D1ShaderProfile.PixelShader50)]
     [D2DGeneratedPixelShaderDescriptor]
-    [AutoConstructor]
     internal readonly partial struct GammaHighlight : ID2D1PixelShader
     {
         /// <inheritdoc/>
@@ -611,7 +609,6 @@ public sealed partial class BokehBlurEffect
     [D2DOutputBuffer(D2D1BufferPrecision.Float32, D2D1ChannelDepth.Four)]
     [D2DShaderProfile(D2D1ShaderProfile.PixelShader50)]
     [D2DGeneratedPixelShaderDescriptor]
-    [AutoConstructor]
     internal readonly partial struct InverseGammaHighlight : ID2D1PixelShader
     {
         /// <inheritdoc/>

@@ -16,7 +16,7 @@ public partial class ShaderDataLoaderTests
     [GeneratedComputeShaderDescriptor]
     public readonly partial struct CapturedResourceShader : IComputeShader
     {
-        public readonly ReadWriteBuffer<float> _;
+        public readonly ReadWriteBuffer<float> _buffer;
 
         public void Execute()
         {
@@ -52,8 +52,8 @@ public partial class ShaderDataLoaderTests
     [GeneratedComputeShaderDescriptor]
     public readonly partial struct MultipleResourcesAndPrimitivesShader : IComputeShader
     {
-        public readonly ReadWriteBuffer<float> _0;
-        public readonly ReadWriteBuffer<float> _1;
+        public readonly ReadWriteBuffer<float> _buffer0;
+        public readonly ReadWriteBuffer<float> _buffer1;
         public readonly int a;
         public readonly int b;
         public readonly int c;
@@ -98,7 +98,7 @@ public partial class ShaderDataLoaderTests
     [GeneratedComputeShaderDescriptor]
     public readonly partial struct ScalarAndVectorTypesShader : IComputeShader
     {
-        public readonly ReadWriteBuffer<float> _;
+        public readonly ReadWriteBuffer<float> _buffer;
         public readonly float3 f3;
         public readonly int a;
         public readonly int b;
@@ -149,7 +149,7 @@ public partial class ShaderDataLoaderTests
     [GeneratedComputeShaderDescriptor]
     public readonly partial struct ScalarVectorAndMatrixTypesShader : IComputeShader
     {
-        public readonly ReadWriteBuffer<float> _;
+        public readonly ReadWriteBuffer<float> _buffer;
         public readonly float2x3 f2x3;
         public readonly int a;
         public readonly Int1x3 i1x3;
@@ -218,16 +218,16 @@ public partial class ShaderDataLoaderTests
     }
 
     [AutoConstructor]
-    public partial struct SimpleTypes
+    public readonly partial struct SimpleTypes
     {
-        public float2x3 f2x3;
-        public int a;
-        public Int1x3 i1x3;
-        public double2 d2;
-        public int c;
-        public Int1x2 i1x2;
-        public int2x2 i2x2;
-        public int d;
+        public readonly float2x3 f2x3;
+        public readonly int a;
+        public readonly Int1x3 i1x3;
+        public readonly double2 d2;
+        public readonly int c;
+        public readonly Int1x2 i1x2;
+        public readonly int2x2 i2x2;
+        public readonly int d;
     }
 
     [AutoConstructor]
@@ -235,7 +235,7 @@ public partial class ShaderDataLoaderTests
     [GeneratedComputeShaderDescriptor]
     public readonly partial struct FlatCustomTypeShader : IComputeShader
     {
-        public readonly ReadWriteBuffer<float> _0;
+        public readonly ReadWriteBuffer<float> _buffer0;
         public readonly SimpleTypes a;
 
         public void Execute()
@@ -298,28 +298,28 @@ public partial class ShaderDataLoaderTests
     }
 
     [AutoConstructor]
-    public partial struct CustomType1
+    public readonly partial struct CustomType1
     {
-        public float3 a;
-        public SimpleTypes b;
-        public int c;
-        public CustomType2 d;
-        public CustomType3 e;
+        public readonly float3 a;
+        public readonly SimpleTypes b;
+        public readonly int c;
+        public readonly CustomType2 d;
+        public readonly CustomType3 e;
     }
 
     [AutoConstructor]
-    public partial struct CustomType2
+    public readonly partial struct CustomType2
     {
-        public int a;
-        public float2 b;
-        public CustomType3 c;
+        public readonly int a;
+        public readonly float2 b;
+        public readonly CustomType3 c;
     }
 
     [AutoConstructor]
-    public partial struct CustomType3
+    public readonly partial struct CustomType3
     {
-        public int a;
-        public float2 b;
+        public readonly int a;
+        public readonly float2 b;
     }
 
     [AutoConstructor]
@@ -327,7 +327,7 @@ public partial class ShaderDataLoaderTests
     [GeneratedComputeShaderDescriptor]
     public readonly partial struct NestedCustomTypesShader : IComputeShader
     {
-        public readonly ReadWriteBuffer<float> _0;
+        public readonly ReadWriteBuffer<float> _buffer0;
         public readonly CustomType1 a;
 
         public void Execute()

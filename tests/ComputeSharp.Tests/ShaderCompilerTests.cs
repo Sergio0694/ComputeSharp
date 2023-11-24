@@ -230,10 +230,10 @@ namespace ComputeSharp.Tests
         }
 
         [AutoConstructor]
-        public partial struct CustomStructType
+        public readonly partial struct CustomStructType
         {
-            public float2 a;
-            public int b;
+            public readonly float2 a;
+            public readonly int b;
         }
 
         [AutoConstructor]

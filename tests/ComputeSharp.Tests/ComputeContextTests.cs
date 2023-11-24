@@ -1308,7 +1308,6 @@ public partial class ComputeContextTests
         }
     }
 
-    [AutoConstructor]
     [ThreadGroupSize(DefaultThreadGroupSizes.XY)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct ClearPixelShader : IComputeShader<float4>
