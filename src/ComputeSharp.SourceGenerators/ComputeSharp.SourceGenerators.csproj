@@ -59,16 +59,16 @@
     <Compile Include="..\ComputeSharp.Core\Primitives\MatrixIndex.cs" Link="ComputeSharp.Core\Primitives\MatrixIndex.cs" />
 
     <!-- ComputeSharp APIs -->
-    <Compile Include="..\ComputeSharp\Core\Attributes\Enums\CompileOptions.cs" Link="ComputeSharp\Core\Attributes\Enums\CompileOptions.cs" />
-    <Compile Include="..\ComputeSharp\Core\Attributes\Enums\DefaultThreadGroupSizes.cs" Link="ComputeSharp\Core\Attributes\Enums\DefaultThreadGroupSizes.cs" />
-    <Compile Include="..\ComputeSharp\Core\Dispatch\DispatchSize.cs" Link="ComputeSharp\Core\Dispatch\DispatchSize.cs" />
-    <Compile Include="..\ComputeSharp\Core\Dispatch\GridIds.cs" Link="ComputeSharp\Core\Dispatch\GridIds.cs" />
-    <Compile Include="..\ComputeSharp\Core\Dispatch\GroupIds.cs" Link="ComputeSharp\Core\Dispatch\GroupIds.cs" />
-    <Compile Include="..\ComputeSharp\Core\Dispatch\GroupSize.cs" Link="ComputeSharp\Core\Dispatch\GroupSize.cs" />
-    <Compile Include="..\ComputeSharp\Core\Dispatch\ThreadIds.cs" Link="ComputeSharp\Core\Dispatch\ThreadIds.cs" />
-    <Compile Include="..\ComputeSharp\Core\Dispatch\ThreadIds.Normalized.cs" Link="ComputeSharp\Core\Dispatch\ThreadIds.Normalized.cs" />
-    <Compile Include="..\ComputeSharp\Core\Interfaces\IComputeShader.cs" Link="ComputeSharp\Core\Interfaces\IComputeShader.cs" />
-    <Compile Include="..\ComputeSharp\Core\Interfaces\IComputeShader{TPixel}.cs" Link="ComputeSharp\Core\Interfaces\IComputeShader{TPixel}.cs" />
+    <Compile Include="..\ComputeSharp\Attributes\Enums\CompileOptions.cs" Link="ComputeSharp\Attributes\Enums\CompileOptions.cs" />
+    <Compile Include="..\ComputeSharp\Attributes\Enums\DefaultThreadGroupSizes.cs" Link="ComputeSharp\Attributes\Enums\DefaultThreadGroupSizes.cs" />
+    <Compile Include="..\ComputeSharp\Dispatch\DispatchSize.cs" Link="ComputeSharp\Dispatch\DispatchSize.cs" />
+    <Compile Include="..\ComputeSharp\Dispatch\GridIds.cs" Link="ComputeSharp\Dispatch\GridIds.cs" />
+    <Compile Include="..\ComputeSharp\Dispatch\GroupIds.cs" Link="ComputeSharp\Dispatch\GroupIds.cs" />
+    <Compile Include="..\ComputeSharp\Dispatch\GroupSize.cs" Link="ComputeSharp\Dispatch\GroupSize.cs" />
+    <Compile Include="..\ComputeSharp\Dispatch\ThreadIds.cs" Link="ComputeSharp\Dispatch\ThreadIds.cs" />
+    <Compile Include="..\ComputeSharp\Dispatch\ThreadIds.Normalized.cs" Link="ComputeSharp\Dispatch\ThreadIds.Normalized.cs" />
+    <Compile Include="..\ComputeSharp\Interfaces\IComputeShader.cs" Link="ComputeSharp\Interfaces\IComputeShader.cs" />
+    <Compile Include="..\ComputeSharp\Interfaces\IComputeShader{TPixel}.cs" Link="ComputeSharp\Interfaces\IComputeShader{TPixel}.cs" />
     <Compile Include="..\ComputeSharp\Graphics\Helpers\AlignmentHelper.cs" Link="ComputeSharp\Graphics\Helpers\AlignmentHelper.cs" />
   </ItemGroup>
 
