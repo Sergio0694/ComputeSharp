@@ -65,7 +65,7 @@
     <Compile Include="..\ComputeSharp.Core\Primitives\MatrixIndex.cs" Link="ComputeSharp.Core\Primitives\MatrixIndex.cs" />
 
     <!-- ComputeSharp APIs -->
-    <Compile Include="..\ComputeSharp\Core\Helpers\AlignmentHelper.cs" Link="ComputeSharp\Core\Helpers\AlignmentHelper.cs" />
+    <Compile Include="..\ComputeSharp\Graphics\Helpers\AlignmentHelper.cs" Link="ComputeSharp\Graphics\Helpers\AlignmentHelper.cs" />
 
     <!-- ComputeSharp.D2D1 APIs -->
     <Compile Include="..\ComputeSharp.D2D1\Attributes\Enums\D2D1ShaderProfile.cs" Link="ComputeSharp.D2D1\Attributes\Enums\D2D1ShaderProfile.cs" />
