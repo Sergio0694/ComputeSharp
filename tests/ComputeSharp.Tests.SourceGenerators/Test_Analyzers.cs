@@ -85,4 +85,88 @@ public class Test_Analyzers
 
         await CSharpAnalyzerWithLanguageVersionTest<NotReadOnlyComputeShaderTypeWithFieldsAnalyzer>.VerifyAnalyzerAsync(source);
     }
+
+    [TestMethod]
+    public async Task GloballyCoherentAttribute_NotWithinShaderType()
+    {
+        const string source = """
+            using ComputeSharp;
+
+            namespace MyFancyApp.Sample;
+
+            internal partial struct MyType
+            {
+                [{|CMPS0058:GloballyCoherent|}]
+                public ReadWriteBuffer<float> buffer;
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<InvalidGloballyCoherentFieldDeclarationAnalyzer>.VerifyAnalyzerAsync(source);
+    }
+
+    [TestMethod]
+    public async Task GloballyCoherentAttribute_IncorrectType()
+    {
+        const string source = """
+            using ComputeSharp;
+
+            namespace MyFancyApp.Sample;
+
+            internal partial struct MyType : IComputeShader
+            {
+                [{|CMPS0058:GloballyCoherent|}]
+                public ReadOnlyBuffer<float> buffer;
+
+                public void Execute()
+                {
+                }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<InvalidGloballyCoherentFieldDeclarationAnalyzer>.VerifyAnalyzerAsync(source);
+    }
+
+    [TestMethod]
+    public async Task GloballyCoherentAttribute_StaticField()
+    {
+        const string source = """
+            using ComputeSharp;
+
+            namespace MyFancyApp.Sample;
+
+            internal partial struct MyType : IComputeShader
+            {
+                [{|CMPS0058:GloballyCoherent|}]
+                public static ReadWriteBuffer<float> buffer;
+
+                public void Execute()
+                {
+                }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<InvalidGloballyCoherentFieldDeclarationAnalyzer>.VerifyAnalyzerAsync(source);
+    }
+
+    [TestMethod]
+    public async Task GloballyCoherentAttribute_ValidField_DoesNotWarn()
+    {
+        const string source = """
+            using ComputeSharp;
+
+            namespace MyFancyApp.Sample;
+
+            internal partial struct MyType : IComputeShader
+            {
+                [GloballyCoherent]
+                public ReadWriteBuffer<float> buffer;
+
+                public void Execute()
+                {
+                }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<InvalidGloballyCoherentFieldDeclarationAnalyzer>.VerifyAnalyzerAsync(source);
+    }
 }
