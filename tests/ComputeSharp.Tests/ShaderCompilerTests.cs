@@ -607,6 +607,58 @@ namespace ComputeSharp.Tests
                 this.buffer[ThreadIds.X] = ThreadIds.X;
             }
         }
+
+        [TestMethod]
+        public void GloballyCoherentBuffers()
+        {
+            ShaderInfo shaderInfo = ReflectionServices.GetShaderInfo<GloballyCoherentBufferShader>();
+
+            Assert.AreEqual(
+                """
+                // ================================================
+                //                  AUTO GENERATED
+                // ================================================
+                // This shader was created by ComputeSharp.
+                // See: https://github.com/Sergio0694/ComputeSharp.
+
+                #define __GroupSize__get_X 64
+                #define __GroupSize__get_Y 1
+                #define __GroupSize__get_Z 1
+
+                cbuffer _ : register(b0)
+                {
+                    uint __x;
+                    uint __y;
+                    uint __z;
+                }
+
+                globallycoherent RWStructuredBuffer<int> __reserved__buffer : register(u0);
+
+                [NumThreads(__GroupSize__get_X, __GroupSize__get_Y, __GroupSize__get_Z)]
+                void Execute(uint3 ThreadIds : SV_DispatchThreadID)
+                {
+                    if (ThreadIds.x < __x && ThreadIds.y < __y && ThreadIds.z < __z)
+                    {
+                        InterlockedAdd(__reserved__buffer[0], 1);
+                    }
+                }
+                """,
+                shaderInfo.HlslSource);
+        }
+
+        [AutoConstructor]
+        [ThreadGroupSize(DefaultThreadGroupSizes.X)]
+        [GeneratedComputeShaderDescriptor]
+        internal readonly partial struct GloballyCoherentBufferShader : IComputeShader
+        {
+            [GloballyCoherent]
+            private readonly ReadWriteBuffer<int> buffer;
+
+            public void Execute()
+            {
+                Hlsl.InterlockedAdd(ref this.buffer[0], 1);
+            }
+        }
     }
 }
 
