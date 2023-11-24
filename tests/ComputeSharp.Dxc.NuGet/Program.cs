@@ -33,13 +33,10 @@ Trace.Assert(shaderInfo.BoundResourceCount == 2);
 /// <summary>
 /// A sample kernel that requires dynamic compilation, as it's not precompiled.
 /// </summary>
-[AutoConstructor]
 [ThreadGroupSize(DefaultThreadGroupSizes.X)]
 [GeneratedComputeShaderDescriptor]
-internal readonly partial struct MultiplyByTwo : IComputeShader
+internal readonly partial struct MultiplyByTwo(ReadWriteBuffer<float> buffer) : IComputeShader
 {
-    public readonly ReadWriteBuffer<float> buffer;
-
     /// <inheritdoc/>
     public void Execute()
     {
