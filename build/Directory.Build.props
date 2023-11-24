@@ -23,6 +23,12 @@
       For instance, this will warn when using the == operator to compare a struct with a null literal.
     -->
     <Features>strict</Features>
+
+    <!--
+      Opt-in feature that allows skipping unnecessary MSBuild invocations during incremental builds.
+      See https://devblogs.microsoft.com/visualstudio/vs-toolbox-accelerate-your-builds-of-sdk-style-net-projects/.
+    -->
+    <AccelerateBuildsInVisualStudio>true</AccelerateBuildsInVisualStudio>
   </PropertyGroup>
 
   <PropertyGroup>
