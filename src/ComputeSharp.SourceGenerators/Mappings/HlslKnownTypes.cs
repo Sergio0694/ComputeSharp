@@ -30,6 +30,16 @@ partial class HlslKnownTypes
     }
 
     /// <summary>
+    /// Checks whether or not a given type name matches a read write buffer type.
+    /// </summary>
+    /// <param name="typeName">The input type name to check.</param>
+    /// <returns>Whether or not <paramref name="typeName"/> represents a read write buffer type.</returns>
+    public static bool IsReadWriteBufferType(string typeName)
+    {
+        return typeName == "ComputeSharp.ReadWriteBuffer`1";
+    }
+
+    /// <summary>
     /// Checks whether or not a given type name matches a structured buffer type.
     /// </summary>
     /// <param name="typeName">The input type name to check.</param>

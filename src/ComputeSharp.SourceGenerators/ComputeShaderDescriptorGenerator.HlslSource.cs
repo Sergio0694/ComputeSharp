@@ -137,10 +137,10 @@ partial class ComputeShaderDescriptorGenerator
                     continue;
                 }
 
-                AttributeData? attribute = fieldSymbol.GetAttributes().FirstOrDefault(static a => a.AttributeClass?.ToDisplayString() == "ComputeSharp.GroupSharedAttribute");
+                AttributeData? groupSharedAttribute = fieldSymbol.GetAttributes().FirstOrDefault(static a => a.AttributeClass?.ToDisplayString() == "ComputeSharp.GroupSharedAttribute");
 
                 // Group shared fields must be static
-                if (attribute is not null)
+                if (groupSharedAttribute is not null)
                 {
                     diagnostics.Add(InvalidGroupSharedFieldDeclaration, fieldSymbol, structDeclarationSymbol, fieldName);
                 }
@@ -167,6 +167,13 @@ partial class ComputeShaderDescriptorGenerator
                     if (HlslKnownTypes.IsStructuredBufferType(metadataName))
                     {
                         types.Add((INamedTypeSymbol)typeSymbol.TypeArguments[0]);
+                    }
+
+                    // Check whether the resource is a globallycoherent writeable buffer
+                    if (HlslKnownTypes.IsReadWriteBufferType(metadataName) &&
+                        fieldSymbol.TryGetAttributeWithFullyQualifiedMetadataName("ComputeSharp.GloballyCoherentAttribute", out _))
+                    {
+                        typeName = "globallycoherent " + typeName;
                     }
 
                     // Add the current mapping for the name (if the name used a reserved keyword)

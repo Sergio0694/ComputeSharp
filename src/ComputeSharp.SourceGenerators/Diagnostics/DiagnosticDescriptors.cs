@@ -814,4 +814,20 @@ partial class DiagnosticDescriptors
         isEnabledByDefault: true,
         description: "Shader types should be readonly (shaders cannot mutate their instance state while running, so shader types not being readonly makes them error prone).",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+    /// <summary>
+    /// Gets a <see cref="DiagnosticDescriptor"/> for when a field annotated with <c>[GloballyCoherent]</c> is not valid.
+    /// <para>
+    /// Format: <c>"The field "{0}" is annotated with [GloballyCoherent], but is not a valid target for it (only ReadWriteBuffer&lt;T&gt; instance fields in compute shader types can be annotated with [GloballyCoherent])"</c>.
+    /// </para>
+    /// </summary>
+    public static readonly DiagnosticDescriptor InvalidGloballyCoherentFieldDeclaration = new(
+        id: "CMPS0058",
+        title: "Invalid [GloballyCoherent] field declaration",
+        messageFormat: """The field "{0}" is annotated with [GloballyCoherent], but is not a valid target for it (only ReadWriteBuffer<T> instance fields in compute shader types can be annotated with [GloballyCoherent])""",
+        category: "ComputeSharp.Shaders",
+        defaultSeverity: DiagnosticSeverity.Error,
+        isEnabledByDefault: true,
+        description: "The [GloballyCoherent] attribute is only valid on ReadWriteBuffer<T> instance fields in compute shader types.",
+        helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 }
