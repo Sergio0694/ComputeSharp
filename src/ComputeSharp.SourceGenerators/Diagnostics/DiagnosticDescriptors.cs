@@ -61,17 +61,17 @@ partial class DiagnosticDescriptors
     /// <summary>
     /// Gets a <see cref="DiagnosticDescriptor"/> for an invalid group shared field declaration.
     /// <para>
-    /// Format: <c>"The compute shader of type {0} contains a group shared field "{1}" that is not static"</c>.
+    /// Format: <c>"The field "{0}" is annotated with [GroupShared], but is not a valid target for it (only static fields of array type in compute shader types, with an unmanaged element type can be annotated with [GroupShared])"</c>.
     /// </para>
     /// </summary>
     public static readonly DiagnosticDescriptor InvalidGroupSharedFieldDeclaration = new(
         id: "CMPS0004",
-        title: "Invalid group shared field declaration",
-        messageFormat: """The compute shader of type {0} contains a group shared field "{1}" that is not static""",
+        title: "Invalid [GroupShared] field declaration",
+        messageFormat: """The field "{0}" is annotated with [GroupShared], but is not a valid target for it (only static fields of array type in compute shader types, with an unmanaged element type can be annotated with [GroupShared])""",
         category: "ComputeSharp.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
-        description: "A group shared field must be static.",
+        description: "The [GroupShared] attribute is only valid on static fields of array type in compute shader types, with an unmanaged element type.",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 
     /// <summary>

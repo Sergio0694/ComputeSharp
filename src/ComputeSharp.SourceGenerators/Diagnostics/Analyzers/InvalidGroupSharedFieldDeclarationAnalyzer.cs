@@ -7,13 +7,13 @@ using static ComputeSharp.SourceGeneration.Diagnostics.DiagnosticDescriptors;
 namespace ComputeSharp.SourceGenerators;
 
 /// <summary>
-/// A diagnostic analyzer that generates an error whenever the [GloballyCoherent] attribute is used on an invalid target field.
+/// A diagnostic analyzer that generates an error whenever the [GroupShared] attribute is used on an invalid target field.
 /// </summary>
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
-public sealed class InvalidGloballyCoherentFieldDeclarationAnalyzer : DiagnosticAnalyzer
+public sealed class InvalidGroupSharedFieldDeclarationAnalyzer : DiagnosticAnalyzer
 {
     /// <inheritdoc/>
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = ImmutableArray.Create(InvalidGloballyCoherentFieldDeclaration);
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = ImmutableArray.Create(InvalidGroupSharedFieldDeclaration);
 
     /// <inheritdoc/>
     public override void Initialize(AnalysisContext context)
@@ -27,7 +27,7 @@ public sealed class InvalidGloballyCoherentFieldDeclarationAnalyzer : Diagnostic
             if (context.Compilation.GetTypeByMetadataName("ComputeSharp.IComputeShader") is not { } computeShaderSymbol ||
                 context.Compilation.GetTypeByMetadataName("ComputeSharp.IComputeShader`1") is not { } pixelShaderSymbol ||
                 context.Compilation.GetTypeByMetadataName("ComputeSharp.ReadWriteBuffer`1") is not { } readWriteBufferSymbol ||
-                context.Compilation.GetTypeByMetadataName("ComputeSharp.GloballyCoherentAttribute") is not { } globallyCoherentAttributeSymbol)
+                context.Compilation.GetTypeByMetadataName("ComputeSharp.GroupSharedAttribute") is not { } groupSharedAttribute)
             {
                 return;
             }
@@ -39,20 +39,19 @@ public sealed class InvalidGloballyCoherentFieldDeclarationAnalyzer : Diagnostic
                     return;
                 }
 
-                // If the current type does not have the [GloballyCoherent] attribute, there is nothing to do
-                if (!fieldSymbol.TryGetAttributeWithType(globallyCoherentAttributeSymbol, out AttributeData? attribute))
+                // If the current type does not have the [GroupShared] attribute, there is nothing to do
+                if (!fieldSymbol.TryGetAttributeWithType(groupSharedAttribute, out AttributeData? attribute))
                 {
                     return;
                 }
 
                 // Emit a diagnostic if the field is not valid (either static, not of ReadWriteBuffer<T> type, or not within a compute shader type)
-                if (fieldSymbol.IsStatic ||
-                    fieldSymbol.Type is not INamedTypeSymbol { IsGenericType: true } fieldTypeSymbol ||
-                    !SymbolEqualityComparer.Default.Equals(fieldTypeSymbol.ConstructedFrom, readWriteBufferSymbol) ||
+                if (!fieldSymbol.IsStatic ||
+                    fieldSymbol.Type is not IArrayTypeSymbol { ElementType.IsUnmanagedType: true } ||
                     !MissingComputeShaderDescriptorOnComputeShaderAnalyzer.IsComputeShaderType(typeSymbol, computeShaderSymbol, pixelShaderSymbol))
                 {
                     context.ReportDiagnostic(Diagnostic.Create(
-                        InvalidGloballyCoherentFieldDeclaration,
+                        InvalidGroupSharedFieldDeclaration,
                         attribute.GetLocation(),
                         fieldSymbol));
                 }

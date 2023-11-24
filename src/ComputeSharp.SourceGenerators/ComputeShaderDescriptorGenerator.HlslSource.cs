@@ -137,14 +137,6 @@ partial class ComputeShaderDescriptorGenerator
                     continue;
                 }
 
-                AttributeData? groupSharedAttribute = fieldSymbol.GetAttributes().FirstOrDefault(static a => a.AttributeClass?.ToDisplayString() == "ComputeSharp.GroupSharedAttribute");
-
-                // Group shared fields must be static
-                if (groupSharedAttribute is not null)
-                {
-                    diagnostics.Add(InvalidGroupSharedFieldDeclaration, fieldSymbol, structDeclarationSymbol, fieldName);
-                }
-
                 // Captured fields must be named type symbols
                 if (fieldSymbol.Type is not INamedTypeSymbol typeSymbol)
                 {
@@ -239,9 +231,7 @@ partial class ComputeShaderDescriptorGenerator
                         continue;
                     }
 
-                    AttributeData? attribute = fieldSymbol.GetAttributes().FirstOrDefault(static a => a.AttributeClass?.ToDisplayString() == "ComputeSharp.GroupSharedAttribute");
-
-                    if (attribute is not null)
+                    if (fieldSymbol.TryGetAttributeWithFullyQualifiedMetadataName("ComputeSharp.GroupSharedAttribute", out _))
                     {
                         continue;
                     }
@@ -292,31 +282,16 @@ partial class ComputeShaderDescriptorGenerator
         {
             using ImmutableArrayBuilder<(string, string, int?)> builder = new();
 
-            foreach (IFieldSymbol fieldSymbol in structDeclarationSymbol.GetMembers().OfType<IFieldSymbol>())
+            foreach (ISymbol memberSymbol in structDeclarationSymbol.GetMembers())
             {
-                if (!fieldSymbol.IsStatic)
+                // We're only looking for static fields of a valid type for group shared buffers
+                if (memberSymbol is not IFieldSymbol { IsStatic: true, Type: IArrayTypeSymbol { ElementType.IsUnmanagedType: true } typeSymbol } fieldSymbol)
                 {
                     continue;
                 }
 
-                AttributeData? attribute = fieldSymbol.GetAttributes().FirstOrDefault(static a => a.AttributeClass?.ToDisplayString() == "ComputeSharp.GroupSharedAttribute");
-
-                if (attribute is null)
+                if (!fieldSymbol.TryGetAttributeWithFullyQualifiedMetadataName("ComputeSharp.GroupSharedAttribute", out AttributeData? attribute))
                 {
-                    continue;
-                }
-
-                if (fieldSymbol.Type is not IArrayTypeSymbol typeSymbol)
-                {
-                    diagnostics.Add(InvalidGroupSharedFieldType, fieldSymbol, structDeclarationSymbol, fieldSymbol.Name, fieldSymbol.Type);
-
-                    continue;
-                }
-
-                if (!typeSymbol.ElementType.IsUnmanagedType)
-                {
-                    diagnostics.Add(InvalidGroupSharedFieldElementType, fieldSymbol, structDeclarationSymbol, fieldSymbol.Name, fieldSymbol.Type);
-
                     continue;
                 }
 

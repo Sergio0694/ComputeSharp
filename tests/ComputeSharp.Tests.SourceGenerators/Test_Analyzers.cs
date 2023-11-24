@@ -169,4 +169,88 @@ public class Test_Analyzers
 
         await CSharpAnalyzerWithLanguageVersionTest<InvalidGloballyCoherentFieldDeclarationAnalyzer>.VerifyAnalyzerAsync(source);
     }
+
+    [TestMethod]
+    public async Task GroupSharedAttribute_NotWithinShaderType()
+    {
+        const string source = """
+            using ComputeSharp;
+
+            namespace MyFancyApp.Sample;
+
+            internal partial struct MyType
+            {
+                [{|CMPS0004:GroupShared|}]
+                public static int[] numbers;
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<InvalidGroupSharedFieldDeclarationAnalyzer>.VerifyAnalyzerAsync(source);
+    }
+
+    [TestMethod]
+    public async Task GroupSharedAttribute_IncorrectType()
+    {
+        const string source = """
+            using ComputeSharp;
+
+            namespace MyFancyApp.Sample;
+
+            internal partial struct MyType : IComputeShader
+            {
+                [{|CMPS0004:GroupShared|}]
+                public static ReadWriteBuffer<int> numbers;
+
+                public void Execute()
+                {
+                }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<InvalidGroupSharedFieldDeclarationAnalyzer>.VerifyAnalyzerAsync(source);
+    }
+
+    [TestMethod]
+    public async Task GroupSharedAttribute_InstanceField()
+    {
+        const string source = """
+            using ComputeSharp;
+
+            namespace MyFancyApp.Sample;
+
+            internal partial struct MyType : IComputeShader
+            {
+                [{|CMPS0004:GroupShared|}]
+                public int[] numbers;
+
+                public void Execute()
+                {
+                }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<InvalidGroupSharedFieldDeclarationAnalyzer>.VerifyAnalyzerAsync(source);
+    }
+
+    [TestMethod]
+    public async Task GroupSharedAttribute_ValidField_DoesNotWarn()
+    {
+        const string source = """
+            using ComputeSharp;
+
+            namespace MyFancyApp.Sample;
+
+            internal partial struct MyType : IComputeShader
+            {
+                [GroupShared]
+                public static int[] numbers;
+
+                public void Execute()
+                {
+                }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<InvalidGroupSharedFieldDeclarationAnalyzer>.VerifyAnalyzerAsync(source);
+    }
 }
