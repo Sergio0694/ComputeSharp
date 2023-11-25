@@ -10,6 +10,90 @@ namespace ComputeSharp.Tests.SourceGenerators;
 public class Test_Analyzers
 {
     [TestMethod]
+    public async Task MissingComputeShaderDescriptor_ComputeShader()
+    {
+        const string source = """
+            using ComputeSharp;
+
+            internal partial struct {|CMPS0053:MyShader|} : IComputeShader
+            {
+                public ReadWriteBuffer<float> buffer;
+
+                public void Execute()
+                {
+                }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<MissingComputeShaderDescriptorOnComputeShaderAnalyzer>.VerifyAnalyzerAsync(source);
+    }
+
+    [TestMethod]
+    public async Task MissingComputeShaderDescriptor_ComputeShaderOfT()
+    {
+        const string source = """
+            using ComputeSharp;
+            using float4 = ComputeSharp.Float4;
+
+            internal partial struct {|CMPS0053:MyShader|} : IComputeShader<float4>
+            {
+                public float4 Execute()
+                {
+                    return 0;
+                }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<MissingComputeShaderDescriptorOnComputeShaderAnalyzer>.VerifyAnalyzerAsync(source);
+    }
+
+    [TestMethod]
+    public async Task MissingComputeShaderDescriptor_ManuallyImplemented_DoesNotWarn()
+    {
+        const string source = """
+            using System;
+            using ComputeSharp;
+            using ComputeSharp.Descriptors;
+            using ComputeSharp.Interop;
+
+            internal partial struct MyShader : IComputeShader, IComputeShaderDescriptor<MyShader>
+            {
+                public static int ThreadsX => throw new NotImplementedException();
+
+                public static int ThreadsY => throw new NotImplementedException();
+
+                public static int ThreadsZ => throw new NotImplementedException();
+
+                public static int ConstantBufferSize => throw new NotImplementedException();
+
+                public static bool IsStaticSamplerRequired => throw new NotImplementedException();
+
+                public static ReadOnlyMemory<ResourceDescriptorRange> ResourceDescriptorRanges => throw new NotImplementedException();
+
+                public static string HlslSource => throw new NotImplementedException();
+
+                public static ReadOnlyMemory<byte> HlslBytecode => throw new NotImplementedException();
+
+                public static void LoadConstantBuffer<TLoader>(in MyShader shader, ref TLoader loader, int x, int y, int z) where TLoader : struct, IConstantBufferLoader
+                {
+                    throw new NotImplementedException();
+                }
+
+                public static void LoadGraphicsResources<TLoader>(in MyShader shader, ref TLoader loader) where TLoader : struct, IGraphicsResourceLoader
+                {
+                    throw new NotImplementedException();
+                }
+
+                public void Execute()
+                {
+                }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<MissingComputeShaderDescriptorOnComputeShaderAnalyzer>.VerifyAnalyzerAsync(source);
+    }
+
+    [TestMethod]
     public async Task NotAccessibleNestedShaderType()
     {
         const string source = """
