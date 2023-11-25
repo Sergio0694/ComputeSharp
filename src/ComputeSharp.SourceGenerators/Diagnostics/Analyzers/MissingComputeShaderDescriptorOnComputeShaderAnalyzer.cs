@@ -48,7 +48,7 @@ public sealed class MissingComputeShaderDescriptorOnComputeShaderAnalyzer : Diag
                 }
 
                 // Emit a diagnostic if the descriptor is missing for the shader type
-                if (!typeSymbol.HasInterfaceWithType(computeShaderDescriptorSymbol) &&
+                if (!HasComputeShaderDescriptorInterface(typeSymbol, computeShaderDescriptorSymbol) &&
                     !typeSymbol.HasAttributeWithType(generatedComputeShaderDescriptorAttributeSymbol))
                 {
                     context.ReportDiagnostic(Diagnostic.Create(
@@ -76,6 +76,25 @@ public sealed class MissingComputeShaderDescriptorOnComputeShaderAnalyzer : Diag
         {
             if (SymbolEqualityComparer.Default.Equals(interfaceSymbol, computeShaderSymbol) ||
                 SymbolEqualityComparer.Default.Equals(interfaceSymbol.ConstructedFrom, pixelShaderSymbol))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// Checks whether a given type implements the shader descriptor interface.
+    /// </summary>
+    /// <param name="typeSymbol">The type to check.</param>
+    /// <param name="computeShaderDescriptorSymbol">The type symbol for <c>IComputeShaderDescriptor&lt;T&gt;</c>.</param>
+    /// <returns></returns>
+    private static bool HasComputeShaderDescriptorInterface(INamedTypeSymbol typeSymbol, INamedTypeSymbol computeShaderDescriptorSymbol)
+    {
+        foreach (INamedTypeSymbol interfaceSymbol in typeSymbol.AllInterfaces)
+        {
+            if (SymbolEqualityComparer.Default.Equals(interfaceSymbol.ConstructedFrom, computeShaderDescriptorSymbol))
             {
                 return true;
             }
