@@ -47,7 +47,7 @@ public sealed class MissingPixelShaderDescriptorOnPixelShaderAnalyzer : Diagnost
                 }
 
                 // Emit a diagnostic if the descriptor is missing for the shader type
-                if (!typeSymbol.HasInterfaceWithType(d2D1PixelShaderDescriptorSymbol) &&
+                if (!HasD2D1PixelShaderDescriptorInterface(typeSymbol, d2D1PixelShaderDescriptorSymbol) &&
                     !typeSymbol.HasAttributeWithType(d2DGeneratedPixelShaderDescriptorAttributeSymbol))
                 {
                     context.ReportDiagnostic(Diagnostic.Create(
@@ -57,5 +57,24 @@ public sealed class MissingPixelShaderDescriptorOnPixelShaderAnalyzer : Diagnost
                 }
             }, SymbolKind.NamedType);
         });
+    }
+
+    /// <summary>
+    /// Checks whether a given type implements the shader descriptor interface.
+    /// </summary>
+    /// <param name="typeSymbol">The type to check.</param>
+    /// <param name="d2D1PixelShaderDescriptorSymbol">The type symbol for <c>ID2D1PixelShaderDescriptor&lt;T&gt;</c>.</param>
+    /// <returns></returns>
+    private static bool HasD2D1PixelShaderDescriptorInterface(INamedTypeSymbol typeSymbol, INamedTypeSymbol d2D1PixelShaderDescriptorSymbol)
+    {
+        foreach (INamedTypeSymbol interfaceSymbol in typeSymbol.AllInterfaces)
+        {
+            if (SymbolEqualityComparer.Default.Equals(interfaceSymbol.ConstructedFrom, d2D1PixelShaderDescriptorSymbol))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
