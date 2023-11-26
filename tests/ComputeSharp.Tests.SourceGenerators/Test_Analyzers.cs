@@ -337,4 +337,58 @@ public class Test_Analyzers
 
         await CSharpAnalyzerWithLanguageVersionTest<InvalidGroupSharedFieldDeclarationAnalyzer>.VerifyAnalyzerAsync(source);
     }
+
+    [TestMethod]
+    public async Task InvalidGeneratedComputeShaderDescriptorAttributeTarget_NoInterface()
+    {
+        const string source = """
+            using ComputeSharp;
+
+            [{|CMPS0054:GeneratedComputeShaderDescriptor|}]
+            internal partial struct MyType
+            {
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<InvalidGeneratedComputeShaderDescriptorAttributeTargetAnalyzer>.VerifyAnalyzerAsync(source);
+    }
+
+    [TestMethod]
+    public async Task InvalidGeneratedComputeShaderDescriptorAttributeTarget_GenericType()
+    {
+        const string source = """
+            using ComputeSharp;
+
+            [{|CMPS0054:GeneratedComputeShaderDescriptor|}]
+            internal partial struct MyType<T> : IComputeShader
+            {
+                public void Execute()
+                {
+                }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<InvalidGeneratedComputeShaderDescriptorAttributeTargetAnalyzer>.VerifyAnalyzerAsync(source);
+    }
+
+    [TestMethod]
+    public async Task InvalidGeneratedComputeShaderDescriptorAttributeTarget_TypeNestedInsideGenericType()
+    {
+        const string source = """
+            using ComputeSharp;
+
+            internal partial class Foo<T>
+            {
+                [{|CMPS0054:GeneratedComputeShaderDescriptor|}]
+                internal partial struct MyType : IComputeShader
+                {
+                    public void Execute()
+                    {
+                    }
+                }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<InvalidGeneratedComputeShaderDescriptorAttributeTargetAnalyzer>.VerifyAnalyzerAsync(source);
+    }
 }

@@ -978,17 +978,17 @@ partial class DiagnosticDescriptors
     /// <summary>
     /// Gets a <see cref="DiagnosticDescriptor"/> for when the <c>[D2DGeneratedPixelShaderDescriptor]</c> attribute is being used on an invalid target type.
     /// <para>
-    /// Format: <c>"The type {0} is not a valid target for the [D2DGeneratedPixelShaderDescriptor] attribute (only types implementing the ID2D1PixelShader interface are valid)"</c>.
+    /// Format: <c>"The type {0} is not a valid target for the [D2DGeneratedPixelShaderDescriptor] attribute (only non generic types implementing the ID2D1PixelShader interface are valid)"</c>.
     /// </para>
     /// </summary>
     public static readonly DiagnosticDescriptor InvalidD2DGeneratedPixelShaderDescriptorAttributeTarget = new(
         id: "CMPSD2D0066",
         title: "Invalid [D2DGeneratedPixelShaderDescriptor] attribute target",
-        messageFormat: "The type {0} is not a valid target for the [D2DGeneratedPixelShaderDescriptor] attribute (only types implementing ID2D1PixelShader interface are valid)",
+        messageFormat: "The type {0} is not a valid target for the [D2DGeneratedPixelShaderDescriptor] attribute (only non generic types implementing ID2D1PixelShader interface are valid)",
         category: "ComputeSharp.D2D1.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
-        description: "The [D2DGeneratedPixelShaderDescriptor] attribute must be used on types that implement the ID2D1PixelShader interface.",
+        description: "The [D2DGeneratedPixelShaderDescriptor] attribute must be used on non generic types that implement the ID2D1PixelShader interface.",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 
     /// <summary>

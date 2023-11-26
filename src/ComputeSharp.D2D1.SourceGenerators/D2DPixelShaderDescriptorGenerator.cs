@@ -39,8 +39,9 @@ public sealed partial class D2DPixelShaderDescriptorGenerator : IIncrementalGene
                         return default;
                     }
 
-                    // If the type symbol doesn't have at least one interface, it can't possibly be a shader type
-                    if (context.TargetSymbol is not INamedTypeSymbol { AllInterfaces.Length: > 0 } typeSymbol)
+                    // If the type symbol doesn't have at least one interface, it can't possibly be a shader type.
+                    // Also check for generic types, just like with DX12 shaders (including nesting inside generics).
+                    if (context.TargetSymbol is not INamedTypeSymbol { AllInterfaces.Length: > 0, IsGenericType: false } typeSymbol)
                     {
                         return default;
                     }

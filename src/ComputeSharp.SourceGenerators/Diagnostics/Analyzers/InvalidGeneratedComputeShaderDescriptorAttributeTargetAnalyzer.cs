@@ -45,13 +45,14 @@ public sealed class InvalidGeneratedComputeShaderDescriptorAttributeTargetAnalyz
                     return;
                 }
 
-                // If the type doesn't implement IComputeShader nor IComputeShader<TPixel>, we can emit a diagnostic
-                if (!MissingComputeShaderDescriptorOnComputeShaderAnalyzer.IsComputeShaderType(typeSymbol, computeShaderSymbol, pixelShaderSymbol))
+                // If the type is generic or it doesn't implement IComputeShader nor IComputeShader<TPixel>, we emit a diagnostic
+                if (typeSymbol.IsGenericType ||
+                    !MissingComputeShaderDescriptorOnComputeShaderAnalyzer.IsComputeShaderType(typeSymbol, computeShaderSymbol, pixelShaderSymbol))
                 {
                     context.ReportDiagnostic(Diagnostic.Create(
-                    InvalidGeneratedComputeShaderDescriptorAttributeTarget,
-                    attribute.GetLocation(),
-                    typeSymbol));
+                        InvalidGeneratedComputeShaderDescriptorAttributeTarget,
+                        attribute.GetLocation(),
+                        typeSymbol));
                 }
             }, SymbolKind.NamedType);
         });
