@@ -38,9 +38,14 @@ public sealed class InvalidD2DGeneratedPixelShaderDescriptorAttributeTargetAnaly
                     return;
                 }
 
-                // Emit a diagnostic if the target type is using [D2DGeneratedPixelShaderDescriptor] but does not implement ID2D1PixelShader
-                if (typeSymbol.TryGetAttributeWithType(d2DGeneratedPixelShaderDescriptorAttributeSymbol, out AttributeData? attribute) &&
-                    !typeSymbol.HasInterfaceWithType(d2D1PixelShaderSymbol))
+                // If the type does not have [D2DGeneratedPixelShaderDescriptor], we can stop here
+                if (!typeSymbol.TryGetAttributeWithType(d2DGeneratedPixelShaderDescriptorAttributeSymbol, out AttributeData? attribute))
+                {
+                    return;
+                }
+
+                // Emit a diagnostic if the target type is generic or does not implement ID2D1PixelShader
+                if (typeSymbol.IsGenericType || !typeSymbol.HasInterfaceWithType(d2D1PixelShaderSymbol))
                 {
                     context.ReportDiagnostic(Diagnostic.Create(
                         InvalidD2DGeneratedPixelShaderDescriptorAttributeTarget,
