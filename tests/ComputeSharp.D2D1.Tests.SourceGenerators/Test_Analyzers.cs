@@ -138,4 +138,62 @@ public class Test_Analyzers
 
         await CSharpAnalyzerWithLanguageVersionTest<NotReadOnlyPixelShaderTypeWithFieldsAnalyzer>.VerifyAnalyzerAsync(source);
     }
+
+    [TestMethod]
+    public async Task InvalidD2DGeneratedPixelShaderDescriptorAttributeTarget_NoInterface()
+    {
+        const string source = """
+            using ComputeSharp.D2D1;
+
+            [{|CMPSD2D0066:D2DGeneratedPixelShaderDescriptor|}]
+            internal partial struct MyType
+            {
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<InvalidD2DGeneratedPixelShaderDescriptorAttributeTargetAnalyzer>.VerifyAnalyzerAsync(source);
+    }
+
+    [TestMethod]
+    public async Task InvalidD2DGeneratedPixelShaderDescriptorAttributeTarget_GenericType()
+    {
+        const string source = """
+            using ComputeSharp;
+            using ComputeSharp.D2D1;
+
+            [{|CMPSD2D0066:D2DGeneratedPixelShaderDescriptor|}]
+            internal partial struct MyType<T> : ID2D1PixelShader
+            {
+                public Float4 Execute()
+                {
+                    return 0;
+                }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<InvalidD2DGeneratedPixelShaderDescriptorAttributeTargetAnalyzer>.VerifyAnalyzerAsync(source);
+    }
+
+    [TestMethod]
+    public async Task InvalidD2DGeneratedPixelShaderDescriptorAttributeTarget_TypeNestedInsideGenericType()
+    {
+        const string source = """
+            using ComputeSharp;
+            using ComputeSharp.D2D1;
+
+            internal partial class Foo<T>
+            {
+                [{|CMPSD2D0066:D2DGeneratedPixelShaderDescriptor|}]
+                internal partial struct MyType : ID2D1PixelShader
+                {
+                    public Float4 Execute()
+                    {
+                        return 0;
+                    }
+                }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<InvalidD2DGeneratedPixelShaderDescriptorAttributeTargetAnalyzer>.VerifyAnalyzerAsync(source);
+    }
 }
