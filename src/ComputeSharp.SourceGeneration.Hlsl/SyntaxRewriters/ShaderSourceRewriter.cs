@@ -195,17 +195,32 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
     {
         ParameterSyntax updatedNode = (ParameterSyntax)base.VisitParameter(node)!;
 
+        // By default, parameters just have no modifier
+        SyntaxToken modifier = Token(SyntaxKind.None);
+
         // Convert the C# parameter modifiers to the HLSL equivalent
-        SyntaxToken modifier =
-            node.Modifiers
-            .Where(static m => m.Kind() is SyntaxKind.OutKeyword or SyntaxKind.RefKeyword or SyntaxKind.InKeyword)
-            .Select(static m => m.Kind() switch
+        for (int i = 0; i < node.Modifiers.Count; i++)
+        {
+            SyntaxToken currentModifier = node.Modifiers[i];
+
+            // We're only looking for in, ref, readonly, and out. The readonly modifier
+            // needs special handling, as it only makes sense right after a ref modifier.
+            switch (currentModifier.Kind())
             {
-                SyntaxKind.OutKeyword => m,
-                SyntaxKind.InKeyword => m,
-                SyntaxKind.RefKeyword => ParseToken("inout"),
-                _ => Token(SyntaxKind.None)
-            }).FirstOrDefault();
+                case SyntaxKind.InKeyword:
+                case SyntaxKind.OutKeyword:
+                    modifier = currentModifier;
+                    goto ExitLoop;
+                case SyntaxKind.RefKeyword when node.Modifiers.Count >= 2 && i < node.Modifiers.Count - 1 && node.Modifiers[i + 1].IsKind(SyntaxKind.ReadOnlyKeyword):
+                    modifier = Token(SyntaxKind.InKeyword);
+                    goto ExitLoop;
+                case SyntaxKind.RefKeyword:
+                    modifier = ParseToken("inout");
+                    goto ExitLoop;
+            }
+        }
+
+        ExitLoop:
 
         return updatedNode
             .WithAttributeLists(default)
