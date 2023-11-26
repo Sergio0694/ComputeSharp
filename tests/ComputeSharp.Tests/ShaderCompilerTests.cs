@@ -516,12 +516,12 @@ namespace ComputeSharp.Tests
         }
 
         [TestMethod]
-        public void PixelShaderWithScopedParameterInMethods()
+        public void ComputeShaderWithScopedParameterInMethods()
         {
-            _ = ReflectionServices.GetShaderInfo<PixelShaderWithScopedParameterInMethodsShader>();
+            _ = ReflectionServices.GetShaderInfo<ComputeShaderWithScopedParameterInMethodsShader>();
         }
 
-        internal static class HelpersForPixelShaderWithScopedParameterInMethods
+        internal static class HelpersForComputeShaderWithScopedParameterInMethods
         {
             public static void Baz(scoped in float a, scoped ref float b)
             {
@@ -532,7 +532,7 @@ namespace ComputeSharp.Tests
         [AutoConstructor]
         [ThreadGroupSize(DefaultThreadGroupSizes.X)]
         [GeneratedComputeShaderDescriptor]
-        internal readonly partial struct PixelShaderWithScopedParameterInMethodsShader : IComputeShader
+        internal readonly partial struct ComputeShaderWithScopedParameterInMethodsShader : IComputeShader
         {
             public readonly ReadWriteBuffer<float> buffer;
             public readonly float number;
@@ -554,7 +554,7 @@ namespace ComputeSharp.Tests
 
                 Foo(ref this.buffer[ThreadIds.X], ref x);
                 Bar(ref this.buffer[ThreadIds.X], ref x);
-                HelpersForPixelShaderWithScopedParameterInMethods.Baz(in this.buffer[ThreadIds.X], ref x);
+                HelpersForComputeShaderWithScopedParameterInMethods.Baz(in this.buffer[ThreadIds.X], ref x);
 
                 this.buffer[ThreadIds.X] *= x;
             }
@@ -611,7 +611,7 @@ namespace ComputeSharp.Tests
         [TestMethod]
         public void GloballyCoherentBuffers()
         {
-            ShaderInfo shaderInfo = ReflectionServices.GetShaderInfo<GloballyCoherentBufferShader>();
+            ShaderInfo info = ReflectionServices.GetShaderInfo<GloballyCoherentBufferShader>();
 
             Assert.AreEqual(
                 """
@@ -643,7 +643,7 @@ namespace ComputeSharp.Tests
                     }
                 }
                 """,
-                shaderInfo.HlslSource);
+                info.HlslSource);
         }
 
         [AutoConstructor]
@@ -657,6 +657,134 @@ namespace ComputeSharp.Tests
             public void Execute()
             {
                 Hlsl.InterlockedAdd(ref this.buffer[0], 1);
+            }
+        }
+
+        [TestMethod]
+        public void ComputeShaderWithRefReadonlyParameterInMethods()
+        {
+            _ = ReflectionServices.GetShaderInfo<ComputeShaderWithRefReadonlyParameterInMethodsShader>();
+        }
+
+        internal static class HelpersForCommputeShaderWithRefReadonlyParameterInMethods
+        {
+            public static float Baz(ref readonly float a, scoped ref readonly float b)
+            {
+                return a + b;
+            }
+        }
+
+        [AutoConstructor]
+        [ThreadGroupSize(DefaultThreadGroupSizes.X)]
+        [GeneratedComputeShaderDescriptor]
+        internal readonly partial struct ComputeShaderWithRefReadonlyParameterInMethodsShader : IComputeShader
+        {
+            public readonly ReadWriteBuffer<float> buffer;
+            public readonly float number;
+
+            private static float Foo(ref readonly float a, scoped ref readonly float b)
+            {
+                return a + b;
+            }
+
+            private float Bar(ref readonly float a, scoped ref readonly float b)
+            {
+                return a + b;
+            }
+
+            /// <inheritdoc/>
+            public void Execute()
+            {
+                float x = this.number + ThreadIds.X;
+
+                x += Foo(ref x, in x);
+                x += Foo(in this.number, in this.number);
+                x += Bar(ref x, in x);
+                x += HelpersForCommputeShaderWithRefReadonlyParameterInMethods.Baz(in this.buffer[ThreadIds.X], ref x);
+
+                this.buffer[ThreadIds.X] = x;
+            }
+        }
+
+        [TestMethod]
+        public void AllRefTypesShader_RewritesRefParametersCorrectly()
+        {
+            ShaderInfo info = ReflectionServices.GetShaderInfo<AllRefTypesShader>();
+
+            Assert.AreEqual(
+                """
+                // ================================================
+                //                  AUTO GENERATED
+                // ================================================
+                // This shader was created by ComputeSharp.
+                // See: https://github.com/Sergio0694/ComputeSharp.
+
+                #define __GroupSize__get_X 64
+                #define __GroupSize__get_Y 1
+                #define __GroupSize__get_Z 1
+
+                cbuffer _ : register(b0)
+                {
+                    uint __x;
+                    uint __y;
+                    uint __z;
+                }
+
+                RWStructuredBuffer<float> __reserved__buffer : register(u0);
+
+                static void Foo(in int a, in int b, inout int c, out int d);
+
+                static void Bar(in int a, in int b, inout int c, out int d);
+
+                static void Foo(in int a, in int b, inout int c, out int d)
+                {
+                    d = 0;
+                }
+
+                static void Bar(in int a, in int b, inout int c, out int d)
+                {
+                    d = 0;
+                }
+
+                [NumThreads(__GroupSize__get_X, __GroupSize__get_Y, __GroupSize__get_Z)]
+                void Execute(uint3 ThreadIds : SV_DispatchThreadID)
+                {
+                    if (ThreadIds.x < __x && ThreadIds.y < __y && ThreadIds.z < __z)
+                    {
+                    }
+                }
+                """,
+                info.HlslSource);
+        }
+
+        [AutoConstructor]
+        [ThreadGroupSize(DefaultThreadGroupSizes.X)]
+        [GeneratedComputeShaderDescriptor]
+        internal readonly partial struct AllRefTypesShader : IComputeShader
+        {
+            public readonly ReadWriteBuffer<float> buffer;
+
+            public static void Foo(
+                in int a,
+                ref readonly int b,
+                ref int c,
+                out int d)
+            {
+                d = 0;
+            }
+
+            public static void Bar(
+                scoped in int a,
+                scoped ref readonly int b,
+                scoped ref int c,
+                scoped out int d)
+            {
+                d = 0;
+            }
+
+            /// <inheritdoc/>
+            public void Execute()
+            {
             }
         }
     }
