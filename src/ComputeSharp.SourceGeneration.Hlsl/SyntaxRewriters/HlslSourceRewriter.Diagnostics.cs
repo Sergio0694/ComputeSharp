@@ -11,11 +11,17 @@ partial class HlslSourceRewriter
     /// <inheritdoc/>
     public override SyntaxNode? VisitAnonymousObjectCreationExpression(AnonymousObjectCreationExpressionSyntax node)
     {
-        AnonymousObjectCreationExpressionSyntax updatedNode = (AnonymousObjectCreationExpressionSyntax)base.VisitAnonymousObjectCreationExpression(node)!;
-
         Diagnostics.Add(AnonymousObjectCreationExpression, node);
 
-        return updatedNode;
+        return base.VisitAnonymousObjectCreationExpression(node);
+    }
+
+    /// <inheritdoc/>
+    public override SyntaxNode? VisitInitializerExpression(InitializerExpressionSyntax node)
+    {
+        Diagnostics.Add(InitializerExpression, node);
+
+        return base.VisitInitializerExpression(node);
     }
 
     /// <inheritdoc/>

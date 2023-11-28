@@ -124,8 +124,11 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
             Diagnostics.Add(InvalidObjectCreationExpression, node, type);
         }
 
-        // Mutate the syntax like with explicit object creation expressions
-        if (updatedNode.ArgumentList!.Arguments.Count == 0)
+        // Mutate the syntax like with explicit object creation expressions. This also handles object
+        // initializer expressions. If those are used, the HLSL will just contain a default expression.
+        // There is a diagnostic being emitted to inform the users if that path is hit. If users want
+        // to create an object and immediately set some values, they should use a factory method.
+        if (updatedNode is not { ArgumentList.Arguments.Count: > 0, Initializer: null })
         {
             return CastExpression(targetType, LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(0)));
         }

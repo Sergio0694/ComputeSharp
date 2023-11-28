@@ -1054,4 +1054,17 @@ partial class DiagnosticDescriptors
         isEnabledByDefault: true,
         description: "Shader types should be readonly (shaders cannot mutate their instance state while running, so shader types not being readonly makes them error prone).",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+    /// <summary>
+    /// Gets a <see cref="DiagnosticDescriptor"/> for an initializer expression.
+    /// </summary>
+    public static readonly DiagnosticDescriptor InitializerExpression = new(
+        id: "CMPSD2D0071",
+        title: "Initializer expression",
+        messageFormat: "An initializer expression cannot be used in a pixel shader",
+        category: "ComputeSharp.D2D1.Shaders",
+        defaultSeverity: DiagnosticSeverity.Error,
+        isEnabledByDefault: true,
+        description: "An initializer expression cannot be used in a pixel shader.",
+        helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 }

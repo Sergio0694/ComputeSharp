@@ -830,4 +830,17 @@ partial class DiagnosticDescriptors
         isEnabledByDefault: true,
         description: "The [GloballyCoherent] attribute is only valid on ReadWriteBuffer<T> instance fields in compute shader types.",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+    /// <summary>
+    /// Gets a <see cref="DiagnosticDescriptor"/> for an initializer expression.
+    /// </summary>
+    public static readonly DiagnosticDescriptor InitializerExpression = new(
+        id: "CMPS0059",
+        title: "Initializer expression",
+        messageFormat: "An initializer expression cannot be used in a compute shader",
+        category: "ComputeSharp.Shaders",
+        defaultSeverity: DiagnosticSeverity.Error,
+        isEnabledByDefault: true,
+        description: "An initializer expression cannot be used in a compute shader.",
+        helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 }
