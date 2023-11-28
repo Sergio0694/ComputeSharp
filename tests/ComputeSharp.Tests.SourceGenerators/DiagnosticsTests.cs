@@ -1344,6 +1344,79 @@ public class DiagnosticsTests
         VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0047", "CMPS0050");
     }
 
+    [TestMethod]
+    public void InitializerExpression_ObjectCreation()
+    {
+        const string source = """
+            using ComputeSharp;
+
+            internal struct StructType
+            {
+                public float Field;
+            }
+            
+            [GeneratedComputeShaderDescriptor]
+            public partial struct MyShader : IComputeShader
+            {
+                public ReadWriteBuffer<StructType> buffer;
+
+                public void Execute()
+                {
+                    buffer[0] = new StructType { Age = 12 };
+                }
+            }
+            """;
+
+        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0047", "CMPS0059");
+    }
+
+    [TestMethod]
+    public void InitializerExpression_ImplicitObjectCreation()
+    {
+        const string source = """
+            using ComputeSharp;
+
+            internal struct StructType
+            {
+                public float Field;
+            }
+            
+            [GeneratedComputeShaderDescriptor]
+            public partial struct MyShader : IComputeShader
+            {
+                public ReadWriteBuffer<StructType> buffer;
+
+                public void Execute()
+                {
+                    buffer[0] = new() { Age = 12 };
+                }
+            }
+            """;
+
+        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0047", "CMPS0059");
+    }
+
+    [TestMethod]
+    public void InitializerExpression_CollectionInitializer()
+    {
+        const string source = """
+            using ComputeSharp;
+            
+            [GeneratedComputeShaderDescriptor]
+            public partial struct MyShader : IComputeShader
+            {
+                public ReadWriteBuffer<int> buffer;
+
+                public void Execute()
+                {
+                    int[] numbers = { 1, 2, 3, 4 };
+                }
+            }
+            """;
+
+        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0031", "CMPS0047", "CMPS0059");
+    }
+
     /// <summary>
     /// Verifies the output of a source generator.
     /// </summary>
