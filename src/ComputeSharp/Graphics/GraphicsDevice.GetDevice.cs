@@ -49,8 +49,16 @@ partial class GraphicsDevice
     /// </summary>
     /// <returns>A sequence of <see cref="GraphicsDevice"/> instances.</returns>
     /// <remarks>
+    /// <para>
     /// Creating a device is a relatively expensive operation, so consider using <see cref="QueryDevices"/> to be
     /// able to filter the existing adapters before creating a device from them, to reduce the system overhead.
+    /// </para>
+    /// <para>
+    /// This method might enumerate discrete graphics devices multiple times (with different <see cref="Luid"/> values) when using
+    /// <see href="https://learn.microsoft.com/en-us/troubleshoot/windows-server/remote/understanding-remote-desktop-protocol">RDP</see>
+    /// to connect to a different Windows machine. This is the expected behavior and matches what the underlying DirectX APIs report
+    /// when enumerating graphics adaptors in this specific scenario.
+    /// </para>
     /// </remarks>
     public static IEnumerable<GraphicsDevice> EnumerateDevices()
     {
@@ -63,10 +71,18 @@ partial class GraphicsDevice
     /// <param name="predicate">The predicate to use to select the devices to create.</param>
     /// <returns>A sequence of <see cref="GraphicsDevice"/> instances matching <paramref name="predicate"/>.</returns>
     /// <remarks>
+    /// <para>
     /// Note that only devices matching the minimum necessary feature level will actually be instantiated and returned.
     /// This means that <paramref name="predicate"/> might not actually be used to match against all existing adapters on
     /// the current system, if any of them doesn't meet the minimum criteria, and that additional filtering might be done
     /// after the input predicate is invoked, so a match doesn't necessarily guarantee that that device will be returned.
+    /// </para>
+    /// <para>
+    /// Just like <see cref="EnumerateDevices"/>, this method might enumerate discrete graphics devices multiple times when using
+    /// <see href="https://learn.microsoft.com/en-us/troubleshoot/windows-server/remote/understanding-remote-desktop-protocol">RDP</see>
+    /// to connect to a different Windows machine. This is the expected behavior and matches what the underlying DirectX APIs report
+    /// when enumerating graphics adaptors in this specific scenario.
+    /// </para>
     /// </remarks>
     public static IEnumerable<GraphicsDevice> QueryDevices(Predicate<GraphicsDeviceInfo> predicate)
     {
