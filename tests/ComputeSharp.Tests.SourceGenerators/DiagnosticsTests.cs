@@ -1345,7 +1345,7 @@ public class DiagnosticsTests
     }
 
     [TestMethod]
-    public void InitializerExpression_ObjectCreation()
+    public void InvalidInitializerExpression_ObjectCreation()
     {
         const string source = """
             using ComputeSharp;
@@ -1371,7 +1371,7 @@ public class DiagnosticsTests
     }
 
     [TestMethod]
-    public void InitializerExpression_ImplicitObjectCreation()
+    public void InvalidInitializerExpression_ImplicitObjectCreation()
     {
         const string source = """
             using ComputeSharp;
@@ -1397,7 +1397,7 @@ public class DiagnosticsTests
     }
 
     [TestMethod]
-    public void InitializerExpression_CollectionInitializer()
+    public void InvalidInitializerExpression_CollectionInitializer()
     {
         const string source = """
             using ComputeSharp;
@@ -1415,6 +1415,27 @@ public class DiagnosticsTests
             """;
 
         VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0031", "CMPS0047", "CMPS0059");
+    }
+
+    [TestMethod]
+    public void InvalidCollectionExpression()
+    {
+        const string source = """
+            using ComputeSharp;
+            
+            [GeneratedComputeShaderDescriptor]
+            public partial struct MyShader : IComputeShader
+            {
+                public ReadWriteBuffer<int> buffer;
+
+                public void Execute()
+                {
+                    int[] numbers = [1, 2, 3, 4];
+                }
+            }
+            """;
+
+        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0031", "CMPS0047", "CMPS0060");
     }
 
     /// <summary>

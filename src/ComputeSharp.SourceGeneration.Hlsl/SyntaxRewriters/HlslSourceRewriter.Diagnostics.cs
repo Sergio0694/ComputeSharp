@@ -25,6 +25,14 @@ partial class HlslSourceRewriter
     }
 
     /// <inheritdoc/>
+    public override SyntaxNode? VisitCollectionExpression(CollectionExpressionSyntax node)
+    {
+        Diagnostics.Add(CollectionExpression, node);
+
+        return base.VisitCollectionExpression(node);
+    }
+
+    /// <inheritdoc/>
     public override SyntaxNode? VisitAwaitExpression(AwaitExpressionSyntax node)
     {
         Diagnostics.Add(AwaitExpression, node);

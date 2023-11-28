@@ -1067,4 +1067,17 @@ partial class DiagnosticDescriptors
         isEnabledByDefault: true,
         description: "An initializer expression cannot be used in a pixel shader.",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+    /// <summary>
+    /// Gets a <see cref="DiagnosticDescriptor"/> for a collection expression.
+    /// </summary>
+    public static readonly DiagnosticDescriptor CollectionExpression = new(
+        id: "CMPSD2D0072",
+        title: "Collection expression",
+        messageFormat: "A collection expression cannot be used in a pixel shader",
+        category: "ComputeSharp.D2D1.Shaders",
+        defaultSeverity: DiagnosticSeverity.Error,
+        isEnabledByDefault: true,
+        description: "A collection expression cannot be used in a pixel shader.",
+        helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 }

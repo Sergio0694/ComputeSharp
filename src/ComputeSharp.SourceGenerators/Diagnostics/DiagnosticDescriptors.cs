@@ -843,4 +843,17 @@ partial class DiagnosticDescriptors
         isEnabledByDefault: true,
         description: "An initializer expression cannot be used in a compute shader.",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+    /// <summary>
+    /// Gets a <see cref="DiagnosticDescriptor"/> for a collection expression.
+    /// </summary>
+    public static readonly DiagnosticDescriptor CollectionExpression = new(
+        id: "CMPS0060",
+        title: "Collection expression",
+        messageFormat: "A collection expression cannot be used in a compute shader",
+        category: "ComputeSharp.Shaders",
+        defaultSeverity: DiagnosticSeverity.Error,
+        isEnabledByDefault: true,
+        description: "A collection expression cannot be used in a compute shader.",
+        helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 }
