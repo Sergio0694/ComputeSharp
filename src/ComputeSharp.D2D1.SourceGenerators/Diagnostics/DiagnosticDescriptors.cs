@@ -13,33 +13,33 @@ partial class DiagnosticDescriptors
     /// <summary>
     /// Gets a <see cref="DiagnosticDescriptor"/> for an invalid shader field.
     /// <para>
-    /// Format: <c>"The compute shader of type {0} contains a field "{1}" of an invalid type {2}"</c>.
+    /// Format: <c>"The pixel shader of type {0} contains a field "{1}" of an invalid type {2}"</c>.
     /// </para>
     /// </summary>
     public static readonly DiagnosticDescriptor InvalidShaderField = new(
         id: "CMPSD2D0001",
         title: "Invalid shader field",
-        messageFormat: """The compute shader of type {0} contains a field "{1}" of an invalid type {2}""",
+        messageFormat: """The pixel shader of type {0} contains a field "{1}" of an invalid type {2}""",
         category: "ComputeSharp.D2D1.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
-        description: "A type representing a compute shader contains a field of a type that is not supported in HLSL.",
+        description: "A type representing a pixel shader contains a field of a type that is not supported in HLSL.",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 
     /// <summary>
     /// Gets a <see cref="DiagnosticDescriptor"/> for an invalid object creation expression.
     /// <para>
-    /// Format: <c>"The type {0} cannot be created in a compute shader"</c>.
+    /// Format: <c>"The type {0} cannot be created in a pixel shader"</c>.
     /// </para>
     /// </summary>
     public static readonly DiagnosticDescriptor InvalidObjectCreationExpression = new(
         id: "CMPSD2D0002",
         title: "Invalid object creation expression",
-        messageFormat: "The type {0} cannot be created in a compute shader (only unmanaged types are supported)",
+        messageFormat: "The type {0} cannot be created in a pixel shader (only unmanaged types are supported)",
         category: "ComputeSharp.D2D1.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
-        description: "Only unmanaged value type objects can be created in a compute shader.",
+        description: "Only unmanaged value type objects can be created in a pixel shader.",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 
     /// <summary>
@@ -48,11 +48,11 @@ partial class DiagnosticDescriptors
     public static readonly DiagnosticDescriptor AnonymousObjectCreationExpression = new(
         id: "CMPSD2D0003",
         title: "Anonymous object creation expression",
-        messageFormat: "An anonymous object cannot be created in a compute shader",
+        messageFormat: "An anonymous object cannot be created in a pixel shader",
         category: "ComputeSharp.D2D1.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
-        description: "An anonymous object cannot be created in a compute shader.",
+        description: "An anonymous object cannot be created in a pixel shader.",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 
     /// <summary>
@@ -61,11 +61,11 @@ partial class DiagnosticDescriptors
     public static readonly DiagnosticDescriptor AsyncModifierOnMethodOrFunction = new(
         id: "CMPSD2D0004",
         title: "Async modifier on method or function",
-        messageFormat: "The async modifier cannot be used in methods or functions used in a compute shader",
+        messageFormat: "The async modifier cannot be used in methods or functions used in a pixel shader",
         category: "ComputeSharp.D2D1.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
-        description: "The async modifier cannot be used in methods or functions used in a compute shader.",
+        description: "The async modifier cannot be used in methods or functions used in a pixel shader.",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 
     /// <summary>
@@ -74,11 +74,11 @@ partial class DiagnosticDescriptors
     public static readonly DiagnosticDescriptor AwaitExpression = new(
         id: "CMPSD2D0005",
         title: "Await expression",
-        messageFormat: "The await expression cannot be used in a compute shader",
+        messageFormat: "The await expression cannot be used in a pixel shader",
         category: "ComputeSharp.D2D1.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
-        description: "The await expression cannot be used in a compute shader.",
+        description: "The await expression cannot be used in a pixel shader.",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 
     /// <summary>
@@ -87,11 +87,11 @@ partial class DiagnosticDescriptors
     public static readonly DiagnosticDescriptor CheckedExpression = new(
         id: "CMPSD2D0006",
         title: "Checked expression",
-        messageFormat: "A checked expression cannot be used in a compute shader",
+        messageFormat: "A checked expression cannot be used in a pixel shader",
         category: "ComputeSharp.D2D1.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
-        description: "A checked expression cannot be used in a compute shader.",
+        description: "A checked expression cannot be used in a pixel shader.",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 
     /// <summary>
@@ -100,11 +100,11 @@ partial class DiagnosticDescriptors
     public static readonly DiagnosticDescriptor CheckedStatement = new(
         id: "CMPSD2D0007",
         title: "Checked statement",
-        messageFormat: "A checked statement cannot be used in a compute shader",
+        messageFormat: "A checked statement cannot be used in a pixel shader",
         category: "ComputeSharp.D2D1.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
-        description: "A checked statement cannot be used in a compute shader.",
+        description: "A checked statement cannot be used in a pixel shader.",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 
     /// <summary>
@@ -113,11 +113,11 @@ partial class DiagnosticDescriptors
     public static readonly DiagnosticDescriptor FixedStatement = new(
         id: "CMPSD2D0008",
         title: "Fixed statement",
-        messageFormat: "A fixed statement cannot be used in a compute shader",
+        messageFormat: "A fixed statement cannot be used in a pixel shader",
         category: "ComputeSharp.D2D1.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
-        description: "A fixed statement cannot be used in a compute shader.",
+        description: "A fixed statement cannot be used in a pixel shader.",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 
     /// <summary>
@@ -126,11 +126,11 @@ partial class DiagnosticDescriptors
     public static readonly DiagnosticDescriptor ForEachStatement = new(
         id: "CMPSD2D0009",
         title: "Foreach statement",
-        messageFormat: "A foreach statement cannot be used in a compute shader",
+        messageFormat: "A foreach statement cannot be used in a pixel shader",
         category: "ComputeSharp.D2D1.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
-        description: "A foreach statement cannot be used in a compute shader.",
+        description: "A foreach statement cannot be used in a pixel shader.",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 
     /// <summary>
@@ -139,11 +139,11 @@ partial class DiagnosticDescriptors
     public static readonly DiagnosticDescriptor LockStatement = new(
         id: "CMPSD2D0010",
         title: "Foreach statement",
-        messageFormat: "A lock statement cannot be used in a compute shader",
+        messageFormat: "A lock statement cannot be used in a pixel shader",
         category: "ComputeSharp.D2D1.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
-        description: "A lock statement cannot be used in a compute shader.",
+        description: "A lock statement cannot be used in a pixel shader.",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 
     /// <summary>
@@ -152,11 +152,11 @@ partial class DiagnosticDescriptors
     public static readonly DiagnosticDescriptor QueryExpression = new(
         id: "CMPSD2D0011",
         title: "Foreach statement",
-        messageFormat: "A LINQ query expression cannot be used in a compute shader",
+        messageFormat: "A LINQ query expression cannot be used in a pixel shader",
         category: "ComputeSharp.D2D1.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
-        description: "A LINQ query expression cannot be used in a compute shader.",
+        description: "A LINQ query expression cannot be used in a pixel shader.",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 
     /// <summary>
@@ -165,11 +165,11 @@ partial class DiagnosticDescriptors
     public static readonly DiagnosticDescriptor RangeExpression = new(
         id: "CMPSD2D0012",
         title: "Range expression",
-        messageFormat: "A range expression cannot be used in a compute shader",
+        messageFormat: "A range expression cannot be used in a pixel shader",
         category: "ComputeSharp.D2D1.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
-        description: "A range expression cannot be used in a compute shader.",
+        description: "A range expression cannot be used in a pixel shader.",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 
     /// <summary>
@@ -178,11 +178,11 @@ partial class DiagnosticDescriptors
     public static readonly DiagnosticDescriptor RecursivePattern = new(
         id: "CMPSD2D0013",
         title: "Recursive pattern",
-        messageFormat: "A recursive pattern cannot be used in a compute shader",
+        messageFormat: "A recursive pattern cannot be used in a pixel shader",
         category: "ComputeSharp.D2D1.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
-        description: "A recursive pattern cannot be used in a compute shader.",
+        description: "A recursive pattern cannot be used in a pixel shader.",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 
     /// <summary>
@@ -191,11 +191,11 @@ partial class DiagnosticDescriptors
     public static readonly DiagnosticDescriptor RefType = new(
         id: "CMPSD2D0014",
         title: "Ref type",
-        messageFormat: "A compute shader cannot have a ref type declaration",
+        messageFormat: "A pixel shader cannot have a ref type declaration",
         category: "ComputeSharp.D2D1.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
-        description: "A compute shader cannot have a ref type declaration.",
+        description: "A pixel shader cannot have a ref type declaration.",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 
     /// <summary>
@@ -204,11 +204,11 @@ partial class DiagnosticDescriptors
     public static readonly DiagnosticDescriptor RelationalPattern = new(
         id: "CMPSD2D0015",
         title: "Relational pattern",
-        messageFormat: "A relational pattern cannot be used in a compute shader",
+        messageFormat: "A relational pattern cannot be used in a pixel shader",
         category: "ComputeSharp.D2D1.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
-        description: "A relational pattern cannot be used in a compute shader.",
+        description: "A relational pattern cannot be used in a pixel shader.",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 
     /// <summary>
@@ -217,11 +217,11 @@ partial class DiagnosticDescriptors
     public static readonly DiagnosticDescriptor SizeOfExpression = new(
         id: "CMPSD2D0016",
         title: "Sizeof expression",
-        messageFormat: "A sizeof expression cannot be used in a compute shader",
+        messageFormat: "A sizeof expression cannot be used in a pixel shader",
         category: "ComputeSharp.D2D1.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
-        description: "A sizeof expression cannot be used in a compute shader.",
+        description: "A sizeof expression cannot be used in a pixel shader.",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 
     /// <summary>
@@ -230,11 +230,11 @@ partial class DiagnosticDescriptors
     public static readonly DiagnosticDescriptor StackAllocArrayCreationExpression = new(
         id: "CMPSD2D0017",
         title: "Stackalloc expression",
-        messageFormat: "A stackalloc expression cannot be used in a compute shader",
+        messageFormat: "A stackalloc expression cannot be used in a pixel shader",
         category: "ComputeSharp.D2D1.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
-        description: "A stackalloc expression cannot be used in a compute shader.",
+        description: "A stackalloc expression cannot be used in a pixel shader.",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 
     /// <summary>
@@ -243,11 +243,11 @@ partial class DiagnosticDescriptors
     public static readonly DiagnosticDescriptor ThrowExpressionOrStatement = new(
         id: "CMPSD2D0018",
         title: "Throw expression or statement",
-        messageFormat: "Throw expressions and statements cannot be used in a compute shader",
+        messageFormat: "Throw expressions and statements cannot be used in a pixel shader",
         category: "ComputeSharp.D2D1.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
-        description: "Throw expressions and statements cannot be used in a compute shader.",
+        description: "Throw expressions and statements cannot be used in a pixel shader.",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 
     /// <summary>
@@ -256,11 +256,11 @@ partial class DiagnosticDescriptors
     public static readonly DiagnosticDescriptor TryStatement = new(
         id: "CMPSD2D0019",
         title: "Try statement",
-        messageFormat: "A try statement cannot be used in a compute shader",
+        messageFormat: "A try statement cannot be used in a pixel shader",
         category: "ComputeSharp.D2D1.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
-        description: "A try statement cannot be used in a compute shader.",
+        description: "A try statement cannot be used in a pixel shader.",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 
     /// <summary>
@@ -269,11 +269,11 @@ partial class DiagnosticDescriptors
     public static readonly DiagnosticDescriptor TupleType = new(
         id: "CMPSD2D0020",
         title: "Tuple type",
-        messageFormat: "A compute shader cannot have a tuple type declaration",
+        messageFormat: "A pixel shader cannot have a tuple type declaration",
         category: "ComputeSharp.D2D1.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
-        description: "A compute shader cannot have a tuple type declaration.",
+        description: "A pixel shader cannot have a tuple type declaration.",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 
     /// <summary>
@@ -282,11 +282,11 @@ partial class DiagnosticDescriptors
     public static readonly DiagnosticDescriptor UsingStatementOrDeclaration = new(
         id: "CMPSD2D0021",
         title: "Using statement or declaration",
-        messageFormat: "Using statements and declarations cannot be used in a compute shader",
+        messageFormat: "Using statements and declarations cannot be used in a pixel shader",
         category: "ComputeSharp.D2D1.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
-        description: "Using statements and declarations cannot be used in a compute shader.",
+        description: "Using statements and declarations cannot be used in a pixel shader.",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 
     /// <summary>
@@ -295,27 +295,27 @@ partial class DiagnosticDescriptors
     public static readonly DiagnosticDescriptor YieldStatement = new(
         id: "CMPSD2D0022",
         title: "Yield statement",
-        messageFormat: "A yield statement cannot be used in a compute shader",
+        messageFormat: "A yield statement cannot be used in a pixel shader",
         category: "ComputeSharp.D2D1.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
-        description: "A yield statement cannot be used in a compute shader.",
+        description: "A yield statement cannot be used in a pixel shader.",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 
     /// <summary>
     /// Gets a <see cref="DiagnosticDescriptor"/> for an invalid object declaration.
     /// <para>
-    /// Format: <c>"A variable of type {0} cannot be declared in a compute shader"</c>.
+    /// Format: <c>"A variable of type {0} cannot be declared in a pixel shader"</c>.
     /// </para>
     /// </summary>
     public static readonly DiagnosticDescriptor InvalidObjectDeclaration = new(
         id: "CMPSD2D0023",
         title: "Invalid object declaration",
-        messageFormat: "A variable of type {0} cannot be declared in a compute shader (only unmanaged types are supported)",
+        messageFormat: "A variable of type {0} cannot be declared in a pixel shader (only unmanaged types are supported)",
         category: "ComputeSharp.D2D1.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
-        description: "Only unmanaged value type objects can be declared in a compute shader.",
+        description: "Only unmanaged value type objects can be declared in a pixel shader.",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 
     /// <summary>
@@ -324,11 +324,11 @@ partial class DiagnosticDescriptors
     public static readonly DiagnosticDescriptor PointerType = new(
         id: "CMPSD2D0024",
         title: "Pointer type",
-        messageFormat: "A compute shader cannot have a pointer type declaration",
+        messageFormat: "A pixel shader cannot have a pointer type declaration",
         category: "ComputeSharp.D2D1.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
-        description: "A compute shader cannot have a pointer type declaration.",
+        description: "A pixel shader cannot have a pointer type declaration.",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 
     /// <summary>
@@ -337,11 +337,11 @@ partial class DiagnosticDescriptors
     public static readonly DiagnosticDescriptor FunctionPointer = new(
         id: "CMPSD2D0025",
         title: "Function pointer type",
-        messageFormat: "A compute shader cannot have a function pointer type declaration",
+        messageFormat: "A pixel shader cannot have a function pointer type declaration",
         category: "ComputeSharp.D2D1.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
-        description: "A compute shader cannot have a function pointer type declaration.",
+        description: "A pixel shader cannot have a function pointer type declaration.",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 
     /// <summary>
@@ -350,11 +350,11 @@ partial class DiagnosticDescriptors
     public static readonly DiagnosticDescriptor UnsafeStatement = new(
         id: "CMPSD2D0026",
         title: "Unsafe statement",
-        messageFormat: "A compute shader cannot have an unsafe statement",
+        messageFormat: "A pixel shader cannot have an unsafe statement",
         category: "ComputeSharp.D2D1.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
-        description: "A compute shader cannot have an unsafe statement.",
+        description: "A pixel shader cannot have an unsafe statement.",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 
     /// <summary>
@@ -363,11 +363,11 @@ partial class DiagnosticDescriptors
     public static readonly DiagnosticDescriptor UnsafeModifierOnMethodOrFunction = new(
         id: "CMPSD2D0027",
         title: "Unsafe modifier on method or function",
-        messageFormat: "The unsafe modifier cannot be used in methods or functions used in a compute shader",
+        messageFormat: "The unsafe modifier cannot be used in methods or functions used in a pixel shader",
         category: "ComputeSharp.D2D1.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
-        description: "The unsafe modifier cannot be used in methods or functions used in a compute shader.",
+        description: "The unsafe modifier cannot be used in methods or functions used in a pixel shader.",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 
     /// <summary>
@@ -376,11 +376,11 @@ partial class DiagnosticDescriptors
     public static readonly DiagnosticDescriptor StringLiteralExpression = new(
         id: "CMPSD2D0028",
         title: "String literal expression",
-        messageFormat: "String literal expressions cannot be used in a compute shader",
+        messageFormat: "String literal expressions cannot be used in a pixel shader",
         category: "ComputeSharp.D2D1.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
-        description: "String literal expressions cannot be used in a compute shader.",
+        description: "String literal expressions cannot be used in a pixel shader.",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 
     /// <summary>
@@ -399,17 +399,17 @@ partial class DiagnosticDescriptors
     /// <summary>
     /// Gets a <see cref="DiagnosticDescriptor"/> for an invalid shader static readonly field type.
     /// <para>
-    /// Format: <c>"The compute shader of type {0} contains a static readonly field "{1}" of an invalid type {2} (only primitive, vector and matrix types are supported)"</c>.
+    /// Format: <c>"The pixel shader of type {0} contains a static readonly field "{1}" of an invalid type {2} (only primitive, vector and matrix types are supported)"</c>.
     /// </para>
     /// </summary>
     public static readonly DiagnosticDescriptor InvalidShaderStaticFieldType = new(
         id: "CMPSD2D0030",
         title: "Invalid shader static readonly field type",
-        messageFormat: """The compute shader of type {0} contains a static readonly field "{1}" of an invalid type {2} (only primitive, vector and matrix types are supported)""",
+        messageFormat: """The pixel shader of type {0} contains a static readonly field "{1}" of an invalid type {2} (only primitive, vector and matrix types are supported)""",
         category: "ComputeSharp.D2D1.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
-        description: "A type representing a compute shader contains a static readonly field of a type that is not supported.",
+        description: "A type representing a pixel shader contains a static readonly field of a type that is not supported.",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 
     /// <summary>
@@ -1053,5 +1053,31 @@ partial class DiagnosticDescriptors
         defaultSeverity: DiagnosticSeverity.Warning,
         isEnabledByDefault: true,
         description: "Shader types should be readonly (shaders cannot mutate their instance state while running, so shader types not being readonly makes them error prone).",
+        helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+    /// <summary>
+    /// Gets a <see cref="DiagnosticDescriptor"/> for an initializer expression.
+    /// </summary>
+    public static readonly DiagnosticDescriptor InitializerExpression = new(
+        id: "CMPSD2D0071",
+        title: "Initializer expression",
+        messageFormat: "An initializer expression cannot be used in a pixel shader",
+        category: "ComputeSharp.D2D1.Shaders",
+        defaultSeverity: DiagnosticSeverity.Error,
+        isEnabledByDefault: true,
+        description: "An initializer expression cannot be used in a pixel shader.",
+        helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+    /// <summary>
+    /// Gets a <see cref="DiagnosticDescriptor"/> for a collection expression.
+    /// </summary>
+    public static readonly DiagnosticDescriptor CollectionExpression = new(
+        id: "CMPSD2D0072",
+        title: "Collection expression",
+        messageFormat: "A collection expression cannot be used in a pixel shader",
+        category: "ComputeSharp.D2D1.Shaders",
+        defaultSeverity: DiagnosticSeverity.Error,
+        isEnabledByDefault: true,
+        description: "A collection expression cannot be used in a pixel shader.",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 }
