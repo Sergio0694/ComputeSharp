@@ -78,6 +78,7 @@ internal static class SyntaxNodeExtensions
         {
             RefTypeSyntax refType => semanticModel.GetTypeInfo(refType.Type).Type!,
             PointerTypeSyntax pointerType => semanticModel.GetTypeInfo(pointerType.ElementType).Type!,
+            ArrayTypeSyntax arrayType => semanticModel.GetTypeInfo(arrayType.ElementType).Type!,
             _ => semanticModel.GetTypeInfo(sourceType).Type!
         };
 
