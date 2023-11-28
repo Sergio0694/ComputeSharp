@@ -1344,6 +1344,7 @@ public class DiagnosticsTests
         VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0047", "CMPS0050");
     }
 
+    // See https://github.com/Sergio0694/ComputeSharp/issues/690
     [TestMethod]
     public void InvalidInitializerExpression_ObjectCreation()
     {
