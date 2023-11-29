@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Threading;
 using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Helpers;
 using ComputeSharp.SourceGeneration.Mappings;
@@ -28,20 +29,20 @@ partial class D2DPixelShaderDescriptorGenerator
         /// </summary>
         /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
         /// <param name="compilation">The input <see cref="Compilation"/> object currently in use.</param>
-        /// <param name="structDeclaration">The <see cref="StructDeclarationSyntax"/> node to process.</param>
-        /// <param name="structDeclarationSymbol">The <see cref="INamedTypeSymbol"/> for <paramref name="structDeclaration"/>.</param>
+        /// <param name="structDeclarationSymbol">The <see cref="INamedTypeSymbol"/> for the shader type.</param>
         /// <param name="inputCount">The number of inputs for the shader.</param>
         /// <param name="inputSimpleIndices">The indicess of the simple shader inputs.</param>
         /// <param name="inputComplexIndices">The indicess of the complex shader inputs.</param>
+        /// <param name="token">The <see cref="CancellationToken"/> used to cancel the operation, if needed.</param>
         /// <returns>The HLSL source for the shader.</returns>
         public static string GetHlslSource(
             ImmutableArrayBuilder<DiagnosticInfo> diagnostics,
             Compilation compilation,
-            StructDeclarationSyntax structDeclaration,
             INamedTypeSymbol structDeclarationSymbol,
             int inputCount,
             ImmutableArray<int> inputSimpleIndices,
-            ImmutableArray<int> inputComplexIndices)
+            ImmutableArray<int> inputComplexIndices,
+            CancellationToken token)
         {
             // Detect any invalid properties
             HlslDefinitionsSyntaxProcessor.DetectAndReportInvalidPropertyDeclarations(diagnostics, structDeclarationSymbol);
@@ -52,6 +53,8 @@ partial class D2DPixelShaderDescriptorGenerator
             Dictionary<IMethodSymbol, MethodDeclarationSyntax> instanceMethods = new(SymbolEqualityComparer.Default);
             Dictionary<IFieldSymbol, string> constantDefinitions = new(SymbolEqualityComparer.Default);
 
+            token.ThrowIfCancellationRequested();
+
             // Extract information on all captured fields
             GetInstanceFields(
                 diagnostics,
@@ -60,20 +63,58 @@ partial class D2DPixelShaderDescriptorGenerator
                 out ImmutableArray<(string Name, string HlslType)> valueFields,
                 out ImmutableArray<(string Name, string HlslType, int Index)> resourceTextureFields);
 
-            // Explore the syntax tree and extract the processed info
+            token.ThrowIfCancellationRequested();
+
             SemanticModelProvider semanticModelProvider = new(compilation);
-            (string entryPoint, ImmutableArray<(string Signature, string Definition)> processedMethods) = GetProcessedMethods(diagnostics, structDeclarationSymbol, semanticModelProvider, discoveredTypes, staticMethods, instanceMethods, constantDefinitions, out bool methodsNeedD2D1RequiresScenePosition);
-            ImmutableArray<(string Name, string TypeDeclaration, string? Assignment)> staticFields = GetStaticFields(diagnostics, semanticModelProvider, structDeclarationSymbol, discoveredTypes, constantDefinitions, out bool fieldsNeedD2D1RequiresScenePosition);
+
+            // Explore the syntax tree and extract the processed info
+            (string entryPoint, ImmutableArray<(string Signature, string Definition)> processedMethods) = GetProcessedMethods(
+                diagnostics,
+                structDeclarationSymbol,
+                semanticModelProvider,
+                discoveredTypes,
+                staticMethods,
+                instanceMethods,
+                constantDefinitions,
+                token,
+                out bool methodsNeedD2D1RequiresScenePosition);
+
+            token.ThrowIfCancellationRequested();
+
+            ImmutableArray<(string Name, string TypeDeclaration, string? Assignment)> staticFields = GetStaticFields(
+                diagnostics,
+                semanticModelProvider,
+                structDeclarationSymbol,
+                discoveredTypes,
+                constantDefinitions,
+                out bool fieldsNeedD2D1RequiresScenePosition);
+
+            token.ThrowIfCancellationRequested();
 
             // Process the discovered types and constants
-            ImmutableArray<(string Name, string Definition)> declaredTypes = HlslDefinitionsSyntaxProcessor.GetDeclaredTypes(diagnostics, structDeclarationSymbol, discoveredTypes, instanceMethods);
+            ImmutableArray<(string Name, string Definition)> declaredTypes = HlslDefinitionsSyntaxProcessor.GetDeclaredTypes(
+                diagnostics,
+                structDeclarationSymbol,
+                discoveredTypes,
+                instanceMethods);
+
+            token.ThrowIfCancellationRequested();
+
             ImmutableArray<(string Name, string Value)> definedConstants = HlslDefinitionsSyntaxProcessor.GetDefinedConstants(constantDefinitions);
+
+            token.ThrowIfCancellationRequested();
 
             // Check whether the scene position is required
             bool requiresScenePosition = GetD2DRequiresScenePositionInfo(structDeclarationSymbol);
 
             // Emit diagnostics for incorrect scene position uses
-            ReportInvalidD2DRequiresScenePositionUse(diagnostics, structDeclarationSymbol, requiresScenePosition, methodsNeedD2D1RequiresScenePosition || fieldsNeedD2D1RequiresScenePosition);
+            ReportInvalidD2DRequiresScenePositionUse(
+                diagnostics,
+                structDeclarationSymbol,
+                requiresScenePosition,
+                methodsNeedD2D1RequiresScenePosition || fieldsNeedD2D1RequiresScenePosition);
+
+            token.ThrowIfCancellationRequested();
 
             // Get the HLSL source
             return GetHlslSource(
@@ -264,6 +305,7 @@ partial class D2DPixelShaderDescriptorGenerator
         /// <param name="instanceMethods">The collection of discovered instance methods for custom struct types.</param>
         /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
         /// <param name="needsD2D1RequiresScenePosition">Whether or not the shader needs the <c>[D2DRequiresScenePosition]</c> annotation.</param>
+        /// <param name="token">The <see cref="CancellationToken"/> used to cancel the operation, if needed.</param>
         /// <returns>A sequence of processed methods in <paramref name="structDeclarationSymbol"/>, and the entry point.</returns>
         private static (string EntryPoint, ImmutableArray<(string Signature, string Definition)> Methods) GetProcessedMethods(
             ImmutableArrayBuilder<DiagnosticInfo> diagnostics,
@@ -273,6 +315,7 @@ partial class D2DPixelShaderDescriptorGenerator
             IDictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods,
             IDictionary<IMethodSymbol, MethodDeclarationSyntax> instanceMethods,
             IDictionary<IFieldSymbol, string> constantDefinitions,
+            CancellationToken token,
             out bool needsD2D1RequiresScenePosition)
         {
             using ImmutableArrayBuilder<(string, string)> methods = new();
@@ -305,6 +348,8 @@ partial class D2DPixelShaderDescriptorGenerator
                     continue;
                 }
 
+                token.ThrowIfCancellationRequested();
+
                 // Create the source rewriter for the current method
                 ShaderSourceRewriter shaderSourceRewriter = new(
                     structDeclarationSymbol,
@@ -318,6 +363,8 @@ partial class D2DPixelShaderDescriptorGenerator
 
                 // Rewrite the method syntax tree
                 MethodDeclarationSyntax? processedMethod = shaderSourceRewriter.Visit(methodDeclaration)!.WithoutTrivia();
+
+                token.ThrowIfCancellationRequested();
 
                 // Update the position requirement
                 needsD2D1RequiresScenePosition |= shaderSourceRewriter.NeedsD2DRequiresScenePositionAttribute;
@@ -345,6 +392,8 @@ partial class D2DPixelShaderDescriptorGenerator
                         processedMethod.NormalizeWhitespace(eol: "\n").ToFullString()));
                 }
             }
+
+            token.ThrowIfCancellationRequested();
 
             // Process static methods as well
             foreach (MethodDeclarationSyntax staticMethod in staticMethods.Values)

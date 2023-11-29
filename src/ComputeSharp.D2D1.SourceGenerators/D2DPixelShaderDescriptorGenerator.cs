@@ -119,11 +119,11 @@ public sealed partial class D2DPixelShaderDescriptorGenerator : IIncrementalGene
                     string hlslSource = HlslSource.GetHlslSource(
                         diagnostics,
                         context.SemanticModel.Compilation,
-                        (StructDeclarationSyntax)context.TargetNode,
                         typeSymbol,
                         inputCount,
                         inputSimpleIndices,
-                        inputComplexIndices);
+                        inputComplexIndices,
+                        token);
 
                     token.ThrowIfCancellationRequested();
 
