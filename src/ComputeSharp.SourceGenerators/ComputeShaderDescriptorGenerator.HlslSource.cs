@@ -60,7 +60,7 @@ partial class ComputeShaderDescriptorGenerator
             Dictionary<IFieldSymbol, string> constantDefinitions = new(SymbolEqualityComparer.Default);
 
             // Setup the semantic model and basic properties
-            INamedTypeSymbol? pixelShaderSymbol = structDeclarationSymbol.AllInterfaces.FirstOrDefault(static interfaceSymbol => interfaceSymbol is { IsGenericType: true, Name: nameof(IComputeShader<byte>) });
+            INamedTypeSymbol? pixelShaderSymbol = structDeclarationSymbol.AllInterfaces.FirstOrDefault(static interfaceSymbol => interfaceSymbol is { IsGenericType: true, Name: "IComputeShader" });
             bool isComputeShader = pixelShaderSymbol is null;
             string? implicitTextureType = isComputeShader ? null : HlslKnownTypes.GetMappedNameForPixelShaderType(pixelShaderSymbol!);
 
@@ -391,12 +391,12 @@ partial class ComputeShaderDescriptorGenerator
 
                 bool isShaderEntryPoint =
                     (isComputeShader &&
-                     methodSymbol.Name == nameof(IComputeShader.Execute) &&
+                     methodSymbol.Name == "Execute" &&
                      methodSymbol.ReturnsVoid &&
                      methodSymbol.TypeParameters.Length == 0 &&
                      methodSymbol.Parameters.Length == 0) ||
                     (!isComputeShader &&
-                     methodSymbol.Name == nameof(IComputeShader<byte>.Execute) &&
+                     methodSymbol.Name == "Execute" &&
                      methodSymbol.ReturnType is not null && // TODO: match for pixel type
                      methodSymbol.TypeParameters.Length == 0 &&
                      methodSymbol.Parameters.Length == 0);

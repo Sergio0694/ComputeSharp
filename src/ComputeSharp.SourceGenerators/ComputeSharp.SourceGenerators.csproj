@@ -67,8 +67,6 @@
     <Compile Include="..\ComputeSharp\Dispatch\GroupSize.cs" Link="ComputeSharp\Dispatch\GroupSize.cs" />
     <Compile Include="..\ComputeSharp\Dispatch\ThreadIds.cs" Link="ComputeSharp\Dispatch\ThreadIds.cs" />
     <Compile Include="..\ComputeSharp\Dispatch\ThreadIds.Normalized.cs" Link="ComputeSharp\Dispatch\ThreadIds.Normalized.cs" />
-    <Compile Include="..\ComputeSharp\Interfaces\IComputeShader.cs" Link="ComputeSharp\Interfaces\IComputeShader.cs" />
-    <Compile Include="..\ComputeSharp\Interfaces\IComputeShader{TPixel}.cs" Link="ComputeSharp\Interfaces\IComputeShader{TPixel}.cs" />
     <Compile Include="..\ComputeSharp\Graphics\Helpers\AlignmentHelper.cs" Link="ComputeSharp\Graphics\Helpers\AlignmentHelper.cs" />
   </ItemGroup>
 
