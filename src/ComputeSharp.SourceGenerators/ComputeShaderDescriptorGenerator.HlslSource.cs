@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Threading;
 using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Helpers;
 using ComputeSharp.SourceGeneration.Mappings;
@@ -29,22 +30,22 @@ partial class ComputeShaderDescriptorGenerator
         /// </summary>
         /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
         /// <param name="compilation">The input <see cref="Compilation"/> object currently in use.</param>
-        /// <param name="structDeclaration">The <see cref="StructDeclarationSyntax"/> node to process.</param>
-        /// <param name="structDeclarationSymbol">The <see cref="INamedTypeSymbol"/> for <paramref name="structDeclaration"/>.</param>
+        /// <param name="structDeclarationSymbol">The <see cref="INamedTypeSymbol"/> for the shader type.</param>
         /// <param name="threadsX">The thread ids value for the X axis.</param>
         /// <param name="threadsY">The thread ids value for the Y axis.</param>
         /// <param name="threadsZ">The thread ids value for the Z axis.</param>
+        /// <param name="token">The <see cref="CancellationToken"/> used to cancel the operation, if needed.</param>
         /// <param name="isImplicitTextureUsed">Indicates whether the current shader uses an implicit texture.</param>
         /// <param name="isSamplerUsed">Whether or not the static sampler is used.</param>
         /// <param name="hlslSource">The resulting HLSL source for the current shader.</param>
         public static void GetInfo(
             ImmutableArrayBuilder<DiagnosticInfo> diagnostics,
             Compilation compilation,
-            StructDeclarationSyntax structDeclaration,
             INamedTypeSymbol structDeclarationSymbol,
             int threadsX,
             int threadsY,
             int threadsZ,
+            CancellationToken token,
             out bool isImplicitTextureUsed,
             out bool isSamplerUsed,
             out string hlslSource)
@@ -58,20 +59,65 @@ partial class ComputeShaderDescriptorGenerator
             Dictionary<IMethodSymbol, MethodDeclarationSyntax> instanceMethods = new(SymbolEqualityComparer.Default);
             Dictionary<IFieldSymbol, string> constantDefinitions = new(SymbolEqualityComparer.Default);
 
-            // Explore the syntax tree and extract the processed info
-            SemanticModelProvider semanticModelProvider = new(compilation);
+            // Setup the semantic model and basic properties
             INamedTypeSymbol? pixelShaderSymbol = structDeclarationSymbol.AllInterfaces.FirstOrDefault(static interfaceSymbol => interfaceSymbol is { IsGenericType: true, Name: nameof(IComputeShader<byte>) });
             bool isComputeShader = pixelShaderSymbol is null;
             string? implicitTextureType = isComputeShader ? null : HlslKnownTypes.GetMappedNameForPixelShaderType(pixelShaderSymbol!);
-            (ImmutableArray<(string MetadataName, string Name, string HlslType)> resourceFields, ImmutableArray<(string Name, string HlslType)> valueFields) = GetInstanceFields(diagnostics, structDeclarationSymbol, discoveredTypes, isComputeShader);
-            ImmutableArray<(string Name, string Type, int? Count)> sharedBuffers = GetSharedBuffers(diagnostics, structDeclarationSymbol, discoveredTypes);
-            (string entryPoint, ImmutableArray<(string Signature, string Definition)> processedMethods, isSamplerUsed) = GetProcessedMethods(diagnostics, structDeclarationSymbol, semanticModelProvider, discoveredTypes, staticMethods, instanceMethods, constantDefinitions, isComputeShader);
+
+            token.ThrowIfCancellationRequested();
+
+            (ImmutableArray<(string MetadataName, string Name, string HlslType)> resourceFields, ImmutableArray<(string Name, string HlslType)> valueFields) = GetInstanceFields(
+                diagnostics,
+                structDeclarationSymbol,
+                discoveredTypes,
+                isComputeShader);
+
+            token.ThrowIfCancellationRequested();
+
+            ImmutableArray<(string Name, string Type, int? Count)> sharedBuffers = GetSharedBuffers(
+                diagnostics,
+                structDeclarationSymbol,
+                discoveredTypes);
+
+            token.ThrowIfCancellationRequested();
+
+            SemanticModelProvider semanticModelProvider = new(compilation);
+
+            (string entryPoint, ImmutableArray<(string Signature, string Definition)> processedMethods, isSamplerUsed) = GetProcessedMethods(
+                diagnostics,
+                structDeclarationSymbol,
+                semanticModelProvider,
+                discoveredTypes,
+                staticMethods,
+                instanceMethods,
+                constantDefinitions,
+                isComputeShader,
+                token);
+
+            token.ThrowIfCancellationRequested();
+
             (string, string)? implicitSamplerField = isSamplerUsed ? ("SamplerState", "__sampler") : default((string, string)?);
-            ImmutableArray<(string Name, string TypeDeclaration, string? Assignment)> staticFields = GetStaticFields(diagnostics, semanticModelProvider, structDeclarationSymbol, discoveredTypes, constantDefinitions);
+            ImmutableArray<(string Name, string TypeDeclaration, string? Assignment)> staticFields = GetStaticFields(
+                diagnostics,
+                semanticModelProvider,
+                structDeclarationSymbol,
+                discoveredTypes,
+                constantDefinitions);
+
+            token.ThrowIfCancellationRequested();
 
             // Process the discovered types and constants
-            ImmutableArray<(string Name, string Definition)> declaredTypes = HlslDefinitionsSyntaxProcessor.GetDeclaredTypes(diagnostics, structDeclarationSymbol, discoveredTypes, instanceMethods);
+            ImmutableArray<(string Name, string Definition)> declaredTypes = HlslDefinitionsSyntaxProcessor.GetDeclaredTypes(
+                diagnostics,
+                structDeclarationSymbol,
+                discoveredTypes,
+                instanceMethods);
+
+            token.ThrowIfCancellationRequested();
+
             ImmutableArray<(string Name, string Value)> definedConstants = HlslDefinitionsSyntaxProcessor.GetDefinedConstants(constantDefinitions);
+
+            token.ThrowIfCancellationRequested();
 
             // Check whether an implicit texture is used in the shader
             isImplicitTextureUsed = implicitTextureType is not null;
@@ -312,6 +358,7 @@ partial class ComputeShaderDescriptorGenerator
         /// <param name="instanceMethods">The collection of discovered instance methods for custom struct types.</param>
         /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
         /// <param name="isComputeShader">Indicates whether or not <paramref name="structDeclarationSymbol"/> represents a compute shader.</param>
+        /// <param name="token">The <see cref="CancellationToken"/> used to cancel the operation, if needed.</param>
         /// <returns>A sequence of processed methods in <paramref name="structDeclarationSymbol"/>, and the entry point.</returns>
         private static (string EntryPoint, ImmutableArray<(string Signature, string Definition)> Methods, bool IsSamplerUser) GetProcessedMethods(
             ImmutableArrayBuilder<DiagnosticInfo> diagnostics,
@@ -321,7 +368,8 @@ partial class ComputeShaderDescriptorGenerator
             IDictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods,
             IDictionary<IMethodSymbol, MethodDeclarationSyntax> instanceMethods,
             IDictionary<IFieldSymbol, string> constantDefinitions,
-            bool isComputeShader)
+            bool isComputeShader,
+            CancellationToken token)
         {
             using ImmutableArrayBuilder<(string, string)> methods = new();
 
@@ -359,6 +407,8 @@ partial class ComputeShaderDescriptorGenerator
                     continue;
                 }
 
+                token.ThrowIfCancellationRequested();
+
                 // Create the source rewriter for the current method
                 ShaderSourceRewriter shaderSourceRewriter = new(
                     structDeclarationSymbol,
@@ -372,6 +422,8 @@ partial class ComputeShaderDescriptorGenerator
 
                 // Rewrite the method syntax tree
                 MethodDeclarationSyntax? processedMethod = shaderSourceRewriter.Visit(methodDeclaration)!.WithoutTrivia();
+
+                token.ThrowIfCancellationRequested();
 
                 // Track the implicit sampler, if used
                 isSamplerUsed = isSamplerUsed || shaderSourceRewriter.IsSamplerUsed;
@@ -402,6 +454,8 @@ partial class ComputeShaderDescriptorGenerator
                         processedMethod.NormalizeWhitespace(eol: "\n").ToFullString()));
                 }
             }
+
+            token.ThrowIfCancellationRequested();
 
             // Process static methods as well
             foreach (MethodDeclarationSyntax staticMethod in staticMethods.Values)

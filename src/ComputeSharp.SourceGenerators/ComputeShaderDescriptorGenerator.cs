@@ -85,11 +85,11 @@ public sealed partial class ComputeShaderDescriptorGenerator : IIncrementalGener
                     HlslSource.GetInfo(
                         diagnostics,
                         context.SemanticModel.Compilation,
-                        (StructDeclarationSyntax)context.TargetNode,
                         typeSymbol,
                         threadsX,
                         threadsY,
                         threadsZ,
+                        token,
                         out bool isImplicitTextureUsed,
                         out bool isSamplerUsed,
                         out string hlslSource);
