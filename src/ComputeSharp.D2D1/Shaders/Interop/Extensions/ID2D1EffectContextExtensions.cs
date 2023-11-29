@@ -40,7 +40,7 @@ internal static unsafe class ID2D1EffectContextExtensions
     {
         using ComPtr<ID2D1Effect> floodEffect = default;
 
-        int hresult = effectContext.CreateEffect(
+        HRESULT hresult = effectContext.CreateEffect(
             effectId: (Guid*)Unsafe.AsPointer(ref Unsafe.AsRef(in CLSID.CLSID_D2D1Flood)),
             effect: (void**)floodEffect.GetAddressOf());
 
