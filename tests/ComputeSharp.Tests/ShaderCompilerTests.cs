@@ -787,6 +787,93 @@ namespace ComputeSharp.Tests
             {
             }
         }
+
+        [TestMethod]
+        public void ShaderWithPartialDeclarations_IsCombinedCorrectly()
+        {
+            ShaderInfo info = ReflectionServices.GetShaderInfo<ShaderWithPartialDeclarations>();
+
+            Assert.AreEqual(
+                """
+                // ================================================
+                //                  AUTO GENERATED
+                // ================================================
+                // This shader was created by ComputeSharp.
+                // See: https://github.com/Sergio0694/ComputeSharp.
+
+                #define __GroupSize__get_X 64
+                #define __GroupSize__get_Y 1
+                #define __GroupSize__get_Z 1
+                #define __ComputeSharp_Tests_ShaderCompilerTests_ShaderWithPartialDeclarations__a 2
+
+                static const int b = 4;
+
+                cbuffer _ : register(b0)
+                {
+                    uint __x;
+                    uint __y;
+                    uint __z;
+                }
+
+                RWStructuredBuffer<float> __reserved__buffer : register(u0);
+
+                static int Sum(int x, int y);
+
+                static int Sum(int x, int y)
+                {
+                    return x + y;
+                }
+
+                [NumThreads(__GroupSize__get_X, __GroupSize__get_Y, __GroupSize__get_Z)]
+                void Execute(uint3 ThreadIds : SV_DispatchThreadID)
+                {
+                    if (ThreadIds.x < __x && ThreadIds.y < __y && ThreadIds.z < __z)
+                    {
+                        __reserved__buffer[ThreadIds.x] = Sum(__ComputeSharp_Tests_ShaderCompilerTests_ShaderWithPartialDeclarations__a, b);
+                    }
+                }
+                """,
+                info.HlslSource);
+        }
+
+        [AutoConstructor]
+        [ThreadGroupSize(DefaultThreadGroupSizes.X)]
+        [GeneratedComputeShaderDescriptor]
+        internal readonly partial struct ShaderWithPartialDeclarations : IComputeShader
+        {
+        }
+
+        partial struct ShaderWithPartialDeclarations
+        {
+            public readonly ReadWriteBuffer<float> buffer;
+        }
+
+        partial struct ShaderWithPartialDeclarations
+        {
+            /// <inheritdoc/>
+            public void Execute()
+            {
+                buffer[ThreadIds.X] = Sum(a, b);
+            }
+        }
+
+        partial struct ShaderWithPartialDeclarations
+        {
+            private const int a = 2;
+        }
+
+        partial struct ShaderWithPartialDeclarations
+        {
+            private static readonly int b = 4;
+        }
+
+        partial struct ShaderWithPartialDeclarations
+        {
+            private static int Sum(int x, int y)
+            {
+                return x + y;
+            }
+        }
     }
 }
 

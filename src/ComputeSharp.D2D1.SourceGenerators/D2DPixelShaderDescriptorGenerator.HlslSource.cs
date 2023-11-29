@@ -62,8 +62,8 @@ partial class D2DPixelShaderDescriptorGenerator
 
             // Explore the syntax tree and extract the processed info
             SemanticModelProvider semanticModelProvider = new(compilation);
-            (string entryPoint, ImmutableArray<(string Signature, string Definition)> processedMethods) = GetProcessedMethods(diagnostics, structDeclaration, structDeclarationSymbol, semanticModelProvider, discoveredTypes, staticMethods, instanceMethods, constantDefinitions, out bool methodsNeedD2D1RequiresScenePosition);
-            ImmutableArray<(string Name, string TypeDeclaration, string? Assignment)> staticFields = GetStaticFields(diagnostics, semanticModelProvider, structDeclaration, structDeclarationSymbol, discoveredTypes, constantDefinitions, out bool fieldsNeedD2D1RequiresScenePosition);
+            (string entryPoint, ImmutableArray<(string Signature, string Definition)> processedMethods) = GetProcessedMethods(diagnostics, structDeclarationSymbol, semanticModelProvider, discoveredTypes, staticMethods, instanceMethods, constantDefinitions, out bool methodsNeedD2D1RequiresScenePosition);
+            ImmutableArray<(string Name, string TypeDeclaration, string? Assignment)> staticFields = GetStaticFields(diagnostics, semanticModelProvider, structDeclarationSymbol, discoveredTypes, constantDefinitions, out bool fieldsNeedD2D1RequiresScenePosition);
 
             // Process the discovered types and constants
             ImmutableArray<(string Name, string Definition)> declaredTypes = HlslDefinitionsSyntaxProcessor.GetDeclaredTypes(diagnostics, structDeclarationSymbol, discoveredTypes, instanceMethods);
@@ -190,7 +190,6 @@ partial class D2DPixelShaderDescriptorGenerator
         /// </summary>
         /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
         /// <param name="semanticModel">The <see cref="SemanticModelProvider"/> instance for the type to process.</param>
-        /// <param name="structDeclaration">The <see cref="StructDeclarationSyntax"/> instance for the current type.</param>
         /// <param name="structDeclarationSymbol">The type symbol for the shader type.</param>
         /// <param name="discoveredTypes">The collection of currently discovered types.</param>
         /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
@@ -199,7 +198,6 @@ partial class D2DPixelShaderDescriptorGenerator
         private static ImmutableArray<(string Name, string TypeDeclaration, string? Assignment)> GetStaticFields(
             ImmutableArrayBuilder<DiagnosticInfo> diagnostics,
             SemanticModelProvider semanticModel,
-            StructDeclarationSyntax structDeclaration,
             INamedTypeSymbol structDeclarationSymbol,
             ICollection<INamedTypeSymbol> discoveredTypes,
             IDictionary<IFieldSymbol, string> constantDefinitions,
@@ -209,46 +207,47 @@ partial class D2DPixelShaderDescriptorGenerator
 
             needsD2D1RequiresScenePosition = false;
 
-            foreach (FieldDeclarationSyntax fieldDeclaration in structDeclaration.Members.OfType<FieldDeclarationSyntax>())
+            foreach (ISymbol memberSymbol in structDeclarationSymbol.GetMembers())
             {
-                foreach (VariableDeclaratorSyntax variableDeclarator in fieldDeclaration.Declaration.Variables)
+                // Find all declared static fields in the type
+                if (memberSymbol is not IFieldSymbol { IsImplicitlyDeclared: false, IsStatic: true, IsConst: false, DeclaringSyntaxReferences: [SyntaxReference fieldReference, ..] } fieldSymbol)
                 {
-                    IFieldSymbol fieldSymbol = (IFieldSymbol)semanticModel.For(variableDeclarator).GetDeclaredSymbol(variableDeclarator)!;
-
-                    if (!fieldSymbol.IsStatic || fieldSymbol.IsConst)
-                    {
-                        continue;
-                    }
-
-                    // Constant properties must be of a primitive, vector or matrix type
-                    if (fieldSymbol.Type is not INamedTypeSymbol typeSymbol ||
-                        !HlslKnownTypes.IsKnownHlslType(typeSymbol.GetFullyQualifiedMetadataName()))
-                    {
-                        diagnostics.Add(InvalidShaderStaticFieldType, variableDeclarator, structDeclarationSymbol, fieldSymbol.Name, fieldSymbol.Type);
-
-                        continue;
-                    }
-
-                    _ = HlslKnownKeywords.TryGetMappedName(fieldSymbol.Name, out string? mapping);
-
-                    string typeDeclaration = fieldSymbol.IsReadOnly switch
-                    {
-                        true => $"static const {HlslKnownTypes.GetMappedName(typeSymbol)}",
-                        false => $"static {HlslKnownTypes.GetMappedName(typeSymbol)}"
-                    };
-
-                    StaticFieldRewriter staticFieldRewriter = new(
-                        semanticModel,
-                        discoveredTypes,
-                        constantDefinitions,
-                        diagnostics);
-
-                    string? assignment = staticFieldRewriter.Visit(variableDeclarator)?.NormalizeWhitespace(eol: "\n").ToFullString();
-
-                    needsD2D1RequiresScenePosition |= staticFieldRewriter.NeedsD2DRequiresScenePositionAttribute;
-
-                    builder.Add((mapping ?? fieldSymbol.Name, typeDeclaration, assignment));
+                    continue;
                 }
+
+                if (fieldReference.GetSyntax() is not VariableDeclaratorSyntax variableDeclarator)
+                {
+                    continue;
+                }
+
+                // Constant properties must be of a primitive, vector or matrix type
+                if (fieldSymbol.Type is not INamedTypeSymbol typeSymbol ||
+                    !HlslKnownTypes.IsKnownHlslType(typeSymbol.GetFullyQualifiedMetadataName()))
+                {
+                    diagnostics.Add(InvalidShaderStaticFieldType, variableDeclarator, structDeclarationSymbol, fieldSymbol.Name, fieldSymbol.Type);
+
+                    continue;
+                }
+
+                _ = HlslKnownKeywords.TryGetMappedName(fieldSymbol.Name, out string? mapping);
+
+                string typeDeclaration = fieldSymbol.IsReadOnly switch
+                {
+                    true => $"static const {HlslKnownTypes.GetMappedName(typeSymbol)}",
+                    false => $"static {HlslKnownTypes.GetMappedName(typeSymbol)}"
+                };
+
+                StaticFieldRewriter staticFieldRewriter = new(
+                    semanticModel,
+                    discoveredTypes,
+                    constantDefinitions,
+                    diagnostics);
+
+                string? assignment = staticFieldRewriter.Visit(variableDeclarator)?.NormalizeWhitespace(eol: "\n").ToFullString();
+
+                needsD2D1RequiresScenePosition |= staticFieldRewriter.NeedsD2DRequiresScenePositionAttribute;
+
+                builder.Add((mapping ?? fieldSymbol.Name, typeDeclaration, assignment));
             }
 
             return builder.ToImmutable();
@@ -259,17 +258,15 @@ partial class D2DPixelShaderDescriptorGenerator
         /// </summary>
         /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
         /// <param name="structDeclarationSymbol">The type symbol for the shader type.</param>
-        /// <param name="structDeclaration">The <see cref="StructDeclarationSyntax"/> instance for the current type.</param>
         /// <param name="semanticModel">The <see cref="SemanticModelProvider"/> instance for the type to process.</param>
         /// <param name="discoveredTypes">The collection of currently discovered types.</param>
         /// <param name="staticMethods">The set of discovered and processed static methods.</param>
         /// <param name="instanceMethods">The collection of discovered instance methods for custom struct types.</param>
         /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
         /// <param name="needsD2D1RequiresScenePosition">Whether or not the shader needs the <c>[D2DRequiresScenePosition]</c> annotation.</param>
-        /// <returns>A sequence of processed methods in <paramref name="structDeclaration"/>, and the entry point.</returns>
+        /// <returns>A sequence of processed methods in <paramref name="structDeclarationSymbol"/>, and the entry point.</returns>
         private static (string EntryPoint, ImmutableArray<(string Signature, string Definition)> Methods) GetProcessedMethods(
             ImmutableArrayBuilder<DiagnosticInfo> diagnostics,
-            StructDeclarationSyntax structDeclaration,
             INamedTypeSymbol structDeclarationSymbol,
             SemanticModelProvider semanticModel,
             ICollection<INamedTypeSymbol> discoveredTypes,
@@ -278,29 +275,32 @@ partial class D2DPixelShaderDescriptorGenerator
             IDictionary<IFieldSymbol, string> constantDefinitions,
             out bool needsD2D1RequiresScenePosition)
         {
-            // Find all declared methods in the type
-            ImmutableArray<MethodDeclarationSyntax> methodDeclarations = (
-                from syntaxNode in structDeclaration.DescendantNodes()
-                where syntaxNode.IsKind(SyntaxKind.MethodDeclaration)
-                select (MethodDeclarationSyntax)syntaxNode).ToImmutableArray();
-
-            string? entryPoint = null;
-
             using ImmutableArrayBuilder<(string, string)> methods = new();
 
+            string? entryPoint = null;
             needsD2D1RequiresScenePosition = false;
 
-            foreach (MethodDeclarationSyntax methodDeclaration in methodDeclarations)
+            foreach (ISymbol memberSymbol in structDeclarationSymbol.GetMembers())
             {
-                IMethodSymbol methodDeclarationSymbol = semanticModel.For(methodDeclaration).GetDeclaredSymbol(methodDeclaration)!;
+                // Find all declared methods in the type
+                if (memberSymbol is not IMethodSymbol { IsImplicitlyDeclared: false, DeclaringSyntaxReferences: [SyntaxReference methodReference, ..] } methodSymbol)
+                {
+                    continue;
+                }
+
+                if (methodReference.GetSyntax() is not MethodDeclarationSyntax methodDeclaration)
+                {
+                    continue;
+                }
+
                 bool isShaderEntryPoint =
-                    methodDeclarationSymbol.Name == "Execute" &&
-                    methodDeclarationSymbol.ReturnType.HasFullyQualifiedMetadataName("ComputeSharp.Float4") &&
-                    methodDeclarationSymbol.TypeParameters.Length == 0 &&
-                    methodDeclarationSymbol.Parameters.Length == 0;
+                    methodSymbol.Name == "Execute" &&
+                    methodSymbol.ReturnType.HasFullyQualifiedMetadataName("ComputeSharp.Float4") &&
+                    methodSymbol.TypeParameters.Length == 0 &&
+                    methodSymbol.Parameters.Length == 0;
 
                 // Except for the entry point, ignore explicit interface implementations
-                if (!isShaderEntryPoint && !methodDeclarationSymbol.ExplicitInterfaceImplementations.IsDefaultOrEmpty)
+                if (!isShaderEntryPoint && !methodSymbol.ExplicitInterfaceImplementations.IsDefaultOrEmpty)
                 {
                     continue;
                 }
