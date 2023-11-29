@@ -1117,26 +1117,6 @@ public class DiagnosticsTests
     }
 
     [TestMethod]
-    public void MultipleShaderTypes()
-    {
-        const string source = """
-            using ComputeSharp;
-
-            namespace MyFancyApp.Sample;
-            
-            [GeneratedComputeShaderDescriptor]
-            public partial struct MyShader : IComputeShader, IComputeShader<float4>
-            {
-                public void Execute()
-                {
-                }
-            }
-            """;
-
-        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0042", "CMPS0047");
-    }
-
-    [TestMethod]
     [DataRow(-1, 1, 1)]
     [DataRow(1, -1, 1)]
     [DataRow(1, 1, -1)]

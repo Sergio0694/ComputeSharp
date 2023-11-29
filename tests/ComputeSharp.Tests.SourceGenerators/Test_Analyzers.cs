@@ -391,4 +391,27 @@ public class Test_Analyzers
 
         await CSharpAnalyzerWithLanguageVersionTest<InvalidGeneratedComputeShaderDescriptorAttributeTargetAnalyzer>.VerifyAnalyzerAsync(source);
     }
+
+    [TestMethod]
+    public async Task MultipleComputeShaderInterfacesOnShader_TwoInterfaces()
+    {
+        const string source = """
+            using ComputeSharp;
+
+            [GeneratedComputeShaderDescriptor]
+            internal partial struct {|CMPS0042:MyType|} : IComputeShader, IComputeShader<Float4>
+            {
+                public void Execute()
+                {
+                }
+
+                Float4 IComputeShader<Float4>.Execute()
+                {
+                    return 0;
+                }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<MultipleComputeShaderInterfacesOnShaderTypeAnalyzer>.VerifyAnalyzerAsync(source);
+    }
 }

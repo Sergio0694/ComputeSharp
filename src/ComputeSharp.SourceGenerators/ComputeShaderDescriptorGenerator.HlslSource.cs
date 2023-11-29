@@ -58,12 +58,6 @@ partial class ComputeShaderDescriptorGenerator
             Dictionary<IMethodSymbol, MethodDeclarationSyntax> instanceMethods = new(SymbolEqualityComparer.Default);
             Dictionary<IFieldSymbol, string> constantDefinitions = new(SymbolEqualityComparer.Default);
 
-            // A given type can only represent a single shader type
-            if (structDeclarationSymbol.AllInterfaces.Count(static interfaceSymbol => interfaceSymbol is { Name: nameof(IComputeShader) } or { IsGenericType: true, Name: nameof(IComputeShader<byte>) }) > 1)
-            {
-                diagnostics.Add(MultipleShaderTypesImplemented, structDeclarationSymbol, structDeclarationSymbol);
-            }
-
             // Explore the syntax tree and extract the processed info
             SemanticModelProvider semanticModelProvider = new(compilation);
             INamedTypeSymbol? pixelShaderSymbol = structDeclarationSymbol.AllInterfaces.FirstOrDefault(static interfaceSymbol => interfaceSymbol is { IsGenericType: true, Name: nameof(IComputeShader<byte>) });
