@@ -71,9 +71,9 @@ partial class ComputeShaderDescriptorGenerator
             string? implicitTextureType = isComputeShader ? null : HlslKnownTypes.GetMappedNameForPixelShaderType(pixelShaderSymbol!);
             (ImmutableArray<(string MetadataName, string Name, string HlslType)> resourceFields, ImmutableArray<(string Name, string HlslType)> valueFields) = GetInstanceFields(diagnostics, structDeclarationSymbol, discoveredTypes, isComputeShader);
             ImmutableArray<(string Name, string Type, int? Count)> sharedBuffers = GetSharedBuffers(diagnostics, structDeclarationSymbol, discoveredTypes);
-            (string entryPoint, ImmutableArray<(string Signature, string Definition)> processedMethods, isSamplerUsed) = GetProcessedMethods(diagnostics, structDeclaration, structDeclarationSymbol, semanticModelProvider, discoveredTypes, staticMethods, instanceMethods, constantDefinitions, isComputeShader);
+            (string entryPoint, ImmutableArray<(string Signature, string Definition)> processedMethods, isSamplerUsed) = GetProcessedMethods(diagnostics, structDeclarationSymbol, semanticModelProvider, discoveredTypes, staticMethods, instanceMethods, constantDefinitions, isComputeShader);
             (string, string)? implicitSamplerField = isSamplerUsed ? ("SamplerState", "__sampler") : default((string, string)?);
-            ImmutableArray<(string Name, string TypeDeclaration, string? Assignment)> staticFields = GetStaticFields(diagnostics, semanticModelProvider, structDeclaration, structDeclarationSymbol, discoveredTypes, constantDefinitions);
+            ImmutableArray<(string Name, string TypeDeclaration, string? Assignment)> staticFields = GetStaticFields(diagnostics, semanticModelProvider, structDeclarationSymbol, discoveredTypes, constantDefinitions);
 
             // Process the discovered types and constants
             ImmutableArray<(string Name, string Definition)> declaredTypes = HlslDefinitionsSyntaxProcessor.GetDeclaredTypes(diagnostics, structDeclarationSymbol, discoveredTypes, instanceMethods);
@@ -204,7 +204,6 @@ partial class ComputeShaderDescriptorGenerator
         /// </summary>
         /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
         /// <param name="semanticModel">The <see cref="SemanticModelProvider"/> instance for the type to process.</param>
-        /// <param name="structDeclaration">The <see cref="StructDeclarationSyntax"/> instance for the current type.</param>
         /// <param name="structDeclarationSymbol">The type symbol for the shader type.</param>
         /// <param name="discoveredTypes">The collection of currently discovered types.</param>
         /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
@@ -212,56 +211,56 @@ partial class ComputeShaderDescriptorGenerator
         private static ImmutableArray<(string Name, string TypeDeclaration, string? Assignment)> GetStaticFields(
             ImmutableArrayBuilder<DiagnosticInfo> diagnostics,
             SemanticModelProvider semanticModel,
-            StructDeclarationSyntax structDeclaration,
             INamedTypeSymbol structDeclarationSymbol,
             ICollection<INamedTypeSymbol> discoveredTypes,
             IDictionary<IFieldSymbol, string> constantDefinitions)
         {
             using ImmutableArrayBuilder<(string, string, string?)> builder = new();
 
-            foreach (FieldDeclarationSyntax fieldDeclaration in structDeclaration.Members.OfType<FieldDeclarationSyntax>())
+            foreach (ISymbol memberSymbol in structDeclarationSymbol.GetMembers())
             {
-                foreach (VariableDeclaratorSyntax variableDeclarator in fieldDeclaration.Declaration.Variables)
+                // Find all declared static fields in the type
+                if (memberSymbol is not IFieldSymbol { IsImplicitlyDeclared: false, IsStatic: true, IsConst: false, DeclaringSyntaxReferences: [SyntaxReference fieldReference, ..] } fieldSymbol)
                 {
-                    IFieldSymbol fieldSymbol = (IFieldSymbol)semanticModel.For(variableDeclarator).GetDeclaredSymbol(variableDeclarator)!;
-
-                    if (!fieldSymbol.IsStatic || fieldSymbol.IsConst)
-                    {
-                        continue;
-                    }
-
-                    if (fieldSymbol.TryGetAttributeWithFullyQualifiedMetadataName("ComputeSharp.GroupSharedAttribute", out _))
-                    {
-                        continue;
-                    }
-
-                    // Constant properties must be of a primitive, vector or matrix type
-                    if (fieldSymbol.Type is not INamedTypeSymbol typeSymbol ||
-                        !HlslKnownTypes.IsKnownHlslType(typeSymbol.GetFullyQualifiedMetadataName()))
-                    {
-                        diagnostics.Add(InvalidShaderStaticFieldType, variableDeclarator, structDeclarationSymbol, fieldSymbol.Name, fieldSymbol.Type);
-
-                        continue;
-                    }
-
-                    _ = HlslKnownKeywords.TryGetMappedName(fieldSymbol.Name, out string? mapping);
-
-                    string typeDeclaration = fieldSymbol.IsReadOnly switch
-                    {
-                        true => $"static const {HlslKnownTypes.GetMappedName(typeSymbol)}",
-                        false => $"static {HlslKnownTypes.GetMappedName(typeSymbol)}"
-                    };
-
-                    StaticFieldRewriter staticFieldRewriter = new(
-                        semanticModel,
-                        discoveredTypes,
-                        constantDefinitions,
-                        diagnostics);
-
-                    string? assignment = staticFieldRewriter.Visit(variableDeclarator)?.NormalizeWhitespace(eol: "\n").ToFullString();
-
-                    builder.Add((mapping ?? fieldSymbol.Name, typeDeclaration, assignment));
+                    continue;
                 }
+
+                if (fieldReference.GetSyntax() is not VariableDeclaratorSyntax variableDeclarator)
+                {
+                    continue;
+                }
+
+                if (fieldSymbol.TryGetAttributeWithFullyQualifiedMetadataName("ComputeSharp.GroupSharedAttribute", out _))
+                {
+                    continue;
+                }
+
+                // Constant properties must be of a primitive, vector or matrix type
+                if (fieldSymbol.Type is not INamedTypeSymbol typeSymbol ||
+                    !HlslKnownTypes.IsKnownHlslType(typeSymbol.GetFullyQualifiedMetadataName()))
+                {
+                    diagnostics.Add(InvalidShaderStaticFieldType, variableDeclarator, structDeclarationSymbol, fieldSymbol.Name, fieldSymbol.Type);
+
+                    continue;
+                }
+
+                _ = HlslKnownKeywords.TryGetMappedName(fieldSymbol.Name, out string? mapping);
+
+                string typeDeclaration = fieldSymbol.IsReadOnly switch
+                {
+                    true => $"static const {HlslKnownTypes.GetMappedName(typeSymbol)}",
+                    false => $"static {HlslKnownTypes.GetMappedName(typeSymbol)}"
+                };
+
+                StaticFieldRewriter staticFieldRewriter = new(
+                    semanticModel,
+                    discoveredTypes,
+                    constantDefinitions,
+                    diagnostics);
+
+                string? assignment = staticFieldRewriter.Visit(variableDeclarator)?.NormalizeWhitespace(eol: "\n").ToFullString();
+
+                builder.Add((mapping ?? fieldSymbol.Name, typeDeclaration, assignment));
             }
 
             return builder.ToImmutable();
@@ -313,17 +312,15 @@ partial class ComputeShaderDescriptorGenerator
         /// </summary>
         /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
         /// <param name="structDeclarationSymbol">The type symbol for the shader type.</param>
-        /// <param name="structDeclaration">The <see cref="StructDeclarationSyntax"/> instance for the current type.</param>
         /// <param name="semanticModel">The <see cref="SemanticModelProvider"/> instance for the type to process.</param>
         /// <param name="discoveredTypes">The collection of currently discovered types.</param>
         /// <param name="staticMethods">The set of discovered and processed static methods.</param>
         /// <param name="instanceMethods">The collection of discovered instance methods for custom struct types.</param>
         /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
         /// <param name="isComputeShader">Indicates whether or not <paramref name="structDeclarationSymbol"/> represents a compute shader.</param>
-        /// <returns>A sequence of processed methods in <paramref name="structDeclaration"/>, and the entry point.</returns>
+        /// <returns>A sequence of processed methods in <paramref name="structDeclarationSymbol"/>, and the entry point.</returns>
         private static (string EntryPoint, ImmutableArray<(string Signature, string Definition)> Methods, bool IsSamplerUser) GetProcessedMethods(
             ImmutableArrayBuilder<DiagnosticInfo> diagnostics,
-            StructDeclarationSyntax structDeclaration,
             INamedTypeSymbol structDeclarationSymbol,
             SemanticModelProvider semanticModel,
             ICollection<INamedTypeSymbol> discoveredTypes,
@@ -332,34 +329,38 @@ partial class ComputeShaderDescriptorGenerator
             IDictionary<IFieldSymbol, string> constantDefinitions,
             bool isComputeShader)
         {
-            // Find all declared methods in the type
-            ImmutableArray<MethodDeclarationSyntax> methodDeclarations = (
-                from syntaxNode in structDeclaration.DescendantNodes()
-                where syntaxNode.IsKind(SyntaxKind.MethodDeclaration)
-                select (MethodDeclarationSyntax)syntaxNode).ToImmutableArray();
-
             using ImmutableArrayBuilder<(string, string)> methods = new();
 
             string? entryPoint = null;
             bool isSamplerUsed = false;
 
-            foreach (MethodDeclarationSyntax methodDeclaration in methodDeclarations)
+            foreach (ISymbol memberSymbol in structDeclarationSymbol.GetMembers())
             {
-                IMethodSymbol methodDeclarationSymbol = semanticModel.For(methodDeclaration).GetDeclaredSymbol(methodDeclaration)!;
+                // Find all declared methods in the type
+                if (memberSymbol is not IMethodSymbol { IsImplicitlyDeclared: false, DeclaringSyntaxReferences: [SyntaxReference methodReference, ..] } methodSymbol)
+                {
+                    continue;
+                }
+
+                if (methodReference.GetSyntax() is not MethodDeclarationSyntax methodDeclaration)
+                {
+                    continue;
+                }
+
                 bool isShaderEntryPoint =
                     (isComputeShader &&
-                     methodDeclarationSymbol.Name == nameof(IComputeShader.Execute) &&
-                     methodDeclarationSymbol.ReturnsVoid &&
-                     methodDeclarationSymbol.TypeParameters.Length == 0 &&
-                     methodDeclarationSymbol.Parameters.Length == 0) ||
+                     methodSymbol.Name == nameof(IComputeShader.Execute) &&
+                     methodSymbol.ReturnsVoid &&
+                     methodSymbol.TypeParameters.Length == 0 &&
+                     methodSymbol.Parameters.Length == 0) ||
                     (!isComputeShader &&
-                     methodDeclarationSymbol.Name == nameof(IComputeShader<byte>.Execute) &&
-                     methodDeclarationSymbol.ReturnType is not null && // TODO: match for pixel type
-                     methodDeclarationSymbol.TypeParameters.Length == 0 &&
-                     methodDeclarationSymbol.Parameters.Length == 0);
+                     methodSymbol.Name == nameof(IComputeShader<byte>.Execute) &&
+                     methodSymbol.ReturnType is not null && // TODO: match for pixel type
+                     methodSymbol.TypeParameters.Length == 0 &&
+                     methodSymbol.Parameters.Length == 0);
 
                 // Except for the entry point, ignore explicit interface implementations
-                if (!isShaderEntryPoint && !methodDeclarationSymbol.ExplicitInterfaceImplementations.IsDefaultOrEmpty)
+                if (!isShaderEntryPoint && !methodSymbol.ExplicitInterfaceImplementations.IsDefaultOrEmpty)
                 {
                     continue;
                 }
