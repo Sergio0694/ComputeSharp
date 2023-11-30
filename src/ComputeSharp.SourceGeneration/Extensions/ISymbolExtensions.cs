@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using System.Threading;
 using Microsoft.CodeAnalysis;
 
 namespace ComputeSharp.SourceGeneration.Extensions;
@@ -116,5 +117,32 @@ internal static class ISymbolExtensions
         attributeData = null;
 
         return false;
+    }
+
+    /// <summary>
+    /// Tries to get a syntax node with a given type from an input symbol.
+    /// </summary>
+    /// <typeparam name="T">The type of syntax node to look for.</typeparam>
+    /// <param name="symbol">The input <see cref="ISymbol"/> instance to get the syntax node for.</param>
+    /// <param name="token">The <see cref="CancellationToken"/> used to cancel the operation, if needed.</param>
+    /// <param name="syntaxNode">The resulting <typeparamref name="T"/> syntax node, if found.</param>
+    /// <returns>Whether or not a syntax node of type <typeparamref name="T"/> was retrieved successfully.</returns>
+    public static bool TryGetSyntaxNode<T>(this ISymbol symbol, CancellationToken token, [NotNullWhen(true)] out T? syntaxNode)
+        where T : SyntaxNode
+    {
+        // If there are no syntax references, there is nothing to do
+        if (symbol.DeclaringSyntaxReferences is not [SyntaxReference syntaxReference, ..])
+        {
+            syntaxNode = null;
+
+            return false;
+        }
+
+        // Get the target node, and check that it's of the desired type
+        T? candidateNode = syntaxReference.GetSyntax(token) as T;
+
+        syntaxNode = candidateNode;
+
+        return candidateNode is not null;
     }
 }
