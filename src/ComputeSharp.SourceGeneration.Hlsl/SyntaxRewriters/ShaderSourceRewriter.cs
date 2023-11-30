@@ -101,7 +101,7 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
     /// <param name="instanceMethods">The collection of discovered instance methods for custom struct types.</param>
     /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
     /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
-    public ShaderSourceRewriter(
+    private ShaderSourceRewriter(
         SemanticModelProvider semanticModel,
         ICollection<INamedTypeSymbol> discoveredTypes,
         IDictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods,
@@ -486,8 +486,15 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
                             return updatedNode;
                         }
 
-                        ShaderSourceRewriter shaderSourceRewriter = new(SemanticModel, DiscoveredTypes, this.staticMethods, this.instanceMethods, ConstantDefinitions, Diagnostics);
-                        MethodDeclarationSyntax processedMethod = shaderSourceRewriter.Visit(methodNode)!.NormalizeWhitespace(eol: "\n").WithoutTrivia();
+                        ShaderSourceRewriter shaderSourceRewriter = new(
+                            SemanticModel,
+                            DiscoveredTypes,
+                            this.staticMethods,
+                            this.instanceMethods,
+                            ConstantDefinitions,
+                            Diagnostics);
+
+                        MethodDeclarationSyntax processedMethod = shaderSourceRewriter.Visit(methodNode)!.WithoutTrivia();
 
                         this.staticMethods.Add(method, processedMethod.WithIdentifier(Identifier(methodIdentifier)));
                     }
@@ -532,8 +539,15 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
                             return updatedNode;
                         }
 
-                        ShaderSourceRewriter shaderSourceRewriter = new(SemanticModel, DiscoveredTypes, this.instanceMethods, this.instanceMethods, ConstantDefinitions, Diagnostics);
-                        MethodDeclarationSyntax processedMethod = shaderSourceRewriter.Visit(methodNode)!.NormalizeWhitespace(eol: "\n").WithoutTrivia();
+                        ShaderSourceRewriter shaderSourceRewriter = new(
+                            SemanticModel,
+                            DiscoveredTypes,
+                            this.instanceMethods,
+                            this.instanceMethods,
+                            ConstantDefinitions,
+                            Diagnostics);
+
+                        MethodDeclarationSyntax processedMethod = shaderSourceRewriter.Visit(methodNode)!.WithoutTrivia();
 
                         this.instanceMethods.Add(method, processedMethod.WithIdentifier(Identifier(methodIdentifier)));
                     }
