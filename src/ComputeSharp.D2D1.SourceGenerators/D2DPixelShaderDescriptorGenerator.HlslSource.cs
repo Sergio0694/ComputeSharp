@@ -87,6 +87,7 @@ partial class D2DPixelShaderDescriptorGenerator
                 structDeclarationSymbol,
                 discoveredTypes,
                 constantDefinitions,
+                token,
                 out bool fieldsNeedD2D1RequiresScenePosition);
 
             token.ThrowIfCancellationRequested();
@@ -234,6 +235,7 @@ partial class D2DPixelShaderDescriptorGenerator
         /// <param name="structDeclarationSymbol">The type symbol for the shader type.</param>
         /// <param name="discoveredTypes">The collection of currently discovered types.</param>
         /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
+        /// <param name="token">The <see cref="CancellationToken"/> used to cancel the operation, if needed.</param>
         /// <param name="needsD2D1RequiresScenePosition">Whether or not the shader needs the <c>[D2DRequiresScenePosition]</c> annotation.</param>
         /// <returns>A sequence of static constant fields in <paramref name="structDeclarationSymbol"/>.</returns>
         private static ImmutableArray<(string Name, string TypeDeclaration, string? Assignment)> GetStaticFields(
@@ -242,6 +244,7 @@ partial class D2DPixelShaderDescriptorGenerator
             INamedTypeSymbol structDeclarationSymbol,
             ICollection<INamedTypeSymbol> discoveredTypes,
             IDictionary<IFieldSymbol, string> constantDefinitions,
+            CancellationToken token,
             out bool needsD2D1RequiresScenePosition)
         {
             using ImmutableArrayBuilder<(string, string, string?)> builder = new();
@@ -251,12 +254,12 @@ partial class D2DPixelShaderDescriptorGenerator
             foreach (ISymbol memberSymbol in structDeclarationSymbol.GetMembers())
             {
                 // Find all declared static fields in the type
-                if (memberSymbol is not IFieldSymbol { IsImplicitlyDeclared: false, IsStatic: true, IsConst: false, DeclaringSyntaxReferences: [SyntaxReference fieldReference, ..] } fieldSymbol)
+                if (memberSymbol is not IFieldSymbol { IsImplicitlyDeclared: false, IsStatic: true, IsConst: false, } fieldSymbol)
                 {
                     continue;
                 }
 
-                if (fieldReference.GetSyntax() is not VariableDeclaratorSyntax variableDeclarator)
+                if (!fieldSymbol.TryGetSyntaxNode(token, out VariableDeclaratorSyntax? variableDeclarator))
                 {
                     continue;
                 }
@@ -326,12 +329,12 @@ partial class D2DPixelShaderDescriptorGenerator
             foreach (ISymbol memberSymbol in structDeclarationSymbol.GetMembers())
             {
                 // Find all declared methods in the type
-                if (memberSymbol is not IMethodSymbol { IsImplicitlyDeclared: false, DeclaringSyntaxReferences: [SyntaxReference methodReference, ..] } methodSymbol)
+                if (memberSymbol is not IMethodSymbol { IsImplicitlyDeclared: false, } methodSymbol)
                 {
                     continue;
                 }
 
-                if (methodReference.GetSyntax() is not MethodDeclarationSyntax methodDeclaration)
+                if (!methodSymbol.TryGetSyntaxNode(token, out MethodDeclarationSyntax? methodDeclaration))
                 {
                     continue;
                 }
