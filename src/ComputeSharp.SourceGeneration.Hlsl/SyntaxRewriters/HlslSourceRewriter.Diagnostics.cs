@@ -9,7 +9,7 @@ namespace ComputeSharp.SourceGeneration.SyntaxRewriters;
 partial class HlslSourceRewriter
 {
     /// <inheritdoc/>
-    public override SyntaxNode? VisitAnonymousObjectCreationExpression(AnonymousObjectCreationExpressionSyntax node)
+    public sealed override SyntaxNode? VisitAnonymousObjectCreationExpression(AnonymousObjectCreationExpressionSyntax node)
     {
         Diagnostics.Add(AnonymousObjectCreationExpression, node);
 
@@ -17,7 +17,7 @@ partial class HlslSourceRewriter
     }
 
     /// <inheritdoc/>
-    public override SyntaxNode? VisitInitializerExpression(InitializerExpressionSyntax node)
+    public sealed override SyntaxNode? VisitInitializerExpression(InitializerExpressionSyntax node)
     {
         Diagnostics.Add(InitializerExpression, node);
 
@@ -25,7 +25,7 @@ partial class HlslSourceRewriter
     }
 
     /// <inheritdoc/>
-    public override SyntaxNode? VisitCollectionExpression(CollectionExpressionSyntax node)
+    public sealed override SyntaxNode? VisitCollectionExpression(CollectionExpressionSyntax node)
     {
         Diagnostics.Add(CollectionExpression, node);
 
@@ -33,7 +33,7 @@ partial class HlslSourceRewriter
     }
 
     /// <inheritdoc/>
-    public override SyntaxNode? VisitAwaitExpression(AwaitExpressionSyntax node)
+    public sealed override SyntaxNode? VisitAwaitExpression(AwaitExpressionSyntax node)
     {
         Diagnostics.Add(AwaitExpression, node);
 
@@ -41,7 +41,7 @@ partial class HlslSourceRewriter
     }
 
     /// <inheritdoc/>
-    public override SyntaxNode? VisitCheckedExpression(CheckedExpressionSyntax node)
+    public sealed override SyntaxNode? VisitCheckedExpression(CheckedExpressionSyntax node)
     {
         Diagnostics.Add(CheckedExpression, node);
 
@@ -49,7 +49,7 @@ partial class HlslSourceRewriter
     }
 
     /// <inheritdoc/>
-    public override SyntaxNode? VisitCheckedStatement(CheckedStatementSyntax node)
+    public sealed override SyntaxNode? VisitCheckedStatement(CheckedStatementSyntax node)
     {
         Diagnostics.Add(CheckedStatement, node);
 
@@ -57,7 +57,7 @@ partial class HlslSourceRewriter
     }
 
     /// <inheritdoc/>
-    public override SyntaxNode? VisitFixedStatement(FixedStatementSyntax node)
+    public sealed override SyntaxNode? VisitFixedStatement(FixedStatementSyntax node)
     {
         Diagnostics.Add(FixedStatement, node);
 
@@ -65,7 +65,7 @@ partial class HlslSourceRewriter
     }
 
     /// <inheritdoc/>
-    public override SyntaxNode? VisitForEachStatement(ForEachStatementSyntax node)
+    public sealed override SyntaxNode? VisitForEachStatement(ForEachStatementSyntax node)
     {
         Diagnostics.Add(ForEachStatement, node);
 
@@ -73,7 +73,7 @@ partial class HlslSourceRewriter
     }
 
     /// <inheritdoc/>
-    public override SyntaxNode? VisitForEachVariableStatement(ForEachVariableStatementSyntax node)
+    public sealed override SyntaxNode? VisitForEachVariableStatement(ForEachVariableStatementSyntax node)
     {
         Diagnostics.Add(ForEachStatement, node);
 
@@ -81,7 +81,7 @@ partial class HlslSourceRewriter
     }
 
     /// <inheritdoc/>
-    public override SyntaxNode? VisitLockStatement(LockStatementSyntax node)
+    public sealed override SyntaxNode? VisitLockStatement(LockStatementSyntax node)
     {
         Diagnostics.Add(LockStatement, node);
 
@@ -89,7 +89,7 @@ partial class HlslSourceRewriter
     }
 
     /// <inheritdoc/>
-    public override SyntaxNode? VisitQueryExpression(QueryExpressionSyntax node)
+    public sealed override SyntaxNode? VisitQueryExpression(QueryExpressionSyntax node)
     {
         Diagnostics.Add(QueryExpression, node);
 
@@ -97,7 +97,7 @@ partial class HlslSourceRewriter
     }
 
     /// <inheritdoc/>
-    public override SyntaxNode? VisitRangeExpression(RangeExpressionSyntax node)
+    public sealed override SyntaxNode? VisitRangeExpression(RangeExpressionSyntax node)
     {
         Diagnostics.Add(RangeExpression, node);
 
@@ -105,7 +105,7 @@ partial class HlslSourceRewriter
     }
 
     /// <inheritdoc/>
-    public override SyntaxNode? VisitRecursivePattern(RecursivePatternSyntax node)
+    public sealed override SyntaxNode? VisitRecursivePattern(RecursivePatternSyntax node)
     {
         Diagnostics.Add(RecursivePattern, node);
 
@@ -113,7 +113,7 @@ partial class HlslSourceRewriter
     }
 
     /// <inheritdoc/>
-    public override SyntaxNode? VisitRefType(RefTypeSyntax node)
+    public sealed override SyntaxNode? VisitRefType(RefTypeSyntax node)
     {
         Diagnostics.Add(RefType, node);
 
@@ -121,7 +121,7 @@ partial class HlslSourceRewriter
     }
 
     /// <inheritdoc/>
-    public override SyntaxNode? VisitRelationalPattern(RelationalPatternSyntax node)
+    public sealed override SyntaxNode? VisitRelationalPattern(RelationalPatternSyntax node)
     {
         Diagnostics.Add(RelationalPattern, node);
 
@@ -129,7 +129,7 @@ partial class HlslSourceRewriter
     }
 
     /// <inheritdoc/>
-    public override SyntaxNode? VisitSizeOfExpression(SizeOfExpressionSyntax node)
+    public sealed override SyntaxNode? VisitSizeOfExpression(SizeOfExpressionSyntax node)
     {
         Diagnostics.Add(SizeOfExpression, node);
 
@@ -137,7 +137,7 @@ partial class HlslSourceRewriter
     }
 
     /// <inheritdoc/>
-    public override SyntaxNode? VisitStackAllocArrayCreationExpression(StackAllocArrayCreationExpressionSyntax node)
+    public sealed override SyntaxNode? VisitStackAllocArrayCreationExpression(StackAllocArrayCreationExpressionSyntax node)
     {
         Diagnostics.Add(StackAllocArrayCreationExpression, node);
 
@@ -145,7 +145,7 @@ partial class HlslSourceRewriter
     }
 
     /// <inheritdoc/>
-    public override SyntaxNode? VisitThrowExpression(ThrowExpressionSyntax node)
+    public sealed override SyntaxNode? VisitThrowExpression(ThrowExpressionSyntax node)
     {
         Diagnostics.Add(ThrowExpressionOrStatement, node);
 
@@ -153,7 +153,7 @@ partial class HlslSourceRewriter
     }
 
     /// <inheritdoc/>
-    public override SyntaxNode? VisitThrowStatement(ThrowStatementSyntax node)
+    public sealed override SyntaxNode? VisitThrowStatement(ThrowStatementSyntax node)
     {
         Diagnostics.Add(ThrowExpressionOrStatement, node);
 
@@ -161,7 +161,7 @@ partial class HlslSourceRewriter
     }
 
     /// <inheritdoc/>
-    public override SyntaxNode? VisitTryStatement(TryStatementSyntax node)
+    public sealed override SyntaxNode? VisitTryStatement(TryStatementSyntax node)
     {
         Diagnostics.Add(TryStatement, node);
 
@@ -169,7 +169,7 @@ partial class HlslSourceRewriter
     }
 
     /// <inheritdoc/>
-    public override SyntaxNode? VisitTupleType(TupleTypeSyntax node)
+    public sealed override SyntaxNode? VisitTupleType(TupleTypeSyntax node)
     {
         Diagnostics.Add(TupleType, node);
 
@@ -177,7 +177,7 @@ partial class HlslSourceRewriter
     }
 
     /// <inheritdoc/>
-    public override SyntaxNode? VisitUsingStatement(UsingStatementSyntax node)
+    public sealed override SyntaxNode? VisitUsingStatement(UsingStatementSyntax node)
     {
         Diagnostics.Add(UsingStatementOrDeclaration, node);
 
@@ -185,7 +185,7 @@ partial class HlslSourceRewriter
     }
 
     /// <inheritdoc/>
-    public override SyntaxNode? VisitYieldStatement(YieldStatementSyntax node)
+    public sealed override SyntaxNode? VisitYieldStatement(YieldStatementSyntax node)
     {
         Diagnostics.Add(YieldStatement, node);
 
@@ -193,7 +193,7 @@ partial class HlslSourceRewriter
     }
 
     /// <inheritdoc/>
-    public override SyntaxNode? VisitFunctionPointerType(FunctionPointerTypeSyntax node)
+    public sealed override SyntaxNode? VisitFunctionPointerType(FunctionPointerTypeSyntax node)
     {
         Diagnostics.Add(FunctionPointer, node);
 
@@ -201,7 +201,7 @@ partial class HlslSourceRewriter
     }
 
     /// <inheritdoc/>
-    public override SyntaxNode? VisitPointerType(PointerTypeSyntax node)
+    public sealed override SyntaxNode? VisitPointerType(PointerTypeSyntax node)
     {
         Diagnostics.Add(PointerType, node);
 
@@ -209,7 +209,7 @@ partial class HlslSourceRewriter
     }
 
     /// <inheritdoc/>
-    public override SyntaxNode? VisitUnsafeStatement(UnsafeStatementSyntax node)
+    public sealed override SyntaxNode? VisitUnsafeStatement(UnsafeStatementSyntax node)
     {
         Diagnostics.Add(UnsafeStatement, node);
 
