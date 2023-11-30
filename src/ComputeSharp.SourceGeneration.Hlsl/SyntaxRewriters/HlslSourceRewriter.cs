@@ -66,7 +66,7 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
     protected ImmutableArrayBuilder<DiagnosticInfo> Diagnostics { get; }
 
     /// <inheritdoc/>
-    public override SyntaxNode VisitCastExpression(CastExpressionSyntax node)
+    public sealed override SyntaxNode VisitCastExpression(CastExpressionSyntax node)
     {
         CastExpressionSyntax updatedNode = (CastExpressionSyntax)base.VisitCastExpression(node)!;
 
@@ -74,7 +74,7 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
     }
 
     /// <inheritdoc/>
-    public override SyntaxNode? VisitVariableDeclaration(VariableDeclarationSyntax node)
+    public sealed override SyntaxNode? VisitVariableDeclaration(VariableDeclarationSyntax node)
     {
         VariableDeclarationSyntax updatedNode = (VariableDeclarationSyntax)base.VisitVariableDeclaration(node)!;
 
@@ -93,7 +93,7 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
     }
 
     /// <inheritdoc/>
-    public override SyntaxNode VisitObjectCreationExpression(ObjectCreationExpressionSyntax node)
+    public sealed override SyntaxNode VisitObjectCreationExpression(ObjectCreationExpressionSyntax node)
     {
         ObjectCreationExpressionSyntax updatedNode = (ObjectCreationExpressionSyntax)base.VisitObjectCreationExpression(node)!;
 
@@ -103,7 +103,7 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
     }
 
     /// <inheritdoc/>
-    public override SyntaxNode VisitImplicitObjectCreationExpression(ImplicitObjectCreationExpressionSyntax node)
+    public sealed override SyntaxNode VisitImplicitObjectCreationExpression(ImplicitObjectCreationExpressionSyntax node)
     {
         ImplicitObjectCreationExpressionSyntax updatedNode = (ImplicitObjectCreationExpressionSyntax)base.VisitImplicitObjectCreationExpression(node)!;
         TypeSyntax explicitType = IdentifierName("").ReplaceAndTrackType(node, SemanticModel.For(node), DiscoveredTypes);
@@ -152,7 +152,7 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
     }
 
     /// <inheritdoc/>
-    public override SyntaxNode VisitDefaultExpression(DefaultExpressionSyntax node)
+    public sealed override SyntaxNode VisitDefaultExpression(DefaultExpressionSyntax node)
     {
         DefaultExpressionSyntax updatedNode = (DefaultExpressionSyntax)base.VisitDefaultExpression(node)!;
 
@@ -163,7 +163,7 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
     }
 
     /// <inheritdoc/>
-    public override SyntaxNode? VisitLiteralExpression(LiteralExpressionSyntax node)
+    public sealed override SyntaxNode? VisitLiteralExpression(LiteralExpressionSyntax node)
     {
         LiteralExpressionSyntax updatedNode = (LiteralExpressionSyntax)base.VisitLiteralExpression(node)!;
 
@@ -221,7 +221,7 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
     }
 
     /// <inheritdoc/>
-    public override SyntaxNode? VisitElementAccessExpression(ElementAccessExpressionSyntax node)
+    public sealed override SyntaxNode? VisitElementAccessExpression(ElementAccessExpressionSyntax node)
     {
         ElementAccessExpressionSyntax updatedNode = (ElementAccessExpressionSyntax)base.VisitElementAccessExpression(node)!;
 
@@ -279,7 +279,7 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
     }
 
     /// <inheritdoc/>
-    public override SyntaxNode? VisitAssignmentExpression(AssignmentExpressionSyntax node)
+    public sealed override SyntaxNode? VisitAssignmentExpression(AssignmentExpressionSyntax node)
     {
         AssignmentExpressionSyntax updatedNode = (AssignmentExpressionSyntax)base.VisitAssignmentExpression(node)!;
 
@@ -306,7 +306,7 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
     }
 
     /// <inheritdoc/>
-    public override SyntaxNode? VisitBinaryExpression(BinaryExpressionSyntax node)
+    public sealed override SyntaxNode? VisitBinaryExpression(BinaryExpressionSyntax node)
     {
         BinaryExpressionSyntax updatedNode = (BinaryExpressionSyntax)base.VisitBinaryExpression(node)!;
 
@@ -331,7 +331,7 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
     }
 
     /// <inheritdoc/>
-    public override SyntaxNode? VisitIdentifierName(IdentifierNameSyntax node)
+    public sealed override SyntaxNode? VisitIdentifierName(IdentifierNameSyntax node)
     {
         IdentifierNameSyntax updatedNode = (IdentifierNameSyntax)base.VisitIdentifierName(node)!;
 
@@ -351,7 +351,7 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
     }
 
     /// <inheritdoc/>
-    public override SyntaxToken VisitToken(SyntaxToken token)
+    public sealed override SyntaxToken VisitToken(SyntaxToken token)
     {
         SyntaxToken updatedToken = base.VisitToken(token);
 
