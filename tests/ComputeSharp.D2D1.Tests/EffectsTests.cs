@@ -34,6 +34,12 @@ public class EffectsTests
     }
 
     [TestMethod]
+    public void InvertWithUserTypeWithConstructor()
+    {
+        D2D1TestRunner.RunAndCompareShader(new InvertWithUserTypeWithConstructorEffect(), null, "Landscape.png", "Landscape_Inverted.png");
+    }
+
+    [TestMethod]
     public void Pixelate()
     {
         D2D1TestRunner.RunAndCompareShader(

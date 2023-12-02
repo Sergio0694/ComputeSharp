@@ -79,6 +79,7 @@ public partial class UserDefinedTypeConstructorTests
         }
     }
 
+    // See https://github.com/Sergio0694/ComputeSharp/issues/481
     [CombinatorialTestMethod]
     [Device(Device.Warp)]
     public void ConstructorWithParameters(Device device)
