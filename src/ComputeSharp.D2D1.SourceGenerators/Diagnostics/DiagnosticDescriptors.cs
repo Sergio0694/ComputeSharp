@@ -1080,4 +1080,20 @@ partial class DiagnosticDescriptors
         isEnabledByDefault: true,
         description: "A collection expression cannot be used in a pixel shader.",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+    /// <summary>
+    /// Gets a <see cref="DiagnosticDescriptor"/> for a constructor with a base constructor declaration.
+    /// <para>
+    /// Format: <c>"The constructor {0} has a base constructor declaration, which cannot be used in a D2D1 shader (only standalone constructors are allowed)"</c>.
+    /// </para>
+    /// </summary>
+    public static readonly DiagnosticDescriptor InvalidBaseConstructorDeclaration = new(
+        id: "CMPSD2D0073",
+        title: "Invalid base constructor declaration",
+        messageFormat: "The constructor {0} has a base constructor declaration, which cannot be used in a D2D1 shader (only standalone constructors are allowed)",
+        category: "ComputeSharp.D2D1.Shaders",
+        defaultSeverity: DiagnosticSeverity.Error,
+        isEnabledByDefault: true,
+        description: "Only standalone constructors (with no base constructor declaration) can be used in a D2D1 shader.",
+        helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 }

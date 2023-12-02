@@ -662,6 +662,14 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
                     return updatedNode;
                 }
 
+                // Chaining constructors is not supported, so emit a diagnostic to inform the user.
+                // The rest of the code will work as usual, but the semantics of the other chained
+                // constructor being invoked is not preserved, so the resulting code is not the same.
+                if (constructorNode.Initializer is not null)
+                {
+                    Diagnostics.Add(InvalidBaseConstructorDeclaration, node, constructor);
+                }
+
                 ShaderSourceRewriter shaderSourceRewriter = new(
                     SemanticModel,
                     DiscoveredTypes,
