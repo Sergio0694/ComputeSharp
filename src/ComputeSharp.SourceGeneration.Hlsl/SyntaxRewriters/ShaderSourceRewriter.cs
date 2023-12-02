@@ -690,7 +690,7 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
                 //
                 // static <TYPE_NAME> __ctor(<PARAMETERS>)
                 // {
-                //     <TYPE_NAME> __this;
+                //     <TYPE_NAME> __this = (<TYPE_NAME>)0;
                 //
                 //     __this.__ctor__init(<PARAMETERS>);
                 //
@@ -702,8 +702,9 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
                     .WithParameterList(processedMethod.ParameterList)
                     .AddBodyStatements(
                         LocalDeclarationStatement(
-                            VariableDeclaration(IdentifierName(returnTypeHlslIdentifier))
-                            .AddVariables(VariableDeclarator(Identifier("__this")))),
+                            VariableDeclaration(IdentifierName(returnTypeHlslIdentifier)).AddVariables(
+                                VariableDeclarator(Identifier("__this")).WithInitializer(EqualsValueClause(
+                                    CastExpression(targetType, LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(0))))))),
                         ExpressionStatement(
                             InvocationExpression(
                                 MemberAccessExpression(
