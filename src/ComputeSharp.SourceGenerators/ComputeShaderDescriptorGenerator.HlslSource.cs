@@ -298,13 +298,20 @@ partial class ComputeShaderDescriptorGenerator
                     false => $"static {HlslKnownTypes.GetMappedName(typeSymbol)}"
                 };
 
+                token.ThrowIfCancellationRequested();
+
                 StaticFieldRewriter staticFieldRewriter = new(
                     semanticModel,
                     discoveredTypes,
                     constantDefinitions,
-                    diagnostics);
+                    diagnostics,
+                    token);
 
-                string? assignment = staticFieldRewriter.Visit(variableDeclarator)?.NormalizeWhitespace(eol: "\n").ToFullString();
+                ExpressionSyntax? processedDeclaration = staticFieldRewriter.Visit(variableDeclarator);
+
+                token.ThrowIfCancellationRequested();
+
+                string? assignment = processedDeclaration?.NormalizeWhitespace(eol: "\n").ToFullString();
 
                 builder.Add((mapping ?? fieldSymbol.Name, typeDeclaration, assignment));
             }
@@ -427,6 +434,7 @@ partial class ComputeShaderDescriptorGenerator
                     constructors,
                     constantDefinitions,
                     diagnostics,
+                    token,
                     isShaderEntryPoint);
 
                 // Rewrite the method syntax tree

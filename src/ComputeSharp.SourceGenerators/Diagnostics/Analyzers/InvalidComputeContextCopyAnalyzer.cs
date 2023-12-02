@@ -239,7 +239,7 @@ public sealed class InvalidComputeContextCopyAnalyzer : DiagnosticAnalyzer
                         return;
                     }
 
-                    context.ReportDiagnostic(Diagnostic.Create(InvalidComputeContextCopy, symbol.DeclaringSyntaxReferences[0].GetSyntax().GetLocation()));
+                    context.ReportDiagnostic(Diagnostic.Create(InvalidComputeContextCopy, symbol.DeclaringSyntaxReferences[0].GetSyntax(context.CancellationToken).GetLocation()));
                 }
             }, SymbolKind.Field);
         });
