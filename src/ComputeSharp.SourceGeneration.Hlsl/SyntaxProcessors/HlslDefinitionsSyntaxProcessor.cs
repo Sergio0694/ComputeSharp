@@ -46,12 +46,14 @@ internal static class HlslDefinitionsSyntaxProcessor
     /// <param name="structDeclarationSymbol">The type symbol for the shader type.</param>
     /// <param name="types">The sequence of discovered custom types.</param>
     /// <param name="instanceMethods">The collection of discovered instance methods for custom struct types.</param>
+    /// <param name="constructors">The collection of discovered constructors for custom struct types.</param>
     /// <returns>A sequence of custom type definitions to add to the shader source.</returns>
     public static ImmutableArray<(string Name, string Definition)> GetDeclaredTypes(
         ImmutableArrayBuilder<DiagnosticInfo> diagnostics,
         INamedTypeSymbol structDeclarationSymbol,
         IEnumerable<INamedTypeSymbol> types,
-        IReadOnlyDictionary<IMethodSymbol, MethodDeclarationSyntax> instanceMethods)
+        IReadOnlyDictionary<IMethodSymbol, MethodDeclarationSyntax> instanceMethods,
+        IReadOnlyDictionary<IMethodSymbol, (MethodDeclarationSyntax, MethodDeclarationSyntax)> constructors)
     {
         using ImmutableArrayBuilder<(string, string)> builder = new();
 
@@ -102,6 +104,12 @@ internal static class HlslDefinitionsSyntaxProcessor
             foreach (KeyValuePair<IMethodSymbol, MethodDeclarationSyntax> method in instanceMethods.Where(pair => SymbolEqualityComparer.Default.Equals(pair.Key.ContainingType, type)))
             {
                 structDeclaration = structDeclaration.AddMembers(method.Value);
+            }
+
+            // Also do the same for all constructors
+            foreach (KeyValuePair<IMethodSymbol, (MethodDeclarationSyntax Stub, MethodDeclarationSyntax Ctor)> methods in constructors.Where(pair => SymbolEqualityComparer.Default.Equals(pair.Key.ContainingType, type)))
+            {
+                structDeclaration = structDeclaration.AddMembers(methods.Value.Stub, methods.Value.Ctor);
             }
 
             // Insert the trailing ; right after the closing bracket (after normalization)

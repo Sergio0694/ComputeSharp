@@ -670,19 +670,19 @@ partial class DiagnosticDescriptors
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 
     /// <summary>
-    /// Gets a <see cref="DiagnosticDescriptor"/> for a method invocation that is not valid from a shader.
+    /// Gets a <see cref="DiagnosticDescriptor"/> for a method or constructor invocation that is not valid from a shader.
     /// <para>
-    /// Format: <c>"The method {0} cannot be used in a shader (methods need to either be HLSL intrinsics or with source available for analysis)"</c>.
+    /// Format: <c>"The method or constructor {0} cannot be used in a shader (methods need to either be HLSL intrinsics or with source available for analysis)"</c>.
     /// </para>
     /// </summary>
-    public static readonly DiagnosticDescriptor InvalidMethodCall = new(
+    public static readonly DiagnosticDescriptor InvalidMethodOrConstructorCall = new(
         id: "CMPS0049",
-        title: "Invalid method invocation from a shader",
-        messageFormat: "The method {0} cannot be used in a shader (methods need to either be HLSL intrinsics or with source available for analysis)",
+        title: "Invalid method or constructor invocation from a shader",
+        messageFormat: "The method or constructor {0} cannot be used in a shader (methods or constructors need to either be HLSL intrinsics or with source available for analysis)",
         category: "ComputeSharp.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
-        description: "Shaders can only invoke methods that are either HLSL intrinsics or with source available for analysis.",
+        description: "Shaders can only invoke methods or constructors that are either HLSL intrinsics or with source available for analysis.",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 
     /// <summary>

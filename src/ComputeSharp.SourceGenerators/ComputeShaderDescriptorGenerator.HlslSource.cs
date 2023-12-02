@@ -57,6 +57,7 @@ partial class ComputeShaderDescriptorGenerator
             HashSet<INamedTypeSymbol> discoveredTypes = new(SymbolEqualityComparer.Default);
             Dictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods = new(SymbolEqualityComparer.Default);
             Dictionary<IMethodSymbol, MethodDeclarationSyntax> instanceMethods = new(SymbolEqualityComparer.Default);
+            Dictionary<IMethodSymbol, (MethodDeclarationSyntax, MethodDeclarationSyntax)> constructors = new(SymbolEqualityComparer.Default);
             Dictionary<IFieldSymbol, string> constantDefinitions = new(SymbolEqualityComparer.Default);
 
             // Setup the semantic model and basic properties
@@ -90,6 +91,7 @@ partial class ComputeShaderDescriptorGenerator
                 discoveredTypes,
                 staticMethods,
                 instanceMethods,
+                constructors,
                 constantDefinitions,
                 isComputeShader,
                 token);
@@ -112,7 +114,8 @@ partial class ComputeShaderDescriptorGenerator
                 diagnostics,
                 structDeclarationSymbol,
                 discoveredTypes,
-                instanceMethods);
+                instanceMethods,
+                constructors);
 
             token.ThrowIfCancellationRequested();
 
@@ -359,6 +362,7 @@ partial class ComputeShaderDescriptorGenerator
         /// <param name="discoveredTypes">The collection of currently discovered types.</param>
         /// <param name="staticMethods">The set of discovered and processed static methods.</param>
         /// <param name="instanceMethods">The collection of discovered instance methods for custom struct types.</param>
+        /// <param name="constructors">The collection of discovered constructors for custom struct types.</param>
         /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
         /// <param name="isComputeShader">Indicates whether or not <paramref name="structDeclarationSymbol"/> represents a compute shader.</param>
         /// <param name="token">The <see cref="CancellationToken"/> used to cancel the operation, if needed.</param>
@@ -370,6 +374,7 @@ partial class ComputeShaderDescriptorGenerator
             ICollection<INamedTypeSymbol> discoveredTypes,
             IDictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods,
             IDictionary<IMethodSymbol, MethodDeclarationSyntax> instanceMethods,
+            IDictionary<IMethodSymbol, (MethodDeclarationSyntax, MethodDeclarationSyntax)> constructors,
             IDictionary<IFieldSymbol, string> constantDefinitions,
             bool isComputeShader,
             CancellationToken token)
@@ -419,6 +424,7 @@ partial class ComputeShaderDescriptorGenerator
                     discoveredTypes,
                     staticMethods,
                     instanceMethods,
+                    constructors,
                     constantDefinitions,
                     diagnostics,
                     isShaderEntryPoint);
