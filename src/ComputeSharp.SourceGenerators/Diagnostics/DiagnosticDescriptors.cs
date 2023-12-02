@@ -672,7 +672,7 @@ partial class DiagnosticDescriptors
     /// <summary>
     /// Gets a <see cref="DiagnosticDescriptor"/> for a method or constructor invocation that is not valid from a shader.
     /// <para>
-    /// Format: <c>"The method or constructor {0} cannot be used in a shader (methods need to either be HLSL intrinsics or with source available for analysis)"</c>.
+    /// Format: <c>"The method or constructor {0} cannot be used in a shader (methods or constructors need to either be HLSL intrinsics or with source available for analysis)"</c>.
     /// </para>
     /// </summary>
     public static readonly DiagnosticDescriptor InvalidMethodOrConstructorCall = new(
