@@ -269,9 +269,10 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
             // the property access to the corresponding HLSL syntax. For instance, m[M11, M12] will become m._m00_m01.
             if (HlslKnownProperties.IsKnownMatrixIndexer(propertyName))
             {
-                bool isValid = true;
+                using ImmutableArrayBuilder<string> hlslPropertyParts = new();
 
-                // Validate the arguments
+                // Validate the arguments and gather all the indexer parts in a single step (without using LINQ).
+                // This prepares all the individual parts to combine into the HLSL property name when rewriting.
                 foreach (ArgumentSyntax argument in node.ArgumentList.Arguments)
                 {
                     if (SemanticModel.For(node).GetOperation(argument.Expression) is not IFieldReferenceOperation fieldReference ||
@@ -279,20 +280,24 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
                     {
                         Diagnostics.Add(NonConstantMatrixSwizzledIndex, argument);
 
-                        isValid = false;
+                        hlslPropertyParts.Clear();
+
+                        break;
                     }
+
+                    // We have a valid field reference, we can process it
+                    string fieldName = fieldReference.Field.Name;
+                    char row = (char)(fieldName[1] - 1);
+                    char column = (char)(fieldName[2] - 1);
+
+                    hlslPropertyParts.Add($"_m{row}{column}");
                 }
 
-                if (isValid)
+                // If we have any property parts, it means the property access is valid.
+                // So we can create the combined HLSL property and rewrite the node.
+                if (hlslPropertyParts.Count > 0)
                 {
-                    // Rewrite the indexer as a property access
-                    string hlslPropertyName = string.Join("",
-                        from argument in node.ArgumentList.Arguments
-                        let fieldReference = (IFieldReferenceOperation)SemanticModel.For(node).GetOperation(argument.Expression)!
-                        let fieldName = fieldReference.Field.Name
-                        let row = (char)(fieldName[1] - 1)
-                        let column = (char)(fieldName[2] - 1)
-                        select $"_m{row}{column}");
+                    string hlslPropertyName = string.Join("", hlslPropertyParts.AsEnumerable());
 
                     return MemberAccessExpression(
                         SyntaxKind.SimpleMemberAccessExpression,

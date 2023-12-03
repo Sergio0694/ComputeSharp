@@ -3,6 +3,8 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Runtime.CompilerServices;
 
@@ -47,7 +49,7 @@ internal struct ImmutableArrayBuilder<T> : IDisposable
     public readonly int Count
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        get => this.writer!.WrittenSpan.Length;
+        get => this.writer!.Count;
     }
 
     /// <summary>
@@ -95,6 +97,18 @@ internal struct ImmutableArrayBuilder<T> : IDisposable
         this.writer!.Insert(index, item);
     }
 
+    /// <summary>
+    /// Gets an <see cref="IEnumerable{T}"/> instance for the current builder.
+    /// </summary>
+    /// <returns>An <see cref="IEnumerable{T}"/> instance for the current builder.</returns>
+    /// <remarks>
+    /// The builder should not be mutated while an enumerator is in use.
+    /// </remarks>
+    public readonly IEnumerable<T> AsEnumerable()
+    {
+        return this.writer!;
+    }
+
     /// <inheritdoc cref="ImmutableArray{T}.Builder.ToImmutable"/>
     public readonly ImmutableArray<T> ToImmutable()
     {
@@ -133,7 +147,7 @@ internal struct ImmutableArrayBuilder<T> : IDisposable
     /// <summary>
     /// A class handling the actual buffer writing.
     /// </summary>
-    private sealed class Writer
+    private sealed class Writer : IList<T>, IReadOnlyList<T>
     {
         /// <summary>
         /// The underlying <typeparamref name="T"/> array.
@@ -162,11 +176,27 @@ internal struct ImmutableArrayBuilder<T> : IDisposable
             this.index = 0;
         }
 
+        /// <inheritdoc/>
+        public int Count => this.index;
+
         /// <inheritdoc cref="ImmutableArrayBuilder{T}.WrittenSpan"/>
         public ReadOnlySpan<T> WrittenSpan
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get => new(this.array, 0, this.index);
+        }
+
+        /// <inheritdoc/>
+        bool ICollection<T>.IsReadOnly => true;
+
+        /// <inheritdoc/>
+        T IReadOnlyList<T>.this[int index] => WrittenSpan[index];
+
+        /// <inheritdoc/>
+        T IList<T>.this[int index]
+        {
+            get => WrittenSpan[index];
+            set => throw new NotSupportedException();
         }
 
         /// <inheritdoc cref="ImmutableArrayBuilder{T}.Advance"/>
@@ -267,6 +297,54 @@ internal struct ImmutableArrayBuilder<T> : IDisposable
             Array.Copy(this.array, newArray, this.index);
 
             this.array = newArray;
+        }
+
+        /// <inheritdoc/>
+        int IList<T>.IndexOf(T item)
+        {
+            return Array.IndexOf(this.array, item, 0, this.index);
+        }
+
+        /// <inheritdoc/>
+        void IList<T>.RemoveAt(int index)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <inheritdoc/>
+        bool ICollection<T>.Contains(T item)
+        {
+            return Array.IndexOf(this.array, item, 0, this.index) >= 0;
+        }
+
+        /// <inheritdoc/>
+        void ICollection<T>.CopyTo(T[] array, int arrayIndex)
+        {
+            Array.Copy(this.array, 0, array, arrayIndex, this.index);
+        }
+
+        /// <inheritdoc/>
+        bool ICollection<T>.Remove(T item)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <inheritdoc/>
+        IEnumerator<T> IEnumerable<T>.GetEnumerator()
+        {
+            T?[] array = this.array!;
+            int length = this.index;
+
+            for (int i = 0; i < length; i++)
+            {
+                yield return array[i]!;
+            }
+        }
+
+        /// <inheritdoc/>
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return ((IEnumerable<T>)this).GetEnumerator();
         }
     }
 }
