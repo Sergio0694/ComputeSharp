@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Linq;
 using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Helpers;
 using ComputeSharp.SourceGeneration.Mappings;
@@ -46,12 +45,14 @@ internal static class HlslDefinitionsSyntaxProcessor
     /// <param name="structDeclarationSymbol">The type symbol for the shader type.</param>
     /// <param name="types">The sequence of discovered custom types.</param>
     /// <param name="instanceMethods">The collection of discovered instance methods for custom struct types.</param>
+    /// <param name="constructors">The collection of discovered constructors for custom struct types.</param>
     /// <returns>A sequence of custom type definitions to add to the shader source.</returns>
     public static ImmutableArray<(string Name, string Definition)> GetDeclaredTypes(
         ImmutableArrayBuilder<DiagnosticInfo> diagnostics,
         INamedTypeSymbol structDeclarationSymbol,
         IEnumerable<INamedTypeSymbol> types,
-        IReadOnlyDictionary<IMethodSymbol, MethodDeclarationSyntax> instanceMethods)
+        IReadOnlyDictionary<IMethodSymbol, MethodDeclarationSyntax> instanceMethods,
+        IReadOnlyDictionary<IMethodSymbol, (MethodDeclarationSyntax, MethodDeclarationSyntax)> constructors)
     {
         using ImmutableArrayBuilder<(string, string)> builder = new();
 
@@ -98,11 +99,35 @@ internal static class HlslDefinitionsSyntaxProcessor
                         VariableDeclarator(Identifier(mappedName!)))));
             }
 
-            // Declare the methods of the current type
-            foreach (KeyValuePair<IMethodSymbol, MethodDeclarationSyntax> method in instanceMethods.Where(pair => SymbolEqualityComparer.Default.Equals(pair.Key.ContainingType, type)))
+            // Enumerate all members in a single pass, so we can avoid materializing the collection.
+            // Additionally, this lets us add all members to the struct declaration in a single go.
+            static IEnumerable<MethodDeclarationSyntax> GatherInstanceMethods(
+                INamedTypeSymbol type,
+                IReadOnlyDictionary<IMethodSymbol, MethodDeclarationSyntax> instanceMethods,
+                IReadOnlyDictionary<IMethodSymbol, (MethodDeclarationSyntax, MethodDeclarationSyntax)> constructors)
             {
-                structDeclaration = structDeclaration.AddMembers(method.Value);
+                // Normal instance methods
+                foreach (KeyValuePair<IMethodSymbol, MethodDeclarationSyntax> method in instanceMethods)
+                {
+                    if (SymbolEqualityComparer.Default.Equals(method.Key.ContainingType, type))
+                    {
+                        yield return method.Value;
+                    }
+                }
+
+                // Constructors and stubs
+                foreach (KeyValuePair<IMethodSymbol, (MethodDeclarationSyntax Stub, MethodDeclarationSyntax Ctor)> methods in constructors)
+                {
+                    if (SymbolEqualityComparer.Default.Equals(methods.Key.ContainingType, type))
+                    {
+                        yield return methods.Value.Stub;
+                        yield return methods.Value.Ctor;
+                    }
+                }
             }
+
+            // Declare the methods of the current type
+            structDeclaration = structDeclaration.WithMembers(structDeclaration.Members.AddRange(GatherInstanceMethods(type, instanceMethods, constructors)));
 
             // Insert the trailing ; right after the closing bracket (after normalization)
             builder.Add((

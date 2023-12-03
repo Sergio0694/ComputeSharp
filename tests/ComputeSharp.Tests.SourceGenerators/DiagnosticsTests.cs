@@ -1419,6 +1419,68 @@ public class DiagnosticsTests
         VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0031", "CMPS0047", "CMPS0060");
     }
 
+    [TestMethod]
+    public void InvalidBaseConstructorDeclaration()
+    {
+        const string source = """
+            using ComputeSharp;
+
+            public struct MyStruct
+            {
+                public MyStruct(int x)
+                {
+                }
+
+                public MyStruct(float x)
+                    : this((int)x)
+                {
+                }
+            }
+            
+            [GeneratedComputeShaderDescriptor]
+            public partial struct MyShader : IComputeShader
+            {
+                public ReadWriteBuffer<int> buffer;
+
+                public void Execute()
+                {
+                    MyStruct value = new(3.14f);
+                }
+            }
+            """;
+
+        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0047", "CMPS0061");
+    }
+
+    [TestMethod]
+    public void InvalidMethodOrConstructorCall_PrimaryConstructor()
+    {
+        const string source = """
+            using ComputeSharp;
+
+            public struct MyStruct(int x)
+            {
+                public int PlusOne()
+                {
+                    return x + 1;
+                }
+            }
+            
+            [GeneratedComputeShaderDescriptor]
+            public partial struct MyShader : IComputeShader
+            {
+                public ReadWriteBuffer<int> buffer;
+
+                public void Execute()
+                {
+                    buffer[ThreadIds.X] = new MyStruct(ThreadIds.X).PlusOne();
+                }
+            }
+            """;
+
+        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0047", "CMPS0049");
+    }
+
     /// <summary>
     /// Verifies the output of a source generator.
     /// </summary>

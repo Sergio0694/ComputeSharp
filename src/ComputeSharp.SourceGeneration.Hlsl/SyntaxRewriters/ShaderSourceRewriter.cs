@@ -13,8 +13,6 @@ using Microsoft.CodeAnalysis.Operations;
 using static ComputeSharp.SourceGeneration.Diagnostics.DiagnosticDescriptors;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
-#pragma warning disable IDE0052
-
 namespace ComputeSharp.SourceGeneration.SyntaxRewriters;
 
 /// <summary>
@@ -38,6 +36,11 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
     private readonly IDictionary<IMethodSymbol, MethodDeclarationSyntax> instanceMethods;
 
     /// <summary>
+    /// The collection of discovered constructors for custom struct types.
+    /// </summary>
+    private readonly IDictionary<IMethodSymbol, (MethodDeclarationSyntax Stub, MethodDeclarationSyntax Ctor)> constructors;
+
+    /// <summary>
     /// The collection of processed local functions in the current tree.
     /// </summary>
     private readonly Dictionary<string, LocalFunctionStatementSyntax> localFunctions;
@@ -53,7 +56,8 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
     private readonly bool isEntryPoint;
 
     /// <summary>
-    /// The identifier of the current <see cref="MethodDeclarationSyntax"/> or <see cref="LocalFunctionStatementSyntax"/> tree being visited.
+    /// The identifier of the current <see cref="ConstructorDeclarationSyntax"/>, <see cref="MethodDeclarationSyntax"/>
+    /// or <see cref="LocalFunctionStatementSyntax"/> tree being visited (used to rewrite local functions).
     /// </summary>
     private SyntaxToken currentMethodIdentifier;
 
@@ -70,6 +74,7 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
     /// <param name="discoveredTypes">The set of discovered custom types.</param>
     /// <param name="staticMethods">The set of discovered and processed static methods.</param>
     /// <param name="instanceMethods">The collection of discovered instance methods for custom struct types.</param>
+    /// <param name="constructors">The collection of discovered constructors for custom struct types.</param>
     /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
     /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
     /// <param name="isEntryPoint">Whether or not the current instance is processing a shader entry point.</param>
@@ -79,6 +84,7 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
         ICollection<INamedTypeSymbol> discoveredTypes,
         IDictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods,
         IDictionary<IMethodSymbol, MethodDeclarationSyntax> instanceMethods,
+        IDictionary<IMethodSymbol, (MethodDeclarationSyntax, MethodDeclarationSyntax)> constructors,
         IDictionary<IFieldSymbol, string> constantDefinitions,
         ImmutableArrayBuilder<DiagnosticInfo> diagnostics,
         bool isEntryPoint)
@@ -87,6 +93,7 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
         this.shaderType = shaderType;
         this.staticMethods = staticMethods;
         this.instanceMethods = instanceMethods;
+        this.constructors = constructors;
         this.localFunctions = [];
         this.implicitVariables = [];
         this.isEntryPoint = isEntryPoint;
@@ -99,6 +106,7 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
     /// <param name="discoveredTypes">The set of discovered custom types.</param>
     /// <param name="staticMethods">The set of discovered and processed static methods.</param>
     /// <param name="instanceMethods">The collection of discovered instance methods for custom struct types.</param>
+    /// <param name="constructors">The collection of discovered constructors for custom struct types.</param>
     /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
     /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
     private ShaderSourceRewriter(
@@ -106,12 +114,14 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
         ICollection<INamedTypeSymbol> discoveredTypes,
         IDictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods,
         IDictionary<IMethodSymbol, MethodDeclarationSyntax> instanceMethods,
+        IDictionary<IMethodSymbol, (MethodDeclarationSyntax, MethodDeclarationSyntax)> constructors,
         IDictionary<IFieldSymbol, string> constantDefinitions,
         ImmutableArrayBuilder<DiagnosticInfo> diagnostics)
         : base(semanticModel, discoveredTypes, constantDefinitions, diagnostics)
     {
         this.staticMethods = staticMethods;
         this.instanceMethods = instanceMethods;
+        this.constructors = constructors;
         this.implicitVariables = [];
         this.localFunctions = [];
     }
@@ -120,6 +130,37 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
     /// Gets the collection of processed local functions in the current tree.
     /// </summary>
     public IReadOnlyDictionary<string, LocalFunctionStatementSyntax> LocalFunctions => this.localFunctions;
+
+    /// <inheritdoc cref="CSharpSyntaxRewriter.Visit(SyntaxNode?)"/>
+    public ConstructorDeclarationSyntax? Visit(ConstructorDeclarationSyntax? node)
+    {
+        if (node is null)
+        {
+            return null;
+        }
+
+        this.currentMethodIdentifier = node.Identifier;
+
+        // Constructors have no return type, so there is no return type identifier to replace.
+        // We simply track the type of the type being constructed and then continue normally.
+        // This is done separately where the constructor operation is being processed.
+        ConstructorDeclarationSyntax? updatedNode = (ConstructorDeclarationSyntax?)base.Visit(node)!;
+
+        if (node!.Modifiers.Any(m => m.IsKind(SyntaxKind.UnsafeKeyword)))
+        {
+            Diagnostics.Add(UnsafeModifierOnMethodOrFunction, node);
+        }
+
+        if (updatedNode is not null)
+        {
+            BlockSyntax implicitBlock = Block(this.implicitVariables.Select(static v => LocalDeclarationStatement(v)).ToArray());
+
+            // Add the tracked implicit declarations (at the start of the body)
+            updatedNode = updatedNode.WithBody(implicitBlock).AddBodyStatements([.. updatedNode.Body!.Statements]);
+        }
+
+        return updatedNode;
+    }
 
     /// <inheritdoc cref="CSharpSyntaxRewriter.Visit(SyntaxNode?)"/>
     public MethodDeclarationSyntax? Visit(MethodDeclarationSyntax? node)
@@ -481,7 +522,7 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
                     {
                         if (method.DeclaringSyntaxReferences.FirstOrDefault()?.GetSyntax() is not MethodDeclarationSyntax methodNode)
                         {
-                            Diagnostics.Add(InvalidMethodCall, node, method);
+                            Diagnostics.Add(InvalidMethodOrConstructorCall, node, method);
 
                             return updatedNode;
                         }
@@ -491,6 +532,7 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
                             DiscoveredTypes,
                             this.staticMethods,
                             this.instanceMethods,
+                            this.constructors,
                             ConstantDefinitions,
                             Diagnostics);
 
@@ -534,7 +576,7 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
                     {
                         if (method.DeclaringSyntaxReferences.FirstOrDefault()?.GetSyntax() is not MethodDeclarationSyntax methodNode)
                         {
-                            Diagnostics.Add(InvalidMethodCall, node, method);
+                            Diagnostics.Add(InvalidMethodOrConstructorCall, node, method);
 
                             return updatedNode;
                         }
@@ -544,6 +586,7 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
                             DiscoveredTypes,
                             this.instanceMethods,
                             this.instanceMethods,
+                            this.constructors,
                             ConstantDefinitions,
                             Diagnostics);
 
@@ -589,6 +632,124 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
         }
 
         return updatedNode;
+    }
+
+    /// <inheritdoc/>
+    protected override SyntaxNode VisitUserDefinedObjectCreationExpression(
+        BaseObjectCreationExpressionSyntax node,
+        BaseObjectCreationExpressionSyntax updatedNode,
+        TypeSyntax targetType)
+    {
+        if (SemanticModel.For(node).GetOperation(node) is IObjectCreationOperation { Constructor: IMethodSymbol constructor, Type: INamedTypeSymbol { TypeKind: TypeKind.Struct } typeSymbol })
+        {
+            DiscoveredTypes.Add(typeSymbol);
+
+            // If there are no arguments, check that the constructor is explicitly defined and is not
+            // the default parameterless constructor. In that case, we just fallback to a default value.
+            if (updatedNode.ArgumentList is not { Arguments.Count: > 0 } && constructor.IsImplicitlyDeclared)
+            {
+                return base.VisitUserDefinedObjectCreationExpression(node, updatedNode, targetType);
+            }
+
+            string returnTypeHlslIdentifier = typeSymbol.GetFullyQualifiedName().ToHlslIdentifierName();
+
+            if (!this.constructors.ContainsKey(constructor))
+            {
+                // If we can't find the constructor declaration for the syntax reference of the constructor, it means that either the
+                // type is from another assembly (hence we have no syntax references at all), or the constructor is compiler generated
+                // (even if IsImplicitlyDeclared is false) and a primary constructor. This is deliberately not supported, as there
+                // are very subtle ways in which captures can interact with fields and methods, and we cannot guarantee to track and
+                // rewrite all of them correctly to exactly preserve the same semantics. So we just block such cases entirely as well.
+                if (constructor.DeclaringSyntaxReferences.FirstOrDefault()?.GetSyntax() is not ConstructorDeclarationSyntax constructorNode)
+                {
+                    Diagnostics.Add(InvalidMethodOrConstructorCall, node, constructor);
+
+                    return base.VisitUserDefinedObjectCreationExpression(node, updatedNode, targetType);
+                }
+
+                // Chaining constructors is not supported, so emit a diagnostic to inform the user.
+                // The rest of the code will work as usual, but the semantics of the other chained
+                // constructor being invoked is not preserved, so the resulting code is not the same.
+                if (constructorNode.Initializer is not null)
+                {
+                    Diagnostics.Add(InvalidBaseConstructorDeclaration, node, constructor);
+                }
+
+                ShaderSourceRewriter shaderSourceRewriter = new(
+                    SemanticModel,
+                    DiscoveredTypes,
+                    this.instanceMethods,
+                    this.instanceMethods,
+                    this.constructors,
+                    ConstantDefinitions,
+                    Diagnostics);
+
+                ConstructorDeclarationSyntax processedMethod = shaderSourceRewriter.Visit(constructorNode)!.WithoutTrivia();
+
+                // Extracts the arguments from the list of parameters of the current method
+                ArgumentSyntax[] ExtractArguments()
+                {
+                    using ImmutableArrayBuilder<ArgumentSyntax> arguments = new();
+
+                    foreach (ParameterSyntax parameter in processedMethod.ParameterList.Parameters)
+                    {
+                        arguments.Add(Argument(IdentifierName(parameter.Identifier.Text)));
+                    }
+
+                    return arguments.ToArray();
+                }
+
+                // Create a static method acting as the constructor stub:
+                //
+                // static <TYPE_NAME> __ctor(<PARAMETERS>)
+                // {
+                //     <TYPE_NAME> __this = (<TYPE_NAME>)0;
+                //
+                //     __this.__ctor__init(<PARAMETERS>);
+                //
+                //     return __this;
+                // }
+                MethodDeclarationSyntax stubNode =
+                    MethodDeclaration(IdentifierName(returnTypeHlslIdentifier), "__ctor")
+                    .AddModifiers(Token(SyntaxKind.StaticKeyword))
+                    .WithParameterList(processedMethod.ParameterList)
+                    .AddBodyStatements(
+                        LocalDeclarationStatement(
+                            VariableDeclaration(IdentifierName(returnTypeHlslIdentifier)).AddVariables(
+                                VariableDeclarator(Identifier("__this")).WithInitializer(EqualsValueClause(
+                                    CastExpression(targetType, LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(0))))))),
+                        ExpressionStatement(
+                            InvocationExpression(
+                                MemberAccessExpression(
+                                    SyntaxKind.SimpleMemberAccessExpression,
+                                    IdentifierName("__this"),
+                                    IdentifierName("__ctor__init")))
+                            .AddArgumentListArguments(ExtractArguments())),
+                        ReturnStatement(IdentifierName("__this")));
+
+                // Create the actual constructor to invoke, as an instance method:
+                //
+                // void __ctor__init(<PARAMETERS>)
+                // {
+                //     <CONSTRUCTOR_STATEMENTS>
+                // }
+                MethodDeclarationSyntax ctorNode =
+                    MethodDeclaration(PredefinedType(Token(SyntaxKind.VoidKeyword)), "__ctor__init")
+                    .WithParameterList(processedMethod.ParameterList)
+                    .WithBody(processedMethod.Body);
+
+                this.constructors.Add(constructor, (stubNode, ctorNode));
+            }
+
+            // Rewrite the expression to invoke the rewritten constructor:
+            //
+            // <TYPE_NAME>::__ctor(...)
+            return
+                InvocationExpression(IdentifierName($"{returnTypeHlslIdentifier}::__ctor"))
+                .WithArgumentList(updatedNode.ArgumentList!);
+        }
+
+        return base.VisitUserDefinedObjectCreationExpression(node, updatedNode, targetType);
     }
 
     /// <summary>
