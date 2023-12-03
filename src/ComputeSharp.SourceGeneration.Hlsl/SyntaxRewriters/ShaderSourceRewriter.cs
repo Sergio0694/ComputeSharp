@@ -655,11 +655,16 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
 
             if (!this.constructors.ContainsKey(constructor))
             {
+                // If we can't find the constructor declaration for the syntax reference of the constructor, it means that either the
+                // type is from another assembly (hence we have no syntax references at all), or the constructor is compiler generated
+                // (even if IsImplicitlyDeclared is false) and a primary constructor. This is deliberately not supported, as there
+                // are very subtle ways in which captures can interact with fields and methods, and we cannot guarantee to track and
+                // rewrite all of them correctly to exactly preserve the same semantics. So we just block such cases entirely as well.
                 if (constructor.DeclaringSyntaxReferences.FirstOrDefault()?.GetSyntax() is not ConstructorDeclarationSyntax constructorNode)
                 {
                     Diagnostics.Add(InvalidMethodOrConstructorCall, node, constructor);
 
-                    return updatedNode;
+                    return base.VisitUserDefinedObjectCreationExpression(node, updatedNode, targetType);
                 }
 
                 // Chaining constructors is not supported, so emit a diagnostic to inform the user.
