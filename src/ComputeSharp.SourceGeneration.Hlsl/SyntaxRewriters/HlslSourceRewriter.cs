@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Threading;
 using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Helpers;
 using ComputeSharp.SourceGeneration.Mappings;
@@ -33,16 +34,19 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
     /// <param name="discoveredTypes">The set of discovered custom types.</param>
     /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
     /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
+    /// <param name="token">The <see cref="System.Threading.CancellationToken"/> value for the current operation.</param>
     protected HlslSourceRewriter(
         SemanticModelProvider semanticModel,
         ICollection<INamedTypeSymbol> discoveredTypes,
         IDictionary<IFieldSymbol, string> constantDefinitions,
-        ImmutableArrayBuilder<DiagnosticInfo> diagnostics)
+        ImmutableArrayBuilder<DiagnosticInfo> diagnostics,
+        CancellationToken token)
     {
         SemanticModel = semanticModel;
         DiscoveredTypes = discoveredTypes;
         ConstantDefinitions = constantDefinitions;
         Diagnostics = diagnostics;
+        CancellationToken = token;
     }
 
     /// <summary>
@@ -64,6 +68,11 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
     /// Gets the collection of produced <see cref="DiagnosticInfo"/> instances.
     /// </summary>
     protected ImmutableArrayBuilder<DiagnosticInfo> Diagnostics { get; }
+
+    /// <summary>
+    /// Gets the <see cref="System.Threading.CancellationToken"/> value for the current operation.
+    /// </summary>
+    protected CancellationToken CancellationToken { get; }
 
     /// <inheritdoc/>
     public sealed override SyntaxNode VisitCastExpression(CastExpressionSyntax node)
@@ -118,6 +127,8 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
     /// <returns>The rewritten <see cref="SyntaxNode"/> for the object creation expression.</returns>
     private SyntaxNode VisitObjectCreationExpression(BaseObjectCreationExpressionSyntax node, BaseObjectCreationExpressionSyntax updatedNode, TypeSyntax targetType)
     {
+        CancellationToken.ThrowIfCancellationRequested();
+
         ITypeSymbol? typeSymbol = SemanticModel.For(node).GetTypeInfo(node).Type;
 
         // Handle the edge case of the type being null (shouldn't really happen)
@@ -192,6 +203,8 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
     /// <inheritdoc/>
     public sealed override SyntaxNode? VisitLiteralExpression(LiteralExpressionSyntax node)
     {
+        CancellationToken.ThrowIfCancellationRequested();
+
         LiteralExpressionSyntax updatedNode = (LiteralExpressionSyntax)base.VisitLiteralExpression(node)!;
 
         if (updatedNode.IsKind(SyntaxKind.DefaultLiteralExpression))
@@ -250,6 +263,8 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
     /// <inheritdoc/>
     public sealed override SyntaxNode? VisitElementAccessExpression(ElementAccessExpressionSyntax node)
     {
+        CancellationToken.ThrowIfCancellationRequested();
+
         ElementAccessExpressionSyntax updatedNode = (ElementAccessExpressionSyntax)base.VisitElementAccessExpression(node)!;
 
         if (SemanticModel.For(node).GetOperation(node) is IPropertyReferenceOperation operation)
@@ -313,6 +328,8 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
     /// <inheritdoc/>
     public sealed override SyntaxNode? VisitAssignmentExpression(AssignmentExpressionSyntax node)
     {
+        CancellationToken.ThrowIfCancellationRequested();
+
         AssignmentExpressionSyntax updatedNode = (AssignmentExpressionSyntax)base.VisitAssignmentExpression(node)!;
 
         if (SemanticModel.For(node).GetOperation(node) is ICompoundAssignmentOperation { OperatorMethod: { ContainingType.ContainingNamespace.Name: "ComputeSharp" } method })
@@ -340,6 +357,8 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
     /// <inheritdoc/>
     public sealed override SyntaxNode? VisitBinaryExpression(BinaryExpressionSyntax node)
     {
+        CancellationToken.ThrowIfCancellationRequested();
+
         BinaryExpressionSyntax updatedNode = (BinaryExpressionSyntax)base.VisitBinaryExpression(node)!;
 
         // Process binary operations to see if the target operator method is an intrinsic

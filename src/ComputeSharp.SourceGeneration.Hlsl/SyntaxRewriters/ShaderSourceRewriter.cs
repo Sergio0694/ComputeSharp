@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Threading;
 using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Helpers;
 using ComputeSharp.SourceGeneration.Mappings;
@@ -77,6 +78,7 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
     /// <param name="constructors">The collection of discovered constructors for custom struct types.</param>
     /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
     /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
+    /// <param name="token">The <see cref="System.Threading.CancellationToken"/> value for the current operation.</param>
     /// <param name="isEntryPoint">Whether or not the current instance is processing a shader entry point.</param>
     public ShaderSourceRewriter(
         INamedTypeSymbol shaderType,
@@ -87,8 +89,9 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
         IDictionary<IMethodSymbol, (MethodDeclarationSyntax, MethodDeclarationSyntax)> constructors,
         IDictionary<IFieldSymbol, string> constantDefinitions,
         ImmutableArrayBuilder<DiagnosticInfo> diagnostics,
+        CancellationToken token,
         bool isEntryPoint)
-        : base(semanticModel, discoveredTypes, constantDefinitions, diagnostics)
+        : base(semanticModel, discoveredTypes, constantDefinitions, diagnostics, token)
     {
         this.shaderType = shaderType;
         this.staticMethods = staticMethods;
@@ -109,6 +112,7 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
     /// <param name="constructors">The collection of discovered constructors for custom struct types.</param>
     /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
     /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
+    /// <param name="token">The <see cref="System.Threading.CancellationToken"/> value for the current operation.</param>
     private ShaderSourceRewriter(
         SemanticModelProvider semanticModel,
         ICollection<INamedTypeSymbol> discoveredTypes,
@@ -116,8 +120,9 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
         IDictionary<IMethodSymbol, MethodDeclarationSyntax> instanceMethods,
         IDictionary<IMethodSymbol, (MethodDeclarationSyntax, MethodDeclarationSyntax)> constructors,
         IDictionary<IFieldSymbol, string> constantDefinitions,
-        ImmutableArrayBuilder<DiagnosticInfo> diagnostics)
-        : base(semanticModel, discoveredTypes, constantDefinitions, diagnostics)
+        ImmutableArrayBuilder<DiagnosticInfo> diagnostics,
+        CancellationToken token)
+        : base(semanticModel, discoveredTypes, constantDefinitions, diagnostics, token)
     {
         this.staticMethods = staticMethods;
         this.instanceMethods = instanceMethods;
@@ -308,6 +313,8 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
     /// <inheritdoc/>
     public override SyntaxNode? VisitLocalFunctionStatement(LocalFunctionStatementSyntax node)
     {
+        CancellationToken.ThrowIfCancellationRequested();
+
         // If the current identifier matches the one for the current method, it means the local function
         // statement is the one being inspected, and it's nto coming from a local function in a method
         // being parsed. That is, this was a blobal method that was annotated in source.
@@ -369,6 +376,8 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
     /// <inheritdoc/>
     public override SyntaxNode VisitMemberAccessExpression(MemberAccessExpressionSyntax node)
     {
+        CancellationToken.ThrowIfCancellationRequested();
+
         MemberAccessExpressionSyntax updatedNode = (MemberAccessExpressionSyntax)base.VisitMemberAccessExpression(node)!;
 
         if (node.IsKind(SyntaxKind.SimpleMemberAccessExpression) &&
@@ -477,6 +486,8 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
     /// <inheritdoc/>
     public override SyntaxNode? VisitInvocationExpression(InvocationExpressionSyntax node)
     {
+        CancellationToken.ThrowIfCancellationRequested();
+
         InvocationExpressionSyntax updatedNode = (InvocationExpressionSyntax)base.VisitInvocationExpression(node)!;
 
         if (SemanticModel.For(node).GetOperation(node) is IInvocationOperation { TargetMethod: IMethodSymbol method } operation)
@@ -520,7 +531,7 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
 
                     if (!this.staticMethods.ContainsKey(method))
                     {
-                        if (method.DeclaringSyntaxReferences.FirstOrDefault()?.GetSyntax() is not MethodDeclarationSyntax methodNode)
+                        if (!method.TryGetSyntaxNode(CancellationToken, out MethodDeclarationSyntax? methodNode))
                         {
                             Diagnostics.Add(InvalidMethodOrConstructorCall, node, method);
 
@@ -534,7 +545,8 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
                             this.instanceMethods,
                             this.constructors,
                             ConstantDefinitions,
-                            Diagnostics);
+                            Diagnostics,
+                            CancellationToken);
 
                         MethodDeclarationSyntax processedMethod = shaderSourceRewriter.Visit(methodNode)!.WithoutTrivia();
 
@@ -574,7 +586,7 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
                     // Same as for static methods, ensure the method is available in source, and process it if so
                     if (!this.instanceMethods.ContainsKey(method))
                     {
-                        if (method.DeclaringSyntaxReferences.FirstOrDefault()?.GetSyntax() is not MethodDeclarationSyntax methodNode)
+                        if (!method.TryGetSyntaxNode(CancellationToken, out MethodDeclarationSyntax? methodNode))
                         {
                             Diagnostics.Add(InvalidMethodOrConstructorCall, node, method);
 
@@ -588,7 +600,8 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
                             this.instanceMethods,
                             this.constructors,
                             ConstantDefinitions,
-                            Diagnostics);
+                            Diagnostics,
+                            CancellationToken);
 
                         MethodDeclarationSyntax processedMethod = shaderSourceRewriter.Visit(methodNode)!.WithoutTrivia();
 
@@ -660,7 +673,7 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
                 // (even if IsImplicitlyDeclared is false) and a primary constructor. This is deliberately not supported, as there
                 // are very subtle ways in which captures can interact with fields and methods, and we cannot guarantee to track and
                 // rewrite all of them correctly to exactly preserve the same semantics. So we just block such cases entirely as well.
-                if (constructor.DeclaringSyntaxReferences.FirstOrDefault()?.GetSyntax() is not ConstructorDeclarationSyntax constructorNode)
+                if (!constructor.TryGetSyntaxNode(CancellationToken, out ConstructorDeclarationSyntax? constructorNode))
                 {
                     Diagnostics.Add(InvalidMethodOrConstructorCall, node, constructor);
 
@@ -682,7 +695,8 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
                     this.instanceMethods,
                     this.constructors,
                     ConstantDefinitions,
-                    Diagnostics);
+                    Diagnostics,
+                    CancellationToken);
 
                 ConstructorDeclarationSyntax processedMethod = shaderSourceRewriter.Visit(constructorNode)!.WithoutTrivia();
 

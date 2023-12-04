@@ -284,13 +284,20 @@ partial class D2DPixelShaderDescriptorGenerator
                     false => $"static {HlslKnownTypes.GetMappedName(typeSymbol)}"
                 };
 
+                token.ThrowIfCancellationRequested();
+
                 StaticFieldRewriter staticFieldRewriter = new(
                     semanticModel,
                     discoveredTypes,
                     constantDefinitions,
-                    diagnostics);
+                    diagnostics,
+                    token);
 
-                string? assignment = staticFieldRewriter.Visit(variableDeclarator)?.NormalizeWhitespace(eol: "\n").ToFullString();
+                ExpressionSyntax? processedDeclaration = staticFieldRewriter.Visit(variableDeclarator);
+
+                token.ThrowIfCancellationRequested();
+
+                string? assignment = processedDeclaration?.NormalizeWhitespace(eol: "\n").ToFullString();
 
                 needsD2D1RequiresScenePosition |= staticFieldRewriter.NeedsD2DRequiresScenePositionAttribute;
 
@@ -368,6 +375,7 @@ partial class D2DPixelShaderDescriptorGenerator
                     constructors,
                     constantDefinitions,
                     diagnostics,
+                    token,
                     isShaderEntryPoint);
 
                 // Rewrite the method syntax tree
