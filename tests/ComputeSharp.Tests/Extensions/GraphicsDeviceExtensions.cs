@@ -340,8 +340,8 @@ public static class GraphicsDeviceExtensions
     {
         return type switch
         {
-            _ when type == typeof(ReadOnlyTexture3D<>) => device.AllocateReadOnlyTexture3D<T>(data),
-            _ when type == typeof(ReadWriteTexture3D<>) => device.AllocateReadWriteTexture3D<T>(data),
+            _ when type == typeof(ReadOnlyTexture3D<>) => device.AllocateReadOnlyTexture3D(data),
+            _ when type == typeof(ReadWriteTexture3D<>) => device.AllocateReadWriteTexture3D(data),
             _ => throw new ArgumentException($"Invalid type: {type}", nameof(type))
         };
     }

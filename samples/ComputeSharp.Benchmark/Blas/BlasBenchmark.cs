@@ -74,7 +74,7 @@ public class BlasBenchmark : IDisposable
     private ReadWriteBuffer<float>? bufferY;
 
     /// <summary>
-    /// A <see cref="System.Random"/> instance to initialize the tensors.
+    /// A <see cref="Random"/> instance to initialize the tensors.
     /// </summary>
     private readonly Random random = new();
 

@@ -56,7 +56,7 @@ internal unsafe struct ICanvasImageInterop : IComObject
     }
 
     /// <summary>
-    /// Gets an <see cref="ID2D1Image"/> from an <see cref="ICanvasImageInterop.Interface"/> instance.
+    /// Gets an <see cref="ID2D1Image"/> from an <see cref="Interface"/> instance.
     /// </summary>
     /// <param name="device">The input canvas device (as a marshalled <see cref="global::Microsoft.Graphics.Canvas.CanvasDevice"/>).</param>
     /// <param name="deviceContext">

@@ -22,7 +22,7 @@ internal static unsafe class ResourceManager
     /// <summary>
     /// Gets or creates an <see cref="IGraphicsEffectSource"/> instance for a native resource.
     /// </summary>
-    /// <param name="device">The input canvas device (as a marshalled <see cref="Microsoft.Graphics.Canvas.CanvasDevice"/>).</param>
+    /// <param name="device">The input canvas device (as a marshalled <see cref="CanvasDevice"/>).</param>
     /// <param name="resource">The input native resource to create a wrapper for.</param>
     /// <param name="dpi">The realization DPIs for <paramref name="resource"/></param>
     /// <returns>The resulting <see cref="IGraphicsEffectSource"/> wrapper instance.</returns>

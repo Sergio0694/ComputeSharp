@@ -18,7 +18,7 @@ internal static class DXGIFormatHelper
     /// </summary>
     /// <typeparam name="T">The input type argument to get the corresponding <see cref="DXGI_FORMAT"/> for.</typeparam>
     /// <returns>The <see cref="DXGI_FORMAT"/> value corresponding to <typeparamref name="T"/>.</returns>
-    /// <exception cref="System.ArgumentException">Thrown when the input type <typeparamref name="T"/> is not supported.</exception>
+    /// <exception cref="ArgumentException">Thrown when the input type <typeparamref name="T"/> is not supported.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static DXGI_FORMAT GetForType<T>()
         where T : unmanaged
@@ -54,7 +54,7 @@ internal static class DXGIFormatHelper
     /// </summary>
     /// <typeparam name="T">The input type argument to check.</typeparam>
     /// <returns>Whether or not the input type corresponds to a normalized format.</returns>
-    /// <exception cref="System.ArgumentException">Thrown when the input type <typeparamref name="T"/> is not supported.</exception>
+    /// <exception cref="ArgumentException">Thrown when the input type <typeparamref name="T"/> is not supported.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsNormalizedType<T>()
         where T : unmanaged

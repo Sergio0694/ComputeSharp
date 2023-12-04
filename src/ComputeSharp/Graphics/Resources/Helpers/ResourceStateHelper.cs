@@ -14,7 +14,7 @@ internal static class ResourceStateHelper
     /// Gets the corresponding <see cref="D3D12_RESOURCE_STATES"/> value for the input resource state.
     /// </summary>
     /// <returns>The <see cref="D3D12_RESOURCE_STATES"/> value corresponding to the input resource state.</returns>
-    /// <exception cref="System.ArgumentException">Thrown when the input value is not valid.</exception>
+    /// <exception cref="ArgumentException">Thrown when the input value is not valid.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static D3D12_RESOURCE_STATES GetD3D12ResourceStates(ResourceState resourceState)
     {
