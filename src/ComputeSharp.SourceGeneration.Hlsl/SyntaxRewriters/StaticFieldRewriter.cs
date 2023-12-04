@@ -24,7 +24,7 @@ namespace ComputeSharp.SourceGeneration.SyntaxRewriters;
 /// <param name="discoveredTypes">The set of discovered custom types.</param>
 /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
 /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
-/// <param name="token">The <see cref="System.Threading.CancellationToken"/> value for the current operation.</param>
+/// <param name="token">The <see cref="CancellationToken"/> value for the current operation.</param>
 internal sealed partial class StaticFieldRewriter(
     SemanticModelProvider semanticModel,
     ICollection<INamedTypeSymbol> discoveredTypes,

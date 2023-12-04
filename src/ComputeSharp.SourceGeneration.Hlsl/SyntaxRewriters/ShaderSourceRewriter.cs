@@ -78,7 +78,7 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
     /// <param name="constructors">The collection of discovered constructors for custom struct types.</param>
     /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
     /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
-    /// <param name="token">The <see cref="System.Threading.CancellationToken"/> value for the current operation.</param>
+    /// <param name="token">The <see cref="CancellationToken"/> value for the current operation.</param>
     /// <param name="isEntryPoint">Whether or not the current instance is processing a shader entry point.</param>
     public ShaderSourceRewriter(
         INamedTypeSymbol shaderType,
@@ -112,7 +112,7 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
     /// <param name="constructors">The collection of discovered constructors for custom struct types.</param>
     /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
     /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
-    /// <param name="token">The <see cref="System.Threading.CancellationToken"/> value for the current operation.</param>
+    /// <param name="token">The <see cref="CancellationToken"/> value for the current operation.</param>
     private ShaderSourceRewriter(
         SemanticModelProvider semanticModel,
         ICollection<INamedTypeSymbol> discoveredTypes,
@@ -581,8 +581,6 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
                 {
                     DiscoveredTypes.Add(structTypeSymbol);
 
-                    string methodIdentifier = method.GetFullyQualifiedMetadataName().ToHlslIdentifierName();
-
                     // Same as for static methods, ensure the method is available in source, and process it if so
                     if (!this.instanceMethods.ContainsKey(method))
                     {
@@ -605,18 +603,10 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
 
                         MethodDeclarationSyntax processedMethod = shaderSourceRewriter.Visit(methodNode)!.WithoutTrivia();
 
-                        this.instanceMethods.Add(method, processedMethod.WithIdentifier(Identifier(methodIdentifier)));
+                        this.instanceMethods.Add(method, processedMethod);
                     }
 
-                    // Rewrite the expression depending on its type:
-                    //   - If it's a simple member expression, change the identifier name: eg. foo.Bar(...) => foo.NewName(...)
-                    //   - If it's an identifier name, change it directly: eg. Bar(...) => NewName(...)
-                    return updatedNode.Expression switch
-                    {
-                        MemberAccessExpressionSyntax memberAccess => updatedNode.WithExpression(memberAccess.WithName(IdentifierName(methodIdentifier))),
-                        IdentifierNameSyntax identifierName => updatedNode.WithExpression(IdentifierName(methodIdentifier)),
-                        _ => throw new NotSupportedException($"Unsupported instance method expression type \"{updatedNode.Expression.GetType()}\".")
-                    };
+                    return updatedNode;
                 }
             }
         }

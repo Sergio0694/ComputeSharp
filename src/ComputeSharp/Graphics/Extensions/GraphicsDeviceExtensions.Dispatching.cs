@@ -116,7 +116,7 @@ public static partial class GraphicsDeviceExtensions
     /// }
     /// </code>
     /// <para>All dispatched shaders will be executed as soon as the context goes out of scope.</para>
-    /// <para>Asynchronous execution is also supported, through the <see cref="System.IAsyncDisposable"/> interface:</para>
+    /// <para>Asynchronous execution is also supported, through the <see cref="IAsyncDisposable"/> interface:</para>
     /// <code>
     /// await using (var context = device.CreateComputeContext())
     /// {

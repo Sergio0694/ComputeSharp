@@ -61,7 +61,7 @@ public sealed partial class HlslGaussianBlurProcessor : IImageProcessor
     }
 
     /// <summary>
-    /// The <see cref="ComputeSharp.GraphicsDevice"/> instance in use.
+    /// The <see cref="GraphicsDevice"/> instance in use.
     /// </summary>
     private readonly GraphicsDevice graphicsDevice;
 
