@@ -394,7 +394,11 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
     {
         IdentifierNameSyntax updatedNode = (IdentifierNameSyntax)base.VisitIdentifierName(node)!;
 
-        if (SemanticModel.For(node).GetOperation(node) is IFieldReferenceOperation operation &&
+        // Only gather constants directly accessed by name. We can also pre-filter to exclude invocations
+        // and member access expressions, as those will be handled separately. Doing so avoids unnecessarily
+        // retrieving semantic information for every identifier, which would otherwise be fairly expensive.
+        if (node.Parent is not (InvocationExpressionSyntax or MemberAccessExpressionSyntax) &&
+            SemanticModel.For(node).GetOperation(node) is IFieldReferenceOperation operation &&
             operation.Field.IsConst &&
             operation.Type!.TypeKind != TypeKind.Enum)
         {
