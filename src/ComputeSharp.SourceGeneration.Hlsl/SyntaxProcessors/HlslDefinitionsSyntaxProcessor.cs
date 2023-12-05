@@ -49,6 +49,7 @@ internal static class HlslDefinitionsSyntaxProcessor
     /// <param name="semanticModel">The <see cref="SemanticModelProvider"/> instance for the type to process.</param>
     /// <param name="discoveredTypes">The collection of currently discovered types.</param>
     /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
+    /// <param name="staticFieldDefinitions">The collection of discovered static field definitions.</param>
     /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
     /// <param name="token">The <see cref="CancellationToken"/> used to cancel the operation, if needed.</param>
     /// <param name="name">The mapped name for the field.</param>
@@ -62,6 +63,7 @@ internal static class HlslDefinitionsSyntaxProcessor
         SemanticModelProvider semanticModel,
         ICollection<INamedTypeSymbol> discoveredTypes,
         IDictionary<IFieldSymbol, string> constantDefinitions,
+        IDictionary<IFieldSymbol, (string, string, string?)> staticFieldDefinitions,
         ImmutableArrayBuilder<DiagnosticInfo> diagnostics,
         CancellationToken token,
         [NotNullWhen(true)] out string? name,
@@ -112,6 +114,7 @@ internal static class HlslDefinitionsSyntaxProcessor
             semanticModel,
             discoveredTypes,
             constantDefinitions,
+            staticFieldDefinitions,
             diagnostics,
             token);
 

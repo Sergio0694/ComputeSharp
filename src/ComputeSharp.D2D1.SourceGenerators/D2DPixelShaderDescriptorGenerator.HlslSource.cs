@@ -53,6 +53,7 @@ partial class D2DPixelShaderDescriptorGenerator
             Dictionary<IMethodSymbol, MethodDeclarationSyntax> instanceMethods = new(SymbolEqualityComparer.Default);
             Dictionary<IMethodSymbol, (MethodDeclarationSyntax, MethodDeclarationSyntax)> constructors = new(SymbolEqualityComparer.Default);
             Dictionary<IFieldSymbol, string> constantDefinitions = new(SymbolEqualityComparer.Default);
+            Dictionary<IFieldSymbol, (string, string, string?)> staticFieldDefinitions = new(SymbolEqualityComparer.Default);
 
             token.ThrowIfCancellationRequested();
 
@@ -78,6 +79,7 @@ partial class D2DPixelShaderDescriptorGenerator
                 instanceMethods,
                 constructors,
                 constantDefinitions,
+                staticFieldDefinitions,
                 token,
                 out bool methodsNeedD2D1RequiresScenePosition);
 
@@ -89,6 +91,7 @@ partial class D2DPixelShaderDescriptorGenerator
                 structDeclarationSymbol,
                 discoveredTypes,
                 constantDefinitions,
+                staticFieldDefinitions,
                 token,
                 out bool fieldsNeedD2D1RequiresScenePosition);
 
@@ -238,6 +241,7 @@ partial class D2DPixelShaderDescriptorGenerator
         /// <param name="structDeclarationSymbol">The type symbol for the shader type.</param>
         /// <param name="discoveredTypes">The collection of currently discovered types.</param>
         /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
+        /// <param name="staticFieldDefinitions">The collection of discovered static field definitions.</param>
         /// <param name="token">The <see cref="CancellationToken"/> used to cancel the operation, if needed.</param>
         /// <param name="needsD2D1RequiresScenePosition">Whether or not the shader needs the <c>[D2DRequiresScenePosition]</c> annotation.</param>
         /// <returns>A sequence of static constant fields in <paramref name="structDeclarationSymbol"/>.</returns>
@@ -247,6 +251,7 @@ partial class D2DPixelShaderDescriptorGenerator
             INamedTypeSymbol structDeclarationSymbol,
             ICollection<INamedTypeSymbol> discoveredTypes,
             IDictionary<IFieldSymbol, string> constantDefinitions,
+            IDictionary<IFieldSymbol, (string, string, string?)> staticFieldDefinitions,
             CancellationToken token,
             out bool needsD2D1RequiresScenePosition)
         {
@@ -267,6 +272,7 @@ partial class D2DPixelShaderDescriptorGenerator
                     semanticModel,
                     discoveredTypes,
                     constantDefinitions,
+                    staticFieldDefinitions,
                     diagnostics,
                     token,
                     out string? name,
@@ -294,6 +300,7 @@ partial class D2DPixelShaderDescriptorGenerator
         /// <param name="instanceMethods">The collection of discovered instance methods for custom struct types.</param>
         /// <param name="constructors">The collection of discovered constructors for custom struct types.</param>
         /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
+        /// <param name="staticFieldDefinitions">The collection of discovered static field definitions.</param>
         /// <param name="needsD2D1RequiresScenePosition">Whether or not the shader needs the <c>[D2DRequiresScenePosition]</c> annotation.</param>
         /// <param name="token">The <see cref="CancellationToken"/> used to cancel the operation, if needed.</param>
         /// <returns>A sequence of processed methods in <paramref name="structDeclarationSymbol"/>, and the entry point.</returns>
@@ -306,6 +313,7 @@ partial class D2DPixelShaderDescriptorGenerator
             IDictionary<IMethodSymbol, MethodDeclarationSyntax> instanceMethods,
             IDictionary<IMethodSymbol, (MethodDeclarationSyntax, MethodDeclarationSyntax)> constructors,
             IDictionary<IFieldSymbol, string> constantDefinitions,
+            IDictionary<IFieldSymbol, (string, string, string?)> staticFieldDefinitions,
             CancellationToken token,
             out bool needsD2D1RequiresScenePosition)
         {
@@ -350,6 +358,7 @@ partial class D2DPixelShaderDescriptorGenerator
                     instanceMethods,
                     constructors,
                     constantDefinitions,
+                    staticFieldDefinitions,
                     diagnostics,
                     token,
                     isShaderEntryPoint);

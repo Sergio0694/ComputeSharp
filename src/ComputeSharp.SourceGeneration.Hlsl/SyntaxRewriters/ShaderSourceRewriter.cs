@@ -77,6 +77,7 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
     /// <param name="instanceMethods">The collection of discovered instance methods for custom struct types.</param>
     /// <param name="constructors">The collection of discovered constructors for custom struct types.</param>
     /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
+    /// <param name="staticFieldDefinitions">The collection of discovered static field definitions.</param>
     /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
     /// <param name="token">The <see cref="CancellationToken"/> value for the current operation.</param>
     /// <param name="isEntryPoint">Whether or not the current instance is processing a shader entry point.</param>
@@ -88,10 +89,11 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
         IDictionary<IMethodSymbol, MethodDeclarationSyntax> instanceMethods,
         IDictionary<IMethodSymbol, (MethodDeclarationSyntax, MethodDeclarationSyntax)> constructors,
         IDictionary<IFieldSymbol, string> constantDefinitions,
+        IDictionary<IFieldSymbol, (string, string, string?)> staticFieldDefinitions,
         ImmutableArrayBuilder<DiagnosticInfo> diagnostics,
         CancellationToken token,
         bool isEntryPoint)
-        : base(semanticModel, discoveredTypes, constantDefinitions, diagnostics, token)
+        : base(semanticModel, discoveredTypes, constantDefinitions, staticFieldDefinitions, diagnostics, token)
     {
         this.shaderType = shaderType;
         this.staticMethods = staticMethods;
@@ -111,6 +113,7 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
     /// <param name="instanceMethods">The collection of discovered instance methods for custom struct types.</param>
     /// <param name="constructors">The collection of discovered constructors for custom struct types.</param>
     /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
+    /// <param name="staticFieldDefinitions">The collection of discovered static field definitions.</param>
     /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
     /// <param name="token">The <see cref="CancellationToken"/> value for the current operation.</param>
     private ShaderSourceRewriter(
@@ -120,9 +123,10 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
         IDictionary<IMethodSymbol, MethodDeclarationSyntax> instanceMethods,
         IDictionary<IMethodSymbol, (MethodDeclarationSyntax, MethodDeclarationSyntax)> constructors,
         IDictionary<IFieldSymbol, string> constantDefinitions,
+        IDictionary<IFieldSymbol, (string, string, string?)> staticFieldDefinitions,
         ImmutableArrayBuilder<DiagnosticInfo> diagnostics,
         CancellationToken token)
-        : base(semanticModel, discoveredTypes, constantDefinitions, diagnostics, token)
+        : base(semanticModel, discoveredTypes, constantDefinitions, staticFieldDefinitions, diagnostics, token)
     {
         this.staticMethods = staticMethods;
         this.instanceMethods = instanceMethods;
@@ -545,6 +549,7 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
                             this.instanceMethods,
                             this.constructors,
                             ConstantDefinitions,
+                            StaticFieldDefinitions,
                             Diagnostics,
                             CancellationToken);
 
@@ -598,6 +603,7 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
                             this.instanceMethods,
                             this.constructors,
                             ConstantDefinitions,
+                            StaticFieldDefinitions,
                             Diagnostics,
                             CancellationToken);
 
@@ -685,6 +691,7 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
                     this.instanceMethods,
                     this.constructors,
                     ConstantDefinitions,
+                    StaticFieldDefinitions,
                     Diagnostics,
                     CancellationToken);
 

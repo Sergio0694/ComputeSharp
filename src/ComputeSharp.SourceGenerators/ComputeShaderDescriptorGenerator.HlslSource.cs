@@ -59,6 +59,7 @@ partial class ComputeShaderDescriptorGenerator
             Dictionary<IMethodSymbol, MethodDeclarationSyntax> instanceMethods = new(SymbolEqualityComparer.Default);
             Dictionary<IMethodSymbol, (MethodDeclarationSyntax, MethodDeclarationSyntax)> constructors = new(SymbolEqualityComparer.Default);
             Dictionary<IFieldSymbol, string> constantDefinitions = new(SymbolEqualityComparer.Default);
+            Dictionary<IFieldSymbol, (string, string, string?)> staticFieldDefinitions = new(SymbolEqualityComparer.Default);
 
             // Setup the semantic model and basic properties
             INamedTypeSymbol? pixelShaderSymbol = structDeclarationSymbol.AllInterfaces.FirstOrDefault(static interfaceSymbol => interfaceSymbol is { IsGenericType: true, Name: "IComputeShader" });
@@ -93,6 +94,7 @@ partial class ComputeShaderDescriptorGenerator
                 instanceMethods,
                 constructors,
                 constantDefinitions,
+                staticFieldDefinitions,
                 isComputeShader,
                 token);
 
@@ -105,6 +107,7 @@ partial class ComputeShaderDescriptorGenerator
                 structDeclarationSymbol,
                 discoveredTypes,
                 constantDefinitions,
+                staticFieldDefinitions,
                 token);
 
             token.ThrowIfCancellationRequested();
@@ -251,6 +254,7 @@ partial class ComputeShaderDescriptorGenerator
         /// <param name="structDeclarationSymbol">The type symbol for the shader type.</param>
         /// <param name="discoveredTypes">The collection of currently discovered types.</param>
         /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
+        /// <param name="staticFieldDefinitions">The collection of discovered static field definitions.</param>
         /// <param name="token">The <see cref="CancellationToken"/> used to cancel the operation, if needed.</param>
         /// <returns>A sequence of static constant fields in <paramref name="structDeclarationSymbol"/>.</returns>
         private static ImmutableArray<(string Name, string TypeDeclaration, string? Assignment)> GetStaticFields(
@@ -259,6 +263,7 @@ partial class ComputeShaderDescriptorGenerator
             INamedTypeSymbol structDeclarationSymbol,
             ICollection<INamedTypeSymbol> discoveredTypes,
             IDictionary<IFieldSymbol, string> constantDefinitions,
+            IDictionary<IFieldSymbol, (string, string, string?)> staticFieldDefinitions,
             CancellationToken token)
         {
             using ImmutableArrayBuilder<(string, string, string?)> builder = new();
@@ -283,6 +288,7 @@ partial class ComputeShaderDescriptorGenerator
                     semanticModel,
                     discoveredTypes,
                     constantDefinitions,
+                    staticFieldDefinitions,
                     diagnostics,
                     token,
                     out string? name,
@@ -349,6 +355,7 @@ partial class ComputeShaderDescriptorGenerator
         /// <param name="instanceMethods">The collection of discovered instance methods for custom struct types.</param>
         /// <param name="constructors">The collection of discovered constructors for custom struct types.</param>
         /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
+        /// <param name="staticFieldDefinitions">The collection of discovered static field definitions.</param>
         /// <param name="isComputeShader">Indicates whether or not <paramref name="structDeclarationSymbol"/> represents a compute shader.</param>
         /// <param name="token">The <see cref="CancellationToken"/> used to cancel the operation, if needed.</param>
         /// <returns>A sequence of processed methods in <paramref name="structDeclarationSymbol"/>, and the entry point.</returns>
@@ -361,6 +368,7 @@ partial class ComputeShaderDescriptorGenerator
             IDictionary<IMethodSymbol, MethodDeclarationSyntax> instanceMethods,
             IDictionary<IMethodSymbol, (MethodDeclarationSyntax, MethodDeclarationSyntax)> constructors,
             IDictionary<IFieldSymbol, string> constantDefinitions,
+            IDictionary<IFieldSymbol, (string, string, string?)> staticFieldDefinitions,
             bool isComputeShader,
             CancellationToken token)
         {
@@ -411,6 +419,7 @@ partial class ComputeShaderDescriptorGenerator
                     instanceMethods,
                     constructors,
                     constantDefinitions,
+                    staticFieldDefinitions,
                     diagnostics,
                     token,
                     isShaderEntryPoint);
