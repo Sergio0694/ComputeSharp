@@ -19,42 +19,65 @@ namespace ComputeSharp.SourceGeneration.SyntaxRewriters;
 /// <summary>
 /// A custom <see cref="CSharpSyntaxRewriter"/> type that processes C# methods to convert to HLSL compliant code.
 /// </summary>
-internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
+/// <param name="shaderType">The type symbol for the shader type.</param>
+/// <param name="semanticModel">The <see cref="SemanticModelProvider"/> instance for the target syntax tree.</param>
+/// <param name="discoveredTypes">The set of discovered custom types.</param>
+/// <param name="staticMethods">The set of discovered and processed static methods.</param>
+/// <param name="instanceMethods">The collection of discovered instance methods for custom struct types.</param>
+/// <param name="constructors">The collection of discovered constructors for custom struct types.</param>
+/// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
+/// <param name="staticFieldDefinitions">The collection of discovered static field definitions.</param>
+/// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
+/// <param name="token">The <see cref="CancellationToken"/> value for the current operation.</param>
+/// <param name="isEntryPoint">Whether or not the current instance is processing a shader entry point.</param>
+internal sealed partial class ShaderSourceRewriter(
+    INamedTypeSymbol shaderType,
+    SemanticModelProvider semanticModel,
+    ICollection<INamedTypeSymbol> discoveredTypes,
+    IDictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods,
+    IDictionary<IMethodSymbol, MethodDeclarationSyntax> instanceMethods,
+    IDictionary<IMethodSymbol, (MethodDeclarationSyntax, MethodDeclarationSyntax)> constructors,
+    IDictionary<IFieldSymbol, string> constantDefinitions,
+    IDictionary<IFieldSymbol, (string, string, string?)> staticFieldDefinitions,
+    ImmutableArrayBuilder<DiagnosticInfo> diagnostics,
+    CancellationToken token,
+    bool isEntryPoint = false)
+    : HlslSourceRewriter(semanticModel, discoveredTypes, constantDefinitions, staticFieldDefinitions, diagnostics, token)
 {
     /// <summary>
     /// The type symbol for the shader type.
     /// </summary>
-    private readonly INamedTypeSymbol shaderType;
+    private readonly INamedTypeSymbol shaderType = shaderType;
 
     /// <summary>
     /// The collection of discovered static methods.
     /// </summary>
-    private readonly IDictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods;
+    private readonly IDictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods = staticMethods;
 
     /// <summary>
     /// The collection of discovered instance methods for custom struct types.
     /// </summary>
-    private readonly IDictionary<IMethodSymbol, MethodDeclarationSyntax> instanceMethods;
+    private readonly IDictionary<IMethodSymbol, MethodDeclarationSyntax> instanceMethods = instanceMethods;
 
     /// <summary>
     /// The collection of discovered constructors for custom struct types.
     /// </summary>
-    private readonly IDictionary<IMethodSymbol, (MethodDeclarationSyntax Stub, MethodDeclarationSyntax Ctor)> constructors;
+    private readonly IDictionary<IMethodSymbol, (MethodDeclarationSyntax Stub, MethodDeclarationSyntax Ctor)> constructors = constructors;
 
     /// <summary>
     /// The collection of processed local functions in the current tree.
     /// </summary>
-    private readonly Dictionary<string, LocalFunctionStatementSyntax> localFunctions;
+    private readonly Dictionary<string, LocalFunctionStatementSyntax> localFunctions = [];
 
     /// <summary>
     /// The list of implicit variables to declare at the start of the body.
     /// </summary>
-    private readonly List<VariableDeclarationSyntax> implicitVariables;
+    private readonly List<VariableDeclarationSyntax> implicitVariables = [];
 
     /// <summary>
     /// Whether or not the current instance is processing a shader entry point.
     /// </summary>
-    private readonly bool isEntryPoint;
+    private readonly bool isEntryPoint = isEntryPoint;
 
     /// <summary>
     /// The identifier of the current <see cref="ConstructorDeclarationSyntax"/>, <see cref="MethodDeclarationSyntax"/>
@@ -66,43 +89,6 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
     /// The current depth inside local declarations.
     /// </summary>
     private int localFunctionDepth;
-
-    /// <summary>
-    /// Creates a new <see cref="ShaderSourceRewriter"/> instance with the specified parameters.
-    /// </summary>
-    /// <param name="shaderType">The type symbol for the shader type.</param>
-    /// <param name="semanticModel">The <see cref="SemanticModelProvider"/> instance for the target syntax tree.</param>
-    /// <param name="discoveredTypes">The set of discovered custom types.</param>
-    /// <param name="staticMethods">The set of discovered and processed static methods.</param>
-    /// <param name="instanceMethods">The collection of discovered instance methods for custom struct types.</param>
-    /// <param name="constructors">The collection of discovered constructors for custom struct types.</param>
-    /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
-    /// <param name="staticFieldDefinitions">The collection of discovered static field definitions.</param>
-    /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
-    /// <param name="token">The <see cref="CancellationToken"/> value for the current operation.</param>
-    /// <param name="isEntryPoint">Whether or not the current instance is processing a shader entry point.</param>
-    public ShaderSourceRewriter(
-        INamedTypeSymbol shaderType,
-        SemanticModelProvider semanticModel,
-        ICollection<INamedTypeSymbol> discoveredTypes,
-        IDictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods,
-        IDictionary<IMethodSymbol, MethodDeclarationSyntax> instanceMethods,
-        IDictionary<IMethodSymbol, (MethodDeclarationSyntax, MethodDeclarationSyntax)> constructors,
-        IDictionary<IFieldSymbol, string> constantDefinitions,
-        IDictionary<IFieldSymbol, (string, string, string?)> staticFieldDefinitions,
-        ImmutableArrayBuilder<DiagnosticInfo> diagnostics,
-        CancellationToken token,
-        bool isEntryPoint = false)
-        : base(semanticModel, discoveredTypes, constantDefinitions, staticFieldDefinitions, diagnostics, token)
-    {
-        this.shaderType = shaderType;
-        this.staticMethods = staticMethods;
-        this.instanceMethods = instanceMethods;
-        this.constructors = constructors;
-        this.localFunctions = [];
-        this.implicitVariables = [];
-        this.isEntryPoint = isEntryPoint;
-    }
 
     /// <summary>
     /// Gets the collection of processed local functions in the current tree.
