@@ -507,6 +507,8 @@ public partial class ShaderRewriterTests
         Assert.AreEqual(444, results[9]);
         Assert.AreEqual(123, results[10]);
         Assert.AreEqual(666, results[11]);
+        Assert.AreEqual(3.14f, results[12]);
+        Assert.AreEqual(3.14f, results[13]);
     }
 
     [AutoConstructor]
@@ -545,6 +547,10 @@ public partial class ShaderRewriterTests
             buffer[9] = C;
             buffer[10] = ExternalType.B;
             buffer[11] = ExternalType.C;
+
+            // Access shader fields via a member access
+            buffer[12] = MixedStaticFieldsInExternalTypesShader.PI;
+            buffer[13] = ExternalType.ReadPI();
         }
     }
 
@@ -554,6 +560,11 @@ public partial class ShaderRewriterTests
         public static readonly int A = 42;
         public static int B;
         public static int C = 333;
+
+        public static float ReadPI()
+        {
+            return MixedStaticFieldsInExternalTypesShader.PI;
+        }
     }
 
     // See https://github.com/Sergio0694/ComputeSharp/issues/278

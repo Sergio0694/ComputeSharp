@@ -368,12 +368,22 @@ internal sealed partial class ShaderSourceRewriter(
                     return updatedNode.Name;
                 }
 
-                // Handle static fields, but only if they're not in the shader type itself. If that is the case, they will already
-                // be discovered separately, when crawling all members of the shader type. Here we only gather external fields.
-                if (fieldOperation.Field.IsStatic &&
-                    !SymbolEqualityComparer.Default.Equals(fieldOperation.Field.ContainingType, this.shaderType))
+                // Handle static fields, which can be either in the shader type itself, or in external types
+                if (fieldOperation.Field.IsStatic)
                 {
-                    if (!StaticFieldDefinitions.TryGetValue(fieldOperation.Field, out (string Name, string, string?) info))
+                    (string Name, string, string?) fieldInfo;
+
+                    // Special case static fields in the shader type itself. Those are already discovered separately, when crawling
+                    // all members of the shader type. But, if this path was hit, it means that they are accessed via a member access
+                    // expression, which means they need to be rewritten to match the simple name they will have in the shader. This
+                    // is often the case if they're accessed from external types. So we just map the name and use that expression.
+                    if (SymbolEqualityComparer.Default.Equals(fieldOperation.Field.ContainingType, this.shaderType))
+                    {
+                        _ = HlslKnownKeywords.TryGetMappedName(fieldOperation.Field.Name, out string? mappedFieldName);
+
+                        return IdentifierName(mappedFieldName ?? fieldOperation.Field.Name);
+                    }
+                    else if (!StaticFieldDefinitions.TryGetValue(fieldOperation.Field, out fieldInfo))
                     {
                         // Execute the same logic as for shader static fields, to process them and extract the relevant info.
                         // In this case, we use the fully qualified name of the field as identifier, not just the field name.
@@ -391,9 +401,9 @@ internal sealed partial class ShaderSourceRewriter(
                             out string? assignmentExpression,
                             out _))
                         {
-                            info.Name = fieldOperation.Field.GetFullyQualifiedMetadataName().ToHlslIdentifierName();
+                            fieldInfo.Name = fieldOperation.Field.GetFullyQualifiedMetadataName().ToHlslIdentifierName();
 
-                            StaticFieldDefinitions.Add(fieldOperation.Field, (info.Name, typeDeclaration, assignmentExpression));
+                            StaticFieldDefinitions.Add(fieldOperation.Field, (fieldInfo.Name, typeDeclaration, assignmentExpression));
                         }
                         else
                         {
@@ -403,7 +413,7 @@ internal sealed partial class ShaderSourceRewriter(
                         }
                     }
 
-                    return IdentifierName(info.Name);
+                    return IdentifierName(fieldInfo.Name);
                 }
             }
 
