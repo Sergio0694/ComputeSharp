@@ -256,52 +256,28 @@ partial class D2DPixelShaderDescriptorGenerator
 
             foreach (ISymbol memberSymbol in structDeclarationSymbol.GetMembers())
             {
-                // Find all declared static fields in the type
-                if (memberSymbol is not IFieldSymbol { IsImplicitlyDeclared: false, IsStatic: true, IsConst: false, } fieldSymbol)
+                if (memberSymbol is not IFieldSymbol fieldSymbol)
                 {
                     continue;
                 }
 
-                if (!fieldSymbol.TryGetSyntaxNode(token, out VariableDeclaratorSyntax? variableDeclarator))
-                {
-                    continue;
-                }
-
-                // Constant properties must be of a primitive, vector or matrix type
-                if (fieldSymbol.Type is not INamedTypeSymbol typeSymbol ||
-                    !HlslKnownTypes.IsKnownHlslType(typeSymbol.GetFullyQualifiedMetadataName()))
-                {
-                    diagnostics.Add(InvalidShaderStaticFieldType, variableDeclarator, structDeclarationSymbol, fieldSymbol.Name, fieldSymbol.Type);
-
-                    continue;
-                }
-
-                _ = HlslKnownKeywords.TryGetMappedName(fieldSymbol.Name, out string? mapping);
-
-                string typeDeclaration = fieldSymbol.IsReadOnly switch
-                {
-                    true => $"static const {HlslKnownTypes.GetMappedName(typeSymbol)}",
-                    false => $"static {HlslKnownTypes.GetMappedName(typeSymbol)}"
-                };
-
-                token.ThrowIfCancellationRequested();
-
-                StaticFieldRewriter staticFieldRewriter = new(
+                if (HlslDefinitionsSyntaxProcessor.TryGetStaticField(
+                    structDeclarationSymbol,
+                    fieldSymbol,
                     semanticModel,
                     discoveredTypes,
                     constantDefinitions,
                     diagnostics,
-                    token);
+                    token,
+                    out string? name,
+                    out string? typeDeclaration,
+                    out string? assignmentExpression,
+                    out StaticFieldRewriter? staticFieldRewriter))
+                {
+                    needsD2D1RequiresScenePosition |= staticFieldRewriter.NeedsD2DRequiresScenePositionAttribute;
 
-                ExpressionSyntax? processedDeclaration = staticFieldRewriter.Visit(variableDeclarator);
-
-                token.ThrowIfCancellationRequested();
-
-                string? assignment = processedDeclaration?.NormalizeWhitespace(eol: "\n").ToFullString();
-
-                needsD2D1RequiresScenePosition |= staticFieldRewriter.NeedsD2DRequiresScenePositionAttribute;
-
-                builder.Add((mapping ?? fieldSymbol.Name, typeDeclaration, assignment));
+                    builder.Add((name, typeDeclaration, assignmentExpression));
+                }
             }
 
             return builder.ToImmutable();
