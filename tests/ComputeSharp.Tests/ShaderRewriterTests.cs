@@ -485,6 +485,77 @@ public partial class ShaderRewriterTests
         }
     }
 
+    [CombinatorialTestMethod]
+    [AllDevices]
+    public void ShaderWithMixedStaticFieldsInExternalTypes(Device device)
+    {
+        using ReadWriteBuffer<float> buffer = device.Get().AllocateReadWriteBuffer<float>(16);
+
+        device.Get().For(1, new MixedStaticFieldsInExternalTypesShader(buffer));
+
+        float[] results = buffer.ToArray();
+
+        Assert.AreEqual(3.14f, results[0]);
+        Assert.AreEqual(111, results[1]);
+        Assert.AreEqual(0, results[2]);
+        Assert.AreEqual(222, results[3]);
+        Assert.AreEqual(6.28f, results[4]);
+        Assert.AreEqual(42, results[5]);
+        Assert.AreEqual(0, results[6]);
+        Assert.AreEqual(333, results[7]);
+        Assert.AreEqual(2, results[8]);
+        Assert.AreEqual(444, results[9]);
+        Assert.AreEqual(123, results[10]);
+        Assert.AreEqual(666, results[11]);
+    }
+
+    [AutoConstructor]
+    [ThreadGroupSize(DefaultThreadGroupSizes.X)]
+    [GeneratedComputeShaderDescriptor]
+    internal readonly partial struct MixedStaticFieldsInExternalTypesShader : IComputeShader
+    {
+        public static readonly float PI = 3.14f;
+        public static readonly int A = 111;
+        public static int B;
+        public static int C = 222;
+
+        private readonly ReadWriteBuffer<float> buffer;
+
+        public void Execute()
+        {
+            // Read static fields from this shader
+            buffer[0] = PI;
+            buffer[1] = A;
+            buffer[2] = B;
+            buffer[3] = C;
+
+            // Read static fields from an external type
+            buffer[4] = ExternalType.PI2;
+            buffer[5] = ExternalType.A;
+            buffer[6] = ExternalType.B;
+            buffer[7] = ExternalType.C;
+
+            // Mutate the fields and check again
+            B += 2;
+            C *= 2;
+            ExternalType.B = 123;
+            ExternalType.C *= 2;
+
+            buffer[8] = B;
+            buffer[9] = C;
+            buffer[10] = ExternalType.B;
+            buffer[11] = ExternalType.C;
+        }
+    }
+
+    internal static class ExternalType
+    {
+        public static readonly float PI2 = 6.28f;
+        public static readonly int A = 42;
+        public static int B;
+        public static int C = 333;
+    }
+
     // See https://github.com/Sergio0694/ComputeSharp/issues/278
     [CombinatorialTestMethod]
     [AllDevices]
