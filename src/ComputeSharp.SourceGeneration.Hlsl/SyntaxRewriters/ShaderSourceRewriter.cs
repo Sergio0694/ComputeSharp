@@ -24,7 +24,7 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
     /// <summary>
     /// The type symbol for the shader type.
     /// </summary>
-    private readonly INamedTypeSymbol? shaderType;
+    private readonly INamedTypeSymbol shaderType;
 
     /// <summary>
     /// The collection of discovered static methods.
@@ -92,7 +92,7 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
         IDictionary<IFieldSymbol, (string, string, string?)> staticFieldDefinitions,
         ImmutableArrayBuilder<DiagnosticInfo> diagnostics,
         CancellationToken token,
-        bool isEntryPoint)
+        bool isEntryPoint = false)
         : base(semanticModel, discoveredTypes, constantDefinitions, staticFieldDefinitions, diagnostics, token)
     {
         this.shaderType = shaderType;
@@ -102,37 +102,6 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
         this.localFunctions = [];
         this.implicitVariables = [];
         this.isEntryPoint = isEntryPoint;
-    }
-
-    /// <summary>
-    /// Creates a new <see cref="ShaderSourceRewriter"/> instance with the specified parameters.
-    /// </summary>
-    /// <param name="semanticModel">The <see cref="SemanticModelProvider"/> instance for the target syntax tree.</param>
-    /// <param name="discoveredTypes">The set of discovered custom types.</param>
-    /// <param name="staticMethods">The set of discovered and processed static methods.</param>
-    /// <param name="instanceMethods">The collection of discovered instance methods for custom struct types.</param>
-    /// <param name="constructors">The collection of discovered constructors for custom struct types.</param>
-    /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
-    /// <param name="staticFieldDefinitions">The collection of discovered static field definitions.</param>
-    /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
-    /// <param name="token">The <see cref="CancellationToken"/> value for the current operation.</param>
-    private ShaderSourceRewriter(
-        SemanticModelProvider semanticModel,
-        ICollection<INamedTypeSymbol> discoveredTypes,
-        IDictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods,
-        IDictionary<IMethodSymbol, MethodDeclarationSyntax> instanceMethods,
-        IDictionary<IMethodSymbol, (MethodDeclarationSyntax, MethodDeclarationSyntax)> constructors,
-        IDictionary<IFieldSymbol, string> constantDefinitions,
-        IDictionary<IFieldSymbol, (string, string, string?)> staticFieldDefinitions,
-        ImmutableArrayBuilder<DiagnosticInfo> diagnostics,
-        CancellationToken token)
-        : base(semanticModel, discoveredTypes, constantDefinitions, staticFieldDefinitions, diagnostics, token)
-    {
-        this.staticMethods = staticMethods;
-        this.instanceMethods = instanceMethods;
-        this.constructors = constructors;
-        this.implicitVariables = [];
-        this.localFunctions = [];
     }
 
     /// <summary>
@@ -543,6 +512,7 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
                         }
 
                         ShaderSourceRewriter shaderSourceRewriter = new(
+                            this.shaderType,
                             SemanticModel,
                             DiscoveredTypes,
                             this.staticMethods,
@@ -597,6 +567,7 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
                         }
 
                         ShaderSourceRewriter shaderSourceRewriter = new(
+                            this.shaderType,
                             SemanticModel,
                             DiscoveredTypes,
                             this.instanceMethods,
@@ -685,6 +656,7 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
                 }
 
                 ShaderSourceRewriter shaderSourceRewriter = new(
+                    this.shaderType,
                     SemanticModel,
                     DiscoveredTypes,
                     this.instanceMethods,
