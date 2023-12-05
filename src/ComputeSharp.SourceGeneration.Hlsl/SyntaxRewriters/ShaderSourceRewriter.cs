@@ -7,6 +7,7 @@ using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Helpers;
 using ComputeSharp.SourceGeneration.Mappings;
 using ComputeSharp.SourceGeneration.Models;
+using ComputeSharp.SourceGeneration.SyntaxProcessors;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -365,6 +366,44 @@ internal sealed partial class ShaderSourceRewriter(
                 if (node.Expression.IsKind(SyntaxKind.ThisExpression))
                 {
                     return updatedNode.Name;
+                }
+
+                // Handle static fields, but only if they're not in the shader type itself. If that is the case, they will already
+                // be discovered separately, when crawling all members of the shader type. Here we only gather external fields.
+                if (fieldOperation.Field.IsStatic &&
+                    !SymbolEqualityComparer.Default.Equals(fieldOperation.Field.ContainingType, this.shaderType))
+                {
+                    if (!StaticFieldDefinitions.TryGetValue(fieldOperation.Field, out (string Name, string, string?) info))
+                    {
+                        // Execute the same logic as for shader static fields, to process them and extract the relevant info.
+                        // In this case, we use the fully qualified name of the field as identifier, not just the field name.
+                        if (HlslDefinitionsSyntaxProcessor.TryGetStaticField(
+                            this.shaderType,
+                            fieldOperation.Field,
+                            SemanticModel,
+                            DiscoveredTypes,
+                            ConstantDefinitions,
+                            StaticFieldDefinitions,
+                            Diagnostics,
+                            CancellationToken,
+                            out _,
+                            out string? typeDeclaration,
+                            out string? assignmentExpression,
+                            out _))
+                        {
+                            info.Name = fieldOperation.Field.GetFullyQualifiedMetadataName().ToHlslIdentifierName();
+
+                            StaticFieldDefinitions.Add(fieldOperation.Field, (info.Name, typeDeclaration, assignmentExpression));
+                        }
+                        else
+                        {
+                            // We failed to process the field for whatever reason. Just stop rewriting it and return
+                            // the current updated node. We'll have some diagnostic for this case emitted previously.
+                            return updatedNode;
+                        }
+                    }
+
+                    return IdentifierName(info.Name);
                 }
             }
 

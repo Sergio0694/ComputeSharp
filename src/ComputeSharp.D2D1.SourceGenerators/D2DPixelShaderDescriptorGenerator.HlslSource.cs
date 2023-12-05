@@ -286,6 +286,12 @@ partial class D2DPixelShaderDescriptorGenerator
                 }
             }
 
+            // Also gather the external static fields (same as in the DX12 generator)
+            foreach ((string, string, string?) externalField in staticFieldDefinitions.Values)
+            {
+                builder.Add(externalField);
+            }
+
             return builder.ToImmutable();
         }
 

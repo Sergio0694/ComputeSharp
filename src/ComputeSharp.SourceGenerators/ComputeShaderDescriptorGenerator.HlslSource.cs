@@ -300,6 +300,12 @@ partial class ComputeShaderDescriptorGenerator
                 }
             }
 
+            // Also gather the external static fields
+            foreach ((string, string, string?) externalField in staticFieldDefinitions.Values)
+            {
+                builder.Add(externalField);
+            }
+
             return builder.ToImmutable();
         }
 
