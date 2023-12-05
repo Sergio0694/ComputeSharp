@@ -5,7 +5,7 @@ using ComputeSharp.Tests.Attributes;
 using ComputeSharp.Tests.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-#pragma warning disable IDE0007, IDE0008, IDE0009
+#pragma warning disable IDE0002, IDE0007, IDE0008, IDE0009
 
 namespace ComputeSharp.Tests;
 
@@ -509,6 +509,7 @@ public partial class ShaderRewriterTests
         Assert.AreEqual(666, results[11]);
         Assert.AreEqual(3.14f, results[12]);
         Assert.AreEqual(3.14f, results[13]);
+        Assert.AreEqual(6.28f, results[14]);
     }
 
     [AutoConstructor]
@@ -551,6 +552,9 @@ public partial class ShaderRewriterTests
             // Access shader fields via a member access
             buffer[12] = MixedStaticFieldsInExternalTypesShader.PI;
             buffer[13] = ExternalType.ReadPI();
+
+            // Access an external field as an identifier name
+            buffer[14] = ExternalType.ReadPI2();
         }
     }
 
@@ -564,6 +568,12 @@ public partial class ShaderRewriterTests
         public static float ReadPI()
         {
             return MixedStaticFieldsInExternalTypesShader.PI;
+        }
+
+        // See https://github.com/Sergio0694/ComputeSharp/issues/298
+        public static float ReadPI2()
+        {
+            return PI2;
         }
     }
 

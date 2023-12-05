@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
@@ -334,6 +335,26 @@ internal sealed partial class ShaderSourceRewriter(
     }
 
     /// <inheritdoc/>
+    public override SyntaxNode? VisitIdentifierName(IdentifierNameSyntax node)
+    {
+        // Intercept identifier names to catch whether we are accessing a static field from its containing type.
+        // This needs special handling, as it would not go through the usual member access path. If we are doing
+        // this, then we rewrite it with the shared logic for all static fields, otherwise we return the normal
+        // visit. Before getting semantic information, we can pre-filter to exclude invocation expressions and
+        // member access expressions. This is safe, because those two parent nodes would already be handled.
+        // We also only process fields from external types, as those in shader types don't need handling here.
+        // This is because they're lowered to the same identifier name, without fully qualified names to rewrite.
+        if (node.Parent is not (InvocationExpressionSyntax or MemberAccessExpressionSyntax) &&
+            SemanticModel.For(node).GetOperation(node) is IFieldReferenceOperation { Field.IsStatic: true } operation &&
+            !SymbolEqualityComparer.Default.Equals(operation.Field.ContainingType, this.shaderType))
+        {
+            return VisitExternalStaticFieldAccess(null, operation.Field) ?? base.VisitIdentifierName(node);
+        }
+
+        return base.VisitIdentifierName(node);
+    }
+
+    /// <inheritdoc/>
     public override SyntaxNode VisitMemberAccessExpression(MemberAccessExpressionSyntax node)
     {
         CancellationToken.ThrowIfCancellationRequested();
@@ -371,8 +392,6 @@ internal sealed partial class ShaderSourceRewriter(
                 // Handle static fields, which can be either in the shader type itself, or in external types
                 if (fieldOperation.Field.IsStatic)
                 {
-                    (string Name, string, string?) fieldInfo;
-
                     // Special case static fields in the shader type itself. Those are already discovered separately, when crawling
                     // all members of the shader type. But, if this path was hit, it means that they are accessed via a member access
                     // expression, which means they need to be rewritten to match the simple name they will have in the shader. This
@@ -383,37 +402,8 @@ internal sealed partial class ShaderSourceRewriter(
 
                         return IdentifierName(mappedFieldName ?? fieldOperation.Field.Name);
                     }
-                    else if (!StaticFieldDefinitions.TryGetValue(fieldOperation.Field, out fieldInfo))
-                    {
-                        // Execute the same logic as for shader static fields, to process them and extract the relevant info.
-                        // In this case, we use the fully qualified name of the field as identifier, not just the field name.
-                        if (HlslDefinitionsSyntaxProcessor.TryGetStaticField(
-                            this.shaderType,
-                            fieldOperation.Field,
-                            SemanticModel,
-                            DiscoveredTypes,
-                            ConstantDefinitions,
-                            StaticFieldDefinitions,
-                            Diagnostics,
-                            CancellationToken,
-                            out _,
-                            out string? typeDeclaration,
-                            out string? assignmentExpression,
-                            out _))
-                        {
-                            fieldInfo.Name = fieldOperation.Field.GetFullyQualifiedMetadataName().ToHlslIdentifierName();
 
-                            StaticFieldDefinitions.Add(fieldOperation.Field, (fieldInfo.Name, typeDeclaration, assignmentExpression));
-                        }
-                        else
-                        {
-                            // We failed to process the field for whatever reason. Just stop rewriting it and return
-                            // the current updated node. We'll have some diagnostic for this case emitted previously.
-                            return updatedNode;
-                        }
-                    }
-
-                    return IdentifierName(fieldInfo.Name);
+                    return VisitExternalStaticFieldAccess(updatedNode, fieldOperation.Field);
                 }
             }
 
@@ -768,6 +758,48 @@ internal sealed partial class ShaderSourceRewriter(
         }
 
         return base.VisitUserDefinedObjectCreationExpression(node, updatedNode, targetType);
+    }
+
+    /// <summary>
+    /// Visits a static field access in an external type and rewrites it as needed.
+    /// </summary>
+    /// <param name="node">The current <see cref="SyntaxNode"/> instance for the static field.</param>
+    /// <param name="fieldSymbol">The <see cref="IFieldSymbol"/> instance for <paramref name="node"/>.</param>
+    /// <returns>The rewritten static field expression.</returns>
+    [return: NotNullIfNotNull(nameof(node))]
+    private SyntaxNode? VisitExternalStaticFieldAccess(SyntaxNode? node, IFieldSymbol fieldSymbol)
+    {
+        if (!StaticFieldDefinitions.TryGetValue(fieldSymbol, out (string Name, string, string?) fieldInfo))
+        {
+            // Execute the same logic as for shader static fields, to process them and extract the relevant info.
+            // In this case, we use the fully qualified name of the field as identifier, not just the field name.
+            if (HlslDefinitionsSyntaxProcessor.TryGetStaticField(
+                this.shaderType,
+                fieldSymbol,
+                SemanticModel,
+                DiscoveredTypes,
+                ConstantDefinitions,
+                StaticFieldDefinitions,
+                Diagnostics,
+                CancellationToken,
+                out _,
+                out string? typeDeclaration,
+                out string? assignmentExpression,
+                out _))
+            {
+                fieldInfo.Name = fieldSymbol.GetFullyQualifiedMetadataName().ToHlslIdentifierName();
+
+                StaticFieldDefinitions.Add(fieldSymbol, (fieldInfo.Name, typeDeclaration, assignmentExpression));
+            }
+            else
+            {
+                // We failed to process the field for whatever reason. Just stop rewriting it and return
+                // the current updated node. We'll have some diagnostic for this case emitted previously.
+                return node;
+            }
+        }
+
+        return IdentifierName(fieldInfo.Name);
     }
 
     /// <summary>

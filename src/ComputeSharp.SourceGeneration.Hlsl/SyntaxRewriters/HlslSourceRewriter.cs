@@ -390,7 +390,7 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
     }
 
     /// <inheritdoc/>
-    public sealed override SyntaxNode? VisitIdentifierName(IdentifierNameSyntax node)
+    public override SyntaxNode? VisitIdentifierName(IdentifierNameSyntax node)
     {
         IdentifierNameSyntax updatedNode = (IdentifierNameSyntax)base.VisitIdentifierName(node)!;
 
