@@ -397,19 +397,19 @@ partial class DiagnosticDescriptors
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 
     /// <summary>
-    /// Gets a <see cref="DiagnosticDescriptor"/> for an invalid shader static readonly field type.
+    /// Gets a <see cref="DiagnosticDescriptor"/> for an invalid static field type.
     /// <para>
-    /// Format: <c>"The pixel shader of type {0} contains a static readonly field "{1}" of an invalid type {2} (only primitive, vector and matrix types are supported)"</c>.
+    /// Format: <c>"The pixel shader of type {0} contains or references a static field "{1}" of an invalid type {2} (only primitive, vector and matrix types are supported)"</c>.
     /// </para>
     /// </summary>
     public static readonly DiagnosticDescriptor InvalidShaderStaticFieldType = new(
         id: "CMPSD2D0030",
-        title: "Invalid shader static readonly field type",
-        messageFormat: """The pixel shader of type {0} contains a static readonly field "{1}" of an invalid type {2} (only primitive, vector and matrix types are supported)""",
+        title: "Invalid shader static field type",
+        messageFormat: """The pixel shader of type {0} contains or references a static field "{1}" of an invalid type {2} (only primitive, vector and matrix types are supported)""",
         category: "ComputeSharp.D2D1.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
-        description: "A type representing a pixel shader contains a static readonly field of a type that is not supported.",
+        description: "A type representing a pixel shader contains or references a static field of a type that is not supported.",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 
     /// <summary>

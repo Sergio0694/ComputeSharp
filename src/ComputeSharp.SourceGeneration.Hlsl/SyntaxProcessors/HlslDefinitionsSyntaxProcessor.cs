@@ -1,10 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
+using System.Threading;
 using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Helpers;
 using ComputeSharp.SourceGeneration.Mappings;
 using ComputeSharp.SourceGeneration.Models;
+using ComputeSharp.SourceGeneration.SyntaxRewriters;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -36,6 +39,97 @@ internal static class HlslDefinitionsSyntaxProcessor
         }
 
         return builder.ToImmutable();
+    }
+
+    /// <summary>
+    /// Tries to get and rewrite a given static field to be used in a shader.
+    /// </summary>
+    /// <param name="structDeclarationSymbol">The type symbol for the shader type.</param>
+    /// <param name="fieldSymbol">The symbol for the field to analyze.</param>
+    /// <param name="semanticModel">The <see cref="SemanticModelProvider"/> instance for the type to process.</param>
+    /// <param name="discoveredTypes">The collection of currently discovered types.</param>
+    /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
+    /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
+    /// <param name="token">The <see cref="CancellationToken"/> used to cancel the operation, if needed.</param>
+    /// <param name="name">The mapped name for the field.</param>
+    /// <param name="typeDeclaration">The type declaration for the field.</param>
+    /// <param name="assignmentExpression">The assignment expression for the field, if present.</param>
+    /// <param name="staticFieldRewriter">The <see cref="StaticFieldRewriter"/> instance used to rewrite the field expression.</param>
+    /// <returns>Whether the field was processed successfully and is valid.</returns>
+    public static bool TryGetStaticField(
+        INamedTypeSymbol structDeclarationSymbol,
+        IFieldSymbol fieldSymbol,
+        SemanticModelProvider semanticModel,
+        ICollection<INamedTypeSymbol> discoveredTypes,
+        IDictionary<IFieldSymbol, string> constantDefinitions,
+        ImmutableArrayBuilder<DiagnosticInfo> diagnostics,
+        CancellationToken token,
+        [NotNullWhen(true)] out string? name,
+        [NotNullWhen(true)] out string? typeDeclaration,
+        out string? assignmentExpression,
+        [NotNullWhen(true)] out StaticFieldRewriter? staticFieldRewriter)
+    {
+        if (fieldSymbol.IsImplicitlyDeclared || !fieldSymbol.IsStatic || fieldSymbol.IsConst)
+        {
+            goto Failure;
+        }
+
+        if (!fieldSymbol.TryGetSyntaxNode(token, out VariableDeclaratorSyntax? variableDeclarator))
+        {
+            goto Failure;
+        }
+
+        // Static fields must be of a primitive, vector or matrix type
+        if (fieldSymbol.Type is not INamedTypeSymbol typeSymbol ||
+            !HlslKnownTypes.IsKnownHlslType(typeSymbol.GetFullyQualifiedMetadataName()))
+        {
+            diagnostics.Add(InvalidShaderStaticFieldType, variableDeclarator, structDeclarationSymbol, fieldSymbol.Name, fieldSymbol.Type);
+
+            goto Failure;
+        }
+
+        _ = HlslKnownKeywords.TryGetMappedName(fieldSymbol.Name, out string? mapping);
+
+        // The field name is either the mapped name (if a reserved name) or just the field name.
+        // This method is shared across external fields too, and callers can just override this.
+        name = mapping ?? fieldSymbol.Name;
+
+        // Readonly fields are rewritten to static const fields, and mutable fields are just static.
+        // Note that there's no protection for mutable static fields that may have been written to
+        // in C# elsewhere. Shader authors should be aware that those writes would not appear in HLSL,
+        // as each shader invocation would only see the initial assignment value (or the default value).
+        typeDeclaration = fieldSymbol.IsReadOnly switch
+        {
+            true => $"static const {HlslKnownTypes.GetMappedName(typeSymbol)}",
+            false => $"static {HlslKnownTypes.GetMappedName(typeSymbol)}"
+        };
+
+        token.ThrowIfCancellationRequested();
+
+        // Create the rewriter to use, which is also returned to callers so they can extract any additional
+        // info if needed. For instance, the D2D generator will check if the dispatch position is required.
+        staticFieldRewriter = new StaticFieldRewriter(
+            semanticModel,
+            discoveredTypes,
+            constantDefinitions,
+            diagnostics,
+            token);
+
+        ExpressionSyntax? processedDeclaration = staticFieldRewriter.Visit(variableDeclarator);
+
+        token.ThrowIfCancellationRequested();
+
+        assignmentExpression = processedDeclaration?.NormalizeWhitespace(eol: "\n").ToFullString();
+
+        return true;
+
+        Failure:
+        name = null;
+        typeDeclaration = null;
+        assignmentExpression = null;
+        staticFieldRewriter = null;
+
+        return false;
     }
 
     /// <summary>
