@@ -1,6 +1,4 @@
-using System.Collections.Generic;
 using System.Linq;
-using ComputeSharp.SourceGeneration.Mappings;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -37,91 +35,6 @@ internal static class SyntaxNodeExtensions
         // If the base types list is empty, check if the type is partial. If it is, it means
         // that there could be another partial declaration with a non-empty base types list.
         return typeDeclaration.Modifiers.Any(SyntaxKind.PartialKeyword);
-    }
-
-    /// <summary>
-    /// Checks a <see cref="SyntaxNode"/> value and replaces the value type to be HLSL compatible, if needed.
-    /// </summary>
-    /// <typeparam name="TRoot">The type of the input <see cref="TypeSyntax"/> instance.</typeparam>
-    /// <param name="node">The input <see cref="SyntaxNode"/> to check and modify if needed.</param>
-    /// <param name="sourceType">The source <see cref="SyntaxNode"/> to use to get type into from <paramref name="semanticModel"/>.</param>
-    /// <param name="semanticModel">The <see cref="SemanticModel"/> instance with info on the input tree.</param>
-    /// <param name="discoveredTypes">The collection of currently discovered types.</param>
-    /// <returns>A <see cref="SyntaxNode"/> instance that represents a type compatible with HLSL.</returns>
-    public static TRoot ReplaceAndTrackType<TRoot>(this TRoot node, SyntaxNode sourceType, SemanticModel semanticModel, ICollection<INamedTypeSymbol> discoveredTypes)
-        where TRoot : TypeSyntax
-    {
-        return node.ReplaceAndTrackType(node, sourceType, semanticModel, discoveredTypes);
-    }
-
-    /// <summary>
-    /// Checks a <see cref="SyntaxNode"/> value and replaces the value type to be HLSL compatible, if needed.
-    /// </summary>
-    /// <typeparam name="TRoot">The type of the input <see cref="SyntaxNode"/> instance.</typeparam>
-    /// <param name="node">The input <see cref="SyntaxNode"/> to check and modify if needed.</param>
-    /// <param name="targetType">The target <see cref="TypeSyntax"/> node to replace.</param>
-    /// <param name="sourceType">The source <see cref="SyntaxNode"/> to use to get type into from <paramref name="semanticModel"/>.</param>
-    /// <param name="semanticModel">The <see cref="SemanticModel"/> instance with info on the input tree.</param>
-    /// <param name="discoveredTypes">The collection of currently discovered types.</param>
-    /// <returns>A <see cref="SyntaxNode"/> instance that represents a type compatible with HLSL.</returns>
-    public static TRoot ReplaceAndTrackType<TRoot>(this TRoot node, TypeSyntax targetType, SyntaxNode sourceType, SemanticModel semanticModel, ICollection<INamedTypeSymbol> discoveredTypes)
-        where TRoot : SyntaxNode
-    {
-        // Skip immediately for function pointers
-        if (sourceType is FunctionPointerTypeSyntax)
-        {
-            return node.ReplaceNode(targetType, ParseTypeName("void*"));
-        }
-
-        // Handle the various possible type kinds
-        ITypeSymbol typeSymbol = sourceType switch
-        {
-            RefTypeSyntax refType => semanticModel.GetTypeInfo(refType.Type).Type!,
-            PointerTypeSyntax pointerType => semanticModel.GetTypeInfo(pointerType.ElementType).Type!,
-            ArrayTypeSyntax arrayType => semanticModel.GetTypeInfo(arrayType.ElementType).Type!,
-            _ => semanticModel.GetTypeInfo(sourceType).Type!
-        };
-
-        // Do nothing if the type is just void
-        if (typeSymbol.SpecialType == SpecialType.System_Void)
-        {
-            return node;
-        }
-
-        string typeName = typeSymbol.GetFullyQualifiedName();
-
-        discoveredTypes.Add((INamedTypeSymbol)typeSymbol);
-
-        if (HlslKnownTypes.TryGetMappedName(typeName, out string? mappedName))
-        {
-            TypeSyntax newType = ParseTypeName(mappedName!);
-
-            return node.ReplaceNode(targetType, newType);
-        }
-
-        return node.ReplaceNode(targetType, ParseTypeName(typeName.ToHlslIdentifierName()));
-    }
-
-    /// <summary>
-    /// Tracks the associated type for a <see cref="SyntaxNode"/> value and returns the HLSL compatible <see cref="TypeSyntax"/>.
-    /// </summary>
-    /// <param name="node">The input <see cref="SyntaxNode"/> to check.</param>
-    /// <param name="semanticModel">The <see cref="SemanticModel"/> instance with info on the input tree.</param>
-    /// <param name="discoveredTypes">The collection of currently discovered types.</param>
-    /// <returns>A <see cref="SyntaxNode"/> instance that represents a type compatible with HLSL.</returns>
-    public static TypeSyntax TrackType(this SyntaxNode node, SemanticModel semanticModel, ICollection<INamedTypeSymbol> discoveredTypes)
-    {
-        ITypeSymbol typeSymbol = semanticModel.GetTypeInfo(node).Type!;
-        string typeName = typeSymbol.GetFullyQualifiedName();
-
-        discoveredTypes.Add((INamedTypeSymbol)typeSymbol);
-
-        if (HlslKnownTypes.TryGetMappedName(typeName, out string? mappedName))
-        {
-            return ParseTypeName(mappedName!);
-        }
-
-        return ParseTypeName(typeName.ToHlslIdentifierName());
     }
 
     /// <summary>

@@ -54,7 +54,7 @@ internal sealed partial class StaticFieldRewriter(
         MemberAccessExpressionSyntax updatedNode = (MemberAccessExpressionSyntax)base.VisitMemberAccessExpression(node)!;
 
         if (node.IsKind(SyntaxKind.SimpleMemberAccessExpression) &&
-            SemanticModel.For(node).GetOperation(node) is IMemberReferenceOperation operation)
+            SemanticModel.For(node).GetOperation(node, CancellationToken) is IMemberReferenceOperation operation)
         {
             // Track and replace constants
             if (operation is IFieldReferenceOperation fieldOperation &&
@@ -96,7 +96,7 @@ internal sealed partial class StaticFieldRewriter(
     {
         InvocationExpressionSyntax updatedNode = (InvocationExpressionSyntax)base.VisitInvocationExpression(node)!;
 
-        if (SemanticModel.For(node).GetOperation(node) is IInvocationOperation operation &&
+        if (SemanticModel.For(node).GetOperation(node, CancellationToken) is IInvocationOperation operation &&
             operation.TargetMethod is IMethodSymbol method &&
             method.IsStatic)
         {
