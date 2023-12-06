@@ -180,7 +180,7 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
             {
                 for (int i = 0; i < node.ArgumentList!.Arguments.Count; i++)
                 {
-                    IArgumentOperation argumentOperation = (IArgumentOperation)SemanticModel.For(node).GetOperation(node.ArgumentList.Arguments[i])!;
+                    IArgumentOperation argumentOperation = (IArgumentOperation)SemanticModel.For(node).GetOperation(node.ArgumentList.Arguments[i], CancellationToken)!;
                     INamedTypeSymbol elementType = (INamedTypeSymbol)argumentOperation.Parameter!.Type;
 
                     updatedNode = updatedNode.ReplaceNode(
@@ -223,7 +223,7 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
             return CastExpression(type, LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(0)));
         }
         else if (updatedNode.IsKind(SyntaxKind.NumericLiteralExpression) &&
-                 SemanticModel.For(node).GetOperation(node) is ILiteralOperation operation &&
+                 SemanticModel.For(node).GetOperation(node, CancellationToken) is ILiteralOperation operation &&
                  operation.Type is INamedTypeSymbol type)
         {
             // If the expression is a literal floating point value, we need to ensure the proper suffixes are
@@ -275,7 +275,7 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
 
         ElementAccessExpressionSyntax updatedNode = (ElementAccessExpressionSyntax)base.VisitElementAccessExpression(node)!;
 
-        if (SemanticModel.For(node).GetOperation(node) is IPropertyReferenceOperation operation)
+        if (SemanticModel.For(node).GetOperation(node, CancellationToken) is IPropertyReferenceOperation operation)
         {
             string propertyName = operation.Property.GetFullyQualifiedMetadataName();
 
@@ -298,7 +298,7 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
                 // This prepares all the individual parts to combine into the HLSL property name when rewriting.
                 foreach (ArgumentSyntax argument in node.ArgumentList.Arguments)
                 {
-                    if (SemanticModel.For(node).GetOperation(argument.Expression) is not IFieldReferenceOperation fieldReference ||
+                    if (SemanticModel.For(node).GetOperation(argument.Expression, CancellationToken) is not IFieldReferenceOperation fieldReference ||
                         !HlslKnownProperties.IsKnownMatrixIndex(fieldReference.Field.GetFullyQualifiedMetadataName()))
                     {
                         Diagnostics.Add(NonConstantMatrixSwizzledIndex, argument);
@@ -340,7 +340,7 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
 
         AssignmentExpressionSyntax updatedNode = (AssignmentExpressionSyntax)base.VisitAssignmentExpression(node)!;
 
-        if (SemanticModel.For(node).GetOperation(node) is ICompoundAssignmentOperation { OperatorMethod: { ContainingType.ContainingNamespace.Name: "ComputeSharp" } method })
+        if (SemanticModel.For(node).GetOperation(node, CancellationToken) is ICompoundAssignmentOperation { OperatorMethod: { ContainingType.ContainingNamespace.Name: "ComputeSharp" } method })
         {
             // If the compound assignment is using an HLSL operator, replace the expression with an invocation and assignment.
             // That is, do the following transformation:
@@ -370,7 +370,7 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
         BinaryExpressionSyntax updatedNode = (BinaryExpressionSyntax)base.VisitBinaryExpression(node)!;
 
         // Process binary operations to see if the target operator method is an intrinsic
-        if (SemanticModel.For(node).GetOperation(node) is IBinaryOperation { OperatorMethod: { ContainingType.ContainingNamespace.Name: "ComputeSharp" } method })
+        if (SemanticModel.For(node).GetOperation(node, CancellationToken) is IBinaryOperation { OperatorMethod: { ContainingType.ContainingNamespace.Name: "ComputeSharp" } method })
         {
             // If the operator is indeed an HLSL overload, replace the expression with an invocation.
             // That is, do the following transformation:
@@ -398,7 +398,7 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
         // and member access expressions, as those will be handled separately. Doing so avoids unnecessarily
         // retrieving semantic information for every identifier, which would otherwise be fairly expensive.
         if (node.Parent is not (InvocationExpressionSyntax or MemberAccessExpressionSyntax) &&
-            SemanticModel.For(node).GetOperation(node) is IFieldReferenceOperation operation &&
+            SemanticModel.For(node).GetOperation(node, CancellationToken) is IFieldReferenceOperation operation &&
             operation.Field.IsConst &&
             operation.Type!.TypeKind != TypeKind.Enum)
         {

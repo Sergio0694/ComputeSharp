@@ -240,7 +240,7 @@ internal sealed partial class ShaderSourceRewriter(
     {
         LocalDeclarationStatementSyntax updatedNode = (LocalDeclarationStatementSyntax)base.VisitLocalDeclarationStatement(node)!;
 
-        if (SemanticModel.For(node).GetOperation(node) is IOperation { Kind: OperationKind.UsingDeclaration })
+        if (SemanticModel.For(node).GetOperation(node, CancellationToken) is IOperation { Kind: OperationKind.UsingDeclaration })
         {
             Diagnostics.Add(UsingStatementOrDeclaration, node);
         }
@@ -345,7 +345,7 @@ internal sealed partial class ShaderSourceRewriter(
         // We also only process fields from external types, as those in shader types don't need handling here.
         // This is because they're lowered to the same identifier name, without fully qualified names to rewrite.
         if (node.Parent is not (InvocationExpressionSyntax or MemberAccessExpressionSyntax) &&
-            SemanticModel.For(node).GetOperation(node) is IFieldReferenceOperation { Field.IsStatic: true } operation &&
+            SemanticModel.For(node).GetOperation(node, CancellationToken) is IFieldReferenceOperation { Field.IsStatic: true } operation &&
             !SymbolEqualityComparer.Default.Equals(operation.Field.ContainingType, this.shaderType))
         {
             return VisitExternalStaticFieldAccess(null, operation.Field) ?? base.VisitIdentifierName(node);
@@ -362,7 +362,7 @@ internal sealed partial class ShaderSourceRewriter(
         MemberAccessExpressionSyntax updatedNode = (MemberAccessExpressionSyntax)base.VisitMemberAccessExpression(node)!;
 
         if (node.IsKind(SyntaxKind.SimpleMemberAccessExpression) &&
-            SemanticModel.For(node).GetOperation(node) is IMemberReferenceOperation operation)
+            SemanticModel.For(node).GetOperation(node, CancellationToken) is IMemberReferenceOperation operation)
         {
             if (operation is IFieldReferenceOperation fieldOperation)
             {
@@ -488,7 +488,7 @@ internal sealed partial class ShaderSourceRewriter(
 
         InvocationExpressionSyntax updatedNode = (InvocationExpressionSyntax)base.VisitInvocationExpression(node)!;
 
-        if (SemanticModel.For(node).GetOperation(node) is IInvocationOperation { TargetMethod: IMethodSymbol method } operation)
+        if (SemanticModel.For(node).GetOperation(node, CancellationToken) is IInvocationOperation { TargetMethod: IMethodSymbol method } operation)
         {
             if (method.IsStatic)
             {
@@ -625,7 +625,7 @@ internal sealed partial class ShaderSourceRewriter(
         updatedNode = updatedNode.WithRefKindKeyword(Token(SyntaxKind.None));
 
         // Track and rewrite the discarded declaration
-        if (SemanticModel.For(node).GetOperation(node.Expression) is IDiscardOperation operation)
+        if (SemanticModel.For(node).GetOperation(node.Expression, CancellationToken) is IDiscardOperation operation)
         {
             TypeSyntax typeSyntax = ParseTypeName(HlslKnownTypes.TrackType(operation.Type!, DiscoveredTypes));
             string identifier = $"__implicit{this.implicitVariables.Count}";
@@ -645,7 +645,7 @@ internal sealed partial class ShaderSourceRewriter(
         BaseObjectCreationExpressionSyntax updatedNode,
         TypeSyntax targetType)
     {
-        if (SemanticModel.For(node).GetOperation(node) is IObjectCreationOperation { Constructor: IMethodSymbol constructor, Type: INamedTypeSymbol { TypeKind: TypeKind.Struct } typeSymbol })
+        if (SemanticModel.For(node).GetOperation(node, CancellationToken) is IObjectCreationOperation { Constructor: IMethodSymbol constructor, Type: INamedTypeSymbol { TypeKind: TypeKind.Struct } typeSymbol })
         {
             DiscoveredTypes.Add(typeSymbol);
 
