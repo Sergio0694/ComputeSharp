@@ -215,4 +215,19 @@ partial class HlslSourceRewriter
 
         return base.VisitUnsafeStatement(node);
     }
+
+    /// <inheritdoc/>
+    public override SyntaxNode? VisitThisExpression(ThisExpressionSyntax node)
+    {
+        // Emit a diagnostic on 'this' expressions, but only if they're not part of a member access.
+        // That is, expressions such as 'this.field' are rewritten correctly to omit the 'this', so
+        // so they are still allowed. But actual 'this' expressions that copy or return the entire
+        // self instance are disallowed, as that use is not valid in HLSL syntax, unfortunately.
+        if (node.Parent is not MemberAccessExpressionSyntax)
+        {
+            Diagnostics.Add(ThisExpression, node);
+        }
+
+        return base.VisitThisExpression(node);
+    }
 }

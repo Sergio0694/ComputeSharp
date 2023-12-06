@@ -1481,6 +1481,75 @@ public class DiagnosticsTests
         VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0047", "CMPS0049");
     }
 
+    [TestMethod]
+    public void InvalidThisExpression_Return()
+    {
+        const string source = """
+            using ComputeSharp;
+
+            public struct MyStruct
+            {
+                public int X;
+
+                public MyStruct Copy()
+                {
+                    return this;
+                }
+            }
+            
+            [GeneratedComputeShaderDescriptor]
+            public partial struct MyShader : IComputeShader
+            {
+                public ReadWriteBuffer<int> buffer;
+
+                public void Execute()
+                {
+                    MyStruct x = (MyStruct)x;
+                    MyStruct y = x.Copy();
+                }
+            }
+            """;
+
+        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0047", "CMPS0062");
+    }
+
+    [TestMethod]
+    public void InvalidThisExpression_Argument()
+    {
+        const string source = """
+            using ComputeSharp;
+
+            public struct MyStruct
+            {
+                public int X;
+
+                public int Read()
+                {
+                    return Extract(this);
+                }
+
+                public static int Extract(MyStruct value)
+                {
+                    return value.X;
+                }
+            }
+            
+            [GeneratedComputeShaderDescriptor]
+            public partial struct MyShader : IComputeShader
+            {
+                public ReadWriteBuffer<int> buffer;
+
+                public void Execute()
+                {
+                    MyStruct x = (MyStruct)x;
+                    int y = x.Read();
+                }
+            }
+            """;
+
+        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0047", "CMPS0062");
+    }
+
     /// <summary>
     /// Verifies the output of a source generator.
     /// </summary>

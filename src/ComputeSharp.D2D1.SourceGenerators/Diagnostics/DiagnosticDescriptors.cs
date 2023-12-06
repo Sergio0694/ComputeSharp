@@ -1096,4 +1096,17 @@ partial class DiagnosticDescriptors
         isEnabledByDefault: true,
         description: "Only standalone constructors (with no base constructor declaration) can be used in a D2D1 shader.",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+    /// <summary>
+    /// Gets a <see cref="DiagnosticDescriptor"/> for a <see langword="this"/> expression.
+    /// </summary>
+    public static readonly DiagnosticDescriptor ThisExpression = new(
+        id: "CMPSD2D0074",
+        title: "Invalid 'this' expression",
+        messageFormat: "A pixel shader cannot use a 'this' expression outside of member accesses (such as 'this.field')",
+        category: "ComputeSharp.D2D1.Shaders",
+        defaultSeverity: DiagnosticSeverity.Error,
+        isEnabledByDefault: true,
+        description: "A pixel shader cannot use a 'this' expression outside of member accesses (such as 'this.field').",
+        helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 }
