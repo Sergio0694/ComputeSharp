@@ -29,18 +29,14 @@ partial class ShaderSourceRewriter
     }
 
     /// <inheritdoc/>
-    private partial void TrackKnownPropertyAccess(IMemberReferenceOperation operation, MemberAccessExpressionSyntax node, string mappedName)
+    partial void TrackKnownMethodInvocation(string metadataName)
     {
-        // No special tracking is needed for D2D1 shaders
+        NeedsD2DRequiresScenePositionAttribute |= HlslKnownMethods.NeedsD2DRequiresScenePositionAttribute(metadataName);
     }
 
     /// <inheritdoc/>
-    private partial void TrackKnownMethodInvocation(string metadataName)
+    partial void TrackExternalStaticField(StaticFieldRewriter staticFieldRewriter)
     {
-        // Track whether the method needs [D2DRequiresScenePosition]
-        if (HlslKnownMethods.NeedsD2DRequiresScenePositionAttribute(metadataName))
-        {
-            NeedsD2DRequiresScenePositionAttribute = true;
-        }
+        NeedsD2DRequiresScenePositionAttribute |= staticFieldRewriter.NeedsD2DRequiresScenePositionAttribute;
     }
 }

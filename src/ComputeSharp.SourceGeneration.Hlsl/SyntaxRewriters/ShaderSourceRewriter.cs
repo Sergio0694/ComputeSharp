@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
@@ -7,6 +8,7 @@ using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Helpers;
 using ComputeSharp.SourceGeneration.Mappings;
 using ComputeSharp.SourceGeneration.Models;
+using ComputeSharp.SourceGeneration.SyntaxProcessors;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -19,42 +21,65 @@ namespace ComputeSharp.SourceGeneration.SyntaxRewriters;
 /// <summary>
 /// A custom <see cref="CSharpSyntaxRewriter"/> type that processes C# methods to convert to HLSL compliant code.
 /// </summary>
-internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
+/// <param name="shaderType">The type symbol for the shader type.</param>
+/// <param name="semanticModel">The <see cref="SemanticModelProvider"/> instance for the target syntax tree.</param>
+/// <param name="discoveredTypes">The set of discovered custom types.</param>
+/// <param name="staticMethods">The set of discovered and processed static methods.</param>
+/// <param name="instanceMethods">The collection of discovered instance methods for custom struct types.</param>
+/// <param name="constructors">The collection of discovered constructors for custom struct types.</param>
+/// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
+/// <param name="staticFieldDefinitions">The collection of discovered static field definitions.</param>
+/// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
+/// <param name="token">The <see cref="CancellationToken"/> value for the current operation.</param>
+/// <param name="isEntryPoint">Whether or not the current instance is processing a shader entry point.</param>
+internal sealed partial class ShaderSourceRewriter(
+    INamedTypeSymbol shaderType,
+    SemanticModelProvider semanticModel,
+    ICollection<INamedTypeSymbol> discoveredTypes,
+    IDictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods,
+    IDictionary<IMethodSymbol, MethodDeclarationSyntax> instanceMethods,
+    IDictionary<IMethodSymbol, (MethodDeclarationSyntax, MethodDeclarationSyntax)> constructors,
+    IDictionary<IFieldSymbol, string> constantDefinitions,
+    IDictionary<IFieldSymbol, (string, string, string?)> staticFieldDefinitions,
+    ImmutableArrayBuilder<DiagnosticInfo> diagnostics,
+    CancellationToken token,
+    bool isEntryPoint = false)
+    : HlslSourceRewriter(semanticModel, discoveredTypes, constantDefinitions, staticFieldDefinitions, diagnostics, token)
 {
     /// <summary>
     /// The type symbol for the shader type.
     /// </summary>
-    private readonly INamedTypeSymbol? shaderType;
+    private readonly INamedTypeSymbol shaderType = shaderType;
 
     /// <summary>
     /// The collection of discovered static methods.
     /// </summary>
-    private readonly IDictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods;
+    private readonly IDictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods = staticMethods;
 
     /// <summary>
     /// The collection of discovered instance methods for custom struct types.
     /// </summary>
-    private readonly IDictionary<IMethodSymbol, MethodDeclarationSyntax> instanceMethods;
+    private readonly IDictionary<IMethodSymbol, MethodDeclarationSyntax> instanceMethods = instanceMethods;
 
     /// <summary>
     /// The collection of discovered constructors for custom struct types.
     /// </summary>
-    private readonly IDictionary<IMethodSymbol, (MethodDeclarationSyntax Stub, MethodDeclarationSyntax Ctor)> constructors;
+    private readonly IDictionary<IMethodSymbol, (MethodDeclarationSyntax Stub, MethodDeclarationSyntax Ctor)> constructors = constructors;
 
     /// <summary>
     /// The collection of processed local functions in the current tree.
     /// </summary>
-    private readonly Dictionary<string, LocalFunctionStatementSyntax> localFunctions;
+    private readonly Dictionary<string, LocalFunctionStatementSyntax> localFunctions = [];
 
     /// <summary>
     /// The list of implicit variables to declare at the start of the body.
     /// </summary>
-    private readonly List<VariableDeclarationSyntax> implicitVariables;
+    private readonly List<VariableDeclarationSyntax> implicitVariables = [];
 
     /// <summary>
     /// Whether or not the current instance is processing a shader entry point.
     /// </summary>
-    private readonly bool isEntryPoint;
+    private readonly bool isEntryPoint = isEntryPoint;
 
     /// <summary>
     /// The identifier of the current <see cref="ConstructorDeclarationSyntax"/>, <see cref="MethodDeclarationSyntax"/>
@@ -66,70 +91,6 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
     /// The current depth inside local declarations.
     /// </summary>
     private int localFunctionDepth;
-
-    /// <summary>
-    /// Creates a new <see cref="ShaderSourceRewriter"/> instance with the specified parameters.
-    /// </summary>
-    /// <param name="shaderType">The type symbol for the shader type.</param>
-    /// <param name="semanticModel">The <see cref="SemanticModelProvider"/> instance for the target syntax tree.</param>
-    /// <param name="discoveredTypes">The set of discovered custom types.</param>
-    /// <param name="staticMethods">The set of discovered and processed static methods.</param>
-    /// <param name="instanceMethods">The collection of discovered instance methods for custom struct types.</param>
-    /// <param name="constructors">The collection of discovered constructors for custom struct types.</param>
-    /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
-    /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
-    /// <param name="token">The <see cref="CancellationToken"/> value for the current operation.</param>
-    /// <param name="isEntryPoint">Whether or not the current instance is processing a shader entry point.</param>
-    public ShaderSourceRewriter(
-        INamedTypeSymbol shaderType,
-        SemanticModelProvider semanticModel,
-        ICollection<INamedTypeSymbol> discoveredTypes,
-        IDictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods,
-        IDictionary<IMethodSymbol, MethodDeclarationSyntax> instanceMethods,
-        IDictionary<IMethodSymbol, (MethodDeclarationSyntax, MethodDeclarationSyntax)> constructors,
-        IDictionary<IFieldSymbol, string> constantDefinitions,
-        ImmutableArrayBuilder<DiagnosticInfo> diagnostics,
-        CancellationToken token,
-        bool isEntryPoint)
-        : base(semanticModel, discoveredTypes, constantDefinitions, diagnostics, token)
-    {
-        this.shaderType = shaderType;
-        this.staticMethods = staticMethods;
-        this.instanceMethods = instanceMethods;
-        this.constructors = constructors;
-        this.localFunctions = [];
-        this.implicitVariables = [];
-        this.isEntryPoint = isEntryPoint;
-    }
-
-    /// <summary>
-    /// Creates a new <see cref="ShaderSourceRewriter"/> instance with the specified parameters.
-    /// </summary>
-    /// <param name="semanticModel">The <see cref="SemanticModelProvider"/> instance for the target syntax tree.</param>
-    /// <param name="discoveredTypes">The set of discovered custom types.</param>
-    /// <param name="staticMethods">The set of discovered and processed static methods.</param>
-    /// <param name="instanceMethods">The collection of discovered instance methods for custom struct types.</param>
-    /// <param name="constructors">The collection of discovered constructors for custom struct types.</param>
-    /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
-    /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
-    /// <param name="token">The <see cref="CancellationToken"/> value for the current operation.</param>
-    private ShaderSourceRewriter(
-        SemanticModelProvider semanticModel,
-        ICollection<INamedTypeSymbol> discoveredTypes,
-        IDictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods,
-        IDictionary<IMethodSymbol, MethodDeclarationSyntax> instanceMethods,
-        IDictionary<IMethodSymbol, (MethodDeclarationSyntax, MethodDeclarationSyntax)> constructors,
-        IDictionary<IFieldSymbol, string> constantDefinitions,
-        ImmutableArrayBuilder<DiagnosticInfo> diagnostics,
-        CancellationToken token)
-        : base(semanticModel, discoveredTypes, constantDefinitions, diagnostics, token)
-    {
-        this.staticMethods = staticMethods;
-        this.instanceMethods = instanceMethods;
-        this.constructors = constructors;
-        this.implicitVariables = [];
-        this.localFunctions = [];
-    }
 
     /// <summary>
     /// Gets the collection of processed local functions in the current tree.
@@ -374,6 +335,26 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
     }
 
     /// <inheritdoc/>
+    public override SyntaxNode? VisitIdentifierName(IdentifierNameSyntax node)
+    {
+        // Intercept identifier names to catch whether we are accessing a static field from its containing type.
+        // This needs special handling, as it would not go through the usual member access path. If we are doing
+        // this, then we rewrite it with the shared logic for all static fields, otherwise we return the normal
+        // visit. Before getting semantic information, we can pre-filter to exclude invocation expressions and
+        // member access expressions. This is safe, because those two parent nodes would already be handled.
+        // We also only process fields from external types, as those in shader types don't need handling here.
+        // This is because they're lowered to the same identifier name, without fully qualified names to rewrite.
+        if (node.Parent is not (InvocationExpressionSyntax or MemberAccessExpressionSyntax) &&
+            SemanticModel.For(node).GetOperation(node) is IFieldReferenceOperation { Field.IsStatic: true } operation &&
+            !SymbolEqualityComparer.Default.Equals(operation.Field.ContainingType, this.shaderType))
+        {
+            return VisitExternalStaticFieldAccess(null, operation.Field) ?? base.VisitIdentifierName(node);
+        }
+
+        return base.VisitIdentifierName(node);
+    }
+
+    /// <inheritdoc/>
     public override SyntaxNode VisitMemberAccessExpression(MemberAccessExpressionSyntax node)
     {
         CancellationToken.ThrowIfCancellationRequested();
@@ -406,6 +387,23 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
                 if (node.Expression.IsKind(SyntaxKind.ThisExpression))
                 {
                     return updatedNode.Name;
+                }
+
+                // Handle static fields, which can be either in the shader type itself, or in external types
+                if (fieldOperation.Field.IsStatic)
+                {
+                    // Special case static fields in the shader type itself. Those are already discovered separately, when crawling
+                    // all members of the shader type. But, if this path was hit, it means that they are accessed via a member access
+                    // expression, which means they need to be rewritten to match the simple name they will have in the shader. This
+                    // is often the case if they're accessed from external types. So we just map the name and use that expression.
+                    if (SymbolEqualityComparer.Default.Equals(fieldOperation.Field.ContainingType, this.shaderType))
+                    {
+                        _ = HlslKnownKeywords.TryGetMappedName(fieldOperation.Field.Name, out string? mappedFieldName);
+
+                        return IdentifierName(mappedFieldName ?? fieldOperation.Field.Name);
+                    }
+
+                    return VisitExternalStaticFieldAccess(updatedNode, fieldOperation.Field);
                 }
             }
 
@@ -539,12 +537,14 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
                         }
 
                         ShaderSourceRewriter shaderSourceRewriter = new(
+                            this.shaderType,
                             SemanticModel,
                             DiscoveredTypes,
                             this.staticMethods,
                             this.instanceMethods,
                             this.constructors,
                             ConstantDefinitions,
+                            StaticFieldDefinitions,
                             Diagnostics,
                             CancellationToken);
 
@@ -592,12 +592,14 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
                         }
 
                         ShaderSourceRewriter shaderSourceRewriter = new(
+                            this.shaderType,
                             SemanticModel,
                             DiscoveredTypes,
                             this.instanceMethods,
                             this.instanceMethods,
                             this.constructors,
                             ConstantDefinitions,
+                            StaticFieldDefinitions,
                             Diagnostics,
                             CancellationToken);
 
@@ -679,12 +681,14 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
                 }
 
                 ShaderSourceRewriter shaderSourceRewriter = new(
+                    this.shaderType,
                     SemanticModel,
                     DiscoveredTypes,
                     this.instanceMethods,
                     this.instanceMethods,
                     this.constructors,
                     ConstantDefinitions,
+                    StaticFieldDefinitions,
                     Diagnostics,
                     CancellationToken);
 
@@ -757,6 +761,48 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
     }
 
     /// <summary>
+    /// Visits a static field access in an external type and rewrites it as needed.
+    /// </summary>
+    /// <param name="node">The current <see cref="SyntaxNode"/> instance for the static field.</param>
+    /// <param name="fieldSymbol">The <see cref="IFieldSymbol"/> instance for <paramref name="node"/>.</param>
+    /// <returns>The rewritten static field expression.</returns>
+    [return: NotNullIfNotNull(nameof(node))]
+    private SyntaxNode? VisitExternalStaticFieldAccess(SyntaxNode? node, IFieldSymbol fieldSymbol)
+    {
+        if (!StaticFieldDefinitions.TryGetValue(fieldSymbol, out (string Name, string, string?) fieldInfo))
+        {
+            // Execute the same logic as for shader static fields, to process them and extract the relevant info.
+            // In this case, we use the fully qualified name of the field as identifier, not just the field name.
+            if (HlslDefinitionsSyntaxProcessor.TryGetStaticField(
+                this.shaderType,
+                fieldSymbol,
+                SemanticModel,
+                DiscoveredTypes,
+                ConstantDefinitions,
+                StaticFieldDefinitions,
+                Diagnostics,
+                CancellationToken,
+                out _,
+                out string? typeDeclaration,
+                out string? assignmentExpression,
+                out _))
+            {
+                fieldInfo.Name = fieldSymbol.GetFullyQualifiedMetadataName().ToHlslIdentifierName();
+
+                StaticFieldDefinitions.Add(fieldSymbol, (fieldInfo.Name, typeDeclaration, assignmentExpression));
+            }
+            else
+            {
+                // We failed to process the field for whatever reason. Just stop rewriting it and return
+                // the current updated node. We'll have some diagnostic for this case emitted previously.
+                return node;
+            }
+        }
+
+        return IdentifierName(fieldInfo.Name);
+    }
+
+    /// <summary>
     /// Rewrites a sampled texture access.
     /// </summary>
     /// <param name="operation">The <see cref="IInvocationOperation"/> instance for the sampled texture access.</param>
@@ -771,11 +817,17 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
     /// <param name="operation">The <see cref="IMemberReferenceOperation"/> instance for the operation.</param>
     /// <param name="node">The <see cref="MemberAccessExpressionSyntax"/> instance for the operation.</param>
     /// <param name="mappedName">The mapped name for the property access.</param>
-    private partial void TrackKnownPropertyAccess(IMemberReferenceOperation operation, MemberAccessExpressionSyntax node, string mappedName);
+    partial void TrackKnownPropertyAccess(IMemberReferenceOperation operation, MemberAccessExpressionSyntax node, string mappedName);
 
     /// <summary>
     /// Tracks a method invocation for a known HLSL method.
     /// </summary>
     /// <param name="metadataName">The metadata name of the method being invoked.</param>
-    private partial void TrackKnownMethodInvocation(string metadataName);
+    partial void TrackKnownMethodInvocation(string metadataName);
+
+    /// <summary>
+    /// Tracks an access to an external static field.
+    /// </summary>
+    /// <param name="staticFieldRewriter">The <see cref="StaticFieldRewriter"/> instance used to rewrite the field expression.</param>
+    partial void TrackExternalStaticField(StaticFieldRewriter staticFieldRewriter);
 }

@@ -23,15 +23,17 @@ namespace ComputeSharp.SourceGeneration.SyntaxRewriters;
 /// <param name="semanticModel">The <see cref="SemanticModelProvider"/> instance for the target syntax tree.</param>
 /// <param name="discoveredTypes">The set of discovered custom types.</param>
 /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
+/// <param name="staticFieldDefinitions">The collection of discovered static field definitions.</param>
 /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
 /// <param name="token">The <see cref="CancellationToken"/> value for the current operation.</param>
 internal sealed partial class StaticFieldRewriter(
     SemanticModelProvider semanticModel,
     ICollection<INamedTypeSymbol> discoveredTypes,
     IDictionary<IFieldSymbol, string> constantDefinitions,
+    IDictionary<IFieldSymbol, (string, string, string?)> staticFieldDefinitions,
     ImmutableArrayBuilder<DiagnosticInfo> diagnostics,
     CancellationToken token)
-    : HlslSourceRewriter(semanticModel, discoveredTypes, constantDefinitions, diagnostics, token)
+    : HlslSourceRewriter(semanticModel, discoveredTypes, constantDefinitions, staticFieldDefinitions, diagnostics, token)
 {
     /// <inheritdoc cref="CSharpSyntaxRewriter.Visit(SyntaxNode?)"/>
     public ExpressionSyntax? Visit(VariableDeclaratorSyntax? node)

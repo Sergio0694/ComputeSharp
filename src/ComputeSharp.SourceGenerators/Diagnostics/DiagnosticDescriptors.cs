@@ -515,17 +515,17 @@ partial class DiagnosticDescriptors
     /// <summary>
     /// Gets a <see cref="DiagnosticDescriptor"/> for an invalid shader static field type.
     /// <para>
-    /// Format: <c>"The compute shader of type {0} contains a static field "{1}" of an invalid type {2} (only primitive, vector and matrix types are supported)"</c>.
+    /// Format: <c>"The compute shader of type {0} contains or references a static field "{1}" of an invalid type {2} (only primitive, vector and matrix types are supported)"</c>.
     /// </para>
     /// </summary>
     public static readonly DiagnosticDescriptor InvalidShaderStaticFieldType = new(
         id: "CMPS0038",
         title: "Invalid shader static field type",
-        messageFormat: """The compute shader of type {0} contains a static field "{1}" of an invalid type {2} (only primitive, vector and matrix types are supported)""",
+        messageFormat: """The compute shader of type {0} contains or references a static field "{1}" of an invalid type {2} (only primitive, vector and matrix types are supported)""",
         category: "ComputeSharp.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
-        description: "A type representing a compute shader contains a static field of a type that is not supported.",
+        description: "A type representing a compute shader contains or references a static field of a type that is not supported.",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 
     /// <summary>
