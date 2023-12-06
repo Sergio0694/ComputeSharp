@@ -872,4 +872,17 @@ partial class DiagnosticDescriptors
         isEnabledByDefault: true,
         description: "Only standalone constructors (with no base constructor declaration) can be used in a shader.",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+    /// <summary>
+    /// Gets a <see cref="DiagnosticDescriptor"/> for a <see langword="this"/> expression.
+    /// </summary>
+    public static readonly DiagnosticDescriptor ThisExpression = new(
+        id: "CMPS0062",
+        title: "Invalid 'this' expression",
+        messageFormat: "A compute shader cannot use a 'this' expression outside of member accesses (such as 'this.field')",
+        category: "ComputeSharp.Shaders",
+        defaultSeverity: DiagnosticSeverity.Error,
+        isEnabledByDefault: true,
+        description: "A compute shader cannot use a 'this' expression outside of member accesses (such as 'this.field').",
+        helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 }
