@@ -23,10 +23,9 @@ public sealed class InvalidGroupSharedFieldDeclarationAnalyzer : DiagnosticAnaly
 
         context.RegisterCompilationStartAction(static context =>
         {
-            // Get the IComputeShader, IComputeShader<TPixel>, ReadWriteBuffer<T> and [GloballyCoherent] symbols
+            // Get the IComputeShader, IComputeShader<TPixel> and [GloballyCoherent] symbols
             if (context.Compilation.GetTypeByMetadataName("ComputeSharp.IComputeShader") is not { } computeShaderSymbol ||
                 context.Compilation.GetTypeByMetadataName("ComputeSharp.IComputeShader`1") is not { } pixelShaderSymbol ||
-                context.Compilation.GetTypeByMetadataName("ComputeSharp.ReadWriteBuffer`1") is not { } readWriteBufferSymbol ||
                 context.Compilation.GetTypeByMetadataName("ComputeSharp.GroupSharedAttribute") is not { } groupSharedAttribute)
             {
                 return;
@@ -45,9 +44,8 @@ public sealed class InvalidGroupSharedFieldDeclarationAnalyzer : DiagnosticAnaly
                     return;
                 }
 
-                // Emit a diagnostic if the field is not valid (either static, not of ReadWriteBuffer<T> type, or not within a compute shader type)
-                if (!fieldSymbol.IsStatic ||
-                    fieldSymbol.Type is not IArrayTypeSymbol { ElementType.IsUnmanagedType: true } ||
+                // Emit a diagnostic if the field is not valid (it must be static, of an array type with an unmanaged element type, and within a compute shader type)
+                if (fieldSymbol is not { IsStatic: true, Type: IArrayTypeSymbol { ElementType.IsUnmanagedType: true } } ||
                     !MissingComputeShaderDescriptorOnComputeShaderAnalyzer.IsComputeShaderType(typeSymbol, computeShaderSymbol, pixelShaderSymbol))
                 {
                     context.ReportDiagnostic(Diagnostic.Create(
