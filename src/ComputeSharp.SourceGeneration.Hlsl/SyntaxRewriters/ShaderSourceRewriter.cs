@@ -140,7 +140,7 @@ internal sealed partial class ShaderSourceRewriter(
 
         MethodDeclarationSyntax? updatedNode = (MethodDeclarationSyntax?)base.Visit(node)!;
 
-        updatedNode = updatedNode.ReplaceAndTrackType(updatedNode.ReturnType, node!.ReturnType, SemanticModel.For(node), DiscoveredTypes);
+        updatedNode = ReplaceAndTrackType(updatedNode, updatedNode.ReturnType, node!.ReturnType, SemanticModel.For(node));
 
         if (node!.Modifiers.Any(m => m.IsKind(SyntaxKind.AsyncKeyword)))
         {
@@ -175,7 +175,7 @@ internal sealed partial class ShaderSourceRewriter(
 
         LocalFunctionStatementSyntax? updatedNode = (LocalFunctionStatementSyntax?)base.Visit(node)!;
 
-        updatedNode = updatedNode.ReplaceAndTrackType(updatedNode.ReturnType, node!.ReturnType, SemanticModel.For(node), DiscoveredTypes);
+        updatedNode = ReplaceAndTrackType(updatedNode, updatedNode.ReturnType, node!.ReturnType, SemanticModel.For(node));
 
         if (node!.Modifiers.Any(m => m.IsKind(SyntaxKind.AsyncKeyword)))
         {
@@ -229,10 +229,10 @@ internal sealed partial class ShaderSourceRewriter(
 
         ExitLoop:
 
-        return updatedNode
-            .WithAttributeLists(default)
-            .ReplaceAndTrackType(updatedNode.Type!, node.Type!, SemanticModel.For(node), DiscoveredTypes)
-            .WithModifiers(TokenList(modifier));
+        updatedNode = updatedNode.WithAttributeLists(default);
+        updatedNode = ReplaceAndTrackType(updatedNode, updatedNode.Type!, node.Type!, SemanticModel.For(node));
+
+        return updatedNode.WithModifiers(TokenList(modifier));
     }
 
     /// <inheritdoc/>
@@ -245,7 +245,7 @@ internal sealed partial class ShaderSourceRewriter(
             Diagnostics.Add(UsingStatementOrDeclaration, node);
         }
 
-        return updatedNode.ReplaceAndTrackType(updatedNode.Declaration.Type, node.Declaration.Type, SemanticModel.For(node), DiscoveredTypes);
+        return ReplaceAndTrackType(updatedNode, updatedNode.Declaration.Type, node.Declaration.Type, SemanticModel.For(node));
     }
 
     /// <inheritdoc/>
@@ -253,7 +253,7 @@ internal sealed partial class ShaderSourceRewriter(
     {
         DeclarationExpressionSyntax updatedNode = (DeclarationExpressionSyntax)base.VisitDeclarationExpression(node)!;
 
-        updatedNode = updatedNode.ReplaceAndTrackType(updatedNode.Type, node.Type, SemanticModel.For(node), DiscoveredTypes);
+        updatedNode = ReplaceAndTrackType(updatedNode, updatedNode.Type, node.Type, SemanticModel.For(node));
 
         // Add the variable to the list of implicit declarations
         this.implicitVariables.Add(VariableDeclaration(updatedNode.Type).AddVariables(VariableDeclarator(updatedNode.Designation.ToString())));
@@ -286,7 +286,7 @@ internal sealed partial class ShaderSourceRewriter(
                 .WithBlockBody()
                 .WithAttributeLists(List<AttributeListSyntax>());
 
-            updatedNode = updatedNode.ReplaceAndTrackType(updatedNode.ReturnType, node!.ReturnType, SemanticModel.For(node), DiscoveredTypes);
+            updatedNode = ReplaceAndTrackType(updatedNode, updatedNode.ReturnType, node!.ReturnType, SemanticModel.For(node));
 
             if (node.Modifiers.Any(m => m.IsKind(SyntaxKind.AsyncKeyword)))
             {
@@ -310,7 +310,7 @@ internal sealed partial class ShaderSourceRewriter(
                 .WithAttributeLists(List<AttributeListSyntax>())
                 .WithIdentifier(Identifier($"__{this.currentMethodIdentifier.Text}__{node.Identifier.Text}"));
 
-            updatedNode = updatedNode.ReplaceAndTrackType(updatedNode.ReturnType, node!.ReturnType, SemanticModel.For(node), DiscoveredTypes);
+            updatedNode = ReplaceAndTrackType(updatedNode, updatedNode.ReturnType, node!.ReturnType, SemanticModel.For(node));
 
             if (node.Modifiers.Any(m => m.IsKind(SyntaxKind.AsyncKeyword)))
             {

@@ -87,7 +87,7 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
     {
         CastExpressionSyntax updatedNode = (CastExpressionSyntax)base.VisitCastExpression(node)!;
 
-        return updatedNode.ReplaceAndTrackType(updatedNode.Type, node.Type, SemanticModel.For(node), DiscoveredTypes);
+        return ReplaceAndTrackType(updatedNode, updatedNode.Type, node.Type, SemanticModel.For(node));
     }
 
     /// <inheritdoc/>
@@ -103,7 +103,7 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
         // If var is used, replace it with the explicit type
         if (updatedNode.Type is IdentifierNameSyntax { IsVar: true })
         {
-            updatedNode = updatedNode.ReplaceAndTrackType(updatedNode.Type, node.Type, SemanticModel.For(node), DiscoveredTypes);
+            updatedNode = ReplaceAndTrackType(updatedNode, updatedNode.Type, node.Type, SemanticModel.For(node));
         }
 
         return updatedNode;
@@ -114,7 +114,7 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
     {
         ObjectCreationExpressionSyntax updatedNode = (ObjectCreationExpressionSyntax)base.VisitObjectCreationExpression(node)!;
 
-        updatedNode = updatedNode.ReplaceAndTrackType(updatedNode.Type, node, SemanticModel.For(node), DiscoveredTypes);
+        updatedNode = ReplaceAndTrackType(updatedNode, updatedNode.Type, node, SemanticModel.For(node));
 
         return VisitObjectCreationExpression(node, updatedNode, updatedNode.Type);
     }
@@ -123,7 +123,7 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
     public sealed override SyntaxNode VisitImplicitObjectCreationExpression(ImplicitObjectCreationExpressionSyntax node)
     {
         ImplicitObjectCreationExpressionSyntax updatedNode = (ImplicitObjectCreationExpressionSyntax)base.VisitImplicitObjectCreationExpression(node)!;
-        TypeSyntax explicitType = IdentifierName("").ReplaceAndTrackType(node, SemanticModel.For(node), DiscoveredTypes);
+        TypeSyntax explicitType = ReplaceAndTrackType(IdentifierName(""), node, SemanticModel.For(node));
 
         return VisitObjectCreationExpression(node, updatedNode, explicitType);
     }
@@ -202,7 +202,7 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
     {
         DefaultExpressionSyntax updatedNode = (DefaultExpressionSyntax)base.VisitDefaultExpression(node)!;
 
-        updatedNode = updatedNode.ReplaceAndTrackType(updatedNode.Type, node.Type, SemanticModel.For(node), DiscoveredTypes);
+        updatedNode = ReplaceAndTrackType(updatedNode, updatedNode.Type, node.Type, SemanticModel.For(node));
 
         // A default expression becomes (T)0 in HLSL
         return CastExpression(updatedNode.Type, LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(0)));
@@ -217,7 +217,7 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
 
         if (updatedNode.IsKind(SyntaxKind.DefaultLiteralExpression))
         {
-            TypeSyntax type = node.TrackType(SemanticModel.For(node), DiscoveredTypes);
+            TypeSyntax type = TrackType(node, SemanticModel.For(node));
 
             // Same HLSL-style expression in the form (T)0
             return CastExpression(type, LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(0)));
