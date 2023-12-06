@@ -817,11 +817,17 @@ internal sealed partial class ShaderSourceRewriter(
     /// <param name="operation">The <see cref="IMemberReferenceOperation"/> instance for the operation.</param>
     /// <param name="node">The <see cref="MemberAccessExpressionSyntax"/> instance for the operation.</param>
     /// <param name="mappedName">The mapped name for the property access.</param>
-    private partial void TrackKnownPropertyAccess(IMemberReferenceOperation operation, MemberAccessExpressionSyntax node, string mappedName);
+    partial void TrackKnownPropertyAccess(IMemberReferenceOperation operation, MemberAccessExpressionSyntax node, string mappedName);
 
     /// <summary>
     /// Tracks a method invocation for a known HLSL method.
     /// </summary>
     /// <param name="metadataName">The metadata name of the method being invoked.</param>
-    private partial void TrackKnownMethodInvocation(string metadataName);
+    partial void TrackKnownMethodInvocation(string metadataName);
+
+    /// <summary>
+    /// Tracks an access to an external static field.
+    /// </summary>
+    /// <param name="staticFieldRewriter">The <see cref="StaticFieldRewriter"/> instance used to rewrite the field expression.</param>
+    partial void TrackExternalStaticField(StaticFieldRewriter staticFieldRewriter);
 }

@@ -48,7 +48,7 @@ partial class ShaderSourceRewriter
     }
 
     /// <inheritdoc/>
-    private partial void TrackKnownPropertyAccess(IMemberReferenceOperation operation, MemberAccessExpressionSyntax node, string mappedName)
+    partial void TrackKnownPropertyAccess(IMemberReferenceOperation operation, MemberAccessExpressionSyntax node, string mappedName)
     {
         // Mark which dispatch properties have been used, to optimize the declaration afterwards
         if (operation.Member.IsStatic)
@@ -87,11 +87,5 @@ partial class ShaderSourceRewriter
                 }
             }
         }
-    }
-
-    /// <inheritdoc/>
-    private partial void TrackKnownMethodInvocation(string metadataName)
-    {
-        // No special tracking is needed for DX12 compute shaders
     }
 }
