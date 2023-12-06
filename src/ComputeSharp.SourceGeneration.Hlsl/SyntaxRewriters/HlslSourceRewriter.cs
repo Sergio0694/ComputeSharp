@@ -95,7 +95,7 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
     {
         VariableDeclarationSyntax updatedNode = (VariableDeclarationSyntax)base.VisitVariableDeclaration(node)!;
 
-        if (SemanticModel.For(node).GetTypeInfo(node.Type).Type is ITypeSymbol { IsUnmanagedType: false } type)
+        if (SemanticModel.For(node).GetTypeInfo(node.Type, CancellationToken).Type is ITypeSymbol { IsUnmanagedType: false } type)
         {
             Diagnostics.Add(InvalidObjectDeclaration, node, type);
         }
@@ -137,7 +137,7 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
     {
         CancellationToken.ThrowIfCancellationRequested();
 
-        ITypeSymbol? typeSymbol = SemanticModel.For(node).GetTypeInfo(node).Type;
+        ITypeSymbol? typeSymbol = SemanticModel.For(node).GetTypeInfo(node, CancellationToken).Type;
 
         // Handle the edge case of the type being null (shouldn't really happen)
         if (typeSymbol is null)

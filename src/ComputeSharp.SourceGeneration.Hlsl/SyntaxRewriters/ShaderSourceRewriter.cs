@@ -438,7 +438,7 @@ internal sealed partial class ShaderSourceRewriter(
 
                 if (!this.staticMethods.TryGetValue(key, out MethodDeclarationSyntax? methodSyntax))
                 {
-                    INamedTypeSymbol resourceType = (INamedTypeSymbol)SemanticModel.For(node).GetTypeInfo(node.Expression).Type!;
+                    INamedTypeSymbol resourceType = (INamedTypeSymbol)SemanticModel.For(node).GetTypeInfo(node.Expression, CancellationToken).Type!;
                     string resourceName = HlslKnownTypes.GetMappedName(resourceType);
 
                     // Create a static method to get a specified dimension for a target resource type.

@@ -17,7 +17,7 @@ partial class HlslSourceRewriter
     /// <returns>A <see cref="SyntaxNode"/> instance that represents a type compatible with HLSL.</returns>
     protected TypeSyntax TrackType(SyntaxNode node, SemanticModel semanticModel)
     {
-        ITypeSymbol typeSymbol = semanticModel.GetTypeInfo(node).Type!;
+        ITypeSymbol typeSymbol = semanticModel.GetTypeInfo(node, CancellationToken).Type!;
         string typeName = typeSymbol.GetFullyQualifiedName();
 
         DiscoveredTypes.Add((INamedTypeSymbol)typeSymbol);
@@ -65,10 +65,10 @@ partial class HlslSourceRewriter
         // Handle the various possible type kinds
         ITypeSymbol typeSymbol = sourceType switch
         {
-            RefTypeSyntax refType => semanticModel.GetTypeInfo(refType.Type).Type!,
-            PointerTypeSyntax pointerType => semanticModel.GetTypeInfo(pointerType.ElementType).Type!,
-            ArrayTypeSyntax arrayType => semanticModel.GetTypeInfo(arrayType.ElementType).Type!,
-            _ => semanticModel.GetTypeInfo(sourceType).Type!
+            RefTypeSyntax refType => semanticModel.GetTypeInfo(refType.Type, CancellationToken).Type!,
+            PointerTypeSyntax pointerType => semanticModel.GetTypeInfo(pointerType.ElementType, CancellationToken).Type!,
+            ArrayTypeSyntax arrayType => semanticModel.GetTypeInfo(arrayType.ElementType, CancellationToken).Type!,
+            _ => semanticModel.GetTypeInfo(sourceType, CancellationToken).Type!
         };
 
         // Do nothing if the type is just void
