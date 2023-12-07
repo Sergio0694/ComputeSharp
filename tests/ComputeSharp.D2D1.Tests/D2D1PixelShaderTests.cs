@@ -617,6 +617,98 @@ namespace ComputeSharp.D2D1.Tests
         }
 
         [TestMethod]
+        public void LoadBytecode_EnableLinkingIsAppliedCorrectly()
+        {
+            ReadOnlyMemory<byte> hlslBytecode1 = D2D1PixelShader.LoadBytecode<ReferenceShaderWithDefaultCompileOptions>(out _, out D2D1CompileOptions compileOptions1);
+            ReadOnlyMemory<byte> hlslBytecode2 = D2D1PixelShader.LoadBytecode<ReferenceShaderWithEnableLinking>(out _, out D2D1CompileOptions compileOptions2);
+
+            Assert.AreEqual(D2D1CompileOptions.Default | D2D1CompileOptions.PackMatrixRowMajor, compileOptions1);
+            Assert.AreEqual(D2D1CompileOptions.Default | D2D1CompileOptions.EnableLinking | D2D1CompileOptions.PackMatrixRowMajor, compileOptions2);
+
+            Assert.IsTrue(MemoryMarshal.TryGetMemoryManager(hlslBytecode1, out MemoryManager<byte>? manager1));
+            Assert.IsTrue(manager1!.GetType().Name.Contains("HlslBytecodeMemoryManager"));
+
+            Assert.IsTrue(MemoryMarshal.TryGetMemoryManager(hlslBytecode2, out MemoryManager<byte>? manager2));
+            Assert.IsTrue(manager2!.GetType().Name.Contains("HlslBytecodeMemoryManager"));
+
+            // Same checks as in D2D1ShaderCompilerTests.CompileInvertEffectWithDefaultOptionsAndLinking
+            Assert.IsTrue(hlslBytecode1.Length > 700);
+            Assert.IsTrue(hlslBytecode2.Length > 1400);
+            Assert.IsTrue(hlslBytecode2.Length > hlslBytecode1.Length);
+            Assert.IsTrue((hlslBytecode2.Length - hlslBytecode1.Length) > 700);
+        }
+
+        [D2DInputCount(1)]
+        [D2DInputSimple(0)]
+        [D2DShaderProfile(D2D1ShaderProfile.PixelShader50)]
+        [D2DCompileOptions(D2D1CompileOptions.Default)]
+        [D2DGeneratedPixelShaderDescriptor]
+        public readonly partial struct ReferenceShaderWithDefaultCompileOptions : ID2D1PixelShader
+        {
+            public float4 Execute()
+            {
+                float4 color = D2D.GetInput(0);
+                float3 rgb = Hlsl.Saturate(1.0f - color.RGB);
+
+                return new(rgb, 1);
+            }
+        }
+
+        [D2DInputCount(1)]
+        [D2DInputSimple(0)]
+        [D2DShaderProfile(D2D1ShaderProfile.PixelShader50)]
+        [D2DCompileOptions(D2D1CompileOptions.Default | D2D1CompileOptions.EnableLinking)]
+        [D2DGeneratedPixelShaderDescriptor]
+        public readonly partial struct ReferenceShaderWithEnableLinking : ID2D1PixelShader
+        {
+            public float4 Execute()
+            {
+                float4 color = D2D.GetInput(0);
+                float3 rgb = Hlsl.Saturate(1.0f - color.RGB);
+
+                return new(rgb, 1);
+            }
+        }
+
+        [TestMethod]
+        public void LoadBytecode_StripReflectionDataIsAppliedCorrectly()
+        {
+            ReadOnlyMemory<byte> hlslBytecode1 = D2D1PixelShader.LoadBytecode<ReferenceShaderWithDefaultCompileOptions>(out _, out D2D1CompileOptions compileOptions1);
+            ReadOnlyMemory<byte> hlslBytecode2 = D2D1PixelShader.LoadBytecode<ReferenceShaderWithStripReflectionData>(out _, out D2D1CompileOptions compileOptions2);
+
+            Assert.AreEqual(D2D1CompileOptions.Default | D2D1CompileOptions.PackMatrixRowMajor, compileOptions1);
+            Assert.AreEqual(D2D1CompileOptions.Default | D2D1CompileOptions.StripReflectionData | D2D1CompileOptions.PackMatrixRowMajor, compileOptions2);
+
+            Assert.IsTrue(MemoryMarshal.TryGetMemoryManager(hlslBytecode1, out MemoryManager<byte>? manager1));
+            Assert.IsTrue(manager1!.GetType().Name.Contains("HlslBytecodeMemoryManager"));
+
+            Assert.IsTrue(MemoryMarshal.TryGetMemoryManager(hlslBytecode2, out MemoryManager<byte>? manager2));
+            Assert.IsTrue(manager2!.GetType().Name.Contains("HlslBytecodeMemoryManager"));
+
+            // Same checks as in D2D1ShaderCompilerTests.CompileInvertEffectWithDefaultOptionsAndStripReflectionData
+            Assert.IsTrue(hlslBytecode1.Length > 700);
+            Assert.IsTrue(hlslBytecode2.Length > 400);
+            Assert.IsTrue(hlslBytecode1.Length > hlslBytecode2.Length);
+            Assert.IsTrue((hlslBytecode1.Length - hlslBytecode2.Length) > 300);
+        }
+
+        [D2DInputCount(1)]
+        [D2DInputSimple(0)]
+        [D2DShaderProfile(D2D1ShaderProfile.PixelShader50)]
+        [D2DCompileOptions(D2D1CompileOptions.Default | D2D1CompileOptions.StripReflectionData)]
+        [D2DGeneratedPixelShaderDescriptor]
+        public readonly partial struct ReferenceShaderWithStripReflectionData : ID2D1PixelShader
+        {
+            public float4 Execute()
+            {
+                float4 color = D2D.GetInput(0);
+                float3 rgb = Hlsl.Saturate(1.0f - color.RGB);
+
+                return new(rgb, 1);
+            }
+        }
+
+        [TestMethod]
         public void GetConstantBufferSize_Empty()
         {
             int size = D2D1PixelShader.GetConstantBufferSize<ShaderWithNoCapturedValues>();
