@@ -48,6 +48,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d3d11shader\D3D11_SHADER_DESC.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d3dcommon\ID3DInclude.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d3dcompiler\D3DCOMPILE.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d3dcompiler\D3DCOMPILER_STRIP_FLAGS.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d3dcompiler\D3D_BLOB_PART.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d3dcompiler\DirectX.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)..\ComputeSharp.Win32.D3D12\DirectX\um\d3dcommon\D3D_PRIMITIVE_TOPOLOGY.cs" Link="DirectX\um\d3dcommon\D3D_PRIMITIVE_TOPOLOGY.cs" />
