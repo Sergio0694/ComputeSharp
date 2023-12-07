@@ -156,6 +156,16 @@ public enum D2D1CompileOptions
     WarningsAreErrors = (int)D3DCOMPILE.D3DCOMPILE_WARNINGS_ARE_ERRORS,
 
     /// <summary>
+    /// Strips the reflection data from the generated shader bytecode. The bytecode size will be smaller, but trying
+    /// to perform reflection on the shader will return inaccurate results. It is recommend if not reflection is used.
+    /// </summary>
+    /// <remarks>
+    /// This flag maps to <c>D3DCOMPILER_STRIP_REFLECTION_DATA</c>, when passed as input to <c>D3DStripShader</c>.
+    /// For more info, see <see href="https://learn.microsoft.com/en-us/windows/win32/api/d3dcompiler/nf-d3dcompiler-d3dstripshader"/>.
+    /// </remarks>
+    StripReflectionData = 1 << 30,
+
+    /// <summary>
     /// This flag enables the support for shader linking. Specifically, when set, this flag causes the APIs from
     /// <see cref="D2D1ShaderCompiler"/> to compile the input shader twice: once as a full D2D1 shader, and once
     /// as an export function, which is then set as private blob data into the final bytecode that is returned.
