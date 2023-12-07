@@ -8,10 +8,7 @@ namespace ComputeSharp.Win32;
 internal enum D2D1_EXTEND_MODE : uint
 {
     D2D1_EXTEND_MODE_CLAMP = 0,
-
     D2D1_EXTEND_MODE_WRAP = 1,
-
     D2D1_EXTEND_MODE_MIRROR = 2,
-
     D2D1_EXTEND_MODE_FORCE_DWORD = 0xffffffff,
 }
