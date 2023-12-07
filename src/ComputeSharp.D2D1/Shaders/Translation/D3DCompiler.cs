@@ -50,6 +50,12 @@ internal static unsafe partial class D3DCompiler
         writtenBytes = Encoding.ASCII.GetBytes(source, buffer);
 #endif
 
+        bool enableLinking = (options & D2D1CompileOptions.EnableLinking) == D2D1CompileOptions.EnableLinking;
+        bool stripReflectionData = (options & D2D1CompileOptions.StripReflectionData) == D2D1CompileOptions.StripReflectionData;
+
+        options &= ~D2D1CompileOptions.EnableLinking;
+        options &= ~D2D1CompileOptions.StripReflectionData;
+
         try
         {
             // Compile the standalone D2D1 full shader
@@ -59,9 +65,10 @@ internal static unsafe partial class D3DCompiler
                 d2DEntry: ASCII.Execute,
                 entryPoint: ASCII.Execute,
                 target: ASCII.GetPixelShaderProfile(shaderProfile),
-                flags: (uint)(options & ~D2D1CompileOptions.EnableLinking));
+                flags: (uint)options,
+                stripReflectionData: stripReflectionData);
 
-            if ((options & D2D1CompileOptions.EnableLinking) == 0)
+            if (!enableLinking)
             {
                 return d3DBlobFullShader.Move();
             }
@@ -73,7 +80,8 @@ internal static unsafe partial class D3DCompiler
                 d2DEntry: ASCII.Execute,
                 entryPoint: default,
                 target: ASCII.GetLibraryProfile(shaderProfile),
-                flags: (uint)(options & ~D2D1CompileOptions.EnableLinking));
+                flags: (uint)options,
+                stripReflectionData: stripReflectionData);
 
             // Embed it as private data if requested
             using ComPtr<ID3DBlob> d3DBlobLinked = SetD3DPrivateData(d3DBlobFullShader.Get(), d3DBlobFunction.Get());
@@ -95,6 +103,7 @@ internal static unsafe partial class D3DCompiler
     /// <param name="entryPoint">The entry point for the shader.</param>
     /// <param name="target">The shader target to use to compile the input source.</param>
     /// <param name="flags">The compilationm flag to use.</param>
+    /// <param name="stripReflectionData">Whether to strip reflection data from the shader bytecode.</param>
     /// <returns>The bytecode for the compiled shader.</returns>
     /// <exception cref="FxcCompilationException">Thrown if the compilation fails.</exception>
     public static ComPtr<ID3DBlob> Compile(
@@ -103,7 +112,8 @@ internal static unsafe partial class D3DCompiler
         ReadOnlySpan<byte> d2DEntry,
         ReadOnlySpan<byte> entryPoint,
         ReadOnlySpan<byte> target,
-        uint flags)
+        uint flags,
+        bool stripReflectionData)
     {
         using ComPtr<ID3DBlob> d3DBlobBytecode = default;
         using ComPtr<ID3DBlob> d3DBlobErrors = default;
@@ -180,6 +190,20 @@ internal static unsafe partial class D3DCompiler
         // clear if this is reachable in case the compilation fails (one would assume
         // there would always be a message), but better safe than sorry.
         hResult.Assert();
+
+        // If requested, strip the reflection data and return that bytecode blob
+        if (stripReflectionData)
+        {
+            using ComPtr<ID3DBlob> d3DBlobBytecodeNoReflection = default;
+
+            DirectX.D3DStripShader(
+                pShaderBytecode: d3DBlobBytecode.Get()->GetBufferPointer(),
+                BytecodeLength: d3DBlobBytecode.Get()->GetBufferSize(),
+                uStripFlags: (uint)D3DCOMPILER_STRIP_FLAGS.D3DCOMPILER_STRIP_REFLECTION_DATA,
+                ppStrippedBlob: d3DBlobBytecodeNoReflection.GetAddressOf()).Assert();
+
+            return d3DBlobBytecodeNoReflection.Move();
+        }
 
         return d3DBlobBytecode.Move();
     }
