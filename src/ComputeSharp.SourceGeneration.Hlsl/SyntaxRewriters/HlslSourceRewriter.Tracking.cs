@@ -18,6 +18,17 @@ partial class HlslSourceRewriter
     protected TypeSyntax TrackType(SyntaxNode node, SemanticModel semanticModel)
     {
         ITypeSymbol typeSymbol = semanticModel.GetTypeInfo(node, CancellationToken).Type!;
+
+        return TrackType(typeSymbol);
+    }
+
+    /// <summary>
+    /// Tracks an <see cref="ITypeSymbol"/> instance and returns the HLSL compatible <see cref="TypeSyntax"/>.
+    /// </summary>
+    /// <param name="typeSymbol">The input <see cref="ITypeSymbol"/> instance to process.</param>
+    /// <returns>A <see cref="SyntaxNode"/> instance that represents a type compatible with HLSL.</returns>
+    protected TypeSyntax TrackType(ITypeSymbol typeSymbol)
+    {
         string typeName = typeSymbol.GetFullyQualifiedName();
 
         DiscoveredTypes.Add((INamedTypeSymbol)typeSymbol);

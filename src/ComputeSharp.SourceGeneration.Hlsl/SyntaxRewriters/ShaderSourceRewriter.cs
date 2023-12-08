@@ -627,7 +627,7 @@ internal sealed partial class ShaderSourceRewriter(
         // Track and rewrite the discarded declaration
         if (SemanticModel.For(node).GetOperation(node.Expression, CancellationToken) is IDiscardOperation operation)
         {
-            TypeSyntax typeSyntax = ParseTypeName(HlslKnownTypes.TrackType(operation.Type!, DiscoveredTypes));
+            TypeSyntax typeSyntax = TrackType(operation.Type!);
             string identifier = $"__implicit{this.implicitVariables.Count}";
 
             // Add the variable to the list of implicit declarations
