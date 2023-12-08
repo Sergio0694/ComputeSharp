@@ -35,7 +35,7 @@ partial class HlslSourceRewriter
 
         if (HlslKnownTypes.TryGetMappedName(typeName, out string? mappedName))
         {
-            return ParseTypeName(mappedName!);
+            return ParseTypeName(mappedName);
         }
 
         return ParseTypeName(typeName.ToHlslIdentifierName());
@@ -94,7 +94,7 @@ partial class HlslSourceRewriter
 
         if (HlslKnownTypes.TryGetMappedName(typeName, out string? mappedName))
         {
-            TypeSyntax newType = ParseTypeName(mappedName!);
+            TypeSyntax newType = ParseTypeName(mappedName);
 
             return node.ReplaceNode(targetType, newType);
         }

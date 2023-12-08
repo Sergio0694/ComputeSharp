@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Numerics;
@@ -240,7 +241,7 @@ internal static partial class HlslKnownTypes
     /// <param name="originalName">The input type name to map.</param>
     /// <param name="mappedName">The resulting mapped type name, if found.</param>
     /// <returns>Whether a mapped name was available.</returns>
-    public static bool TryGetMappedName(string originalName, out string? mappedName)
+    public static bool TryGetMappedName(string originalName, [NotNullWhen(true)] out string? mappedName)
     {
         return KnownHlslTypeMetadataNames.TryGetValue(originalName, out mappedName);
     }
