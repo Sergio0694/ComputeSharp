@@ -18,4 +18,7 @@ internal static unsafe partial class DirectX
 
     [DllImport("d3dcompiler_47", ExactSpelling = true)]
     public static extern HRESULT D3DSetBlobPart([NativeTypeName("LPCVOID")] void* pSrcData, [NativeTypeName("SIZE_T")] nuint SrcDataSize, D3D_BLOB_PART Part, uint Flags, [NativeTypeName("LPCVOID")] void* pPart, [NativeTypeName("SIZE_T")] nuint PartSize, ID3DBlob** ppNewShader);
+
+    [DllImport("d3dcompiler_47", ExactSpelling = true)]
+    public static extern HRESULT D3DStripShader([NativeTypeName("LPCVOID")] void* pShaderBytecode, [NativeTypeName("SIZE_T")] nuint BytecodeLength, uint uStripFlags, ID3DBlob** ppStrippedBlob);
 }

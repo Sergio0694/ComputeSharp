@@ -65,11 +65,13 @@ public static class D2D1ShaderCompiler
         D2D1ShaderProfile shaderProfile,
         D2D1CompileOptions options)
     {
-        // Check linking support
+        // Check the additional compile options (not provided by FXC directly)
         bool enableLinking = (options & D2D1CompileOptions.EnableLinking) == D2D1CompileOptions.EnableLinking;
+        bool stripReflectionData = (options & D2D1CompileOptions.StripReflectionData) == D2D1CompileOptions.StripReflectionData;
 
-        // Remove the linking flag to make the options blittable to flags
+        // Remove the additional options to make them blittable to flags
         options &= ~D2D1CompileOptions.EnableLinking;
+        options &= ~D2D1CompileOptions.StripReflectionData;
 
         // Compile the standalone D2D1 full shader
         using ComPtr<ID3DBlob> d3DBlobFullShader = D3DCompiler.Compile(
@@ -78,7 +80,8 @@ public static class D2D1ShaderCompiler
             d2DEntry: entryPointAscii,
             entryPoint: entryPointAscii,
             target: ASCII.GetPixelShaderProfile(shaderProfile),
-            flags: (uint)options);
+            flags: (uint)options,
+            stripReflectionData: stripReflectionData);
 
         if (!enableLinking)
         {
@@ -95,7 +98,8 @@ public static class D2D1ShaderCompiler
             d2DEntry: entryPointAscii,
             entryPoint: default,
             target: ASCII.GetLibraryProfile(shaderProfile),
-            flags: (uint)options);
+            flags: (uint)options,
+            stripReflectionData: stripReflectionData);
 
         // Embed it as private data if requested
         using ComPtr<ID3DBlob> d3DBlobLinked = D3DCompiler.SetD3DPrivateData(d3DBlobFullShader.Get(), d3DBlobFunction.Get());
