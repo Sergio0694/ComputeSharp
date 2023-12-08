@@ -12,12 +12,12 @@ partial class HlslKnownTypes
     /// <summary>
     /// Gets the known HLSL dispatch types.
     /// </summary>
-    public static IReadOnlyCollection<Type> HlslDispatchTypes { get; } = new[]
-    {
+    public static IReadOnlyCollection<Type> HlslDispatchTypes { get; } =
+    [
         typeof(ThreadIds),
         typeof(GroupIds),
         typeof(GridIds)
-    };
+    ];
 
     /// <summary>
     /// Checks whether or not a given type name matches a constant buffer type.

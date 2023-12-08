@@ -246,7 +246,7 @@ public sealed partial class D2DPixelShaderDescriptorGenerator : IIncrementalGene
             item.Hierarchy.WriteSyntax(
                 state: item,
                 writer: writer,
-                baseTypes: new[] { $"global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<{item.Hierarchy.Hierarchy[0].QualifiedName}>" },
+                baseTypes: [$"global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<{item.Hierarchy.Hierarchy[0].QualifiedName}>"],
                 memberCallbacks: declaredMembers.WrittenSpan);
 
             // If any generated types are needed, they go into a separate namespace

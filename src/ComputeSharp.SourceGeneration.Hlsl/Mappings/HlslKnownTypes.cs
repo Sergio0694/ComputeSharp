@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 using ComputeSharp.SourceGeneration.Extensions;
 using Microsoft.CodeAnalysis;
 
-#pragma warning disable RS1024
+#pragma warning disable IDE0055, RS1024
 
 namespace ComputeSharp.SourceGeneration.Mappings;
 
@@ -19,20 +19,20 @@ internal static partial class HlslKnownTypes
     /// <summary>
     /// Gets the set of HLSL vector types.
     /// </summary>
-    public static IReadOnlyCollection<Type> KnownVectorTypes { get; } = new[]
-    {
+    public static IReadOnlyCollection<Type> KnownVectorTypes { get; } =
+    [
         typeof(Bool2), typeof(Bool3), typeof(Bool4),
         typeof(Int2), typeof(Int3), typeof(Int4),
         typeof(UInt2), typeof(UInt3), typeof(UInt4),
         typeof(Float2), typeof(Float3), typeof(Float4),
         typeof(Double2), typeof(Double3), typeof(Double4)
-    };
+    ];
 
     /// <summary>
     /// Gets the set of HLSL matrix types.
     /// </summary>
-    public static IReadOnlyCollection<Type> KnownMatrixTypes { get; } = new[]
-    {
+    public static IReadOnlyCollection<Type> KnownMatrixTypes { get; } =
+    [
         typeof(Bool1x1), typeof(Bool1x2), typeof(Bool1x3), typeof(Bool1x4),
         typeof(Bool2x1), typeof(Bool2x2), typeof(Bool2x3), typeof(Bool2x4),
         typeof(Bool3x1), typeof(Bool3x2), typeof(Bool3x3), typeof(Bool3x4),
@@ -53,7 +53,7 @@ internal static partial class HlslKnownTypes
         typeof(Double2x1), typeof(Double2x2), typeof(Double2x3), typeof(Double2x4),
         typeof(Double3x1), typeof(Double3x2), typeof(Double3x3), typeof(Double3x4),
         typeof(Double4x1), typeof(Double4x2), typeof(Double4x3), typeof(Double4x4)
-    };
+    ];
 
     /// <summary>
     /// The mapping of supported known types to HLSL types.

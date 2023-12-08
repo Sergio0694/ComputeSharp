@@ -94,7 +94,7 @@ public sealed partial class D2DPixelShaderSourceGenerator : IIncrementalGenerato
                 state: item,
                 writer: writer,
                 baseTypes: [],
-                memberCallbacks: new IndentedTextWriter.Callback<D2D1PixelShaderSourceInfo>[] { Execute.WriteSyntax });
+                memberCallbacks: [Execute.WriteSyntax]);
 
             context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.{item.MethodName}.g.cs", writer.ToString());
         });

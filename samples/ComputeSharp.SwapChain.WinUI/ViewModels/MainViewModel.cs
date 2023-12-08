@@ -79,7 +79,7 @@ public sealed partial class MainViewModel : ObservableObject
     /// <summary>
     /// Gets the available resolution scaling options (as percentage values).
     /// </summary>
-    public IList<int> ResolutionScaleOptions { get; } = new[] { 25, 50, 75, 100 };
+    public IList<int> ResolutionScaleOptions { get; } = [25, 50, 75, 100];
 
     /// <summary>
     /// Gets the collection of available compute shader.
