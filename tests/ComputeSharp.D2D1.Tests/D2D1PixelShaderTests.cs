@@ -101,14 +101,14 @@ namespace ComputeSharp.D2D1.Tests
         {
             CollectionAssert.AreEqual(new[]
             {
-            D2D1PixelShaderInputType.Simple,
-            D2D1PixelShaderInputType.Complex,
-            D2D1PixelShaderInputType.Simple,
-            D2D1PixelShaderInputType.Complex,
-            D2D1PixelShaderInputType.Complex,
-            D2D1PixelShaderInputType.Complex,
-            D2D1PixelShaderInputType.Simple
-        }, D2D1PixelShader.GetInputTypes<ShaderWithMultipleInputs>().ToArray());
+                D2D1PixelShaderInputType.Simple,
+                D2D1PixelShaderInputType.Complex,
+                D2D1PixelShaderInputType.Simple,
+                D2D1PixelShaderInputType.Complex,
+                D2D1PixelShaderInputType.Complex,
+                D2D1PixelShaderInputType.Complex,
+                D2D1PixelShaderInputType.Simple
+            }, D2D1PixelShader.GetInputTypes<ShaderWithMultipleInputs>().ToArray());
         }
 
         [TestMethod]

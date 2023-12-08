@@ -25,7 +25,7 @@ internal static partial class HlslKnownMethods
     /// <summary>
     /// Builds the mapping of supported known methods to HLSL names.
     /// </summary>
-    private static IReadOnlyDictionary<string, string> BuildKnownMethodsMap()
+    private static Dictionary<string, string> BuildKnownMethodsMap()
     {
         Dictionary<string, string> knownMethods = new()
         {
@@ -162,7 +162,7 @@ internal static partial class HlslKnownMethods
     /// <summary>
     /// Builds the mapping of supported known methods that require parameters mapping to HLSL names.
     /// </summary>
-    private static IReadOnlyDictionary<string, string> BuildKnownMethodsParametersMappingMap()
+    private static Dictionary<string, string> BuildKnownMethodsParametersMappingMap()
     {
         ILookup<string, MethodInfo> methodsLookup = typeof(Hlsl).GetMethods(BindingFlags.Public | BindingFlags.Static).ToLookup(static method => method.Name);
 

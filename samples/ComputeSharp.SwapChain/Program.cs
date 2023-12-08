@@ -16,8 +16,8 @@ class Program
     static void Main()
     {
         // Prepare the mapping of available samples to choose from
-        (string ShaderName, Win32Application Application)[] samples = new[]
-        {
+        (string ShaderName, Win32Application Application)[] samples =
+        [
             (nameof(HelloWorld), Win32ApplicationFactory<HelloWorld>.Create(static time => new((float)time.TotalSeconds))),
             (nameof(FourColorGradient), Win32ApplicationFactory<FourColorGradient>.Create(static time => new((float)time.TotalSeconds))),
             (nameof(ColorfulInfinity), Win32ApplicationFactory<ColorfulInfinity>.Create(static time => new((float)time.TotalSeconds))),
@@ -31,7 +31,7 @@ class Program
             (nameof(TriangleGridContouring), Win32ApplicationFactory<TriangleGridContouring>.Create(static time => new((float)time.TotalSeconds))),
             (nameof(ContouredLayers), Win32ApplicationFactory<ContouredLayers>.Create(static time => new((float)time.TotalSeconds, RustyMetal.Value))),
             (nameof(TerracedHills), Win32ApplicationFactory<TerracedHills>.Create(static time => new((float)time.TotalSeconds))),
-        };
+        ];
 
         int index;
 

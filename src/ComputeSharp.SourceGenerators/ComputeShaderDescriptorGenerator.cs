@@ -183,7 +183,7 @@ public sealed partial class ComputeShaderDescriptorGenerator : IIncrementalGener
             item.Hierarchy.WriteSyntax(
                 state: item,
                 writer: writer,
-                baseTypes: new[] { $"global::ComputeSharp.Descriptors.IComputeShaderDescriptor<{item.Hierarchy.Hierarchy[0].QualifiedName}>" },
+                baseTypes: [$"global::ComputeSharp.Descriptors.IComputeShaderDescriptor<{item.Hierarchy.Hierarchy[0].QualifiedName}>"],
                 memberCallbacks: declaredMembers.WrittenSpan);
 
             // Append any additional types as well

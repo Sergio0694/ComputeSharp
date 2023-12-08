@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Numerics;
-using System.Text.RegularExpressions;
 using ComputeSharp.SourceGeneration.Extensions;
 using Microsoft.CodeAnalysis;
 
-#pragma warning disable RS1024
+#pragma warning disable IDE0055, RS1024
 
 namespace ComputeSharp.SourceGeneration.Mappings;
 
@@ -17,22 +17,22 @@ namespace ComputeSharp.SourceGeneration.Mappings;
 internal static partial class HlslKnownTypes
 {
     /// <summary>
-    /// Gets the set of HLSL vector types.
+    /// The set of HLSL vector types.
     /// </summary>
-    public static IReadOnlyCollection<Type> KnownVectorTypes { get; } = new[]
-    {
+    private static readonly Type[] KnownVectorTypes =
+    [
         typeof(Bool2), typeof(Bool3), typeof(Bool4),
         typeof(Int2), typeof(Int3), typeof(Int4),
         typeof(UInt2), typeof(UInt3), typeof(UInt4),
         typeof(Float2), typeof(Float3), typeof(Float4),
         typeof(Double2), typeof(Double3), typeof(Double4)
-    };
+    ];
 
     /// <summary>
-    /// Gets the set of HLSL matrix types.
+    /// The set of HLSL matrix types.
     /// </summary>
-    public static IReadOnlyCollection<Type> KnownMatrixTypes { get; } = new[]
-    {
+    private static readonly Type[] KnownMatrixTypes =
+    [
         typeof(Bool1x1), typeof(Bool1x2), typeof(Bool1x3), typeof(Bool1x4),
         typeof(Bool2x1), typeof(Bool2x2), typeof(Bool2x3), typeof(Bool2x4),
         typeof(Bool3x1), typeof(Bool3x2), typeof(Bool3x3), typeof(Bool3x4),
@@ -53,17 +53,55 @@ internal static partial class HlslKnownTypes
         typeof(Double2x1), typeof(Double2x2), typeof(Double2x3), typeof(Double2x4),
         typeof(Double3x1), typeof(Double3x2), typeof(Double3x3), typeof(Double3x4),
         typeof(Double4x1), typeof(Double4x2), typeof(Double4x3), typeof(Double4x4)
-    };
+    ];
+
+    /// <summary>
+    /// The mapping of supported known vector types to HLSL types.
+    /// </summary>
+    private static readonly IReadOnlyDictionary<string, string> KnownVectorTypeMetadataNames = BuildKnownVectorTypeMetadataNames();
+
+    /// <summary>
+    /// The mapping of supported known matrix types to HLSL types.
+    /// </summary>
+    private static readonly IReadOnlyDictionary<string, string> KnownMatrixTypesMetadataNames = BuildKnownMatrixTypeMetadataNames();
 
     /// <summary>
     /// The mapping of supported known types to HLSL types.
     /// </summary>
-    private static readonly IReadOnlyDictionary<string, string> KnownHlslTypes = BuildKnownHlslTypes();
+    private static readonly IReadOnlyDictionary<string, string> KnownHlslTypeMetadataNames = BuildKnownHlslTypeMetadataNames();
+
+    /// <summary>
+    /// The mapping of type info for all supported known matrix types to HLSL types.
+    /// </summary>
+    private static readonly IReadOnlyDictionary<string, NonLinearMatrixTypeInfo> KnownNonLinearMatrixTypeInfo = BuildKnownNonLinearMatrixTypeInfo();
+
+    /// <summary>
+    /// Builds the mapping of known HLSL vector types.
+    /// </summary>
+    /// <returns>The mapping of known HLSL vector types.</returns>
+    private static Dictionary<string, string> BuildKnownVectorTypeMetadataNames()
+    {
+        return KnownVectorTypes.ToDictionary(
+            keySelector: static type => type.FullName,
+            elementSelector: static type => type.Name.ToLowerInvariant());
+    }
+
+    /// <summary>
+    /// Builds the mapping of known HLSL matrix types.
+    /// </summary>
+    /// <returns>The mapping of known HLSL matrix types.</returns>
+    private static Dictionary<string, string> BuildKnownMatrixTypeMetadataNames()
+    {
+        return KnownMatrixTypes.ToDictionary(
+            keySelector: static type => type.FullName,
+            elementSelector: static type => type.Name.ToLowerInvariant());
+    }
 
     /// <summary>
     /// Builds the mapping of known primitive types.
     /// </summary>
-    private static IReadOnlyDictionary<string, string> BuildKnownHlslTypes()
+    /// <returns>The mapping of known primitive types.</returns>
+    private static Dictionary<string, string> BuildKnownHlslTypeMetadataNames()
     {
         Dictionary<string, string> knownTypes = new()
         {
@@ -78,19 +116,74 @@ internal static partial class HlslKnownTypes
             [typeof(double).FullName] = "double"
         };
 
-        // Add all the vector types
-        foreach (Type type in KnownVectorTypes)
+        IEnumerable<KeyValuePair<string, string>> metadataNames =
+            knownTypes
+            .Concat(KnownVectorTypeMetadataNames)
+            .Concat(KnownMatrixTypesMetadataNames);
+
+        return metadataNames.ToDictionary(
+            keySelector: static p => p.Key,
+            elementSelector: static p => p.Value);
+    }
+
+    /// <summary>
+    /// Builds the mapping of type info for all supported known matrix types to HLSL types.
+    /// </summary>
+    /// <returns>The mapping of type info for all supported known matrix types to HLSL types.</returns>
+    private static Dictionary<string, NonLinearMatrixTypeInfo> BuildKnownNonLinearMatrixTypeInfo()
+    {
+        Type[] knownTypes =
+        [
+            typeof(Bool2x1), typeof(Bool2x2), typeof(Bool2x3), typeof(Bool2x4),
+            typeof(Bool3x1), typeof(Bool3x2), typeof(Bool3x3), typeof(Bool3x4),
+            typeof(Bool4x1), typeof(Bool4x2), typeof(Bool4x3), typeof(Bool4x4),
+            typeof(Int2x1), typeof(Int2x2), typeof(Int2x3), typeof(Int2x4),
+            typeof(Int3x1), typeof(Int3x2), typeof(Int3x3), typeof(Int3x4),
+            typeof(Int4x1), typeof(Int4x2), typeof(Int4x3), typeof(Int4x4),
+            typeof(UInt2x1), typeof(UInt2x2), typeof(UInt2x3), typeof(UInt2x4),
+            typeof(UInt3x1), typeof(UInt3x2), typeof(UInt3x3), typeof(UInt3x4),
+            typeof(UInt4x1), typeof(UInt4x2), typeof(UInt4x3), typeof(UInt4x4),
+            typeof(Float2x1), typeof(Float2x2), typeof(Float2x3), typeof(Float2x4),
+            typeof(Float3x1), typeof(Float3x2), typeof(Float3x3), typeof(Float3x4),
+            typeof(Float4x1), typeof(Float4x2), typeof(Float4x3), typeof(Float4x4),
+            typeof(Double2x1), typeof(Double2x2), typeof(Double2x3), typeof(Double2x4),
+            typeof(Double3x1), typeof(Double3x2), typeof(Double3x3), typeof(Double3x4),
+            typeof(Double4x1), typeof(Double4x2), typeof(Double4x3), typeof(Double4x4)
+        ];
+
+        static NonLinearMatrixTypeInfo CreateTypeInfo(Type type)
         {
-            knownTypes.Add(type.FullName, type.Name.ToLowerInvariant());
+            // Extract the info for each non linear matrix type:
+            //   - The name is just the prefix without the NxM part
+            //   - The number of rows is the first suffix character
+            //   - The number of columns is the last suffix character
+            return new(
+                ElementName: type.Name[..^3],
+                Rows: int.Parse(type.Name[^3].ToString(), CultureInfo.InvariantCulture),
+                Columns: int.Parse(type.Name[^1].ToString(), CultureInfo.InvariantCulture));
         }
 
-        // Add all the matrix types
-        foreach (Type type in KnownMatrixTypes)
-        {
-            knownTypes.Add(type.FullName, type.Name.ToLowerInvariant());
-        }
+        return knownTypes.ToDictionary(
+            keySelector: static type => type.FullName,
+            elementSelector: CreateTypeInfo);
+    }
 
-        return knownTypes;
+    /// <summary>
+    /// Enumerates the known HLSL vector types.
+    /// </summary>
+    /// <returns>The sequence of all known HLSL vector types.</returns>
+    public static IEnumerable<Type> EnumerateKnownVectorTypes()
+    {
+        return KnownVectorTypes;
+    }
+
+    /// <summary>
+    /// Enumerates the known HLSL matrix types.
+    /// </summary>
+    /// <returns>The sequence of all known HLSL matrix types.</returns>
+    public static IEnumerable<Type> EnumerateKnownMatrixTypes()
+    {
+        return KnownMatrixTypes;
     }
 
     /// <summary>
@@ -100,7 +193,7 @@ internal static partial class HlslKnownTypes
     /// <returns>Whether or not <paramref name="typeName"/> represents a scalar, vector or matrix type.</returns>
     public static bool IsKnownHlslType(string typeName)
     {
-        return KnownHlslTypes.ContainsKey(typeName);
+        return KnownHlslTypeMetadataNames.ContainsKey(typeName);
     }
 
     /// <summary>
@@ -110,7 +203,7 @@ internal static partial class HlslKnownTypes
     /// <returns>Whether or not <paramref name="typeName"/> represents a vector type.</returns>
     public static bool IsVectorType(string typeName)
     {
-        return KnownVectorTypes.Any(type => type.FullName == typeName);
+        return KnownVectorTypeMetadataNames.ContainsKey(typeName);
     }
 
     /// <summary>
@@ -120,7 +213,7 @@ internal static partial class HlslKnownTypes
     /// <returns>Whether or not <paramref name="typeName"/> represents a matrix type.</returns>
     public static bool IsMatrixType(string typeName)
     {
-        return KnownMatrixTypes.Any(type => type.FullName == typeName);
+        return KnownMatrixTypesMetadataNames.ContainsKey(typeName);
     }
 
     /// <summary>
@@ -134,22 +227,16 @@ internal static partial class HlslKnownTypes
     /// <returns>Whether or not <paramref name="typeName"/> represents a non linear matrix type.</returns>
     public static bool IsNonLinearMatrixType(string typeName, out string? elementName, out int rows, out int columns)
     {
-        if (KnownMatrixTypes.Any(type => type.FullName == typeName))
+        if (KnownNonLinearMatrixTypeInfo.TryGetValue(typeName, out NonLinearMatrixTypeInfo? value))
         {
-            Match match = Regex.Match(typeName, @"^ComputeSharp\.(Bool|Int|UInt|Float|Double)([2-4])x([1-4])$");
+            (elementName, rows, columns) = value;
 
-            if (match.Success)
-            {
-                elementName = match.Groups[1].Value;
-                rows = int.Parse(match.Groups[2].Value, CultureInfo.InvariantCulture);
-                columns = int.Parse(match.Groups[3].Value, CultureInfo.InvariantCulture);
-
-                return true;
-            }
+            return true;
         }
 
         elementName = null;
-        rows = columns = 0;
+        rows = 0;
+        columns = 0;
 
         return false;
     }
@@ -170,7 +257,7 @@ internal static partial class HlslKnownTypes
     {
         string elementTypeName = ((INamedTypeSymbol)typeSymbol.ElementType).GetFullyQualifiedMetadataName();
 
-        if (KnownHlslTypes.TryGetValue(elementTypeName, out string? mapped))
+        if (KnownHlslTypeMetadataNames.TryGetValue(elementTypeName, out string? mapped))
         {
             return mapped;
         }
@@ -185,7 +272,7 @@ internal static partial class HlslKnownTypes
     /// <returns>The HLSL-compatible type name that can be used in an HLSL shader.</returns>
     public static string GetMappedName(string originalName)
     {
-        return KnownHlslTypes[originalName];
+        return KnownHlslTypeMetadataNames[originalName];
     }
 
     /// <summary>
@@ -194,29 +281,9 @@ internal static partial class HlslKnownTypes
     /// <param name="originalName">The input type name to map.</param>
     /// <param name="mappedName">The resulting mapped type name, if found.</param>
     /// <returns>Whether a mapped name was available.</returns>
-    public static bool TryGetMappedName(string originalName, out string? mappedName)
+    public static bool TryGetMappedName(string originalName, [NotNullWhen(true)] out string? mappedName)
     {
-        return KnownHlslTypes.TryGetValue(originalName, out mappedName);
-    }
-
-    /// <summary>
-    /// Tracks an <see cref="ITypeSymbol"/> instance and returns an HLSL compatible type name.
-    /// </summary>
-    /// <param name="typeSymbol">The input <see cref="ITypeSymbol"/> instance to process.</param>
-    /// <param name="discoveredTypes">The collection of currently discovered types.</param>
-    /// <returns>A type name that represents a type compatible with HLSL.</returns>
-    public static string TrackType(ITypeSymbol typeSymbol, ICollection<INamedTypeSymbol> discoveredTypes)
-    {
-        string typeName = typeSymbol.GetFullyQualifiedName();
-
-        discoveredTypes.Add((INamedTypeSymbol)typeSymbol);
-
-        if (TryGetMappedName(typeName, out string? mappedName))
-        {
-            return mappedName!;
-        }
-
-        return typeName.ToHlslIdentifierName();
+        return KnownHlslTypeMetadataNames.TryGetValue(originalName, out mappedName);
     }
 
     /// <summary>
@@ -238,7 +305,7 @@ internal static partial class HlslKnownTypes
                 return;
             }
 
-            if (KnownHlslTypes.ContainsKey(type.GetFullyQualifiedMetadataName()))
+            if (KnownHlslTypeMetadataNames.ContainsKey(type.GetFullyQualifiedMetadataName()))
             {
                 return;
             }
@@ -325,7 +392,7 @@ internal static partial class HlslKnownTypes
 
                 INamedTypeSymbol fieldType = (INamedTypeSymbol)field.Type;
 
-                if (!KnownHlslTypes.ContainsKey(fieldType.GetFullyQualifiedMetadataName()) &&
+                if (!KnownHlslTypeMetadataNames.ContainsKey(fieldType.GetFullyQualifiedMetadataName()) &&
                     !invalidTypes.Contains(fieldType))
                 {
                     _ = dependencies.Add(fieldType);
@@ -356,4 +423,12 @@ internal static partial class HlslKnownTypes
             }
         }
     }
+
+    /// <summary>
+    /// A simple model with info on a non linear matrix type.
+    /// </summary>
+    /// <param name="ElementName">The element name of the matrix type.</param>
+    /// <param name="Rows">The number of rows in the matrix type.</param>
+    /// <param name="Columns">The number of columns in the matrix type.</param>
+    private sealed record NonLinearMatrixTypeInfo(string ElementName, int Rows, int Columns);
 }

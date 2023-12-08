@@ -21,7 +21,7 @@ internal static partial class HlslKnownProperties
     /// <summary>
     /// Builds the mapping of supported known properties to HLSL names.
     /// </summary>
-    private static IReadOnlyDictionary<string, string> BuildKnownPropertiesMap()
+    private static Dictionary<string, string> BuildKnownPropertiesMap()
     {
         Dictionary<string, string> knownProperties = new()
         {
@@ -141,7 +141,7 @@ internal static partial class HlslKnownProperties
 
         // Programmatically load mappings for the instance members of the HLSL vector types
         foreach ((Type Type, PropertyInfo Property) item in
-            from type in HlslKnownTypes.KnownVectorTypes
+            from type in HlslKnownTypes.EnumerateKnownVectorTypes()
             from property in type.GetProperties(BindingFlags.Instance | BindingFlags.Public)
             select (Type: type, Property: property))
         {
@@ -150,7 +150,7 @@ internal static partial class HlslKnownProperties
 
         // Load mappings for the matrix properties as well
         foreach ((Type Type, PropertyInfo Property) item in
-            from type in HlslKnownTypes.KnownMatrixTypes
+            from type in HlslKnownTypes.EnumerateKnownMatrixTypes()
             from property in type.GetProperties(BindingFlags.Instance | BindingFlags.Public)
             where Regex.IsMatch(property.Name, "^M[1-4]{2}$")
             select (Type: type, Property: property))

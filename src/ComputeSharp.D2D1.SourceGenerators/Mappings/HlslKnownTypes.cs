@@ -34,7 +34,7 @@ partial class HlslKnownTypes
             string genericArgumentName = ((INamedTypeSymbol)typeSymbol.TypeArguments[0]).GetFullyQualifiedMetadataName();
 
             // Get the HLSL name for the type argument (it can only be either float or float4)
-            _ = KnownHlslTypes.TryGetValue(genericArgumentName, out string? mappedElementType);
+            _ = KnownHlslTypeMetadataNames.TryGetValue(genericArgumentName, out string? mappedElementType);
 
             return typeName switch
             {
@@ -46,7 +46,7 @@ partial class HlslKnownTypes
         }
 
         // The captured field is of an HLSL primitive type
-        if (KnownHlslTypes.TryGetValue(typeName, out string? mappedType))
+        if (KnownHlslTypeMetadataNames.TryGetValue(typeName, out string? mappedType))
         {
             return mappedType;
         }

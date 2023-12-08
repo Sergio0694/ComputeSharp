@@ -1830,7 +1830,7 @@ public class Test_D2DPixelShaderSourceGenerator
         // Create the original compilation
         CSharpCompilation compilation = CSharpCompilation.Create(
             "original",
-            new SyntaxTree[] { sourceTree },
+            [sourceTree],
             metadataReferences,
             new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary, allowUnsafe: true));
 

@@ -192,7 +192,7 @@ internal static class HlslDefinitionsSyntaxProcessor
 
                 structDeclaration = structDeclaration.AddMembers(
                     FieldDeclaration(VariableDeclaration(
-                        IdentifierName(mappedType!)).AddVariables(
+                        IdentifierName(mappedType)).AddVariables(
                         VariableDeclarator(Identifier(mappedName!)))));
             }
 

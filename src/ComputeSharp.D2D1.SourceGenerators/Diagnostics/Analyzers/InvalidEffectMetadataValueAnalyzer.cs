@@ -26,13 +26,13 @@ public sealed class InvalidEffectMetadataValueAnalyzer : DiagnosticAnalyzer
     /// <summary>
     /// The mapping of diagnostics to their attribute type names.
     /// </summary>
-    private static readonly ImmutableDictionary<string, DiagnosticDescriptor> AttributeTypeNameToDiagnosticMapping = ImmutableDictionary.CreateRange(new[]
-    {
+    private static readonly ImmutableDictionary<string, DiagnosticDescriptor> AttributeTypeNameToDiagnosticMapping = ImmutableDictionary.CreateRange(
+    [
         new KeyValuePair<string, DiagnosticDescriptor>("D2DEffectDisplayNameAttribute", InvalidD2DEffectDisplayNameAttributeValue),
         new KeyValuePair<string, DiagnosticDescriptor>("D2DEffectDescriptionAttribute", InvalidD2DEffectDescriptionAttributeValue),
         new KeyValuePair<string, DiagnosticDescriptor>("D2DEffectCategoryAttribute", InvalidD2DEffectCategoryAttributeValue),
         new KeyValuePair<string, DiagnosticDescriptor>("D2DEffectAuthorAttribute", InvalidD2DEffectAuthorAttributeValue)
-    });
+    ]);
 
     /// <inheritdoc/>
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = ImmutableArray.Create(
