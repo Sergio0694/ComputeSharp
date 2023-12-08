@@ -6,7 +6,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace ComputeSharp.Tests.Internals;
 
 [TestClass]
-[TestCategory("NativeObject")]
 public class NativeObjectTests
 {
     [TestMethod]

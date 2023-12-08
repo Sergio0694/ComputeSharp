@@ -8,7 +8,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace ComputeSharp.Tests;
 
 [TestClass]
-[TestCategory("Texture1D")]
 public partial class Texture1DTests
 {
     [CombinatorialTestMethod]

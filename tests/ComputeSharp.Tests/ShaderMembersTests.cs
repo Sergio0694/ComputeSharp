@@ -8,7 +8,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace ComputeSharp.Tests;
 
 [TestClass]
-[TestCategory("ShaderMembers")]
 public partial class ShaderMembersTests
 {
     [CombinatorialTestMethod]

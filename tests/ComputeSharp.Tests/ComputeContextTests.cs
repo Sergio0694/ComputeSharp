@@ -16,7 +16,6 @@ using ImageSharpRgba32 = SixLabors.ImageSharp.PixelFormats.Rgba32;
 namespace ComputeSharp.Tests;
 
 [TestClass]
-[TestCategory("ComputeContext")]
 public partial class ComputeContextTests
 {
     [CombinatorialTestMethod]

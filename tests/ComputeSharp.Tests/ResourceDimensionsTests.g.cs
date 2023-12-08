@@ -5,7 +5,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace ComputeSharp.Tests;
 
 [TestClass]
-[TestCategory("ResourceDimensions")]
 public partial class ResourceDimensionsTests
 {
     [CombinatorialTestMethod]

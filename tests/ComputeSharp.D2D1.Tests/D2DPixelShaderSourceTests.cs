@@ -4,7 +4,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace ComputeSharp.D2D1.Tests;
 
 [TestClass]
-[TestCategory("D2DPixelShaderSource")]
 public partial class D2DPixelShaderSourceTests
 {
     [D2DPixelShaderSource("""

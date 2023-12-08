@@ -4,7 +4,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace ComputeSharp.Tests;
 
 [TestClass]
-[TestCategory("GlobalUsingDirectives")]
 public unsafe partial class GlobalUsingDirectivesTests
 {
     [TestMethod]

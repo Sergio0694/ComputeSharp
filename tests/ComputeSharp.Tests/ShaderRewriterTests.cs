@@ -10,7 +10,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace ComputeSharp.Tests;
 
 [TestClass]
-[TestCategory("ShaderRewriter")]
 public partial class ShaderRewriterTests
 {
     [CombinatorialTestMethod]

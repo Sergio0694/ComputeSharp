@@ -10,7 +10,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace ComputeSharp.Tests
 {
     [TestClass]
-    [TestCategory("ShaderCompiler")]
     public partial class ShaderCompilerTests
     {
         [TestMethod]
@@ -880,7 +879,6 @@ namespace ComputeSharp.Tests
 namespace ExternalNamespace
 {
     [TestClass]
-    [TestCategory("ShaderCompiler")]
     public partial class ShaderCompilerTestsInExternalNamespace
     {
         [AutoConstructor]

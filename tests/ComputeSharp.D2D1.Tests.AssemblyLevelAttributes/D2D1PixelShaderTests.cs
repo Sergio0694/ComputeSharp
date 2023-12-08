@@ -7,7 +7,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace ComputeSharp.D2D1.Tests.AssemblyLevelAttributes;
 
 [TestClass]
-[TestCategory("D2D1PixelShader")]
 public partial class D2D1PixelShaderTests
 {
     [TestMethod]

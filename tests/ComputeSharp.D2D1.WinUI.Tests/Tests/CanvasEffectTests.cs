@@ -16,7 +16,6 @@ using Windows.UI;
 namespace ComputeSharp.D2D1.WinUI.Tests;
 
 [TestClass]
-[TestCategory("CanvasEffect")]
 public partial class CanvasEffectTests
 {
     [TestMethod]

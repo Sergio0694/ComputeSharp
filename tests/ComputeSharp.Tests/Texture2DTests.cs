@@ -9,7 +9,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace ComputeSharp.Tests;
 
 [TestClass]
-[TestCategory("Texture2D")]
 public partial class Texture2DTests
 {
     [CombinatorialTestMethod]

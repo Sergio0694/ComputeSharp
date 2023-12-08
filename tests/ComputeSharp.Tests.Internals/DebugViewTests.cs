@@ -9,7 +9,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace ComputeSharp.Tests.Internals;
 
 [TestClass]
-[TestCategory("Buffer")]
 public partial class DebugViewTests
 {
     [CombinatorialTestMethod]

@@ -8,7 +8,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace ComputeSharp.Tests.Internals;
 
 [TestClass]
-[TestCategory("ShaderDataLoader")]
 public partial class ShaderDataLoaderTests
 {
     [AutoConstructor]
