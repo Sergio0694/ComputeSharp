@@ -7,7 +7,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace ComputeSharp.Tests.DisableDynamicCompilation;
 
 [TestClass]
-[TestCategory("Dispatch")]
 public partial class DispatchTests
 {
     [CombinatorialTestMethod]

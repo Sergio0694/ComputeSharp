@@ -13,7 +13,6 @@ using SixLabors.ImageSharp.PixelFormats;
 namespace ComputeSharp.D2D1.Tests;
 
 [TestClass]
-[TestCategory("Shaders")]
 public class ShadersTests
 {
     [TestMethod]

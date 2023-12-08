@@ -11,7 +11,6 @@ using TerraFX.Interop.Windows;
 namespace ComputeSharp.Tests.DeviceLost;
 
 [TestClass]
-[TestCategory("DeviceLost")]
 public class DeviceLostTests
 {
     [CombinatorialTestMethod]

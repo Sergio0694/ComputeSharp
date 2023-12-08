@@ -8,7 +8,6 @@ using TerraFX.Interop.Windows;
 namespace ComputeSharp.Tests.DeviceLost;
 
 [TestClass]
-[TestCategory("GetDefaultDevice")]
 public class GetDefaultDeviceTests
 {
     [TestMethod]

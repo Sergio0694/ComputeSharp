@@ -20,7 +20,6 @@ using ImageSharpL8 = SixLabors.ImageSharp.PixelFormats.L8;
 namespace ComputeSharp.Tests;
 
 [TestClass]
-[TestCategory("Imaging")]
 public class ImagingTests
 {
     [AssemblyInitialize]

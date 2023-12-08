@@ -9,7 +9,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace ComputeSharp.Tests;
 
 [TestClass]
-[TestCategory("Dispatch")]
 public partial class DispatchTests
 {
     [CombinatorialTestMethod]

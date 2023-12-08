@@ -14,7 +14,6 @@ using TerraFX.Interop.Windows;
 namespace ComputeSharp.Tests;
 
 [TestClass]
-[TestCategory("AllocationServices")]
 public unsafe class AllocationServicesTests
 {
     [TestMethod]

@@ -5,7 +5,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace ComputeSharp.D2D1.Tests;
 
 [TestClass]
-[TestCategory("D2D1ShaderCompiler")]
 public partial class D2D1ShaderCompilerTests
 {
     [TestMethod]

@@ -12,7 +12,6 @@ using TerraFX.Interop.Windows;
 namespace ComputeSharp.D2D1.Tests;
 
 [TestClass]
-[TestCategory("D2D1PixelShaderEffect")]
 public partial class D2D1PixelShaderEffectTests
 {
     [TestMethod]

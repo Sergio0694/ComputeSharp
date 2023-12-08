@@ -36,7 +36,7 @@ internal static partial class ConstantBufferSyntaxProcessor
         ref int constantBufferSizeInBytes,
         out ImmutableArray<FieldInfo> fields)
     {
-        // Helper method that uses boxes instead of ref-s (illegal in enumerators)
+        // Helper method to traverse the type hierarchy and append all valid fields
         static void GetInfo(
             Compilation compilation,
             ITypeSymbol currentTypeSymbol,

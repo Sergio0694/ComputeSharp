@@ -19,7 +19,6 @@ using TerraFX.Interop.Windows;
 namespace ComputeSharp.D2D1.Tests;
 
 [TestClass]
-[TestCategory("D2D1ResourceTextureManager")]
 public partial class D2D1ResourceTextureManagerTests
 {
     [TestMethod]

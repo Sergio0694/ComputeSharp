@@ -10,7 +10,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace ComputeSharp.Tests;
 
 [TestClass]
-[TestCategory("Texture3D")]
 public partial class Texture3DTests
 {
     [CombinatorialTestMethod]

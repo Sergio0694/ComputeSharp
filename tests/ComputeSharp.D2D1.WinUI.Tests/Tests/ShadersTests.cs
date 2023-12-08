@@ -13,7 +13,6 @@ using Windows.UI;
 namespace ComputeSharp.D2D1.WinUI.Tests;
 
 [TestClass]
-[TestCategory("Shaders")]
 public class ShadersTests
 {
     [TestMethod]

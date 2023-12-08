@@ -4,7 +4,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace ComputeSharp.Tests.Internals;
 
 [TestClass]
-[TestCategory("AlignmentHelper")]
 public class AlignmentHelperTests
 {
     [TestMethod]

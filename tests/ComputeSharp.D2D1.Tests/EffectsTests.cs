@@ -12,7 +12,6 @@ using SixLabors.ImageSharp.Processing;
 namespace ComputeSharp.D2D1.Tests;
 
 [TestClass]
-[TestCategory("Effects")]
 public class EffectsTests
 {
     [AssemblyInitialize]

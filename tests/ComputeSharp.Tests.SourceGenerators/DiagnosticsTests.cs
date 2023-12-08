@@ -13,7 +13,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace ComputeSharp.Tests.SourceGenerators;
 
 [TestClass]
-[TestCategory("Diagnostics")]
 public class DiagnosticsTests
 {
     [TestMethod]

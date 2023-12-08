@@ -5,7 +5,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace ComputeSharp.Tests;
 
 [TestClass]
-[TestCategory("IPixelShader")]
 public partial class IPixelShaderTests
 {
     [CombinatorialTestMethod]

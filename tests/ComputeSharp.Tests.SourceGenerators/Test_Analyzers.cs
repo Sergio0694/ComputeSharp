@@ -6,7 +6,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace ComputeSharp.Tests.SourceGenerators;
 
 [TestClass]
-[TestCategory("Analyzers")]
 public class Test_Analyzers
 {
     [TestMethod]

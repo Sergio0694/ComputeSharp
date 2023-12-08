@@ -10,7 +10,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace ComputeSharp.Tests;
 
 [TestClass]
-[TestCategory("TransferTexture1D")]
 public partial class TransferTexture1DTests
 {
     [CombinatorialTestMethod]

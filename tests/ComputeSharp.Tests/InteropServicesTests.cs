@@ -10,7 +10,6 @@ using TerraFX.Interop.Windows;
 namespace ComputeSharp.Tests;
 
 [TestClass]
-[TestCategory("InteropServices")]
 public unsafe partial class InteropServicesTests
 {
     [CombinatorialTestMethod]

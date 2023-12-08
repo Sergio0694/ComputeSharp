@@ -13,7 +13,6 @@ using TerraFX.Interop.Windows;
 namespace ComputeSharp.Tests.DeviceLost;
 
 [TestClass]
-[TestCategory("DeviceDisposal")]
 public partial class DeviceDisposalTests
 {
     [AssemblyInitialize]
