@@ -159,7 +159,7 @@ partial class HlslKnownTypes
             string genericArgumentName = ((INamedTypeSymbol)typeSymbol.TypeArguments.Last()).GetFullyQualifiedMetadataName();
 
             // If the current type is a custom type, format it as needed
-            if (!KnownHlslTypes.TryGetValue(genericArgumentName, out string? mappedElementType))
+            if (!KnownHlslTypeMetadataNames.TryGetValue(genericArgumentName, out string? mappedElementType))
             {
                 mappedElementType = genericArgumentName.ToHlslIdentifierName();
             }
@@ -196,7 +196,7 @@ partial class HlslKnownTypes
         }
 
         // The captured field is of an HLSL primitive type
-        if (KnownHlslTypes.TryGetValue(typeName, out string? mappedType))
+        if (KnownHlslTypeMetadataNames.TryGetValue(typeName, out string? mappedType))
         {
             return mappedType;
         }
@@ -215,7 +215,7 @@ partial class HlslKnownTypes
         string genericArgumentName = ((INamedTypeSymbol)typeSymbol.TypeArguments.First()).GetFullyQualifiedMetadataName();
 
         // If the current type is a custom type, format it as needed
-        if (!KnownHlslTypes.TryGetValue(genericArgumentName, out string? mappedElementType))
+        if (!KnownHlslTypeMetadataNames.TryGetValue(genericArgumentName, out string? mappedElementType))
         {
             mappedElementType = genericArgumentName.ToHlslIdentifierName();
         }

@@ -17,9 +17,9 @@ namespace ComputeSharp.SourceGeneration.Mappings;
 internal static partial class HlslKnownTypes
 {
     /// <summary>
-    /// Gets the set of HLSL vector types.
+    /// The set of HLSL vector types.
     /// </summary>
-    public static IReadOnlyCollection<Type> KnownVectorTypes { get; } =
+    private static readonly Type[] KnownVectorTypes =
     [
         typeof(Bool2), typeof(Bool3), typeof(Bool4),
         typeof(Int2), typeof(Int3), typeof(Int4),
@@ -29,9 +29,9 @@ internal static partial class HlslKnownTypes
     ];
 
     /// <summary>
-    /// Gets the set of HLSL matrix types.
+    /// The set of HLSL matrix types.
     /// </summary>
-    public static IReadOnlyCollection<Type> KnownMatrixTypes { get; } =
+    private static readonly Type[] KnownMatrixTypes =
     [
         typeof(Bool1x1), typeof(Bool1x2), typeof(Bool1x3), typeof(Bool1x4),
         typeof(Bool2x1), typeof(Bool2x2), typeof(Bool2x3), typeof(Bool2x4),
@@ -56,14 +56,47 @@ internal static partial class HlslKnownTypes
     ];
 
     /// <summary>
+    /// The mapping of supported known vector types to HLSL types.
+    /// </summary>
+    private static readonly IReadOnlyDictionary<string, string> KnownVectorTypeMetadataNames = BuildKnownVectorTypeMetadataNames();
+
+    /// <summary>
+    /// The mapping of supported known matrix types to HLSL types.
+    /// </summary>
+    private static readonly IReadOnlyDictionary<string, string> KnownMatrixTypesMetadataNames = BuildKnownMatrixTypeMetadataNames();
+
+    /// <summary>
     /// The mapping of supported known types to HLSL types.
     /// </summary>
-    private static readonly IReadOnlyDictionary<string, string> KnownHlslTypes = BuildKnownHlslTypes();
+    private static readonly IReadOnlyDictionary<string, string> KnownHlslTypeMetadataNames = BuildKnownHlslTypeMetadataNames();
+
+    /// <summary>
+    /// Builds the mapping of known HLSL vector types.
+    /// </summary>
+    /// <returns>The mapping of known HLSL vector types.</returns>
+    private static IReadOnlyDictionary<string, string> BuildKnownVectorTypeMetadataNames()
+    {
+        return KnownVectorTypes.ToDictionary(
+            keySelector: static type => type.FullName,
+            elementSelector: static type => type.Name.ToLowerInvariant());
+    }
+
+    /// <summary>
+    /// Builds the mapping of known HLSL matrix types.
+    /// </summary>
+    /// <returns>The mapping of known HLSL matrix types.</returns>
+    private static IReadOnlyDictionary<string, string> BuildKnownMatrixTypeMetadataNames()
+    {
+        return KnownMatrixTypes.ToDictionary(
+            keySelector: static type => type.FullName,
+            elementSelector: static type => type.Name.ToLowerInvariant());
+    }
 
     /// <summary>
     /// Builds the mapping of known primitive types.
     /// </summary>
-    private static IReadOnlyDictionary<string, string> BuildKnownHlslTypes()
+    /// <returns>The mapping of known primitive types.</returns>
+    private static IReadOnlyDictionary<string, string> BuildKnownHlslTypeMetadataNames()
     {
         Dictionary<string, string> knownTypes = new()
         {
@@ -78,19 +111,32 @@ internal static partial class HlslKnownTypes
             [typeof(double).FullName] = "double"
         };
 
-        // Add all the vector types
-        foreach (Type type in KnownVectorTypes)
-        {
-            knownTypes.Add(type.FullName, type.Name.ToLowerInvariant());
-        }
+        IEnumerable<KeyValuePair<string, string>> metadataNames =
+            knownTypes
+            .Concat(KnownVectorTypeMetadataNames)
+            .Concat(KnownMatrixTypesMetadataNames);
 
-        // Add all the matrix types
-        foreach (Type type in KnownMatrixTypes)
-        {
-            knownTypes.Add(type.FullName, type.Name.ToLowerInvariant());
-        }
+        return metadataNames.ToDictionary(
+            keySelector: static p => p.Key,
+            elementSelector: static p => p.Value);
+    }
 
-        return knownTypes;
+    /// <summary>
+    /// Enumerates the known HLSL vector types.
+    /// </summary>
+    /// <returns>The sequence of all known HLSL vector types.</returns>
+    public static IEnumerable<Type> EnumerateKnownVectorTypes()
+    {
+        return KnownVectorTypes;
+    }
+
+    /// <summary>
+    /// Enumerates the known HLSL matrix types.
+    /// </summary>
+    /// <returns>The sequence of all known HLSL matrix types.</returns>
+    public static IEnumerable<Type> EnumerateKnownMatrixTypes()
+    {
+        return KnownMatrixTypes;
     }
 
     /// <summary>
@@ -100,7 +146,7 @@ internal static partial class HlslKnownTypes
     /// <returns>Whether or not <paramref name="typeName"/> represents a scalar, vector or matrix type.</returns>
     public static bool IsKnownHlslType(string typeName)
     {
-        return KnownHlslTypes.ContainsKey(typeName);
+        return KnownHlslTypeMetadataNames.ContainsKey(typeName);
     }
 
     /// <summary>
@@ -110,7 +156,7 @@ internal static partial class HlslKnownTypes
     /// <returns>Whether or not <paramref name="typeName"/> represents a vector type.</returns>
     public static bool IsVectorType(string typeName)
     {
-        return KnownVectorTypes.Any(type => type.FullName == typeName);
+        return KnownVectorTypeMetadataNames.ContainsKey(typeName);
     }
 
     /// <summary>
@@ -120,7 +166,7 @@ internal static partial class HlslKnownTypes
     /// <returns>Whether or not <paramref name="typeName"/> represents a matrix type.</returns>
     public static bool IsMatrixType(string typeName)
     {
-        return KnownMatrixTypes.Any(type => type.FullName == typeName);
+        return KnownMatrixTypesMetadataNames.ContainsKey(typeName);
     }
 
     /// <summary>
@@ -170,7 +216,7 @@ internal static partial class HlslKnownTypes
     {
         string elementTypeName = ((INamedTypeSymbol)typeSymbol.ElementType).GetFullyQualifiedMetadataName();
 
-        if (KnownHlslTypes.TryGetValue(elementTypeName, out string? mapped))
+        if (KnownHlslTypeMetadataNames.TryGetValue(elementTypeName, out string? mapped))
         {
             return mapped;
         }
@@ -185,7 +231,7 @@ internal static partial class HlslKnownTypes
     /// <returns>The HLSL-compatible type name that can be used in an HLSL shader.</returns>
     public static string GetMappedName(string originalName)
     {
-        return KnownHlslTypes[originalName];
+        return KnownHlslTypeMetadataNames[originalName];
     }
 
     /// <summary>
@@ -196,7 +242,7 @@ internal static partial class HlslKnownTypes
     /// <returns>Whether a mapped name was available.</returns>
     public static bool TryGetMappedName(string originalName, out string? mappedName)
     {
-        return KnownHlslTypes.TryGetValue(originalName, out mappedName);
+        return KnownHlslTypeMetadataNames.TryGetValue(originalName, out mappedName);
     }
 
     /// <summary>
@@ -238,7 +284,7 @@ internal static partial class HlslKnownTypes
                 return;
             }
 
-            if (KnownHlslTypes.ContainsKey(type.GetFullyQualifiedMetadataName()))
+            if (KnownHlslTypeMetadataNames.ContainsKey(type.GetFullyQualifiedMetadataName()))
             {
                 return;
             }
@@ -325,7 +371,7 @@ internal static partial class HlslKnownTypes
 
                 INamedTypeSymbol fieldType = (INamedTypeSymbol)field.Type;
 
-                if (!KnownHlslTypes.ContainsKey(fieldType.GetFullyQualifiedMetadataName()) &&
+                if (!KnownHlslTypeMetadataNames.ContainsKey(fieldType.GetFullyQualifiedMetadataName()) &&
                     !invalidTypes.Contains(fieldType))
                 {
                     _ = dependencies.Add(fieldType);

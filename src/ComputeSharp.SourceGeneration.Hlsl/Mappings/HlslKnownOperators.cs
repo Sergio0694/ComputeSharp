@@ -19,13 +19,14 @@ internal static partial class HlslKnownOperators
     /// <summary>
     /// Builds the mapping of supported known operators to HLSL names.
     /// </summary>
+    /// <returns>The mapping of supported known operators to HLSL names.</returns>
     private static IReadOnlyDictionary<string, string> BuildKnownOperatorsMap()
     {
         Dictionary<string, string> knownOperators = [];
 
         // Programmatically load mappings for the intrinsic operators on each HLSL primitive type
         foreach ((Type Type, MethodInfo Operator, string IntrinsicName, bool RequiresParametersMatching) item in
-            from type in HlslKnownTypes.KnownVectorTypes.Concat(HlslKnownTypes.KnownMatrixTypes)
+            from type in HlslKnownTypes.EnumerateKnownVectorTypes().Concat(HlslKnownTypes.EnumerateKnownMatrixTypes())
             from method in type.GetMethods(BindingFlags.Static | BindingFlags.Public)
             where method.IsSpecialName && method.Name.StartsWith("op_", StringComparison.InvariantCulture)
             let attribute = method.GetCustomAttribute<HlslIntrinsicNameAttribute>()
