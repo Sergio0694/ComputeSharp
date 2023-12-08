@@ -17,7 +17,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace ComputeSharp.Tests.SourceGenerators;
 
 [TestClass]
-public class Test_D2DPixelShaderSourceGenerator
+public class Test_ComputeShaderDescriptorGenerator
 {
     [TestMethod]
     public async Task SimpleShader_ComputeShader()
