@@ -21,7 +21,7 @@ internal static partial class HlslKnownProperties
     /// <summary>
     /// Builds the mapping of supported known properties to HLSL names.
     /// </summary>
-    private static IReadOnlyDictionary<string, string> BuildKnownPropertiesMap()
+    private static Dictionary<string, string> BuildKnownPropertiesMap()
     {
         Dictionary<string, string> knownProperties = new()
         {

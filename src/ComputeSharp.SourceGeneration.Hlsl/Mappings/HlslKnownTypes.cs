@@ -75,7 +75,7 @@ internal static partial class HlslKnownTypes
     /// Builds the mapping of known HLSL vector types.
     /// </summary>
     /// <returns>The mapping of known HLSL vector types.</returns>
-    private static IReadOnlyDictionary<string, string> BuildKnownVectorTypeMetadataNames()
+    private static Dictionary<string, string> BuildKnownVectorTypeMetadataNames()
     {
         return KnownVectorTypes.ToDictionary(
             keySelector: static type => type.FullName,
@@ -86,7 +86,7 @@ internal static partial class HlslKnownTypes
     /// Builds the mapping of known HLSL matrix types.
     /// </summary>
     /// <returns>The mapping of known HLSL matrix types.</returns>
-    private static IReadOnlyDictionary<string, string> BuildKnownMatrixTypeMetadataNames()
+    private static Dictionary<string, string> BuildKnownMatrixTypeMetadataNames()
     {
         return KnownMatrixTypes.ToDictionary(
             keySelector: static type => type.FullName,
@@ -97,7 +97,7 @@ internal static partial class HlslKnownTypes
     /// Builds the mapping of known primitive types.
     /// </summary>
     /// <returns>The mapping of known primitive types.</returns>
-    private static IReadOnlyDictionary<string, string> BuildKnownHlslTypeMetadataNames()
+    private static Dictionary<string, string> BuildKnownHlslTypeMetadataNames()
     {
         Dictionary<string, string> knownTypes = new()
         {

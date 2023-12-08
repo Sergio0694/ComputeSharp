@@ -15,9 +15,9 @@ internal static partial class HlslKnownFields
     /// <summary>
     /// Builds the mapping of supported known fields to HLSL names.
     /// </summary>
-    private static IReadOnlyDictionary<string, string> BuildKnownFieldsMap()
+    private static Dictionary<string, string> BuildKnownFieldsMap()
     {
-        Dictionary<string, string> knownMembers = new()
+        return new()
         {
             [$"float.{nameof(float.NaN)}"] = "asfloat(0xFFC00000)",
             [$"float.{nameof(float.PositiveInfinity)}"] = "asfloat(0x7F800000)",
@@ -27,8 +27,6 @@ internal static partial class HlslKnownFields
             [$"double.{nameof(double.PositiveInfinity)}"] = "asdouble(0x00000000, 0x7FF00000)",
             [$"double.{nameof(double.NegativeInfinity)}"] = "asdouble(0x00000000, 0xFFF00000)"
         };
-
-        return knownMembers;
     }
 
     /// <summary>

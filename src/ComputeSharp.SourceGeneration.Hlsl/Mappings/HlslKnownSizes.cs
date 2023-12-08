@@ -20,7 +20,7 @@ internal static class HlslKnownSizes
     /// <summary>
     /// Builds the mapping of known type sizes and alignments.
     /// </summary>
-    private static IReadOnlyDictionary<string, (int, int)> BuildKnownSizesMap()
+    private static Dictionary<string, (int, int)> BuildKnownSizesMap()
     {
         Dictionary<string, (int, int)> knownSizes = new()
         {

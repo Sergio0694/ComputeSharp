@@ -20,7 +20,7 @@ internal static partial class HlslKnownOperators
     /// Builds the mapping of supported known operators to HLSL names.
     /// </summary>
     /// <returns>The mapping of supported known operators to HLSL names.</returns>
-    private static IReadOnlyDictionary<string, string> BuildKnownOperatorsMap()
+    private static Dictionary<string, string> BuildKnownOperatorsMap()
     {
         Dictionary<string, string> knownOperators = [];
 
