@@ -4,7 +4,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Numerics;
-using System.Text.RegularExpressions;
 using ComputeSharp.SourceGeneration.Extensions;
 using Microsoft.CodeAnalysis;
 
@@ -72,6 +71,11 @@ internal static partial class HlslKnownTypes
     private static readonly IReadOnlyDictionary<string, string> KnownHlslTypeMetadataNames = BuildKnownHlslTypeMetadataNames();
 
     /// <summary>
+    /// The mapping of type info for all supported known matrix types to HLSL types.
+    /// </summary>
+    private static readonly IReadOnlyDictionary<string, NonLinearMatrixTypeInfo> KnownNonLinearMatrixTypeInfo = BuildKnownNonLinearMatrixTypeInfo();
+
+    /// <summary>
     /// Builds the mapping of known HLSL vector types.
     /// </summary>
     /// <returns>The mapping of known HLSL vector types.</returns>
@@ -120,6 +124,48 @@ internal static partial class HlslKnownTypes
         return metadataNames.ToDictionary(
             keySelector: static p => p.Key,
             elementSelector: static p => p.Value);
+    }
+
+    /// <summary>
+    /// Builds the mapping of type info for all supported known matrix types to HLSL types.
+    /// </summary>
+    /// <returns>The mapping of type info for all supported known matrix types to HLSL types.</returns>
+    private static Dictionary<string, NonLinearMatrixTypeInfo> BuildKnownNonLinearMatrixTypeInfo()
+    {
+        Type[] knownTypes =
+        [
+            typeof(Bool2x1), typeof(Bool2x2), typeof(Bool2x3), typeof(Bool2x4),
+            typeof(Bool3x1), typeof(Bool3x2), typeof(Bool3x3), typeof(Bool3x4),
+            typeof(Bool4x1), typeof(Bool4x2), typeof(Bool4x3), typeof(Bool4x4),
+            typeof(Int2x1), typeof(Int2x2), typeof(Int2x3), typeof(Int2x4),
+            typeof(Int3x1), typeof(Int3x2), typeof(Int3x3), typeof(Int3x4),
+            typeof(Int4x1), typeof(Int4x2), typeof(Int4x3), typeof(Int4x4),
+            typeof(UInt2x1), typeof(UInt2x2), typeof(UInt2x3), typeof(UInt2x4),
+            typeof(UInt3x1), typeof(UInt3x2), typeof(UInt3x3), typeof(UInt3x4),
+            typeof(UInt4x1), typeof(UInt4x2), typeof(UInt4x3), typeof(UInt4x4),
+            typeof(Float2x1), typeof(Float2x2), typeof(Float2x3), typeof(Float2x4),
+            typeof(Float3x1), typeof(Float3x2), typeof(Float3x3), typeof(Float3x4),
+            typeof(Float4x1), typeof(Float4x2), typeof(Float4x3), typeof(Float4x4),
+            typeof(Double2x1), typeof(Double2x2), typeof(Double2x3), typeof(Double2x4),
+            typeof(Double3x1), typeof(Double3x2), typeof(Double3x3), typeof(Double3x4),
+            typeof(Double4x1), typeof(Double4x2), typeof(Double4x3), typeof(Double4x4)
+        ];
+
+        static NonLinearMatrixTypeInfo CreateTypeInfo(Type type)
+        {
+            // Extract the info for each non linear matrix type:
+            //   - The name is just the prefix without the NxM part
+            //   - The number of rows is the first suffix character
+            //   - The number of columns is the last suffix character
+            return new(
+                ElementName: type.Name[..^3],
+                Rows: int.Parse(type.Name[^3].ToString(), CultureInfo.InvariantCulture),
+                Columns: int.Parse(type.Name[^1].ToString(), CultureInfo.InvariantCulture));
+        }
+
+        return knownTypes.ToDictionary(
+            keySelector: static type => type.FullName,
+            elementSelector: CreateTypeInfo);
     }
 
     /// <summary>
@@ -181,22 +227,16 @@ internal static partial class HlslKnownTypes
     /// <returns>Whether or not <paramref name="typeName"/> represents a non linear matrix type.</returns>
     public static bool IsNonLinearMatrixType(string typeName, out string? elementName, out int rows, out int columns)
     {
-        if (KnownMatrixTypes.Any(type => type.FullName == typeName))
+        if (KnownNonLinearMatrixTypeInfo.TryGetValue(typeName, out NonLinearMatrixTypeInfo? value))
         {
-            Match match = Regex.Match(typeName, @"^ComputeSharp\.(Bool|Int|UInt|Float|Double)([2-4])x([1-4])$");
+            (elementName, rows, columns) = value;
 
-            if (match.Success)
-            {
-                elementName = match.Groups[1].Value;
-                rows = int.Parse(match.Groups[2].Value, CultureInfo.InvariantCulture);
-                columns = int.Parse(match.Groups[3].Value, CultureInfo.InvariantCulture);
-
-                return true;
-            }
+            return true;
         }
 
         elementName = null;
-        rows = columns = 0;
+        rows = 0;
+        columns = 0;
 
         return false;
     }
@@ -383,4 +423,12 @@ internal static partial class HlslKnownTypes
             }
         }
     }
+
+    /// <summary>
+    /// A simple model with info on a non linear matrix type.
+    /// </summary>
+    /// <param name="ElementName">The element name of the matrix type.</param>
+    /// <param name="Rows">The number of rows in the matrix type.</param>
+    /// <param name="Columns">The number of columns in the matrix type.</param>
+    private sealed record NonLinearMatrixTypeInfo(string ElementName, int Rows, int Columns);
 }
