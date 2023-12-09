@@ -228,7 +228,7 @@ unsafe partial class GraphicsDevice
         /// <summary>
         /// The shared <see cref="ConcurrentQueue{T}"/> holding the reusable <see cref="WaitForFenceValueTaskSource"/> instances.
         /// </summary>
-        private static readonly ConcurrentQueue<WaitForFenceValueTaskSource> ValueTaskSourceQueue = new();
+        private static readonly ConcurrentQueue<WaitForFenceValueTaskSource> ValueTaskSourceQueue = [];
 
         /// <summary>
         /// The approximate count of currently enqueued instances in <see cref="ValueTaskSourceQueue"/>.

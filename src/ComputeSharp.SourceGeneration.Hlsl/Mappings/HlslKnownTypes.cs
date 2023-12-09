@@ -365,7 +365,7 @@ internal static partial class HlslKnownTypes
     /// <returns>The same list as input, but in a valid HLSL declaration order.</returns>
     private static IEnumerable<INamedTypeSymbol> OrderByDependency(IEnumerable<INamedTypeSymbol> types, IReadOnlyCollection<INamedTypeSymbol> invalidTypes)
     {
-        Queue<(INamedTypeSymbol Type, HashSet<INamedTypeSymbol> Fields)> queue = new();
+        Queue<(INamedTypeSymbol Type, HashSet<INamedTypeSymbol> Fields)> queue = [];
 
         // Build a mapping of type dependencies for all the captured types. A type depends on another
         // when the latter is a field in the first type. HLSL requires custom types to be declared in

@@ -20,7 +20,7 @@ internal sealed class DynamicCache<TKey, TValue>
     /// <summary>
     /// The backing <see cref="ConcurrentDictionary{TKey, TValue}"/> instance for the cache.
     /// </summary>
-    private readonly ConcurrentDictionary<Entry, TValue> map = new();
+    private readonly ConcurrentDictionary<Entry, TValue> map = [];
 
     /// <summary>
     /// The <see cref="ConditionalWeakTable{TKey, TValue}"/> tracking dead entries to remove.
