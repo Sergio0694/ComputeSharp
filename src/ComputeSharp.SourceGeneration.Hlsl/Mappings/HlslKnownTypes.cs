@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
-using System.Numerics;
 using ComputeSharp.SourceGeneration.Extensions;
 using Microsoft.CodeAnalysis;
 
@@ -110,9 +109,6 @@ internal static partial class HlslKnownTypes
             [typeof(int).FullName] = "int",
             [typeof(uint).FullName] = "uint",
             [typeof(float).FullName] = "float",
-            [typeof(Vector2).FullName] = "float2",
-            [typeof(Vector3).FullName] = "float3",
-            [typeof(Vector4).FullName] = "float4",
             [typeof(double).FullName] = "double"
         };
 

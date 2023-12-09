@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using System.Numerics;
 using System.Reflection;
 using System.Text.RegularExpressions;
 
@@ -25,29 +24,6 @@ internal static partial class HlslKnownProperties
     {
         Dictionary<string, string> knownProperties = new()
         {
-            [$"{typeof(Vector2).FullName}.{nameof(Vector2.X)}"] = "x",
-            [$"{typeof(Vector2).FullName}.{nameof(Vector2.Y)}"] = "y",
-            [$"{typeof(Vector2).FullName}.{nameof(Vector2.Zero)}"] = "(float2)0",
-            [$"{typeof(Vector2).FullName}.{nameof(Vector2.One)}"] = "float2(1.0f, 1.0f)",
-            [$"{typeof(Vector2).FullName}.{nameof(Vector2.UnitX)}"] = "float2(1.0f, 0.0f)",
-            [$"{typeof(Vector2).FullName}.{nameof(Vector2.UnitY)}"] = "float2(0.0f, 1.0f)",
-
-            [$"{typeof(Vector3).FullName}.{nameof(Vector3.X)}"] = "x",
-            [$"{typeof(Vector3).FullName}.{nameof(Vector3.Y)}"] = "y",
-            [$"{typeof(Vector3).FullName}.{nameof(Vector3.Z)}"] = "z",
-            [$"{typeof(Vector3).FullName}.{nameof(Vector3.Zero)}"] = "(float3)0",
-            [$"{typeof(Vector3).FullName}.{nameof(Vector3.One)}"] = "float3(1.0f, 1.0f, 1.0f)",
-            [$"{typeof(Vector3).FullName}.{nameof(Vector3.UnitX)}"] = "float3(1.0f, 0.0f, 0.0f)",
-            [$"{typeof(Vector3).FullName}.{nameof(Vector3.UnitY)}"] = "float3(0.0f, 1.0f, 0.0f)",
-            [$"{typeof(Vector3).FullName}.{nameof(Vector3.UnitZ)}"] = "float3(0.0f, 0.0f, 1.0f)",
-
-            [$"{typeof(Vector4).FullName}.{nameof(Vector4.X)}"] = "x",
-            [$"{typeof(Vector4).FullName}.{nameof(Vector4.Y)}"] = "y",
-            [$"{typeof(Vector4).FullName}.{nameof(Vector4.Z)}"] = "z",
-            [$"{typeof(Vector4).FullName}.{nameof(Vector4.W)}"] = "w",
-            [$"{typeof(Vector4).FullName}.{nameof(Vector4.Zero)}"] = "(float4)0",
-            [$"{typeof(Vector4).FullName}.{nameof(Vector4.One)}"] = "float4(1.0f, 1.0f, 1.0f, 1.0f)",
-
             [$"{typeof(Bool2).FullName}.{nameof(Bool2.False)}"] = "(bool2)0",
             [$"{typeof(Bool2).FullName}.{nameof(Bool2.True)}"] = "bool2(true, true)",
             [$"{typeof(Bool2).FullName}.{nameof(Bool2.TrueX)}"] = "bool2(true, false)",

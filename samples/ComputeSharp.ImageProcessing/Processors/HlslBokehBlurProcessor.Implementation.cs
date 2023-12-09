@@ -371,11 +371,11 @@ public sealed partial class HlslBokehBlurProcessor
                     float4 sourceImaginary = imaginaries[offsetX, offsetY];
                     Complex64 factors = kernel[i];
 
-                    result.Real += (Vector4)((factors.Real * sourceReal) - (factors.Imaginary * sourceImaginary));
-                    result.Imaginary += (Vector4)((factors.Real * sourceImaginary) + (factors.Imaginary * sourceReal));
+                    result.Real += (factors.Real * sourceReal) - (factors.Imaginary * sourceImaginary);
+                    result.Imaginary += (factors.Real * sourceImaginary) + (factors.Imaginary * sourceReal);
                 }
 
-                target[ThreadIds.XY] += (float4)result.WeightedSum(z, w);
+                target[ThreadIds.XY] += result.WeightedSum(z, w);
             }
         }
 
