@@ -531,7 +531,18 @@ internal sealed partial class ShaderSourceRewriter(
                     {
                         if (!method.TryGetSyntaxNode(CancellationToken, out MethodDeclarationSyntax? methodNode))
                         {
-                            Diagnostics.Add(InvalidMethodOrConstructorCall, node, method);
+                            // Special cases method calls to Math and MathF APIs. In this case, we also want to emit a specific
+                            // diagnostic to guide developers towards using the intrinsic APIs on the Hlsl class instead. This
+                            // check is only done when the current method is already invalid anyway, so it adds no overhead.
+                            if (method.ContainingType is { Name: "Math" or "MathF", ContainingType: null, ContainingNamespace.Name: "System" })
+                            {
+                                Diagnostics.Add(InvalidMathOrMathFCall, node, method);
+                            }
+                            else
+                            {
+                                // Otherwise just emit the generic error diagnostic
+                                Diagnostics.Add(InvalidMethodOrConstructorCall, node, method);
+                            }
 
                             return updatedNode;
                         }

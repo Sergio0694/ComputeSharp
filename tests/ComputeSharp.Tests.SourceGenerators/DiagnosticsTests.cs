@@ -1242,6 +1242,30 @@ public class DiagnosticsTests
     }
 
     [TestMethod]
+    public void InvalidMethodCall_SystemMath()
+    {
+        const string source = """
+            using System;
+            using ComputeSharp;
+
+            namespace MyFancyApp.Sample;
+            
+            [GeneratedComputeShaderDescriptor]
+            public partial struct MyShader : IComputeShader
+            {
+                public readonly ReadWriteBuffer<float> buffer;
+
+                public void Execute()
+                {
+                    buffer[0] = Math.Abs(42);
+                }
+            }
+            """;
+
+        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0063", "CMPS0047");
+    }
+
+    [TestMethod]
     public void InvalidDiscoveredType_Primitive()
     {
         const string source = """
