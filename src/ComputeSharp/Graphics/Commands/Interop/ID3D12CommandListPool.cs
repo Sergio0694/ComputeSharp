@@ -16,7 +16,7 @@ internal readonly unsafe struct ID3D12CommandListPool(D3D12_COMMAND_LIST_TYPE d3
     /// <summary>
     /// The queue of <see cref="D3D12CommandListBundle"/> items with the available command lists.
     /// </summary>
-    private readonly Queue<D3D12CommandListBundle> d3D12CommandListBundleQueue = new();
+    private readonly Queue<D3D12CommandListBundle> d3D12CommandListBundleQueue = [];
 
     /// <summary>
     /// Rents a <see cref="ID3D12GraphicsCommandList"/> and <see cref="ID3D12CommandAllocator"/> pair.
