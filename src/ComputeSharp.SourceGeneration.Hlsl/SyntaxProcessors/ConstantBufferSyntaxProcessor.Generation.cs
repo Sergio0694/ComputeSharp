@@ -51,8 +51,13 @@ partial class ConstantBufferSyntaxProcessor
         _ = usingDirectives.Add("global::System.CodeDom.Compiler");
         _ = usingDirectives.Add("global::System.Diagnostics");
         _ = usingDirectives.Add("global::System.Diagnostics.CodeAnalysis");
-        _ = usingDirectives.Add("global::System.Runtime.CompilerServices");
         _ = usingDirectives.Add("global::System.Runtime.InteropServices");
+
+        // Only add this directive if the marshaller is also present, as it's only needed there
+        if (!info.Fields.IsEmpty)
+        {
+            _ = usingDirectives.Add("global::System.Runtime.CompilerServices");
+        }
 
         // Declare the ConstantBuffer type
         static void ConstantBufferCallback(TInfo info, IndentedTextWriter writer)
