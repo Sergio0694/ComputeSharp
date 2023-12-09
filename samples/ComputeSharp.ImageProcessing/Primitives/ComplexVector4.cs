@@ -1,7 +1,6 @@
 // Copyright (c) Six Labors.
 // Licensed under the Apache License, Version 2.0.
 
-using System.Numerics;
 using System.Runtime.CompilerServices;
 
 namespace SixLabors.ImageSharp;
@@ -14,21 +13,21 @@ internal struct ComplexVector4
     /// <summary>
     /// The real part of the complex vector
     /// </summary>
-    public Vector4 Real;
+    public float4 Real;
 
     /// <summary>
     /// The imaginary part of the complex number
     /// </summary>
-    public Vector4 Imaginary;
+    public float4 Imaginary;
 
     /// <summary>
     /// Performs a weighted sum on the current instance according to the given parameters
     /// </summary>
     /// <param name="a">The 'a' parameter, for the real component</param>
     /// <param name="b">The 'b' parameter, for the imaginary component</param>
-    /// <returns>The resulting <see cref="Vector4"/> value</returns>
+    /// <returns>The resulting <see cref="float4"/> value</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly Vector4 WeightedSum(float a, float b)
+    public readonly float4 WeightedSum(float a, float b)
     {
         return (this.Real * a) + (this.Imaginary * b);
     }

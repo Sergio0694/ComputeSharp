@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Numerics;
 using System.Reflection;
 using System.Text.RegularExpressions;
 
@@ -28,11 +27,7 @@ internal static class HlslKnownSizes
             [typeof(int).FullName] = (4, 4),
             [typeof(uint).FullName] = (4, 4),
             [typeof(float).FullName] = (4, 4),
-            [typeof(double).FullName] = (8, 8),
-
-            [typeof(Vector2).FullName] = (8, 4),
-            [typeof(Vector3).FullName] = (12, 4),
-            [typeof(Vector4).FullName] = (16, 4)
+            [typeof(double).FullName] = (8, 8)
         };
 
         foreach (

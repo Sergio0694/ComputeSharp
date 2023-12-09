@@ -569,8 +569,8 @@ public sealed partial class BokehBlurEffect
                     float realFactor = this.kernelReals[i];
                     float imaginaryFactor = this.kernelImaginaries[i];
 
-                    result.Real += (Vector4)((realFactor * sourceReal) - (imaginaryFactor * sourceImaginary));
-                    result.Imaginary += (Vector4)((realFactor * sourceImaginary) + (imaginaryFactor * sourceReal));
+                    result.Real += (realFactor * sourceReal) - (imaginaryFactor * sourceImaginary);
+                    result.Imaginary += (realFactor * sourceImaginary) + (imaginaryFactor * sourceReal);
                 }
 
                 return result.WeightedSum(z, w);

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Numerics;
 using System.Reflection;
 using ComputeSharp.Core.Intrinsics.Attributes;
 
@@ -27,103 +26,7 @@ internal static partial class HlslKnownMethods
     /// </summary>
     private static Dictionary<string, string> BuildKnownMethodsMap()
     {
-        Dictionary<string, string> knownMethods = new()
-        {
-            [$"{typeof(Math).FullName}.{nameof(Math.Abs)}"] = "abs",
-            [$"{typeof(Math).FullName}.{nameof(Math.Max)}"] = "max",
-            [$"{typeof(Math).FullName}.{nameof(Math.Min)}"] = "min",
-            [$"{typeof(Math).FullName}.{nameof(Math.Pow)}"] = "pow",
-            [$"{typeof(Math).FullName}.{nameof(Math.Sin)}"] = "sin",
-            [$"{typeof(Math).FullName}.{nameof(Math.Sinh)}"] = "sinh",
-            [$"{typeof(Math).FullName}.{nameof(Math.Asin)}"] = "asin",
-            [$"{typeof(Math).FullName}.{nameof(Math.Cos)}"] = "cos",
-            [$"{typeof(Math).FullName}.{nameof(Math.Cosh)}"] = "cosh",
-            [$"{typeof(Math).FullName}.{nameof(Math.Acos)}"] = "acos",
-            [$"{typeof(Math).FullName}.{nameof(Math.Tan)}"] = "tan",
-            [$"{typeof(Math).FullName}.{nameof(Math.Tanh)}"] = "tanh",
-            [$"{typeof(Math).FullName}.{nameof(Math.Atan)}"] = "atan",
-            [$"{typeof(Math).FullName}.{nameof(Math.Atan2)}"] = "atan2",
-            [$"{typeof(Math).FullName}.{nameof(Math.Ceiling)}"] = "ceil",
-            [$"{typeof(Math).FullName}.{nameof(Math.Floor)}"] = "floor",
-            [$"{typeof(Math).FullName}.Clamp"] = "clamp",
-            [$"{typeof(Math).FullName}.{nameof(Math.Exp)}"] = "exp",
-            [$"{typeof(Math).FullName}.{nameof(Math.Log)}"] = "log",
-            [$"{typeof(Math).FullName}.{nameof(Math.Log10)}"] = "log10",
-            [$"{typeof(Math).FullName}.{nameof(Math.Max)}"] = "max",
-            [$"{typeof(Math).FullName}.{nameof(Math.Min)}"] = "min",
-            [$"{typeof(Math).FullName}.{nameof(Math.Round)}"] = "round",
-            [$"{typeof(Math).FullName}.{nameof(Math.Sqrt)}"] = "sqrt",
-            [$"{typeof(Math).FullName}.{nameof(Math.Sign)}"] = "sign",
-            [$"{typeof(Math).FullName}.{nameof(Math.Truncate)}"] = "trunc",
-
-            ["System.MathF.Abs"] = "abs",
-            ["System.MathF.Max"] = "max",
-            ["System.MathF.Min"] = "min",
-            ["System.MathF.Pow"] = "pow",
-            ["System.MathF.Sin"] = "sin",
-            ["System.MathF.Sinh"] = "sinh",
-            ["System.MathF.Asin"] = "asin",
-            ["System.MathF.Cos"] = "cos",
-            ["System.MathF.Cosh"] = "cosh",
-            ["System.MathF.Acos"] = "acos",
-            ["System.MathF.Tan"] = "tan",
-            ["System.MathF.Tanh"] = "tanh",
-            ["System.MathF.Atan"] = "atan",
-            ["System.MathF.Atan2"] = "atan2",
-            ["System.MathF.Ceiling"] = "ceil",
-            ["System.MathF.Floor"] = "floor",
-            ["System.MathF.Clamp"] = "clamp",
-            ["System.MathF.Exp"] = "exp",
-            ["System.MathF.Log"] = "log",
-            ["System.MathF.Log10"] = "log10",
-            ["System.MathF.Round"] = "round",
-            ["System.MathF.Sqrt"] = "sqrt",
-            ["System.MathF.Sign"] = "sign",
-            ["System.MathF.Truncate"] = "trunc",
-
-            [$"{typeof(float).FullName}.IsFinite"] = "isfinite",
-            [$"{typeof(float).FullName}.{nameof(float.IsInfinity)}"] = "isinf",
-            [$"{typeof(float).FullName}.{nameof(float.IsNaN)}"] = "isnan",
-
-            [$"{typeof(double).FullName}.IsFinite"] = "isfinite",
-            [$"{typeof(double).FullName}.{nameof(double.IsInfinity)}"] = "isinf",
-            [$"{typeof(double).FullName}.{nameof(double.IsNaN)}"] = "isnan",
-
-            [$"{typeof(Vector2).FullName}.{nameof(Vector2.Abs)}"] = "abs",
-            [$"{typeof(Vector2).FullName}.{nameof(Vector2.Clamp)}"] = "clamp",
-            [$"{typeof(Vector2).FullName}.{nameof(Vector2.Distance)}"] = "distance",
-            [$"{typeof(Vector2).FullName}.{nameof(Vector2.Dot)}"] = "dot",
-            [$"{typeof(Vector2).FullName}.{nameof(Vector2.Lerp)}"] = "lerp",
-            [$"{typeof(Vector2).FullName}.{nameof(Vector2.Max)}"] = "max",
-            [$"{typeof(Vector2).FullName}.{nameof(Vector2.Min)}"] = "min",
-            [$"{typeof(Vector2).FullName}.{nameof(Vector2.Reflect)}"] = "reflect",
-            [$"{typeof(Vector2).FullName}.{nameof(Vector2.Transform)}"] = "mul",
-            [$"{typeof(Vector2).FullName}.{nameof(Vector2.TransformNormal)}"] = "mul",
-            [$"{typeof(Vector2).FullName}.{nameof(Vector2.Normalize)}"] = "normalize",
-
-            [$"{typeof(Vector3).FullName}.{nameof(Vector3.Abs)}"] = "abs",
-            [$"{typeof(Vector3).FullName}.{nameof(Vector3.Clamp)}"] = "clamp",
-            [$"{typeof(Vector3).FullName}.{nameof(Vector3.Cross)}"] = "cross",
-            [$"{typeof(Vector3).FullName}.{nameof(Vector3.Distance)}"] = "distance",
-            [$"{typeof(Vector3).FullName}.{nameof(Vector3.Dot)}"] = "dot",
-            [$"{typeof(Vector3).FullName}.{nameof(Vector3.Lerp)}"] = "lerp",
-            [$"{typeof(Vector3).FullName}.{nameof(Vector3.Max)}"] = "max",
-            [$"{typeof(Vector3).FullName}.{nameof(Vector3.Min)}"] = "min",
-            [$"{typeof(Vector3).FullName}.{nameof(Vector3.Reflect)}"] = "reflect",
-            [$"{typeof(Vector3).FullName}.{nameof(Vector3.Transform)}"] = "mul",
-            [$"{typeof(Vector3).FullName}.{nameof(Vector3.TransformNormal)}"] = "mul",
-            [$"{typeof(Vector3).FullName}.{nameof(Vector3.Normalize)}"] = "normalize",
-
-            [$"{typeof(Vector4).FullName}.{nameof(Vector4.Abs)}"] = "abs",
-            [$"{typeof(Vector4).FullName}.{nameof(Vector4.Clamp)}"] = "clamp",
-            [$"{typeof(Vector4).FullName}.{nameof(Vector4.Distance)}"] = "distance",
-            [$"{typeof(Vector4).FullName}.{nameof(Vector4.Dot)}"] = "dot",
-            [$"{typeof(Vector4).FullName}.{nameof(Vector4.Lerp)}"] = "lerp",
-            [$"{typeof(Vector4).FullName}.{nameof(Vector4.Max)}"] = "max",
-            [$"{typeof(Vector4).FullName}.{nameof(Vector4.Min)}"] = "min",
-            [$"{typeof(Vector4).FullName}.{nameof(Vector4.Transform)}"] = "mul",
-            [$"{typeof(Vector4).FullName}.{nameof(Vector4.Normalize)}"] = "normalize"
-        };
+        Dictionary<string, string> knownMethods = [];
 
         // Programmatically load mappings from the Hlsl class as well (the ones with no parameter matching)
         foreach (MethodInfo? method in
