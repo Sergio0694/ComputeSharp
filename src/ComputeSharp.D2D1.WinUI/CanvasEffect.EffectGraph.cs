@@ -13,7 +13,7 @@ partial class CanvasEffect
     protected readonly ref struct EffectGraph
     {
         /// <summary>
-        ///The owning <see cref="CanvasEffect"/> instance.
+        /// The owning <see cref="CanvasEffect"/> instance.
         /// </summary>
         private readonly CanvasEffect owner;
 
