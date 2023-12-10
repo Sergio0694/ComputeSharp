@@ -512,97 +512,67 @@ partial class ComputeShaderDescriptorGenerator
             bool isSamplerUsed,
             string executeMethod)
         {
-            using ImmutableArrayBuilder<char> hlslBuilder = new();
-
-            void AppendLF()
-            {
-                hlslBuilder.Add('\n');
-            }
-
-            void AppendLineAndLF(string text)
-            {
-                hlslBuilder.AddRange(text.AsSpan());
-                hlslBuilder.Add('\n');
-            }
-
-            void AppendCharacterAndLF(char c)
-            {
-                hlslBuilder.Add(c);
-                hlslBuilder.Add('\n');
-            }
-
-            string FlushText()
-            {
-                string text = hlslBuilder.ToString();
-
-                hlslBuilder.Clear();
-
-                return text;
-            }
+            using IndentedTextWriter writer = new();
 
             // Header
-            AppendLineAndLF("// ================================================");
-            AppendLineAndLF("//                  AUTO GENERATED");
-            AppendLineAndLF("// ================================================");
-            AppendLineAndLF("// This shader was created by ComputeSharp.");
-            AppendLineAndLF("// See: https://github.com/Sergio0694/ComputeSharp.");
+            writer.WriteLine("""
+                // ================================================
+                //                  AUTO GENERATED
+                // ================================================
+                // This shader was created by ComputeSharp.
+                // See: https://github.com/Sergio0694/ComputeSharp.
+                """, isMultiline: true);
 
             // Group size constants
-            AppendLF();
-            AppendLineAndLF($"#define __GroupSize__get_X {threadsX}");
-            AppendLineAndLF($"#define __GroupSize__get_Y {threadsY}");
-            AppendLineAndLF($"#define __GroupSize__get_Z {threadsZ}");
+            writer.WriteLine();
+            writer.WriteLine($"#define __GroupSize__get_X {threadsX}");
+            writer.WriteLine($"#define __GroupSize__get_Y {threadsY}");
+            writer.WriteLine($"#define __GroupSize__get_Z {threadsZ}");
 
             // Define declarations
             foreach ((string name, string value) in definedConstants)
             {
-                AppendLineAndLF($"#define {name} {value}");
+                writer.WriteLine($"#define {name} {value}");
             }
 
-            // Static fields
-            if (staticFields.Any())
-            {
-                AppendLF();
+            writer.WriteLine();
 
-                foreach ((string Name, string TypeDeclaration, string? Assignment) field in staticFields)
+            // Static fields
+            foreach ((string Name, string TypeDeclaration, string? Assignment) field in staticFields)
+            {
+                if (field.Assignment is string assignment)
                 {
-                    if (field.Assignment is string assignment)
-                    {
-                        AppendLineAndLF($"{field.TypeDeclaration} {field.Name} = {assignment};");
-                    }
-                    else
-                    {
-                        AppendLineAndLF($"{field.TypeDeclaration} {field.Name};");
-                    }
+                    writer.WriteLine($"{field.TypeDeclaration} {field.Name} = {assignment};");
+                }
+                else
+                {
+                    writer.WriteLine($"{field.TypeDeclaration} {field.Name};");
                 }
             }
 
             // Declared types
             foreach ((string _, string typeDefinition) in declaredTypes)
             {
-                AppendLF();
-                AppendLineAndLF(typeDefinition);
+                writer.WriteLine(skipIfPresent: true);
+                writer.WriteLine(typeDefinition);
             }
+
+            writer.WriteLine(skipIfPresent: true);
+            writer.WriteLine("cbuffer _ : register(b0)");
 
             // Captured variables
-            AppendLF();
-            AppendLineAndLF("cbuffer _ : register(b0)");
-            AppendCharacterAndLF('{');
-            AppendLineAndLF("    uint __x;");
-            AppendLineAndLF("    uint __y;");
-
-            if (isComputeShader)
+            using (writer.WriteBlock())
             {
-                AppendLineAndLF("    uint __z;");
-            }
+                writer.WriteLine("uint __x;");
+                writer.WriteLine("uint __y;");
+                writer.WriteLineIf(isComputeShader, "uint __z;");
 
-            // User-defined values
-            foreach ((string fieldName, string fieldType) in valueFields)
-            {
-                AppendLineAndLF($"    {fieldType} {fieldName};");
+                // User-defined values
+                foreach ((string fieldName, string fieldType) in valueFields)
+                {
+                    writer.WriteLine($"{fieldType} {fieldName};");
+                }
             }
-
-            AppendCharacterAndLF('}');
 
             int constantBuffersCount = 1;
             int readOnlyBuffersCount = 0;
@@ -611,15 +581,15 @@ partial class ComputeShaderDescriptorGenerator
             // Optional implicit texture field
             if (!isComputeShader)
             {
-                AppendLF();
-                AppendLineAndLF($"{implicitTextureType} __outputTexture : register(u{readWriteBuffersCount++});");
+                writer.WriteLine(skipIfPresent: true);
+                writer.WriteLine($"{implicitTextureType} __outputTexture : register(u{readWriteBuffersCount++});");
             }
 
             // Optional sampler field
             if (isSamplerUsed)
             {
-                AppendLF();
-                AppendLineAndLF("SamplerState __sampler : register(s);");
+                writer.WriteLine(skipIfPresent: true);
+                writer.WriteLine("SamplerState __sampler : register(s);");
             }
 
             // Resources
@@ -627,21 +597,23 @@ partial class ComputeShaderDescriptorGenerator
             {
                 if (HlslKnownTypes.IsConstantBufferType(metadataName))
                 {
-                    AppendLF();
-                    AppendLineAndLF($"cbuffer _{fieldName} : register(b{constantBuffersCount++})");
-                    AppendCharacterAndLF('{');
-                    AppendLineAndLF($"    {fieldType} {fieldName}[2];");
-                    AppendCharacterAndLF('}');
+                    writer.WriteLine(skipIfPresent: true);
+                    writer.WriteLine($"cbuffer _{fieldName} : register(b{constantBuffersCount++})");
+
+                    using (writer.WriteBlock())
+                    {
+                        writer.WriteLine($"{fieldType} {fieldName}[2];");
+                    }
                 }
                 else if (HlslKnownTypes.IsReadOnlyTypedResourceType(metadataName))
                 {
-                    AppendLF();
-                    AppendLineAndLF($"{fieldType} {fieldName} : register(t{readOnlyBuffersCount++});");
+                    writer.WriteLine(skipIfPresent: true);
+                    writer.WriteLine($"{fieldType} {fieldName} : register(t{readOnlyBuffersCount++});");
                 }
                 else if (HlslKnownTypes.IsReadWriteTypedResourceType(metadataName))
                 {
-                    AppendLF();
-                    AppendLineAndLF($"{fieldType} {fieldName} : register(u{readWriteBuffersCount++});");
+                    writer.WriteLine(skipIfPresent: true);
+                    writer.WriteLine($"{fieldType} {fieldName} : register(u{readWriteBuffersCount++});");
                 }
             }
 
@@ -650,30 +622,30 @@ partial class ComputeShaderDescriptorGenerator
             {
                 object count = (object?)bufferCount ?? "__GroupSize__get_X * __GroupSize__get_Y * __GroupSize__get_Z";
 
-                AppendLF();
-                AppendLineAndLF($"groupshared {bufferType} {bufferName} [{count}];");
+                writer.WriteLine(skipIfPresent: true);
+                writer.WriteLine($"groupshared {bufferType} {bufferName} [{count}];");
             }
 
             // Forward declarations
             foreach ((string forwardDeclaration, string _) in processedMethods)
             {
-                AppendLF();
-                AppendLineAndLF(forwardDeclaration);
+                writer.WriteLine(skipIfPresent: true);
+                writer.WriteLine(forwardDeclaration);
             }
 
             // Captured methods
             foreach ((string _, string method) in processedMethods)
             {
-                AppendLF();
-                AppendLineAndLF(method);
+                writer.WriteLine(skipIfPresent: true);
+                writer.WriteLine(method);
             }
 
             // Entry point
-            AppendLF();
-            AppendLineAndLF("[NumThreads(__GroupSize__get_X, __GroupSize__get_Y, __GroupSize__get_Z)]");
-            AppendLineAndLF(executeMethod);
+            writer.WriteLine(skipIfPresent: true);
+            writer.WriteLine("[NumThreads(__GroupSize__get_X, __GroupSize__get_Y, __GroupSize__get_Z)]");
+            writer.WriteLine(executeMethod);
 
-            return FlushText();
+            return writer.ToString();
         }
     }
 }

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Linq;
 using System.Threading;
 using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Helpers;
@@ -471,124 +470,101 @@ partial class D2DPixelShaderDescriptorGenerator
             ImmutableArray<int> inputComplexIndices,
             bool requiresScenePosition)
         {
-            using ImmutableArrayBuilder<char> hlslBuilder = new();
-
-            void AppendLF()
-            {
-                hlslBuilder.Add('\n');
-            }
-
-            void AppendLineAndLF(string text)
-            {
-                hlslBuilder.AddRange(text.AsSpan());
-                hlslBuilder.Add('\n');
-            }
+            using IndentedTextWriter writer = new();
 
             // Header
-            AppendLineAndLF("// ================================================");
-            AppendLineAndLF("//                  AUTO GENERATED");
-            AppendLineAndLF("// ================================================");
-            AppendLineAndLF("// This shader was created by ComputeSharp.");
-            AppendLineAndLF("// See: https://github.com/Sergio0694/ComputeSharp.");
-            AppendLF();
+            writer.WriteLine("""
+                // ================================================
+                //                  AUTO GENERATED
+                // ================================================
+                // This shader was created by ComputeSharp.
+                // See: https://github.com/Sergio0694/ComputeSharp.
+                """, isMultiline: true);
 
             // Shader metadata
-            AppendLineAndLF($"#define D2D_INPUT_COUNT {inputCount}");
+            writer.WriteLine();
+            writer.WriteLine($"#define D2D_INPUT_COUNT {inputCount}");
 
             foreach (int simpleInput in inputSimpleIndices)
             {
-                AppendLineAndLF($"#define D2D_INPUT{simpleInput}_SIMPLE");
+                writer.WriteLine($"#define D2D_INPUT{simpleInput}_SIMPLE");
             }
 
             foreach (int complexInput in inputComplexIndices)
             {
-                AppendLineAndLF($"#define D2D_INPUT{complexInput}_COMPLEX");
+                writer.WriteLine($"#define D2D_INPUT{complexInput}_COMPLEX");
             }
 
-            if (requiresScenePosition)
-            {
-                AppendLineAndLF("#define D2D_REQUIRES_SCENE_POSITION");
-            }
+            writer.WriteLineIf(requiresScenePosition, "#define D2D_REQUIRES_SCENE_POSITION");
 
             // Add the "d2d1effecthelpers.hlsli" header
-            AppendLF();
-            AppendLineAndLF("#include \"d2d1effecthelpers.hlsli\"");
+            writer.WriteLine();
+            writer.WriteLine("#include \"d2d1effecthelpers.hlsli\"");
+            writer.WriteLine();
 
             // Define declarations
-            if (definedConstants.Any())
+            foreach ((string name, string value) in definedConstants)
             {
-                AppendLF();
-
-                foreach ((string name, string value) in definedConstants)
-                {
-                    AppendLineAndLF($"#define {name} {value}");
-                }
+                writer.WriteLine($"#define {name} {value}");
             }
 
-            // Static fields
-            if (staticFields.Any())
-            {
-                AppendLF();
+            writer.WriteLine(skipIfPresent: true);
 
-                foreach ((string Name, string TypeDeclaration, string? Assignment) field in staticFields)
+            // Static fields
+            foreach ((string Name, string TypeDeclaration, string? Assignment) field in staticFields)
+            {
+                if (field.Assignment is string assignment)
                 {
-                    if (field.Assignment is string assignment)
-                    {
-                        AppendLineAndLF($"{field.TypeDeclaration} {field.Name} = {assignment};");
-                    }
-                    else
-                    {
-                        AppendLineAndLF($"{field.TypeDeclaration} {field.Name};");
-                    }
+                    writer.WriteLine($"{field.TypeDeclaration} {field.Name} = {assignment};");
+                }
+                else
+                {
+                    writer.WriteLine($"{field.TypeDeclaration} {field.Name};");
                 }
             }
 
             // Declared types
             foreach ((string _, string typeDefinition) in declaredTypes)
             {
-                AppendLF();
-                AppendLineAndLF(typeDefinition);
+                writer.WriteLine(skipIfPresent: true);
+                writer.WriteLine(typeDefinition);
             }
 
-            // Captured variables
-            if (valueFields.Any())
-            {
-                AppendLF();
+            writer.WriteLine(skipIfPresent: true);
 
-                foreach ((string fieldName, string fieldType) in valueFields)
-                {
-                    AppendLineAndLF($"{fieldType} {fieldName};");
-                }
+            // Captured variables
+            foreach ((string fieldName, string fieldType) in valueFields)
+            {
+                writer.WriteLine($"{fieldType} {fieldName};");
             }
 
             // Resource textures
             foreach ((string fieldName, string fieldType, int index) in resourceTextureFields)
             {
-                AppendLF();
-
-                AppendLineAndLF($"{fieldType} {fieldName} : register(t{index});");
-                AppendLineAndLF($"SamplerState __sampler__{fieldName} : register(s{index});");
+                writer.WriteLine(skipIfPresent: true);
+                writer.WriteLine($"{fieldType} {fieldName} : register(t{index});");
+                writer.WriteLine($"SamplerState __sampler__{fieldName} : register(s{index});");
             }
 
             // Forward declarations
             foreach ((string forwardDeclaration, string _) in processedMethods)
             {
-                AppendLF();
-                AppendLineAndLF(forwardDeclaration);
+                writer.WriteLine(skipIfPresent: true);
+                writer.WriteLine(forwardDeclaration);
             }
 
             // Captured methods
             foreach ((string _, string method) in processedMethods)
             {
-                AppendLF();
-                AppendLineAndLF(method);
+                writer.WriteLine(skipIfPresent: true);
+                writer.WriteLine(method);
             }
 
             // Entry point
-            AppendLF();
-            AppendLineAndLF(executeMethod);
+            writer.WriteLine(skipIfPresent: true);
+            writer.WriteLine(executeMethod);
 
-            return hlslBuilder.ToString();
+            return writer.ToString();
         }
     }
 }

@@ -23,6 +23,7 @@ partial class ComputeShaderDescriptorGenerator
             writer.IncreaseIndent();
             writer.WriteLine("\"\"\"");
             writer.Write(info.HlslInfoKey.HlslSource, isMultiline: true);
+            writer.WriteLine(skipIfPresent: true);
             writer.WriteLine("\"\"\";");
             writer.DecreaseIndent();
         }
