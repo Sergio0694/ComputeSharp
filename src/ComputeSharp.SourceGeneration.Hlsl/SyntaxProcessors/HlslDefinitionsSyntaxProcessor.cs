@@ -17,7 +17,7 @@ using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 namespace ComputeSharp.SourceGeneration.SyntaxProcessors;
 
 /// <summary>
-/// A processor responsible for extracting definitions from shader types
+/// A processor responsible for extracting definitions from shader types.
 /// </summary>
 internal static class HlslDefinitionsSyntaxProcessor
 {

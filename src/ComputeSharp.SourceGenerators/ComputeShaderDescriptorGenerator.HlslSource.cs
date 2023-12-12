@@ -535,7 +535,7 @@ partial class ComputeShaderDescriptorGenerator
                 writer.WriteLine($"#define {name} {value}");
             }
 
-            writer.WriteLine();
+            writer.WriteLine(skipIfPresent: true);
 
             // Static fields
             foreach ((string Name, string TypeDeclaration, string? Assignment) field in staticFields)
@@ -579,25 +579,20 @@ partial class ComputeShaderDescriptorGenerator
             int readWriteBuffersCount = 0;
 
             // Optional implicit texture field
-            if (!isComputeShader)
-            {
-                writer.WriteLine(skipIfPresent: true);
-                writer.WriteLine($"{implicitTextureType} __outputTexture : register(u{readWriteBuffersCount++});");
-            }
+            writer.WriteLine(skipIfPresent: true);
+            writer.WriteLineIf(!isComputeShader, $"{implicitTextureType} __outputTexture : register(u{readWriteBuffersCount++});");
 
             // Optional sampler field
-            if (isSamplerUsed)
-            {
-                writer.WriteLine(skipIfPresent: true);
-                writer.WriteLine("SamplerState __sampler : register(s);");
-            }
+            writer.WriteLine(skipIfPresent: true);
+            writer.WriteLineIf(isSamplerUsed, "SamplerState __sampler : register(s);");
 
             // Resources
             foreach ((string metadataName, string fieldName, string fieldType) in resourceFields)
             {
+                writer.WriteLine(skipIfPresent: true);
+
                 if (HlslKnownTypes.IsConstantBufferType(metadataName))
                 {
-                    writer.WriteLine(skipIfPresent: true);
                     writer.WriteLine($"cbuffer _{fieldName} : register(b{constantBuffersCount++})");
 
                     using (writer.WriteBlock())
@@ -607,12 +602,10 @@ partial class ComputeShaderDescriptorGenerator
                 }
                 else if (HlslKnownTypes.IsReadOnlyTypedResourceType(metadataName))
                 {
-                    writer.WriteLine(skipIfPresent: true);
                     writer.WriteLine($"{fieldType} {fieldName} : register(t{readOnlyBuffersCount++});");
                 }
                 else if (HlslKnownTypes.IsReadWriteTypedResourceType(metadataName))
                 {
-                    writer.WriteLine(skipIfPresent: true);
                     writer.WriteLine($"{fieldType} {fieldName} : register(u{readWriteBuffersCount++});");
                 }
             }
