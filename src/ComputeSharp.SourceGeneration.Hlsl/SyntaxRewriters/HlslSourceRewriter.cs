@@ -40,7 +40,7 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
         SemanticModelProvider semanticModel,
         ICollection<INamedTypeSymbol> discoveredTypes,
         IDictionary<IFieldSymbol, string> constantDefinitions,
-        IDictionary<IFieldSymbol, (string, string, string?)> staticFieldDefinitions,
+        IDictionary<IFieldSymbol, HlslStaticField> staticFieldDefinitions,
         ImmutableArrayBuilder<DiagnosticInfo> diagnostics,
         CancellationToken token)
     {
@@ -70,7 +70,7 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
     /// <summary>
     /// Gets the collection of discovered static field definitions.
     /// </summary>
-    protected IDictionary<IFieldSymbol, (string, string, string?)> StaticFieldDefinitions { get; }
+    protected IDictionary<IFieldSymbol, HlslStaticField> StaticFieldDefinitions { get; }
 
     /// <summary>
     /// Gets the collection of produced <see cref="DiagnosticInfo"/> instances.

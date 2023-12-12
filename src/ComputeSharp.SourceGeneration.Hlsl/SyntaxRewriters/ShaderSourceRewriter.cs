@@ -40,7 +40,7 @@ internal sealed partial class ShaderSourceRewriter(
     IDictionary<IMethodSymbol, MethodDeclarationSyntax> instanceMethods,
     IDictionary<IMethodSymbol, (MethodDeclarationSyntax, MethodDeclarationSyntax)> constructors,
     IDictionary<IFieldSymbol, string> constantDefinitions,
-    IDictionary<IFieldSymbol, (string, string, string?)> staticFieldDefinitions,
+    IDictionary<IFieldSymbol, HlslStaticField> staticFieldDefinitions,
     ImmutableArrayBuilder<DiagnosticInfo> diagnostics,
     CancellationToken token,
     bool isEntryPoint = false)

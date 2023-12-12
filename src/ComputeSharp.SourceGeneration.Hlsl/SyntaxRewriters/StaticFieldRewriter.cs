@@ -30,7 +30,7 @@ internal sealed partial class StaticFieldRewriter(
     SemanticModelProvider semanticModel,
     ICollection<INamedTypeSymbol> discoveredTypes,
     IDictionary<IFieldSymbol, string> constantDefinitions,
-    IDictionary<IFieldSymbol, (string, string, string?)> staticFieldDefinitions,
+    IDictionary<IFieldSymbol, HlslStaticField> staticFieldDefinitions,
     ImmutableArrayBuilder<DiagnosticInfo> diagnostics,
     CancellationToken token)
     : HlslSourceRewriter(semanticModel, discoveredTypes, constantDefinitions, staticFieldDefinitions, diagnostics, token)
