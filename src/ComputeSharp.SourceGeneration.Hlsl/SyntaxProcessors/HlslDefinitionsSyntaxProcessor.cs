@@ -17,7 +17,7 @@ using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 namespace ComputeSharp.SourceGeneration.SyntaxProcessors;
 
 /// <summary>
-/// A processor responsible for extracting definitions from shader types
+/// A processor responsible for extracting definitions from shader types.
 /// </summary>
 internal static class HlslDefinitionsSyntaxProcessor
 {
@@ -26,9 +26,9 @@ internal static class HlslDefinitionsSyntaxProcessor
     /// </summary>
     /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
     /// <returns>A sequence of discovered constants to declare in the shader.</returns>
-    public static ImmutableArray<(string Name, string Value)> GetDefinedConstants(IReadOnlyDictionary<IFieldSymbol, string> constantDefinitions)
+    public static ImmutableArray<HlslConstant> GetDefinedConstants(IReadOnlyDictionary<IFieldSymbol, string> constantDefinitions)
     {
-        using ImmutableArrayBuilder<(string, string)> builder = new();
+        using ImmutableArrayBuilder<HlslConstant> builder = new();
 
         foreach (KeyValuePair<IFieldSymbol, string> constant in constantDefinitions)
         {
@@ -144,14 +144,14 @@ internal static class HlslDefinitionsSyntaxProcessor
     /// <param name="instanceMethods">The collection of discovered instance methods for custom struct types.</param>
     /// <param name="constructors">The collection of discovered constructors for custom struct types.</param>
     /// <returns>A sequence of custom type definitions to add to the shader source.</returns>
-    public static ImmutableArray<(string Name, string Definition)> GetDeclaredTypes(
+    public static ImmutableArray<HlslUserType> GetDeclaredTypes(
         ImmutableArrayBuilder<DiagnosticInfo> diagnostics,
         INamedTypeSymbol structDeclarationSymbol,
         IEnumerable<INamedTypeSymbol> types,
         IReadOnlyDictionary<IMethodSymbol, MethodDeclarationSyntax> instanceMethods,
         IReadOnlyDictionary<IMethodSymbol, (MethodDeclarationSyntax, MethodDeclarationSyntax)> constructors)
     {
-        using ImmutableArrayBuilder<(string, string)> builder = new();
+        using ImmutableArrayBuilder<HlslUserType> builder = new();
 
         IReadOnlyCollection<INamedTypeSymbol> invalidTypes;
 
