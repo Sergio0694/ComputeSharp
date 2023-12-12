@@ -325,6 +325,9 @@ partial class D2DPixelShaderDescriptorGenerator
             using ImmutableArrayBuilder<HlslMethod> methods = new();
 
             string? entryPoint = null;
+
+            // By default, the scene position is not required. We will set this while
+            // rewriting HLSL, if any method we traverse ends up requiring the position.
             needsD2D1RequiresScenePosition = false;
 
             foreach (ISymbol memberSymbol in structDeclarationSymbol.GetMembers())
