@@ -722,6 +722,10 @@ namespace ComputeSharp.Tests
                 #define __GroupSize__get_Y 1
                 #define __GroupSize__get_Z 1
 
+                static void Foo(in int a, in int b, inout int c, out int d);
+
+                static void Bar(in int a, in int b, inout int c, out int d);
+
                 cbuffer _ : register(b0)
                 {
                     uint __x;
@@ -730,10 +734,6 @@ namespace ComputeSharp.Tests
                 }
 
                 RWStructuredBuffer<float> __reserved__buffer : register(u0);
-
-                static void Foo(in int a, in int b, inout int c, out int d);
-
-                static void Bar(in int a, in int b, inout int c, out int d);
 
                 static void Foo(in int a, in int b, inout int c, out int d)
                 {
@@ -805,6 +805,8 @@ namespace ComputeSharp.Tests
                 #define __GroupSize__get_Z 1
                 #define __ComputeSharp_Tests_ShaderCompilerTests_ShaderWithPartialDeclarations__a 2
 
+                static int Sum(int x, int y);
+
                 static const int b = 4;
 
                 cbuffer _ : register(b0)
@@ -815,8 +817,6 @@ namespace ComputeSharp.Tests
                 }
 
                 RWStructuredBuffer<float> __reserved__buffer : register(u0);
-
-                static int Sum(int x, int y);
 
                 static int Sum(int x, int y)
                 {

@@ -97,12 +97,14 @@ partial class D2DPixelShaderDescriptorGenerator
             token.ThrowIfCancellationRequested();
 
             // Process the discovered types and constants
-            ImmutableArray<HlslUserType> declaredTypes = HlslDefinitionsSyntaxProcessor.GetDeclaredTypes(
+            HlslDefinitionsSyntaxProcessor.GetDeclaredTypes(
                 diagnostics,
                 structDeclarationSymbol,
                 discoveredTypes,
                 instanceMethods,
-                constructors);
+                constructors,
+                out ImmutableArray<HlslUserType> typeDeclarations,
+                out ImmutableArray<string> typeMethodDeclarations);
 
             token.ThrowIfCancellationRequested();
 
@@ -125,11 +127,12 @@ partial class D2DPixelShaderDescriptorGenerator
             // Get the HLSL source
             return GetHlslSource(
                 definedConstants,
-                declaredTypes,
                 valueFields,
                 resourceTextureFields,
                 staticFields,
                 processedMethods,
+                typeDeclarations,
+                typeMethodDeclarations,
                 entryPoint,
                 inputCount,
                 inputSimpleIndices,
@@ -449,11 +452,12 @@ partial class D2DPixelShaderDescriptorGenerator
         /// Produces the series of statements to build the current HLSL source.
         /// </summary>
         /// <param name="definedConstants">The sequence of defined constants for the shader.</param>
-        /// <param name="declaredTypes">The sequence of declared types used by the shader.</param>
         /// <param name="valueFields">The sequence of value instance fields for the current shader.</param>
         /// <param name="resourceTextureFields">The sequence of captured resource textures for the current shader.</param>
         /// <param name="staticFields">The sequence of static fields referenced by the shader.</param>
         /// <param name="processedMethods">The sequence of processed methods used by the shader.</param>
+        /// <param name="typeDeclarations">The collection of declarations of all custom types.</param>
+        /// <param name="typeMethodDeclarations">The collection of implementations of all methods in all custom types.</param>
         /// <param name="executeMethod">The body of the entry point of the shader.</param>
         /// <param name="inputCount">The number of shader inputs to declare.</param>
         /// <param name="inputSimpleIndices">The indicess of the simple shader inputs.</param>
@@ -462,11 +466,12 @@ partial class D2DPixelShaderDescriptorGenerator
         /// <returns>The series of statements to build the HLSL source to compile to execute the current shader.</returns>
         private static string GetHlslSource(
             ImmutableArray<HlslConstant> definedConstants,
-            ImmutableArray<HlslUserType> declaredTypes,
             ImmutableArray<HlslValueField> valueFields,
             ImmutableArray<HlslResourceTextureField> resourceTextureFields,
             ImmutableArray<HlslStaticField> staticFields,
             ImmutableArray<HlslMethod> processedMethods,
+            ImmutableArray<HlslUserType> typeDeclarations,
+            ImmutableArray<string> typeMethodDeclarations,
             string executeMethod,
             int inputCount,
             ImmutableArray<int> inputSimpleIndices,
@@ -513,6 +518,15 @@ partial class D2DPixelShaderDescriptorGenerator
 
             writer.WriteLine(skipIfPresent: true);
 
+            // Forward declarations of shader/static methods
+            foreach (HlslMethod method in processedMethods)
+            {
+                writer.WriteLine(skipIfPresent: true);
+                writer.WriteLine(method.Signature);
+            }
+
+            writer.WriteLine(skipIfPresent: true);
+
             // Static fields
             foreach (HlslStaticField field in staticFields)
             {
@@ -526,8 +540,10 @@ partial class D2DPixelShaderDescriptorGenerator
                 }
             }
 
+            writer.WriteLine(skipIfPresent: true);
+
             // Declared types
-            foreach (HlslUserType userType in declaredTypes)
+            foreach (HlslUserType userType in typeDeclarations)
             {
                 writer.WriteLine(skipIfPresent: true);
                 writer.WriteLine(userType.Definition);
@@ -549,11 +565,11 @@ partial class D2DPixelShaderDescriptorGenerator
                 writer.WriteLine($"SamplerState __sampler__{field.Name} : register(s{field.Index});");
             }
 
-            // Forward declarations
-            foreach (HlslMethod method in processedMethods)
+            // Method declarations for discovered types
+            foreach (string method in typeMethodDeclarations)
             {
                 writer.WriteLine(skipIfPresent: true);
-                writer.WriteLine(method.Signature);
+                writer.WriteLine(method);
             }
 
             // Captured methods
