@@ -10,7 +10,7 @@ namespace ComputeSharp.D2D1.Shaders.Interop.Effects.TransformMappers;
 /// <summary>
 /// The transform mapper manager type to use with built-in effects.
 /// </summary>
-internal unsafe struct ID2D1TransformMapper : IComObject
+internal unsafe struct ID2D1DrawTransformMapper : IComObject
 {
     /// <inheritdoc/>
     static Guid* IComObject.IID
@@ -60,8 +60,8 @@ internal unsafe struct ID2D1TransformMapper : IComObject
         RECT* outputRect,
         RECT* outputOpaqueSubRect)
     {
-        return ((delegate* unmanaged[MemberFunction]<ID2D1TransformMapper*, ID2D1DrawInfoUpdateContext*, RECT*, RECT*, uint, RECT*, RECT*, int>)this.lpVtbl[3])(
-            (ID2D1TransformMapper*)Unsafe.AsPointer(ref this),
+        return ((delegate* unmanaged[MemberFunction]<ID2D1DrawTransformMapper*, ID2D1DrawInfoUpdateContext*, RECT*, RECT*, uint, RECT*, RECT*, int>)this.lpVtbl[3])(
+            (ID2D1DrawTransformMapper*)Unsafe.AsPointer(ref this),
             updateContext,
             inputRects,
             inputOpaqueSubRects,
@@ -83,8 +83,8 @@ internal unsafe struct ID2D1TransformMapper : IComObject
         RECT* inputRects,
         uint inputRectsCount)
     {
-        return ((delegate* unmanaged[MemberFunction]<ID2D1TransformMapper*, RECT*, RECT*, uint, int>)this.lpVtbl[4])(
-            (ID2D1TransformMapper*)Unsafe.AsPointer(ref this),
+        return ((delegate* unmanaged[MemberFunction]<ID2D1DrawTransformMapper*, RECT*, RECT*, uint, int>)this.lpVtbl[4])(
+            (ID2D1DrawTransformMapper*)Unsafe.AsPointer(ref this),
             outputRect,
             inputRects,
             inputRectsCount);
@@ -103,8 +103,8 @@ internal unsafe struct ID2D1TransformMapper : IComObject
         RECT invalidInputRect,
         RECT* invalidOutputRect)
     {
-        return ((delegate* unmanaged[MemberFunction]<ID2D1TransformMapper*, uint, RECT, RECT*, int>)this.lpVtbl[5])(
-            (ID2D1TransformMapper*)Unsafe.AsPointer(ref this),
+        return ((delegate* unmanaged[MemberFunction]<ID2D1DrawTransformMapper*, uint, RECT, RECT*, int>)this.lpVtbl[5])(
+            (ID2D1DrawTransformMapper*)Unsafe.AsPointer(ref this),
             inputIndex,
             invalidInputRect,
             invalidOutputRect);

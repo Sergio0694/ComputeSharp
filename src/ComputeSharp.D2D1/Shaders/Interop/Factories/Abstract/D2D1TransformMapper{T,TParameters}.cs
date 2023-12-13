@@ -12,7 +12,7 @@ namespace ComputeSharp.D2D1.Shaders.Interop.Factories.Abstract;
 /// </summary>
 /// <typeparam name="T">The type of D2D1 pixel shader associated to the transform mapper.</typeparam>
 /// <typeparam name="TParameters">The type of parameters that the transform mapper will use.</typeparam>
-internal abstract class D2D1TransformMapper<T, TParameters> : D2D1TransformMapper<T>
+internal abstract class D2D1DrawTransformMapper<T, TParameters> : D2D1DrawTransformMapper<T>
     where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
     where TParameters : unmanaged
 {

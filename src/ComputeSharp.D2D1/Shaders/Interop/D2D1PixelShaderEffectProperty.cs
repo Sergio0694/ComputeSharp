@@ -18,7 +18,7 @@ public static class D2D1PixelShaderEffectProperty
     public const uint ConstantBuffer = 0;
 
     /// <summary>
-    /// The index for the <c>ID2D1TransformMapper</c> property of a <see cref="D2D1PixelShaderEffect"/> object.
+    /// The index for the <c>ID2D1DrawTransformMapper</c> property of a <see cref="D2D1PixelShaderEffect"/> object.
     /// </summary>
     /// <remarks>
     /// <para>The value of this property is of type <c>D2D1_PROPERTY_TYPE_IUNKNOWN</c>.</para>

@@ -10,54 +10,54 @@ using ComputeSharp.Win32;
 namespace ComputeSharp.D2D1.Shaders.Interop.Effects.TransformMappers;
 
 /// <summary>
-/// An implementation of the <see cref="ID2D1TransformMapper"/> interface wrapping <see cref="ID2D1TransformMapperInterop"/>.
+/// An implementation of the <see cref="ID2D1DrawTransformMapper"/> interface wrapping <see cref="ID2D1DrawTransformMapperInterop"/>.
 /// </summary>
-internal unsafe partial struct D2D1TransformMapperImpl
+internal unsafe partial struct D2D1DrawTransformMapperImpl
 {
     /// <summary>
-    /// The shared vtable pointer for <see cref="D2D1TransformMapperImpl"/> instance, for <see cref="ID2D1TransformMapper"/>.
+    /// The shared vtable pointer for <see cref="D2D1DrawTransformMapperImpl"/> instance, for <see cref="ID2D1DrawTransformMapper"/>.
     /// </summary>
-    private static readonly void** VtblForID2D1TransformMapper = InitVtblForID2D1TransformMapperAndID2D1TransformMapperInternal();
+    private static readonly void** VtblForID2D1DrawTransformMapper = InitVtblForID2D1DrawTransformMapperAndID2D1DrawTransformMapperInternal();
 
     /// <summary>
-    /// The shared vtable pointer for <see cref="D2D1TransformMapperImpl"/> instance, for <see cref="ID2D1TransformMapperInternal"/>.
+    /// The shared vtable pointer for <see cref="D2D1DrawTransformMapperImpl"/> instance, for <see cref="ID2D1DrawTransformMapperInternal"/>.
     /// </summary>
-    private static readonly void** VtblForID2D1TransformMapperInternal = &VtblForID2D1TransformMapper[6];
+    private static readonly void** VtblForID2D1DrawTransformMapperInternal = &VtblForID2D1DrawTransformMapper[6];
 
     /// <summary>
-    /// Initializes the combined vtable for <see cref="ID2D1TransformMapper"/> and <see cref="ID2D1TransformMapperInternal"/>.
+    /// Initializes the combined vtable for <see cref="ID2D1DrawTransformMapper"/> and <see cref="ID2D1DrawTransformMapperInternal"/>.
     /// </summary>
-    /// <returns>The combined vtable for <see cref="ID2D1TransformMapper"/> and <see cref="ID2D1TransformMapperInternal"/>.</returns>
-    private static void** InitVtblForID2D1TransformMapperAndID2D1TransformMapperInternal()
+    /// <returns>The combined vtable for <see cref="ID2D1DrawTransformMapper"/> and <see cref="ID2D1DrawTransformMapperInternal"/>.</returns>
+    private static void** InitVtblForID2D1DrawTransformMapperAndID2D1DrawTransformMapperInternal()
     {
         void** lpVtbl = (void**)D2D1AssemblyAssociatedMemory.Allocate(sizeof(void*) * 10);
 
         // ID2D1ResourceTextureManager
-        lpVtbl[0] = (delegate* unmanaged[MemberFunction]<D2D1TransformMapperImpl*, Guid*, void**, int>)&ID2D1TransformMapperMethods.QueryInterface;
-        lpVtbl[1] = (delegate* unmanaged[MemberFunction]<D2D1TransformMapperImpl*, uint>)&ID2D1TransformMapperMethods.AddRef;
-        lpVtbl[2] = (delegate* unmanaged[MemberFunction]<D2D1TransformMapperImpl*, uint>)&ID2D1TransformMapperMethods.Release;
-        lpVtbl[3] = (delegate* unmanaged[MemberFunction]<D2D1TransformMapperImpl*, ID2D1DrawInfoUpdateContext*, RECT*, RECT*, uint, RECT*, RECT*, int>)&ID2D1TransformMapperMethods.MapInputRectsToOutputRect;
-        lpVtbl[4] = (delegate* unmanaged[MemberFunction]<D2D1TransformMapperImpl*, RECT*, RECT*, uint, int>)&ID2D1TransformMapperMethods.MapOutputRectToInputRects;
-        lpVtbl[5] = (delegate* unmanaged[MemberFunction]<D2D1TransformMapperImpl*, uint, RECT, RECT*, int>)&ID2D1TransformMapperMethods.MapInvalidRect;
+        lpVtbl[0] = (delegate* unmanaged[MemberFunction]<D2D1DrawTransformMapperImpl*, Guid*, void**, int>)&ID2D1DrawTransformMapperMethods.QueryInterface;
+        lpVtbl[1] = (delegate* unmanaged[MemberFunction]<D2D1DrawTransformMapperImpl*, uint>)&ID2D1DrawTransformMapperMethods.AddRef;
+        lpVtbl[2] = (delegate* unmanaged[MemberFunction]<D2D1DrawTransformMapperImpl*, uint>)&ID2D1DrawTransformMapperMethods.Release;
+        lpVtbl[3] = (delegate* unmanaged[MemberFunction]<D2D1DrawTransformMapperImpl*, ID2D1DrawInfoUpdateContext*, RECT*, RECT*, uint, RECT*, RECT*, int>)&ID2D1DrawTransformMapperMethods.MapInputRectsToOutputRect;
+        lpVtbl[4] = (delegate* unmanaged[MemberFunction]<D2D1DrawTransformMapperImpl*, RECT*, RECT*, uint, int>)&ID2D1DrawTransformMapperMethods.MapOutputRectToInputRects;
+        lpVtbl[5] = (delegate* unmanaged[MemberFunction]<D2D1DrawTransformMapperImpl*, uint, RECT, RECT*, int>)&ID2D1DrawTransformMapperMethods.MapInvalidRect;
 
-        // ID2D1TransformMapperInternal
-        lpVtbl[6 + 0] = (delegate* unmanaged[MemberFunction]<D2D1TransformMapperImpl*, Guid*, void**, int>)&ID2D1TransformMapperInternalMethods.QueryInterface;
-        lpVtbl[6 + 1] = (delegate* unmanaged[MemberFunction]<D2D1TransformMapperImpl*, uint>)&ID2D1TransformMapperInternalMethods.AddRef;
-        lpVtbl[6 + 2] = (delegate* unmanaged[MemberFunction]<D2D1TransformMapperImpl*, uint>)&ID2D1TransformMapperInternalMethods.Release;
-        lpVtbl[6 + 3] = (delegate* unmanaged[MemberFunction]<D2D1TransformMapperImpl*, void**, int>)&ID2D1TransformMapperInternalMethods.GetManagedWrapperHandle;
+        // ID2D1DrawTransformMapperInternal
+        lpVtbl[6 + 0] = (delegate* unmanaged[MemberFunction]<D2D1DrawTransformMapperImpl*, Guid*, void**, int>)&ID2D1DrawTransformMapperInternalMethods.QueryInterface;
+        lpVtbl[6 + 1] = (delegate* unmanaged[MemberFunction]<D2D1DrawTransformMapperImpl*, uint>)&ID2D1DrawTransformMapperInternalMethods.AddRef;
+        lpVtbl[6 + 2] = (delegate* unmanaged[MemberFunction]<D2D1DrawTransformMapperImpl*, uint>)&ID2D1DrawTransformMapperInternalMethods.Release;
+        lpVtbl[6 + 3] = (delegate* unmanaged[MemberFunction]<D2D1DrawTransformMapperImpl*, void**, int>)&ID2D1DrawTransformMapperInternalMethods.GetManagedWrapperHandle;
 
         return lpVtbl;
     }
 
     /// <summary>
-    /// The vtable pointer for the current instance, for <see cref="ID2D1TransformMapper"/>.
+    /// The vtable pointer for the current instance, for <see cref="ID2D1DrawTransformMapper"/>.
     /// </summary>
-    private void** lpVtblForID2D1TransformMapper;
+    private void** lpVtblForID2D1DrawTransformMapper;
 
     /// <summary>
-    /// The vtable pointer for the current instance, for <see cref="ID2D1TransformMapperInternal"/>.
+    /// The vtable pointer for the current instance, for <see cref="ID2D1DrawTransformMapperInternal"/>.
     /// </summary>
-    private void** lpVtblForID2D1TransformMapperInternal;
+    private void** lpVtblForID2D1DrawTransformMapperInternal;
 
     /// <summary>
     /// The current reference count for the object (from <see cref="IUnknown"/>).
@@ -65,7 +65,7 @@ internal unsafe partial struct D2D1TransformMapperImpl
     private volatile int referenceCount;
 
     /// <summary>
-    /// A <see cref="GCHandle"/> to the wrapped <see cref="ID2D1TransformMapperInterop"/> instance.
+    /// A <see cref="GCHandle"/> to the wrapped <see cref="ID2D1DrawTransformMapperInterop"/> instance.
     /// </summary>
     private GCHandle transformMapperHandle;
 
@@ -75,18 +75,18 @@ internal unsafe partial struct D2D1TransformMapperImpl
     private SpinLock spinLock;
 
     /// <summary>
-    /// The factory method for <see cref="D2D1TransformMapperImpl"/> instances.
+    /// The factory method for <see cref="D2D1DrawTransformMapperImpl"/> instances.
     /// </summary>
-    /// <param name="transformMapper">The input <see cref="ID2D1TransformMapperInterop"/> instance to wrap.</param>
-    /// <param name="d2D1TransformMapperProxy">The resulting <see cref="D2D1TransformMapperImpl"/> instance.</param>
+    /// <param name="transformMapper">The input <see cref="ID2D1DrawTransformMapperInterop"/> instance to wrap.</param>
+    /// <param name="d2D1TransformMapperProxy">The resulting <see cref="D2D1DrawTransformMapperImpl"/> instance.</param>
     public static void Factory(
-        ID2D1TransformMapperInterop transformMapper,
-        D2D1TransformMapperImpl** d2D1TransformMapperProxy)
+        ID2D1DrawTransformMapperInterop transformMapper,
+        D2D1DrawTransformMapperImpl** d2D1TransformMapperProxy)
     {
-        D2D1TransformMapperImpl* @this = (D2D1TransformMapperImpl*)NativeMemory.Alloc((nuint)sizeof(D2D1TransformMapperImpl));
+        D2D1DrawTransformMapperImpl* @this = (D2D1DrawTransformMapperImpl*)NativeMemory.Alloc((nuint)sizeof(D2D1DrawTransformMapperImpl));
 
-        @this->lpVtblForID2D1TransformMapper = VtblForID2D1TransformMapper;
-        @this->lpVtblForID2D1TransformMapperInternal = VtblForID2D1TransformMapperInternal;
+        @this->lpVtblForID2D1DrawTransformMapper = VtblForID2D1DrawTransformMapper;
+        @this->lpVtblForID2D1DrawTransformMapperInternal = VtblForID2D1DrawTransformMapperInternal;
         @this->referenceCount = 1;
         @this->transformMapperHandle = GCHandle.Alloc(transformMapper);
         @this->spinLock = new SpinLock(enableThreadOwnerTracking: false);
@@ -103,9 +103,9 @@ internal unsafe partial struct D2D1TransformMapperImpl
     /// <summary>
     /// Ensures the target of the current CCW is tracked and is keeping it alive.
     /// </summary>
-    /// <param name="target">The associated <see cref="ID2D1TransformMapperInterop"/> object to track.</param>
+    /// <param name="target">The associated <see cref="ID2D1DrawTransformMapperInterop"/> object to track.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public void EnsureTargetIsTracked(ID2D1TransformMapperInterop target)
+    public void EnsureTargetIsTracked(ID2D1DrawTransformMapperInterop target)
     {
         this.transformMapperHandle.Target = target;
     }
@@ -113,15 +113,15 @@ internal unsafe partial struct D2D1TransformMapperImpl
     /// <summary>
     /// Copies the current object onto a target pointer.
     /// </summary>
-    /// <param name="transformMapper">The target <see cref="ID2D1TransformMapper"/> pointer.</param>
+    /// <param name="transformMapper">The target <see cref="ID2D1DrawTransformMapper"/> pointer.</param>
     /// <returns>The <see cref="HRESULT"/> for the operation.</returns>
     /// <remarks>This method must only be called if the caller has taken a lock on <see cref="SpinLock"/> already.</remarks>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public void CopyToWithNoLock(ID2D1TransformMapper** transformMapper)
+    public void CopyToWithNoLock(ID2D1DrawTransformMapper** transformMapper)
     {
         this.referenceCount++;
 
-        *transformMapper = (ID2D1TransformMapper*)Unsafe.AsPointer(ref this);
+        *transformMapper = (ID2D1DrawTransformMapper*)Unsafe.AsPointer(ref this);
     }
 
     /// <inheritdoc cref="IUnknown.QueryInterface"/>
@@ -137,9 +137,9 @@ internal unsafe partial struct D2D1TransformMapperImpl
             return E.E_POINTER;
         }
 
-        // ID2D1TransformMapper
+        // ID2D1DrawTransformMapper
         if (riid->Equals(Windows.__uuidof<IUnknown>()) ||
-            riid->Equals(Windows.__uuidof<ID2D1TransformMapper>()))
+            riid->Equals(Windows.__uuidof<ID2D1DrawTransformMapper>()))
         {
             this.referenceCount++;
 
@@ -148,8 +148,8 @@ internal unsafe partial struct D2D1TransformMapperImpl
             return S.S_OK;
         }
 
-        // ID2D1TransformMapperInternal
-        if (riid->Equals(Windows.__uuidof<ID2D1TransformMapperInternal>()))
+        // ID2D1DrawTransformMapperInternal
+        if (riid->Equals(Windows.__uuidof<ID2D1DrawTransformMapperInternal>()))
         {
             this.referenceCount++;
 

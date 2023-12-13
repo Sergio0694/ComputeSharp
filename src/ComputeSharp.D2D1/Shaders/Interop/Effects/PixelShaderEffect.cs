@@ -78,9 +78,9 @@ internal unsafe partial struct PixelShaderEffect
     private byte* constantBuffer;
 
     /// <summary>
-    /// The <see cref="ID2D1TransformMapper"/> instance to use, if any.
+    /// The <see cref="ID2D1DrawTransformMapper"/> instance to use, if any.
     /// </summary>
-    private ComPtr<ID2D1TransformMapper> d2D1TransformMapper;
+    private ComPtr<ID2D1DrawTransformMapper> d2D1TransformMapper;
 
     /// <summary>
     /// The <see cref="ID2D1DrawInfo"/> instance currently in use.

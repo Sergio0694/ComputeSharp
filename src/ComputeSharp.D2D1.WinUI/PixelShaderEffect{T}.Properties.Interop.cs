@@ -55,7 +55,7 @@ unsafe partial class PixelShaderEffect<T>
     /// Gets the marshalled value for <see cref="TransformMapper"/>.
     /// </summary>
     /// <returns>The marshalled value for <see cref="TransformMapper"/>.</returns>
-    private D2D1TransformMapper<T>? GetTransformMapper()
+    private D2D1DrawTransformMapper<T>? GetTransformMapper()
     {
         using ReferenceTracker.Lease _0 = GetReferenceTracker().GetLease();
 
@@ -73,7 +73,7 @@ unsafe partial class PixelShaderEffect<T>
     /// Sets the marshalled value for <see cref="TransformMapper"/>.
     /// </summary>
     /// <param name="value">The value to set for <see cref="TransformMapper"/>.</param>
-    private void SetTransformMapper(D2D1TransformMapper<T> value)
+    private void SetTransformMapper(D2D1DrawTransformMapper<T> value)
     {
         using ReferenceTracker.Lease _0 = GetReferenceTracker().GetLease();
 

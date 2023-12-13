@@ -10,7 +10,7 @@ namespace ComputeSharp.D2D1.Shaders.Interop.Effects.TransformMappers;
 /// <summary>
 /// The internal transform mapper manager interface.
 /// </summary>
-internal unsafe struct ID2D1TransformMapperInternal : IComObject
+internal unsafe struct ID2D1DrawTransformMapperInternal : IComObject
 {
     /// <inheritdoc/>
     static Guid* IComObject.IID
@@ -49,8 +49,8 @@ internal unsafe struct ID2D1TransformMapperInternal : IComObject
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public HRESULT GetManagedWrapperHandle(void** ppvHandle)
     {
-        return ((delegate* unmanaged[MemberFunction]<ID2D1TransformMapperInternal*, void**, int>)this.lpVtbl[3])(
-            (ID2D1TransformMapperInternal*)Unsafe.AsPointer(ref this),
+        return ((delegate* unmanaged[MemberFunction]<ID2D1DrawTransformMapperInternal*, void**, int>)this.lpVtbl[3])(
+            (ID2D1DrawTransformMapperInternal*)Unsafe.AsPointer(ref this),
             ppvHandle);
     }
 }

@@ -107,7 +107,7 @@ unsafe partial struct PixelShaderEffect
             default(ArgumentNullException).ThrowIfNull(data);
             default(ArgumentOutOfRangeException).ThrowIfLessThan((int)dataSize, sizeof(void*), nameof(dataSize));
 
-            @this->d2D1TransformMapper.CopyTo((ID2D1TransformMapper**)data).Assert();
+            @this->d2D1TransformMapper.CopyTo((ID2D1DrawTransformMapper**)data).Assert();
 
             if (actualSize is not null)
             {
@@ -138,9 +138,9 @@ unsafe partial struct PixelShaderEffect
             default(ArgumentNullException).ThrowIfNull(value);
 
             using ComPtr<IUnknown> unknown = new((IUnknown*)value);
-            using ComPtr<ID2D1TransformMapper> transformMapper = default;
+            using ComPtr<ID2D1DrawTransformMapper> transformMapper = default;
 
-            // Check that the input object implements ID2D1TransformMapper
+            // Check that the input object implements ID2D1DrawTransformMapper
             unknown.CopyTo(transformMapper.GetAddressOf()).Assert();
 
             // Store the transform mapper manager into the effect

@@ -95,7 +95,7 @@ public partial class D2D1PixelShaderEffectTests
     [ExpectedException(typeof(ArgumentNullException), AllowDerivedTypes = false)]
     public unsafe void SetTransformMapperForD2D1Effect_RCW_NullD2D1ResourceTextureManager()
     {
-        D2D1PixelShaderEffect.SetTransformMapperForD2D1Effect((void*)1, (D2D1TransformMapper<NullConstantBufferShader>)null!);
+        D2D1PixelShaderEffect.SetTransformMapperForD2D1Effect((void*)1, (D2D1DrawTransformMapper<NullConstantBufferShader>)null!);
     }
 
     [TestMethod]
