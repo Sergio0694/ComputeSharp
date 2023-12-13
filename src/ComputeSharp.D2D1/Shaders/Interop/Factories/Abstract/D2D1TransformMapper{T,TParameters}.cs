@@ -22,7 +22,7 @@ internal abstract class D2D1DrawTransformMapper<T, TParameters> : D2D1DrawTransf
     private TParameters parameters;
 
     /// <inheritdoc/>
-    public override void MapInputsToOutput(
+    public sealed override void MapInputsToOutput(
         D2D1DrawInfoUpdateContext<T> drawInfoUpdateContext,
         ReadOnlySpan<Rectangle> inputs,
         ReadOnlySpan<Rectangle> opaqueInputs,
@@ -56,7 +56,7 @@ internal abstract class D2D1DrawTransformMapper<T, TParameters> : D2D1DrawTransf
     }
 
     /// <inheritdoc/>
-    public override void MapOutputToInputs(in Rectangle output, Span<Rectangle> inputs)
+    public sealed override void MapOutputToInputs(in Rectangle output, Span<Rectangle> inputs)
     {
         Rectangle64 output64 = Rectangle64.FromRectangle(output);
 
@@ -66,7 +66,7 @@ internal abstract class D2D1DrawTransformMapper<T, TParameters> : D2D1DrawTransf
     }
 
     /// <inheritdoc/>
-    public override void MapInvalidOutput(int inputIndex, in Rectangle invalidInput, out Rectangle invalidOutput)
+    public sealed override void MapInvalidOutput(int inputIndex, in Rectangle invalidInput, out Rectangle invalidOutput)
     {
         Rectangle64 output64 = Rectangle64.FromRectangle(invalidInput);
 
