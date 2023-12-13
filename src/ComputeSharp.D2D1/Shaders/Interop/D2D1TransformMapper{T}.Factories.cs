@@ -1,16 +1,11 @@
 using System;
 using System.Numerics;
-using ComputeSharp.D2D1.Descriptors;
 using ComputeSharp.D2D1.Shaders.Interop.Factories;
 
 namespace ComputeSharp.D2D1.Interop;
 
-/// <summary>
-/// Provides built-in transform mapper factories for common transform mapping operations.
-/// </summary>
-/// <typeparam name="T">The type of D2D1 pixel shader associated to the transform mapper.</typeparam>
-public static class D2D1TransformMapperFactory<T>
-    where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
+/// <inheritdoc cref="D2D1TransformMapper{T}"/>
+partial class D2D1TransformMapper<T>
 {
     /// <summary>
     /// Creates an <see cref="D2D1TransformMapper{T}"/> instance for an inflate transform.
@@ -40,6 +35,7 @@ public static class D2D1TransformMapperFactory<T>
     /// </summary>
     /// <param name="accessor">The input <see cref="Accessor{TResult}"/> instance to retrieve the inflate amount to use (applies to all edges of the input area).</param>
     /// <returns>The resulting <see cref="D2D1TransformMapper{T}"/> instance for an inflate transform.</returns>
+    /// <exception cref="ArgumentNullException">Thrown if <paramref name="accessor"/> is <see langword="null"/>.</exception>
     public static D2D1TransformMapper<T> Inflate(Accessor<int> accessor)
     {
         default(ArgumentNullException).ThrowIfNull(accessor);
@@ -74,6 +70,7 @@ public static class D2D1TransformMapperFactory<T>
     /// </summary>
     /// <param name="accessor">The input <see cref="Accessor{TResult}"/> instance to retrieve the transformation matrix to use.</param>
     /// <returns>The resulting <see cref="D2D1TransformMapper{T}"/> instance for an affine transform.</returns>
+    /// <exception cref="ArgumentNullException">Thrown if <paramref name="accessor"/> is <see langword="null"/>.</exception>
     public static D2D1TransformMapper<T> Transform(Accessor<Matrix3x2> accessor)
     {
         default(ArgumentNullException).ThrowIfNull(accessor);
