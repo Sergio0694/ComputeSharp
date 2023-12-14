@@ -97,12 +97,14 @@ partial class D2DPixelShaderDescriptorGenerator
             token.ThrowIfCancellationRequested();
 
             // Process the discovered types and constants
-            ImmutableArray<HlslUserType> declaredTypes = HlslDefinitionsSyntaxProcessor.GetDeclaredTypes(
+            HlslDefinitionsSyntaxProcessor.GetDeclaredTypes(
                 diagnostics,
                 structDeclarationSymbol,
                 discoveredTypes,
                 instanceMethods,
-                constructors);
+                constructors,
+                out ImmutableArray<HlslUserType> typeDeclarations,
+                out ImmutableArray<string> typeMethodDeclarations);
 
             token.ThrowIfCancellationRequested();
 
@@ -125,11 +127,12 @@ partial class D2DPixelShaderDescriptorGenerator
             // Get the HLSL source
             return GetHlslSource(
                 definedConstants,
-                declaredTypes,
                 valueFields,
                 resourceTextureFields,
                 staticFields,
                 processedMethods,
+                typeDeclarations,
+                typeMethodDeclarations,
                 entryPoint,
                 inputCount,
                 inputSimpleIndices,
@@ -448,12 +451,13 @@ partial class D2DPixelShaderDescriptorGenerator
         /// <summary>
         /// Produces the series of statements to build the current HLSL source.
         /// </summary>
-        /// <param name="definedConstants">The sequence of defined constants for the shader.</param>
-        /// <param name="declaredTypes">The sequence of declared types used by the shader.</param>
-        /// <param name="valueFields">The sequence of value instance fields for the current shader.</param>
+        /// <param name="definedConstants"><inheritdoc cref="HlslSourceHelper.WriteTopDeclarations" path="/param[@name='definedConstants']/node()"/></param>
+        /// <param name="valueFields"><inheritdoc cref="HlslSourceHelper.WriteCapturedFields" path="/param[@name='valueFields']/node()"/></param>
         /// <param name="resourceTextureFields">The sequence of captured resource textures for the current shader.</param>
-        /// <param name="staticFields">The sequence of static fields referenced by the shader.</param>
-        /// <param name="processedMethods">The sequence of processed methods used by the shader.</param>
+        /// <param name="staticFields"><inheritdoc cref="HlslSourceHelper.WriteTopDeclarations" path="/param[@name='staticFields']/node()"/></param>
+        /// <param name="processedMethods"><inheritdoc cref="HlslSourceHelper.WriteTopDeclarations" path="/param[@name='processedMethods']/node()"/></param>
+        /// <param name="typeDeclarations"><inheritdoc cref="HlslSourceHelper.WriteTopDeclarations" path="/param[@name='typeDeclarations']/node()"/></param>
+        /// <param name="typeMethodDeclarations"><inheritdoc cref="HlslSourceHelper.WriteMethodDeclarations" path="/param[@name='typeMethodDeclarations']/node()"/></param>
         /// <param name="executeMethod">The body of the entry point of the shader.</param>
         /// <param name="inputCount">The number of shader inputs to declare.</param>
         /// <param name="inputSimpleIndices">The indicess of the simple shader inputs.</param>
@@ -462,11 +466,12 @@ partial class D2DPixelShaderDescriptorGenerator
         /// <returns>The series of statements to build the HLSL source to compile to execute the current shader.</returns>
         private static string GetHlslSource(
             ImmutableArray<HlslConstant> definedConstants,
-            ImmutableArray<HlslUserType> declaredTypes,
             ImmutableArray<HlslValueField> valueFields,
             ImmutableArray<HlslResourceTextureField> resourceTextureFields,
             ImmutableArray<HlslStaticField> staticFields,
             ImmutableArray<HlslMethod> processedMethods,
+            ImmutableArray<HlslUserType> typeDeclarations,
+            ImmutableArray<string> typeMethodDeclarations,
             string executeMethod,
             int inputCount,
             ImmutableArray<int> inputSimpleIndices,
@@ -475,17 +480,9 @@ partial class D2DPixelShaderDescriptorGenerator
         {
             using IndentedTextWriter writer = new();
 
-            // Header
-            writer.WriteLine("""
-                // ================================================
-                //                  AUTO GENERATED
-                // ================================================
-                // This shader was created by ComputeSharp.
-                // See: https://github.com/Sergio0694/ComputeSharp.
-                """, isMultiline: true);
+            HlslSourceHelper.WriteHeader(writer);
 
             // Shader metadata
-            writer.WriteLine();
             writer.WriteLine($"#define D2D_INPUT_COUNT {inputCount}");
 
             foreach (int simpleInput in inputSimpleIndices)
@@ -505,41 +502,16 @@ partial class D2DPixelShaderDescriptorGenerator
             writer.WriteLine("#include \"d2d1effecthelpers.hlsli\"");
             writer.WriteLine();
 
-            // Define declarations
-            foreach (HlslConstant constant in definedConstants)
-            {
-                writer.WriteLine($"#define {constant.Name} {constant.Value}");
-            }
+            // The FXC compiler does not support type forward declarations
+            HlslSourceHelper.WriteTopDeclarations(
+                writer,
+                definedConstants,
+                staticFields,
+                processedMethods,
+                typeDeclarations,
+                includeTypeForwardDeclarations: false);
 
-            writer.WriteLine(skipIfPresent: true);
-
-            // Static fields
-            foreach (HlslStaticField field in staticFields)
-            {
-                if (field.Assignment is string assignment)
-                {
-                    writer.WriteLine($"{field.TypeDeclaration} {field.Name} = {assignment};");
-                }
-                else
-                {
-                    writer.WriteLine($"{field.TypeDeclaration} {field.Name};");
-                }
-            }
-
-            // Declared types
-            foreach (HlslUserType userType in declaredTypes)
-            {
-                writer.WriteLine(skipIfPresent: true);
-                writer.WriteLine(userType.Definition);
-            }
-
-            writer.WriteLine(skipIfPresent: true);
-
-            // Captured variables
-            foreach (HlslValueField valueField in valueFields)
-            {
-                writer.WriteLine($"{valueField.Type} {valueField.Name};");
-            }
+            HlslSourceHelper.WriteCapturedFields(writer, valueFields);
 
             // Resource textures
             foreach (HlslResourceTextureField field in resourceTextureFields)
@@ -549,22 +521,9 @@ partial class D2DPixelShaderDescriptorGenerator
                 writer.WriteLine($"SamplerState __sampler__{field.Name} : register(s{field.Index});");
             }
 
-            // Forward declarations
-            foreach (HlslMethod method in processedMethods)
-            {
-                writer.WriteLine(skipIfPresent: true);
-                writer.WriteLine(method.Signature);
-            }
-
-            // Captured methods
-            foreach (HlslMethod method in processedMethods)
-            {
-                writer.WriteLine(skipIfPresent: true);
-                writer.WriteLine(method.Declaration);
-            }
+            HlslSourceHelper.WriteMethodDeclarations(writer, processedMethods, typeMethodDeclarations);
 
             // Entry point
-            writer.WriteLine(skipIfPresent: true);
             writer.WriteLine(executeMethod);
 
             return writer.ToString();

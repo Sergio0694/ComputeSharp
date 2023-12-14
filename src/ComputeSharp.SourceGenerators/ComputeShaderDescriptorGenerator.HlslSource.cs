@@ -114,12 +114,14 @@ partial class ComputeShaderDescriptorGenerator
             token.ThrowIfCancellationRequested();
 
             // Process the discovered types and constants
-            ImmutableArray<HlslUserType> declaredTypes = HlslDefinitionsSyntaxProcessor.GetDeclaredTypes(
+            HlslDefinitionsSyntaxProcessor.GetDeclaredTypes(
                 diagnostics,
                 structDeclarationSymbol,
                 discoveredTypes,
                 instanceMethods,
-                constructors);
+                constructors,
+                out ImmutableArray<HlslUserType> typeDeclarations,
+                out ImmutableArray<string> typeMethodDeclarations);
 
             token.ThrowIfCancellationRequested();
 
@@ -136,12 +138,13 @@ partial class ComputeShaderDescriptorGenerator
                 threadsY,
                 threadsZ,
                 definedConstants,
-                declaredTypes,
                 resourceFields,
                 valueFields,
                 staticFields,
                 sharedBuffers,
                 processedMethods,
+                typeDeclarations,
+                typeMethodDeclarations,
                 isComputeShader,
                 implicitTextureType,
                 isSamplerUsed,
@@ -486,13 +489,14 @@ partial class ComputeShaderDescriptorGenerator
         /// <param name="threadsX">The thread ids value for the X axis.</param>
         /// <param name="threadsY">The thread ids value for the Y axis.</param>
         /// <param name="threadsZ">The thread ids value for the Z axis.</param>
-        /// <param name="definedConstants">The sequence of defined constants for the shader.</param>
-        /// <param name="declaredTypes">The sequence of declared types used by the shader.</param>
+        /// <param name="definedConstants"><inheritdoc cref="HlslSourceHelper.WriteTopDeclarations" path="/param[@name='definedConstants']/node()"/></param>
         /// <param name="resourceFields">The sequence of resource instance fields for the current shader.</param>
-        /// <param name="valueFields">The sequence of value instance fields for the current shader.</param>
-        /// <param name="staticFields">The sequence of static fields referenced by the shader.</param>
+        /// <param name="valueFields"><inheritdoc cref="HlslSourceHelper.WriteCapturedFields" path="/param[@name='valueFields']/node()"/></param>
+        /// <param name="staticFields"><inheritdoc cref="HlslSourceHelper.WriteTopDeclarations" path="/param[@name='staticFields']/node()"/></param>
         /// <param name="sharedBuffers">The sequence of shared buffers declared by the shader.</param>
-        /// <param name="processedMethods">The sequence of processed methods used by the shader.</param>
+        /// <param name="processedMethods"><inheritdoc cref="HlslSourceHelper.WriteTopDeclarations" path="/param[@name='processedMethods']/node()"/></param>
+        /// <param name="typeDeclarations"><inheritdoc cref="HlslSourceHelper.WriteTopDeclarations" path="/param[@name='typeDeclarations']/node()"/></param>
+        /// <param name="typeMethodDeclarations"><inheritdoc cref="HlslSourceHelper.WriteMethodDeclarations" path="/param[@name='typeMethodDeclarations']/node()"/></param>
         /// <param name="isComputeShader">Whether or not the current shader type is a compute shader.</param>
         /// <param name="implicitTextureType">The type of the implicit target texture, if present.</param>
         /// <param name="isSamplerUsed">Whether the static sampler is used by the shader.</param>
@@ -503,12 +507,13 @@ partial class ComputeShaderDescriptorGenerator
             int threadsY,
             int threadsZ,
             ImmutableArray<HlslConstant> definedConstants,
-            ImmutableArray<HlslUserType> declaredTypes,
             ImmutableArray<HlslResourceField> resourceFields,
             ImmutableArray<HlslValueField> valueFields,
             ImmutableArray<HlslStaticField> staticFields,
             ImmutableArray<HlslSharedBuffer> sharedBuffers,
             ImmutableArray<HlslMethod> processedMethods,
+            ImmutableArray<HlslUserType> typeDeclarations,
+            ImmutableArray<string> typeMethodDeclarations,
             bool isComputeShader,
             string? implicitTextureType,
             bool isSamplerUsed,
@@ -516,50 +521,21 @@ partial class ComputeShaderDescriptorGenerator
         {
             using IndentedTextWriter writer = new();
 
-            // Header
-            writer.WriteLine("""
-                // ================================================
-                //                  AUTO GENERATED
-                // ================================================
-                // This shader was created by ComputeSharp.
-                // See: https://github.com/Sergio0694/ComputeSharp.
-                """, isMultiline: true);
+            HlslSourceHelper.WriteHeader(writer);
 
             // Group size constants
-            writer.WriteLine();
             writer.WriteLine($"#define __GroupSize__get_X {threadsX}");
             writer.WriteLine($"#define __GroupSize__get_Y {threadsY}");
             writer.WriteLine($"#define __GroupSize__get_Z {threadsZ}");
 
-            // Define declarations
-            foreach (HlslConstant constant in definedConstants)
-            {
-                writer.WriteLine($"#define {constant.Name} {constant.Value}");
-            }
+            HlslSourceHelper.WriteTopDeclarations(
+                writer,
+                definedConstants,
+                staticFields,
+                processedMethods,
+                typeDeclarations,
+                includeTypeForwardDeclarations: true);
 
-            writer.WriteLine(skipIfPresent: true);
-
-            // Static fields
-            foreach (HlslStaticField field in staticFields)
-            {
-                if (field.Assignment is string assignment)
-                {
-                    writer.WriteLine($"{field.TypeDeclaration} {field.Name} = {assignment};");
-                }
-                else
-                {
-                    writer.WriteLine($"{field.TypeDeclaration} {field.Name};");
-                }
-            }
-
-            // Declared types
-            foreach (HlslUserType userType in declaredTypes)
-            {
-                writer.WriteLine(skipIfPresent: true);
-                writer.WriteLine(userType.Definition);
-            }
-
-            writer.WriteLine(skipIfPresent: true);
             writer.WriteLine("cbuffer _ : register(b0)");
 
             // Captured variables
@@ -569,11 +545,7 @@ partial class ComputeShaderDescriptorGenerator
                 writer.WriteLine("uint __y;");
                 writer.WriteLineIf(isComputeShader, "uint __z;");
 
-                // User-defined values
-                foreach (HlslValueField valueField in valueFields)
-                {
-                    writer.WriteLine($"{valueField.Type} {valueField.Name};");
-                }
+                HlslSourceHelper.WriteCapturedFields(writer, valueFields);
             }
 
             int constantBuffersCount = 1;
@@ -621,22 +593,9 @@ partial class ComputeShaderDescriptorGenerator
                 writer.WriteLine($"groupshared {buffer.Type} {buffer.Name} [{count}];");
             }
 
-            // Forward declarations
-            foreach (HlslMethod method in processedMethods)
-            {
-                writer.WriteLine(skipIfPresent: true);
-                writer.WriteLine(method.Signature);
-            }
-
-            // Captured methods
-            foreach (HlslMethod method in processedMethods)
-            {
-                writer.WriteLine(skipIfPresent: true);
-                writer.WriteLine(method.Declaration);
-            }
+            HlslSourceHelper.WriteMethodDeclarations(writer, processedMethods, typeMethodDeclarations);
 
             // Entry point
-            writer.WriteLine(skipIfPresent: true);
             writer.WriteLine("[NumThreads(__GroupSize__get_X, __GroupSize__get_Y, __GroupSize__get_Z)]");
             writer.WriteLine(executeMethod);
 

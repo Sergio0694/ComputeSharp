@@ -143,15 +143,19 @@ internal static class HlslDefinitionsSyntaxProcessor
     /// <param name="types">The sequence of discovered custom types.</param>
     /// <param name="instanceMethods">The collection of discovered instance methods for custom struct types.</param>
     /// <param name="constructors">The collection of discovered constructors for custom struct types.</param>
-    /// <returns>A sequence of custom type definitions to add to the shader source.</returns>
-    public static ImmutableArray<HlslUserType> GetDeclaredTypes(
+    /// <param name="typeDeclarations">The collection of declarations of all custom types.</param>
+    /// <param name="methodDeclarations">The collection of implementations of all methods in all custom types.</param>
+    public static void GetDeclaredTypes(
         ImmutableArrayBuilder<DiagnosticInfo> diagnostics,
         INamedTypeSymbol structDeclarationSymbol,
         IEnumerable<INamedTypeSymbol> types,
         IReadOnlyDictionary<IMethodSymbol, MethodDeclarationSyntax> instanceMethods,
-        IReadOnlyDictionary<IMethodSymbol, (MethodDeclarationSyntax, MethodDeclarationSyntax)> constructors)
+        IReadOnlyDictionary<IMethodSymbol, (MethodDeclarationSyntax, MethodDeclarationSyntax)> constructors,
+        out ImmutableArray<HlslUserType> typeDeclarations,
+        out ImmutableArray<string> methodDeclarations)
     {
-        using ImmutableArrayBuilder<HlslUserType> builder = new();
+        using ImmutableArrayBuilder<HlslUserType> typeDeclarationsBuilder = new();
+        using ImmutableArrayBuilder<string> methodDeclarationsBuilder = new();
 
         IReadOnlyCollection<INamedTypeSymbol> invalidTypes;
 
@@ -223,11 +227,33 @@ internal static class HlslDefinitionsSyntaxProcessor
                 }
             }
 
-            // Declare the methods of the current type
-            structDeclaration = structDeclaration.WithMembers(structDeclaration.Members.AddRange(GatherInstanceMethods(type, instanceMethods, constructors)));
+            using (ImmutableArrayBuilder<MethodDeclarationSyntax> methodDefinitions = new())
+            {
+                // Forward declarations for all methods, and implementations.
+                // We need these to ensure things work with arbitrary ordering.
+                foreach (MethodDeclarationSyntax methodDeclaration in GatherInstanceMethods(type, instanceMethods, constructors))
+                {
+                    methodDefinitions.Add(methodDeclaration.AsDefinition());
+
+                    // We need to normalize the whitespaces here, as this methhod declaration will not be added to
+                    // the list of members for the struct declaration, but rather it will be written directly into
+                    // the resulting HLSL source (as the implementation of this forward declaration). For the same
+                    // reason, we also need to change the identifier to also include the containing type with '::'.
+                    string methodImplementation =
+                        methodDeclaration
+                        .WithIdentifier(Identifier($"{structType}::{methodDeclaration.Identifier.Text}"))
+                        .NormalizeWhitespace(eol: "\n")
+                        .ToFullString();
+
+                    methodDeclarationsBuilder.Add(methodImplementation);
+                }
+
+                // Add all method forward declarations to the current type
+                structDeclaration = structDeclaration.WithMembers(structDeclaration.Members.AddRange(methodDefinitions.AsEnumerable()));
+            }
 
             // Insert the trailing ; right after the closing bracket (after normalization)
-            builder.Add((
+            typeDeclarationsBuilder.Add((
                 structType,
                 structDeclaration
                     .NormalizeWhitespace(eol: "\n")
@@ -241,7 +267,8 @@ internal static class HlslDefinitionsSyntaxProcessor
             diagnostics.Add(InvalidDiscoveredType, structDeclarationSymbol, structDeclarationSymbol, invalidType);
         }
 
-        return builder.ToImmutable();
+        typeDeclarations = typeDeclarationsBuilder.ToImmutable();
+        methodDeclarations = methodDeclarationsBuilder.ToImmutable();
     }
 
     /// <summary>
