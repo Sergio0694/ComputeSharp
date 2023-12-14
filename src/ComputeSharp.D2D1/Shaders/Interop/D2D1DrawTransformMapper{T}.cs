@@ -3,7 +3,6 @@ using System.Drawing;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using ComputeSharp.D2D1.Descriptors;
-using ComputeSharp.D2D1.Interop.Effects;
 using ComputeSharp.D2D1.Shaders.Interop.Effects.TransformMappers;
 using ComputeSharp.Win32;
 

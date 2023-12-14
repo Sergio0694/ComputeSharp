@@ -1,8 +1,8 @@
 using System;
 using System.Drawing;
-using ComputeSharp.D2D1.Shaders.Interop.Effects.TransformMappers;
+using ComputeSharp.D2D1.Interop;
 
-namespace ComputeSharp.D2D1.Interop.Effects;
+namespace ComputeSharp.D2D1.Shaders.Interop.Effects.TransformMappers;
 
 /// <summary>
 /// A base type to support non-generic <see cref="D2D1DrawTransformMapper{T}"/> uses.
