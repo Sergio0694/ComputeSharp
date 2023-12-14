@@ -547,6 +547,11 @@ internal sealed partial class ShaderSourceRewriter(
                             return updatedNode;
                         }
 
+                        // Add a marker to avoid endless recursion in case we have any loops in the graph.
+                        // This will be updated right after rewriting this method completes. This temporary
+                        // value is fine, as the actual rewritten method is not used while rewriting HLSL.
+                        this.staticMethods.Add(method, null!);
+
                         ShaderSourceRewriter shaderSourceRewriter = new(
                             this.shaderType,
                             SemanticModel,
@@ -561,7 +566,7 @@ internal sealed partial class ShaderSourceRewriter(
 
                         MethodDeclarationSyntax processedMethod = shaderSourceRewriter.Visit(methodNode)!.WithoutTrivia();
 
-                        this.staticMethods.Add(method, processedMethod.WithIdentifier(Identifier(methodIdentifier)));
+                        this.staticMethods[method] = processedMethod.WithIdentifier(Identifier(methodIdentifier));
                     }
 
                     return updatedNode.WithExpression(IdentifierName(methodIdentifier));
@@ -602,11 +607,13 @@ internal sealed partial class ShaderSourceRewriter(
                             return updatedNode;
                         }
 
+                        this.instanceMethods[method] = null!;
+
                         ShaderSourceRewriter shaderSourceRewriter = new(
                             this.shaderType,
                             SemanticModel,
                             DiscoveredTypes,
-                            this.instanceMethods,
+                            this.staticMethods,
                             this.instanceMethods,
                             this.constructors,
                             ConstantDefinitions,
@@ -616,7 +623,7 @@ internal sealed partial class ShaderSourceRewriter(
 
                         MethodDeclarationSyntax processedMethod = shaderSourceRewriter.Visit(methodNode)!.WithoutTrivia();
 
-                        this.instanceMethods.Add(method, processedMethod);
+                        this.instanceMethods[method] = processedMethod;
                     }
 
                     return updatedNode;
@@ -691,11 +698,13 @@ internal sealed partial class ShaderSourceRewriter(
                     Diagnostics.Add(InvalidBaseConstructorDeclaration, node, constructor);
                 }
 
+                this.constructors[constructor] = default!;
+
                 ShaderSourceRewriter shaderSourceRewriter = new(
                     this.shaderType,
                     SemanticModel,
                     DiscoveredTypes,
-                    this.instanceMethods,
+                    this.staticMethods,
                     this.instanceMethods,
                     this.constructors,
                     ConstantDefinitions,
@@ -757,7 +766,7 @@ internal sealed partial class ShaderSourceRewriter(
                     .WithParameterList(processedMethod.ParameterList)
                     .WithBody(processedMethod.Body);
 
-                this.constructors.Add(constructor, (stubNode, ctorNode));
+                this.constructors[constructor] = (stubNode, ctorNode);
             }
 
             // Rewrite the expression to invoke the rewritten constructor:

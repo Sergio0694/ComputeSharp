@@ -1573,6 +1573,72 @@ public class DiagnosticsTests
         VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0047", "CMPS0062");
     }
 
+    [TestMethod]
+    public void RecursiveMembers()
+    {
+        const string source = """
+            using ComputeSharp;
+
+            internal static class ClassWithRecursiveMembers
+            {
+                public static int A(int x)
+                {
+                    return B(x);
+                }
+
+                public static int B(int x)
+                {
+                    if (x <= 0)
+                    {
+                        return 0;
+                    }
+
+                    return A(x - 1);
+                }
+            }
+
+            public struct StructTypeWithRecursiveMembers
+            {
+                public int x;
+
+                public int Fib()
+                {
+                    if (x <= 0)
+                    {
+                        return x;
+                    }
+
+                    x--;
+
+                    return Fib();
+                }
+            }
+
+            [ThreadGroupSize(DefaultThreadGroupSizes.X)]
+            [GeneratedComputeShaderDescriptor]
+            internal readonly struct ShaderWithRecursiveMembers : IComputeShader
+            {
+                public readonly ReadWriteBuffer<int> results;
+
+                public void Execute()
+                {
+                    results[0] = ClassWithRecursiveMembers.A(42);
+
+                    StructTypeWithRecursiveMembers instance;
+                    instance.x = 42;
+
+                    results[1] = instance.Fib();
+                }
+            }
+            """;
+
+        // This should be correctly handled by the HLSL rewriter, and not cause a StackOverflowException.
+        // The HLSL compilation is expected to fail because recursion is not actually supported:
+        //
+        // "error: recursive functions not allowed"
+        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0046");
+    }
+
     /// <summary>
     /// Verifies the output of a source generator.
     /// </summary>
