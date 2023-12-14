@@ -35,7 +35,11 @@ internal static unsafe class ID2D1EffectExtensions
             return default;
         }
 
-        byte[] buffer = ArrayPool<byte>.Shared.Rent(constantBufferSize);
+        byte[]? bufferArray = null;
+
+        Span<byte> buffer = constantBufferSize <= 64
+            ? stackalloc byte[64]
+            : bufferArray = ArrayPool<byte>.Shared.Rent(constantBufferSize);
 
         fixed (byte* p = buffer)
         {
@@ -49,7 +53,10 @@ internal static unsafe class ID2D1EffectExtensions
 
         T shader = T.CreateFromConstantBuffer(buffer);
 
-        ArrayPool<byte>.Shared.Return(buffer);
+        if (bufferArray is not null)
+        {
+            ArrayPool<byte>.Shared.Return(bufferArray);
+        }
 
         return shader;
     }
