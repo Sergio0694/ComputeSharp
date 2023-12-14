@@ -5,7 +5,7 @@ using ComputeSharp.Interop;
 using ComputeSharp.Tests.Misc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-#pragma warning disable IDE0008, IDE0022, IDE0009
+#pragma warning disable IDE0008, IDE0022, IDE0009, IDE0290
 
 namespace ComputeSharp.Tests
 {
@@ -871,6 +871,327 @@ namespace ComputeSharp.Tests
             private static int Sum(int x, int y)
             {
                 return x + y;
+            }
+        }
+
+        [TestMethod]
+        public void ShaderWithStructMethodCallingOtherStructMethod_IsProcessedCorrectly()
+        {
+            ShaderInfo info = ReflectionServices.GetShaderInfo<ShaderWithStructMethodCallingOtherStructMethod>();
+
+            Assert.AreEqual(
+                """
+                // ================================================
+                //                  AUTO GENERATED
+                // ================================================
+                // This shader was created by ComputeSharp.
+                // See: https://github.com/Sergio0694/ComputeSharp.
+
+                #define __GroupSize__get_X 64
+                #define __GroupSize__get_Y 1
+                #define __GroupSize__get_Z 1
+
+                struct ComputeSharp_Tests_ShaderCompilerTests_StructWithInstanceMethod1;
+                struct ComputeSharp_Tests_ShaderCompilerTests_StructWithInstanceMethod2;
+
+                struct ComputeSharp_Tests_ShaderCompilerTests_StructWithInstanceMethod1
+                {
+                    int InstanceMethod();
+                };
+
+                struct ComputeSharp_Tests_ShaderCompilerTests_StructWithInstanceMethod2
+                {
+                    int InstanceMethod();
+                };
+
+                cbuffer _ : register(b0)
+                {
+                    uint __x;
+                    uint __y;
+                    uint __z;
+                }
+
+                RWStructuredBuffer<int> __reserved__buffer : register(u0);
+
+                int ComputeSharp_Tests_ShaderCompilerTests_StructWithInstanceMethod1::InstanceMethod()
+                {
+                    ComputeSharp_Tests_ShaderCompilerTests_StructWithInstanceMethod2 bar = (ComputeSharp_Tests_ShaderCompilerTests_StructWithInstanceMethod2)0;
+                    return bar.InstanceMethod();
+                }
+
+                int ComputeSharp_Tests_ShaderCompilerTests_StructWithInstanceMethod2::InstanceMethod()
+                {
+                    return 42;
+                }
+
+                [NumThreads(__GroupSize__get_X, __GroupSize__get_Y, __GroupSize__get_Z)]
+                void Execute(uint3 ThreadIds : SV_DispatchThreadID)
+                {
+                    if (ThreadIds.x < __x && ThreadIds.y < __y && ThreadIds.z < __z)
+                    {
+                        ComputeSharp_Tests_ShaderCompilerTests_StructWithInstanceMethod1 foo = (ComputeSharp_Tests_ShaderCompilerTests_StructWithInstanceMethod1)0;
+                        __reserved__buffer[ThreadIds.x] = foo.InstanceMethod();
+                    }
+                }
+                """,
+                info.HlslSource);
+        }
+
+        // See https://github.com/Sergio0694/ComputeSharp/issues/479
+        [AutoConstructor]
+        [ThreadGroupSize(DefaultThreadGroupSizes.X)]
+        [GeneratedComputeShaderDescriptor]
+        public readonly partial struct ShaderWithStructMethodCallingOtherStructMethod : IComputeShader
+        {
+            private readonly ReadWriteBuffer<int> buffer;
+
+            public void Execute()
+            {
+                StructWithInstanceMethod1 foo = default;
+
+                buffer[ThreadIds.X] = foo.InstanceMethod();
+            }
+        }
+
+        public struct StructWithInstanceMethod1
+        {
+            public int InstanceMethod()
+            {
+                StructWithInstanceMethod2 bar = default;
+
+                return bar.InstanceMethod();
+            }
+        }
+
+        public struct StructWithInstanceMethod2
+        {
+            public int InstanceMethod()
+            {
+                return 42;
+            }
+        }
+
+        [TestMethod]
+        public void ShaderWithAllSupportedMembers_IsProcessedCorrectly()
+        {
+            ShaderInfo info = ReflectionServices.GetShaderInfo<ShaderWithAllSupportedMembers>();
+
+            Assert.AreEqual(
+                """
+                // ================================================
+                //                  AUTO GENERATED
+                // ================================================
+                // This shader was created by ComputeSharp.
+                // See: https://github.com/Sergio0694/ComputeSharp.
+
+                #define __GroupSize__get_X 64
+                #define __GroupSize__get_Y 1
+                #define __GroupSize__get_Z 1
+                #define __ComputeSharp_Tests_ShaderCompilerTests_ExternalContainerClass__Factor 8
+                #define __ComputeSharp_Tests_ShaderCompilerTests_ShaderWithAllSupportedMembers__PI 3.14
+
+                struct ComputeSharp_Tests_ShaderCompilerTests_StructType1;
+                struct ComputeSharp_Tests_ShaderCompilerTests_StructType2;
+
+                int InstanceMethodInShader();
+
+                static float StaticMethodInShader(float x);
+
+                static float ComputeSharp_Tests_ShaderCompilerTests_StructType1_StaticMethod(int x);
+
+                static float ComputeSharp_Tests_ShaderCompilerTests_StructType2_StaticMethod(int x);
+
+                static const float Init = abs(__ComputeSharp_Tests_ShaderCompilerTests_ShaderWithAllSupportedMembers__PI);
+                static int Temp;
+                static int ComputeSharp_Tests_ShaderCompilerTests_ExternalContainerClass_Temp;
+                static const float ComputeSharp_Tests_ShaderCompilerTests_ExternalContainerClass_PI2 = 3.14 * 2;
+
+                struct ComputeSharp_Tests_ShaderCompilerTests_StructType1
+                {
+                    int X;
+                    float Y;
+                    float Combine(ComputeSharp_Tests_ShaderCompilerTests_StructType2 other);
+                    static ComputeSharp_Tests_ShaderCompilerTests_StructType1 __ctor(int x);
+                    void __ctor__init(int x);
+                };
+
+                struct ComputeSharp_Tests_ShaderCompilerTests_StructType2
+                {
+                    float2 V;
+                    float Combine(ComputeSharp_Tests_ShaderCompilerTests_StructType1 other);
+                };
+
+                cbuffer _ : register(b0)
+                {
+                    uint __x;
+                    uint __y;
+                    uint __z;
+                    int number;
+                    float4 __reserved__vector;
+                }
+
+                RWStructuredBuffer<int> __reserved__buffer : register(u0);
+
+                float ComputeSharp_Tests_ShaderCompilerTests_StructType1::Combine(ComputeSharp_Tests_ShaderCompilerTests_StructType2 other)
+                {
+                    return Y + other.V.y;
+                }
+
+                static ComputeSharp_Tests_ShaderCompilerTests_StructType1 ComputeSharp_Tests_ShaderCompilerTests_StructType1::__ctor(int x)
+                {
+                    ComputeSharp_Tests_ShaderCompilerTests_StructType1 __this = (ComputeSharp_Tests_ShaderCompilerTests_StructType1)0;
+                    __this.__ctor__init(x);
+                    return __this;
+                }
+
+                void ComputeSharp_Tests_ShaderCompilerTests_StructType1::__ctor__init(int x)
+                {
+                    X = x;
+                    Y = (float)0;
+                }
+
+                float ComputeSharp_Tests_ShaderCompilerTests_StructType2::Combine(ComputeSharp_Tests_ShaderCompilerTests_StructType1 other)
+                {
+                    return V.x + other.X;
+                }
+
+                int InstanceMethodInShader()
+                {
+                    return (int)(number + __reserved__vector.x);
+                }
+
+                static float StaticMethodInShader(float x)
+                {
+                    return x + 1;
+                }
+
+                static float ComputeSharp_Tests_ShaderCompilerTests_StructType1_StaticMethod(int x)
+                {
+                    return x * 2;
+                }
+
+                static float ComputeSharp_Tests_ShaderCompilerTests_StructType2_StaticMethod(int x)
+                {
+                    return x * 4;
+                }
+
+                [NumThreads(__GroupSize__get_X, __GroupSize__get_Y, __GroupSize__get_Z)]
+                void Execute(uint3 ThreadIds : SV_DispatchThreadID)
+                {
+                    if (ThreadIds.x < __x && ThreadIds.y < __y && ThreadIds.z < __z)
+                    {
+                        ComputeSharp_Tests_ShaderCompilerTests_StructType1 type1 = ComputeSharp_Tests_ShaderCompilerTests_StructType1::__ctor(__ComputeSharp_Tests_ShaderCompilerTests_ExternalContainerClass__Factor);
+                        ComputeSharp_Tests_ShaderCompilerTests_StructType2 type2 = (ComputeSharp_Tests_ShaderCompilerTests_StructType2)0;
+                        float combine1 = type1.Combine(type2);
+                        float combine2 = type2.Combine(type1);
+                        combine1 += ComputeSharp_Tests_ShaderCompilerTests_StructType1_StaticMethod(Temp++);
+                        combine2 += ComputeSharp_Tests_ShaderCompilerTests_StructType2_StaticMethod(ComputeSharp_Tests_ShaderCompilerTests_ExternalContainerClass_Temp++);
+                        float dummy = Init + ComputeSharp_Tests_ShaderCompilerTests_ExternalContainerClass_PI2;
+                        __reserved__buffer[ThreadIds.x] = (int)(combine1 + combine2 + dummy);
+                    }
+                }
+                """,
+                info.HlslSource);
+        }
+
+        [AutoConstructor]
+        [ThreadGroupSize(DefaultThreadGroupSizes.X)]
+        [GeneratedComputeShaderDescriptor]
+        internal readonly partial struct ShaderWithAllSupportedMembers : IComputeShader
+        {
+            private const float PI = 3.14f;
+
+            private static readonly float Init = Hlsl.Abs(PI);
+            private static int Temp;
+
+            private readonly ReadWriteBuffer<int> buffer;
+            private readonly int number;
+            private readonly float4 vector;
+
+            public void Execute()
+            {
+                StructType1 type1 = new(ExternalContainerClass.Factor);
+                StructType2 type2 = default;
+
+                float combine1 = type1.Combine(type2);
+                float combine2 = type2.Combine(type1);
+
+                combine1 += StructType1.StaticMethod(Temp++);
+                combine2 += StructType2.StaticMethod(ExternalContainerClass.Temp++);
+
+                float dummy = Init + ExternalContainerClass.PI2;
+
+                buffer[ThreadIds.X] = (int)(combine1 + combine2 + dummy);
+            }
+
+            public int InstanceMethodInShader()
+            {
+                return (int)(number + vector.X);
+            }
+
+            public static float StaticMethodInShader(float x)
+            {
+                return x + 1;
+            }
+        }
+
+        public static class ExternalContainerClass
+        {
+            public const int Factor = 8;
+
+            public static readonly float PI2 = 3.14f * 2;
+            public static int Temp;
+        }
+
+        internal struct StructType1
+        {
+            public int X;
+            public float Y;
+
+            public StructType1(int x)
+            {
+                X = x;
+                Y = default;
+            }
+
+            public float Combine(StructType2 other)
+            {
+                return Y + other.V.Y;
+            }
+
+            public float InstanceMethod()
+            {
+                StructType2 other = default;
+                other.V = ExternalContainerClass.PI2;
+
+                return Y + other.Combine(default) + StructType2.StaticMethod(X);
+            }
+
+            public static float StaticMethod(int x)
+            {
+                return x * 2;
+            }
+        }
+
+        internal struct StructType2
+        {
+            public float2 V;
+
+            public float Combine(StructType1 other)
+            {
+                return V.X + other.X;
+            }
+
+            public float InstanceMethod()
+            {
+                StructType1 other = new(ExternalContainerClass.Temp);
+
+                return V.X + other.Combine(default) + StructType1.StaticMethod((int)V.X);
+            }
+
+            public static float StaticMethod(int x)
+            {
+                return x * 4;
             }
         }
     }

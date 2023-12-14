@@ -39,6 +39,12 @@ public class EffectsTests
     }
 
     [TestMethod]
+    public void InvertWithUserTypeAndMutuallyInvokingMethods()
+    {
+        D2D1TestRunner.RunAndCompareShader(new InvertWithUserTypeAndMutuallyInvokingMethods(), null, "Landscape.png", "Landscape_Inverted.png");
+    }
+
+    [TestMethod]
     public void Pixelate()
     {
         D2D1TestRunner.RunAndCompareShader(
