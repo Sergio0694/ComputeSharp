@@ -16,8 +16,12 @@ internal unsafe partial struct PixelShaderEffect
     /// </summary>
     /// <param name="effectImpl">The resulting effect factory.</param>
     /// <returns>The <c>HRESULT</c> for the operation.</returns>
+    /// <remarks>
+    /// The return type is intentionally <see langword="void"/><c>*</c> because delegate targets are considered
+    /// visible for reflection, so not using <see cref="IUnknown"/> avoids metadata for it being rooted unnecessarily.
+    /// </remarks>
     [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-    public delegate int FactoryDelegate(IUnknown** effectImpl);
+    public delegate int FactoryDelegate(void** effectImpl);
 
     /// <summary>
     /// A base type with global values for pixel shader effects.
@@ -153,9 +157,9 @@ internal unsafe partial struct PixelShaderEffect
         }
 
         /// <inheritdoc cref="FactoryDelegate"/>
-        private static int CreateEffect(IUnknown** effectImpl)
+        private static int CreateEffect(void** effectImpl)
         {
-            return PixelShaderEffect.Factory(Instance, effectImpl);
+            return PixelShaderEffect.Factory(Instance, (IUnknown**)effectImpl);
         }
     }
 }
