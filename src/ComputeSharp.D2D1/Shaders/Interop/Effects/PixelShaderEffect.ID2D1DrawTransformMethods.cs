@@ -72,7 +72,7 @@ partial struct PixelShaderEffect
 
                 if (@this->d2D1TransformMapper.Get() is not null)
                 {
-                    // Forward to the current ID2D1TransformMapper instance
+                    // Forward to the current ID2D1DrawTransformMapper instance
                     @this->d2D1TransformMapper.Get()->MapOutputRectToInputRects(outputRect, inputRects, inputRectsCount).Assert();
                 }
                 else
@@ -129,7 +129,7 @@ partial struct PixelShaderEffect
                         constantBufferSize: @this->GetGlobals().ConstantBufferSize,
                         d2D1DrawInfo: @this->d2D1DrawInfo.Get()).Assert();
 
-                    // Forward the call to the input ID2D1TransformMapper instance
+                    // Forward the call to the input ID2D1DrawTransformMapper instance
                     HRESULT hresult = @this->d2D1TransformMapper.Get()->MapInputRectsToOutputRect(
                         updateContext: (ID2D1DrawInfoUpdateContext*)d2D1DrawInfoUpdateContext.Get(),
                         inputRects: inputRects,
@@ -212,7 +212,7 @@ partial struct PixelShaderEffect
 
                 if (@this->d2D1TransformMapper.Get() is not null)
                 {
-                    // Forward to the current ID2D1TransformMapper instance
+                    // Forward to the current ID2D1DrawTransformMapper instance
                     @this->d2D1TransformMapper.Get()->MapInvalidRect(inputIndex, invalidInputRect, invalidOutputRect).Assert();
                 }
                 else

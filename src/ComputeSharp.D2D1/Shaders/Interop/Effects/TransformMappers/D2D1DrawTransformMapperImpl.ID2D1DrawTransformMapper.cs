@@ -3,44 +3,43 @@ using System.Drawing;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using ComputeSharp.D2D1.Extensions;
-using ComputeSharp.D2D1.Interop.Effects;
 using ComputeSharp.Win32;
 
 namespace ComputeSharp.D2D1.Shaders.Interop.Effects.TransformMappers;
 
 /// <inheritdoc/>
-unsafe partial struct D2D1TransformMapperImpl
+unsafe partial struct D2D1DrawTransformMapperImpl
 {
     /// <summary>
-    /// The implementation for <see cref="ID2D1TransformMapper"/>.
+    /// The implementation for <see cref="ID2D1DrawTransformMapper"/>.
     /// </summary>
-    private static class ID2D1TransformMapperMethods
+    private static class ID2D1DrawTransformMapperMethods
     {
-        /// <inheritdoc cref="D2D1TransformMapperImpl.QueryInterface"/>
+        /// <inheritdoc cref="D2D1DrawTransformMapperImpl.QueryInterface"/>
         [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
-        public static int QueryInterface(D2D1TransformMapperImpl* @this, Guid* riid, void** ppvObject)
+        public static int QueryInterface(D2D1DrawTransformMapperImpl* @this, Guid* riid, void** ppvObject)
         {
             return @this->QueryInterface(riid, ppvObject);
         }
 
-        /// <inheritdoc cref="D2D1TransformMapperImpl.AddRef"/>
+        /// <inheritdoc cref="D2D1DrawTransformMapperImpl.AddRef"/>
         [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
-        public static uint AddRef(D2D1TransformMapperImpl* @this)
+        public static uint AddRef(D2D1DrawTransformMapperImpl* @this)
         {
             return @this->AddRef();
         }
 
-        /// <inheritdoc cref="D2D1TransformMapperImpl.Release"/>
+        /// <inheritdoc cref="D2D1DrawTransformMapperImpl.Release"/>
         [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
-        public static uint Release(D2D1TransformMapperImpl* @this)
+        public static uint Release(D2D1DrawTransformMapperImpl* @this)
         {
             return @this->Release();
         }
 
-        /// <inheritdoc cref="ID2D1TransformMapper.MapInputRectsToOutputRect"/>
+        /// <inheritdoc cref="ID2D1DrawTransformMapper.MapInputRectsToOutputRect"/>
         [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         public static int MapInputRectsToOutputRect(
-            D2D1TransformMapperImpl* @this,
+            D2D1DrawTransformMapperImpl* @this,
             ID2D1DrawInfoUpdateContext* d2D1DrawInfoUpdateContext,
             RECT* inputRects,
             RECT* inputOpaqueSubRects,
@@ -63,7 +62,7 @@ unsafe partial struct D2D1TransformMapperImpl
             // Invoke MapInputsToOutput and handle exceptions so they don't cross the ABI boundary
             try
             {
-                Unsafe.As<ID2D1TransformMapperInterop>(@this->transformMapperHandle.Target!).MapInputsToOutput(
+                Unsafe.As<ID2D1DrawTransformMapperInterop>(@this->transformMapperHandle.Target!).MapInputsToOutput(
                     d2D1DrawInfoUpdateContext,
                     inputs,
                     opaqueInputs,
@@ -81,10 +80,10 @@ unsafe partial struct D2D1TransformMapperImpl
             return S.S_OK;
         }
 
-        /// <inheritdoc cref="ID2D1TransformMapper.MapOutputRectToInputRects"/>
+        /// <inheritdoc cref="ID2D1DrawTransformMapper.MapOutputRectToInputRects"/>
         [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         public static int MapOutputRectToInputRects(
-            D2D1TransformMapperImpl* @this,
+            D2D1DrawTransformMapperImpl* @this,
             RECT* outputRect,
             RECT* inputRects,
             uint inputRectsCount)
@@ -100,7 +99,7 @@ unsafe partial struct D2D1TransformMapperImpl
             // Handle exceptions, as mentioned above
             try
             {
-                Unsafe.As<ID2D1TransformMapperInterop>(@this->transformMapperHandle.Target!).MapOutputToInputs(in output, inputs);
+                Unsafe.As<ID2D1DrawTransformMapperInterop>(@this->transformMapperHandle.Target!).MapOutputToInputs(in output, inputs);
             }
             catch (Exception e)
             {
@@ -115,10 +114,10 @@ unsafe partial struct D2D1TransformMapperImpl
             return S.S_OK;
         }
 
-        /// <inheritdoc cref="ID2D1TransformMapper.MapInvalidRect"/>
+        /// <inheritdoc cref="ID2D1DrawTransformMapper.MapInvalidRect"/>
         [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         public static int MapInvalidRect(
-            D2D1TransformMapperImpl* @this,
+            D2D1DrawTransformMapperImpl* @this,
             uint inputIndex,
             RECT invalidInputRect,
             RECT* invalidOutputRect)
@@ -129,7 +128,7 @@ unsafe partial struct D2D1TransformMapperImpl
             // Handle exceptions once again
             try
             {
-                Unsafe.As<ID2D1TransformMapperInterop>(@this->transformMapperHandle.Target!).MapInvalidOutput((int)inputIndex, invalidInput, out invalidOutput);
+                Unsafe.As<ID2D1DrawTransformMapperInterop>(@this->transformMapperHandle.Target!).MapInvalidOutput((int)inputIndex, invalidInput, out invalidOutput);
             }
             catch (Exception e)
             {

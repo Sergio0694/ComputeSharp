@@ -77,10 +77,10 @@ file static class D2D1AffineTransformMapper
 }
 
 /// <summary>
-/// A custom <see cref="D2D1TransformMapper{T, TParameters}"/> implementation for an affine transform.
+/// A custom <see cref="D2D1DrawTransformMapper{T, TParameters}"/> implementation for an affine transform.
 /// </summary>
 /// <typeparam name="T">The type of D2D1 pixel shader associated to the transform mapper.</typeparam>
-internal abstract class D2D1AffineTransformMapper<T> : D2D1TransformMapper<T, Matrix3x2>
+internal abstract class D2D1AffineTransformMapper<T> : D2D1DrawTransformMapper<T, Matrix3x2>
     where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
 {
     /// <inheritdoc/>
@@ -130,9 +130,9 @@ internal abstract class D2D1AffineTransformMapper<T> : D2D1TransformMapper<T, Ma
     public sealed class DynamicMatrix : D2D1AffineTransformMapper<T>
     {
         /// <summary>
-        /// Gets the <see cref="D2D1TransformMapperFactory{T}.Accessor{TResult}"/> instance to get the dynamic affine transform matrix.
+        /// Gets the <see cref="D2D1DrawTransformMapper{T}.Accessor{TResult}"/> instance to get the dynamic affine transform matrix.
         /// </summary>
-        public required D2D1TransformMapperFactory<T>.Accessor<Matrix3x2> Accessor { get; init; }
+        public required Accessor<Matrix3x2> Accessor { get; init; }
 
         /// <inheritdoc/>
         protected override Matrix3x2 GetParameters(D2D1DrawInfoUpdateContext<T> drawInfoUpdateContext)

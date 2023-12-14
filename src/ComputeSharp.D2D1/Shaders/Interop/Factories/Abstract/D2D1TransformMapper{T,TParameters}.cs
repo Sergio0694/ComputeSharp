@@ -12,7 +12,7 @@ namespace ComputeSharp.D2D1.Shaders.Interop.Factories.Abstract;
 /// </summary>
 /// <typeparam name="T">The type of D2D1 pixel shader associated to the transform mapper.</typeparam>
 /// <typeparam name="TParameters">The type of parameters that the transform mapper will use.</typeparam>
-internal abstract class D2D1TransformMapper<T, TParameters> : D2D1TransformMapper<T>
+internal abstract class D2D1DrawTransformMapper<T, TParameters> : D2D1DrawTransformMapper<T>
     where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
     where TParameters : unmanaged
 {
@@ -22,7 +22,7 @@ internal abstract class D2D1TransformMapper<T, TParameters> : D2D1TransformMappe
     private TParameters parameters;
 
     /// <inheritdoc/>
-    public override void MapInputsToOutput(
+    public sealed override void MapInputsToOutput(
         D2D1DrawInfoUpdateContext<T> drawInfoUpdateContext,
         ReadOnlySpan<Rectangle> inputs,
         ReadOnlySpan<Rectangle> opaqueInputs,
@@ -56,7 +56,7 @@ internal abstract class D2D1TransformMapper<T, TParameters> : D2D1TransformMappe
     }
 
     /// <inheritdoc/>
-    public override void MapOutputToInputs(in Rectangle output, Span<Rectangle> inputs)
+    public sealed override void MapOutputToInputs(in Rectangle output, Span<Rectangle> inputs)
     {
         Rectangle64 output64 = Rectangle64.FromRectangle(output);
 
@@ -66,7 +66,7 @@ internal abstract class D2D1TransformMapper<T, TParameters> : D2D1TransformMappe
     }
 
     /// <inheritdoc/>
-    public override void MapInvalidOutput(int inputIndex, in Rectangle invalidInput, out Rectangle invalidOutput)
+    public sealed override void MapInvalidOutput(int inputIndex, in Rectangle invalidInput, out Rectangle invalidOutput)
     {
         Rectangle64 output64 = Rectangle64.FromRectangle(invalidInput);
 

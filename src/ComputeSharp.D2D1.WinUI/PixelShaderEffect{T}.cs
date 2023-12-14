@@ -54,7 +54,7 @@ public sealed partial class PixelShaderEffect<T> : IReferenceTrackedObject, ICan
     /// <summary>
     /// The backing field for <see cref="TransformMapper"/>.
     /// </summary>
-    private D2D1TransformMapper<T>? transformMapper;
+    private D2D1DrawTransformMapper<T>? transformMapper;
 
     /// <summary>
     /// The backing field for <see cref="CacheOutput"/>.

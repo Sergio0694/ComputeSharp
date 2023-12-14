@@ -479,9 +479,9 @@ public sealed partial class BokehBlurEffect
     internal sealed partial class VerticalConvolution
     {
         /// <summary>
-        /// The <see cref="D2D1TransformMapper{T}"/> for the shader.
+        /// The <see cref="D2D1DrawTransformMapper{T}"/> for the shader.
         /// </summary>
-        public static D2D1TransformMapper<Shader> Transform { get; } = D2D1TransformMapperFactory<Shader>.Inflate(static (in Shader shader) => (0, shader.kernelLength, 0, shader.kernelLength));
+        public static D2D1DrawTransformMapper<Shader> Transform { get; } = D2D1DrawTransformMapper<Shader>.Inflate(static (in Shader shader) => (0, shader.kernelLength, 0, shader.kernelLength));
 
         /// <summary>
         /// Kernel for the vertical convolution pass for real or imaginary components.
@@ -526,9 +526,9 @@ public sealed partial class BokehBlurEffect
     internal sealed partial class HorizontalConvolutionAndAccumulatePartials
     {
         /// <summary>
-        /// The <see cref="D2D1TransformMapper{T}"/> for the shader.
+        /// The <see cref="D2D1DrawTransformMapper{T}"/> for the shader.
         /// </summary>
-        public static D2D1TransformMapper<Shader> Transform { get; } = D2D1TransformMapperFactory<Shader>.Inflate(static (in Shader shader) => (shader.kernelLength, 0, shader.kernelLength, 0));
+        public static D2D1DrawTransformMapper<Shader> Transform { get; } = D2D1DrawTransformMapper<Shader>.Inflate(static (in Shader shader) => (shader.kernelLength, 0, shader.kernelLength, 0));
 
         /// <summary>
         /// Kernel for the horizontal convolution pass.

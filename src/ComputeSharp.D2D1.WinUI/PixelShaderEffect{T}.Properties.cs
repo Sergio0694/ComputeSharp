@@ -18,11 +18,11 @@ partial class PixelShaderEffect<T>
     }
 
     /// <summary>
-    /// Gets or sets the <see cref="D2D1TransformMapper{T}"/> instance to use for the effect, if any.
+    /// Gets or sets the <see cref="D2D1DrawTransformMapper{T}"/> instance to use for the effect, if any.
     /// </summary>
     /// <exception cref="ArgumentNullException">Thrown if the value is set to <see langword="null"/>.</exception>
     [DisallowNull]
-    public D2D1TransformMapper<T>? TransformMapper
+    public D2D1DrawTransformMapper<T>? TransformMapper
     {
         get => GetTransformMapper();
         set => SetTransformMapper(value);

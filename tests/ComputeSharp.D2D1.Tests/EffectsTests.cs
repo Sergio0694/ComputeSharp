@@ -49,7 +49,7 @@ public class EffectsTests
     {
         D2D1TestRunner.RunAndCompareShader(
             new PixelateEffect(new PixelateEffect.Constants(1280, 840, 16)),
-            D2D1TransformMapperFactory<PixelateEffect>.Inflate(16),
+            D2D1DrawTransformMapper<PixelateEffect>.Inflate(16),
             "Landscape.png",
             "Landscape_Pixelate.png");
     }

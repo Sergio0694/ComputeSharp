@@ -19,7 +19,7 @@ internal static class D2D1TestRunner
     /// Executes a pixel shader and compares the expected results.
     /// </summary>
     /// <typeparam name="T">The type of pixel shader to run.</typeparam>
-    /// <param name="transformMapper">A custom <see cref="D2D1TransformMapper{T}"/> instance for the effect.</param>
+    /// <param name="transformMapper">A custom <see cref="D2D1DrawTransformMapper{T}"/> instance for the effect.</param>
     /// <param name="originalFileName">The name of the source image.</param>
     /// <param name="expectedFileName">The name of the expected result image.</param>
     /// <param name="destinationFileName">The name of the destination image to save results to.</param>
@@ -27,7 +27,7 @@ internal static class D2D1TestRunner
     /// <param name="threshold">The allowed difference threshold for the normalized delta.</param>
     public static void RunAndCompareShader<T>(
         in T shader,
-        D2D1TransformMapper<T>? transformMapper,
+        D2D1DrawTransformMapper<T>? transformMapper,
         string originalFileName,
         string expectedFileName,
         [CallerMemberName] string destinationFileName = "",
@@ -101,12 +101,12 @@ internal static class D2D1TestRunner
     /// </summary>
     /// <typeparam name="T">The shader type to execute.</typeparam>
     /// <param name="shader">The shader to run.</param>
-    /// <param name="transformMapper">A custom <see cref="D2D1TransformMapper{T}"/> instance for the effect.</param>
+    /// <param name="transformMapper">A custom <see cref="D2D1DrawTransformMapper{T}"/> instance for the effect.</param>
     /// <param name="sourcePath">The source path for the image to run the shader on.</param>
     /// <param name="destinationPath">The destination path for the result.</param>
     private static unsafe void ExecutePixelShaderAndSaveToFile<T>(
         in T shader,
-        D2D1TransformMapper<T>? transformMapper,
+        D2D1DrawTransformMapper<T>? transformMapper,
         string sourcePath,
         string destinationPath)
         where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
@@ -148,12 +148,12 @@ internal static class D2D1TestRunner
     /// <param name="shader">The shader to run.</param>
     /// <param name="width">The resulting width.</param>
     /// <param name="height">The resulting height.</param>
-    /// <param name="transformMapper">A custom <see cref="D2D1TransformMapper{T}"/> instance for the effect.</param>
+    /// <param name="transformMapper">A custom <see cref="D2D1DrawTransformMapper{T}"/> instance for the effect.</param>
     /// <param name="destinationPath">The destination path for the result.</param>
     /// <param name="resourceTextures">The additional resource textures to use to run the shader.</param>
     private static unsafe void ExecutePixelShaderAndSaveToFile<T>(
         in T shader,
-        D2D1TransformMapper<T>? transformMapper,
+        D2D1DrawTransformMapper<T>? transformMapper,
         int width,
         int height,
         string destinationPath,

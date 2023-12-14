@@ -3,7 +3,6 @@ using System.Drawing;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using ComputeSharp.D2D1.Descriptors;
-using ComputeSharp.D2D1.Interop.Effects;
 using ComputeSharp.D2D1.Shaders.Interop.Effects.TransformMappers;
 using ComputeSharp.Win32;
 
@@ -12,7 +11,7 @@ using ComputeSharp.Win32;
 namespace ComputeSharp.D2D1.Interop;
 
 /// <summary>
-/// Provides an <c>ID2D1TransformMapper</c> implementation, which can be used to customize the draw transform logic in
+/// Provides an <c>ID2D1DrawTransformMapper</c> implementation, which can be used to customize the draw transform logic in
 /// an effect created with <see cref="D2D1PixelShaderEffect"/> and also shared across multiple instances of a given effect.
 /// </summary>
 /// <typeparam name="T">The type of shader the transform will interact with.</typeparam>
@@ -27,7 +26,7 @@ namespace ComputeSharp.D2D1.Interop;
 /// These managers are COM objects implementing the following interface:
 /// <code language="cpp">
 /// [uuid(02E6D48D-B892-4FBC-AA54-119203BAB802)]
-/// interface ID2D1TransformMapper : IUnknown
+/// interface ID2D1DrawTransformMapper : IUnknown
 /// {
 ///     HRESULT MapInputRectsToOutputRect(
 ///         [in]  const ID2D1DrawInfoUpdateContext* updateContext,
@@ -79,44 +78,44 @@ namespace ComputeSharp.D2D1.Interop;
 /// </code>
 /// </para>
 /// <para>
-/// That is, <c>ID2D1DrawInfoUpdateContext</c> allows a custom transform (an <c>ID2D1TransformMapper</c> instance) to interact with the underlying <c>ID2D1DrawInfo</c> object
+/// That is, <c>ID2D1DrawInfoUpdateContext</c> allows a custom transform (an <c>ID2D1DrawTransformMapper</c> instance) to interact with the underlying <c>ID2D1DrawInfo</c> object
 /// that is owned by the effect being used, in a safe way. For instance, it allows a transform to read and update the constant buffer, which can be used to allow a transform to
 /// pass the exact dispatch area size to an input shader, without the consumer having to manually query that information beforehand (which might not be available either).
 /// </para>
 /// <para>
-/// This interface is implemented by ComputeSharp.D2D1, and it can be used through the APIs in <see cref="D2D1TransformMapper{T}"/>, in several ways.
-/// That is, consumers can either implement a type inheriting from <see cref="D2D1TransformMapper{T}"/> to implement their own fully customized transform
-/// mapping logic, or they can use the helper methods exposed by <see cref="D2D1TransformMapperFactory{T}"/> to easily retrieve ready to use transforms.
+/// This interface is implemented by ComputeSharp.D2D1, and it can be used through the APIs in <see cref="D2D1DrawTransformMapper{T}"/>, in several ways.
+/// That is, consumers can either implement a type inheriting from <see cref="D2D1DrawTransformMapper{T}"/> to implement their own fully customized transform
+/// mapping logic, or they can use the helper methods exposed by <see cref="D2D1DrawTransformMapper{T}"/> to easily retrieve ready to use transforms.
 /// </para>
 /// <para>
 /// A CCW (COM callable wrapper, see <see href="https://learn.microsoft.com/dotnet/standard/native-interop/com-callable-wrapper"/>) is also available for all
-/// of these APIs, implemented via the same <see cref="D2D1TransformMapper{T}"/> type. That is, a given instance can expose its underlying CCW through the
+/// of these APIs, implemented via the same <see cref="D2D1DrawTransformMapper{T}"/> type. That is, a given instance can expose its underlying CCW through the
 /// <see cref="ICustomQueryInterface"/> interface, and this can then be passed to an existing D2D1 effect instance.
 /// </para>
 /// </remarks>
-public abstract unsafe class D2D1TransformMapper<T> : ICustomQueryInterface, ID2D1TransformMapperInterop
+public abstract unsafe partial class D2D1DrawTransformMapper<T> : ICustomQueryInterface, ID2D1DrawTransformMapperInterop
     where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
 {
     /// <summary>
-    /// The <see cref="D2D1TransformMapperImpl"/> object wrapped by the current instance.
+    /// The <see cref="D2D1DrawTransformMapperImpl"/> object wrapped by the current instance.
     /// </summary>
-    private ComPtr<D2D1TransformMapperImpl> d2D1TransformMapperImpl;
+    private ComPtr<D2D1DrawTransformMapperImpl> d2D1TransformMapperImpl;
 
     /// <summary>
-    /// Creates a new <see cref="D2D1TransformMapper{T}"/> instance.
+    /// Creates a new <see cref="D2D1DrawTransformMapper{T}"/> instance.
     /// </summary>
-    public D2D1TransformMapper()
+    public D2D1DrawTransformMapper()
     {
-        fixed (D2D1TransformMapperImpl** d2D1TransformMapperImpl = this.d2D1TransformMapperImpl)
+        fixed (D2D1DrawTransformMapperImpl** d2D1TransformMapperImpl = this.d2D1TransformMapperImpl)
         {
-            D2D1TransformMapperImpl.Factory(this, d2D1TransformMapperImpl);
+            D2D1DrawTransformMapperImpl.Factory(this, d2D1TransformMapperImpl);
         }
     }
 
     /// <summary>
-    /// Releases the underlying <c>ID2D1TransformMapper</c> object.
+    /// Releases the underlying <c>ID2D1DrawTransformMapper</c> object.
     /// </summary>
-    ~D2D1TransformMapper()
+    ~D2D1DrawTransformMapper()
     {
         this.d2D1TransformMapperImpl.Dispose();
     }
@@ -189,11 +188,11 @@ public abstract unsafe class D2D1TransformMapper<T> : ICustomQueryInterface, ID2
     public abstract void MapInvalidOutput(int inputIndex, in Rectangle invalidInput, out Rectangle invalidOutput);
 
     /// <summary>
-    /// Gets the underlying <see cref="ID2D1TransformMapper"/> object.
+    /// Gets the underlying <see cref="ID2D1DrawTransformMapper"/> object.
     /// </summary>
-    /// <param name="transformMapper">The underlying <see cref="ID2D1TransformMapper"/> object.</param>
+    /// <param name="transformMapper">The underlying <see cref="ID2D1DrawTransformMapper"/> object.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    internal void GetD2D1TransformMapper(ID2D1TransformMapper** transformMapper)
+    internal void GetD2D1TransformMapper(ID2D1DrawTransformMapper** transformMapper)
     {
         bool lockTaken = false;
 
@@ -249,7 +248,7 @@ public abstract unsafe class D2D1TransformMapper<T> : ICustomQueryInterface, ID2
     }
 
     /// <inheritdoc/>
-    void ID2D1TransformMapperInterop.MapInputsToOutput(
+    void ID2D1DrawTransformMapperInterop.MapInputsToOutput(
         ID2D1DrawInfoUpdateContext* d2D1DrawInfoUpdateContext,
         ReadOnlySpan<Rectangle> inputs,
         ReadOnlySpan<Rectangle> opaqueInputs,
@@ -265,13 +264,13 @@ public abstract unsafe class D2D1TransformMapper<T> : ICustomQueryInterface, ID2
     }
 
     /// <inheritdoc/>
-    void ID2D1TransformMapperInterop.MapOutputToInputs(in Rectangle output, Span<Rectangle> inputs)
+    void ID2D1DrawTransformMapperInterop.MapOutputToInputs(in Rectangle output, Span<Rectangle> inputs)
     {
         MapOutputToInputs(in output, inputs);
     }
 
     /// <inheritdoc/>
-    void ID2D1TransformMapperInterop.MapInvalidOutput(int inputIndex, in Rectangle invalidInput, out Rectangle invalidOutput)
+    void ID2D1DrawTransformMapperInterop.MapInvalidOutput(int inputIndex, in Rectangle invalidInput, out Rectangle invalidOutput)
     {
         MapInvalidOutput(inputIndex, in invalidInput, out invalidOutput);
     }
