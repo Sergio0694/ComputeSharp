@@ -1,3 +1,4 @@
+using System;
 using System.Buffers;
 using ComputeSharp.D2D1.Descriptors;
 using ComputeSharp.D2D1.Extensions;
@@ -37,7 +38,11 @@ public readonly unsafe ref struct D2D1DrawInfoUpdateContext<T>
 
         this.d2D1DrawInfoUpdateContext->GetConstantBufferSize(&constantBufferSize).Assert();
 
-        byte[] buffer = ArrayPool<byte>.Shared.Rent((int)constantBufferSize);
+        byte[]? bufferArray = null;
+
+        Span<byte> buffer = constantBufferSize <= 64
+            ? stackalloc byte[64]
+            : bufferArray = ArrayPool<byte>.Shared.Rent((int)constantBufferSize);
 
         fixed (byte* pBuffer = buffer)
         {
@@ -46,7 +51,10 @@ public readonly unsafe ref struct D2D1DrawInfoUpdateContext<T>
 
         T shader = T.CreateFromConstantBuffer(buffer);
 
-        ArrayPool<byte>.Shared.Return(buffer);
+        if (bufferArray is not null)
+        {
+            ArrayPool<byte>.Shared.Return(bufferArray);
+        }
 
         return shader;
     }
