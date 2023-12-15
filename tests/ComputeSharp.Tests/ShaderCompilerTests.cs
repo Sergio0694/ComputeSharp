@@ -838,9 +838,7 @@ namespace ComputeSharp.Tests
         [AutoConstructor]
         [ThreadGroupSize(DefaultThreadGroupSizes.X)]
         [GeneratedComputeShaderDescriptor]
-        internal readonly partial struct ShaderWithPartialDeclarations : IComputeShader
-        {
-        }
+        internal readonly partial struct ShaderWithPartialDeclarations : IComputeShader;
 
         partial struct ShaderWithPartialDeclarations
         {
