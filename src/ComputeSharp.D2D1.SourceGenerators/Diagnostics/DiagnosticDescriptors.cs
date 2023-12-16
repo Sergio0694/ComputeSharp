@@ -1125,4 +1125,20 @@ partial class DiagnosticDescriptors
         isEnabledByDefault: true,
         description: "Methods from the Math and MathF types cannot be used in a shader, and equivalent APIs from the Hlsl type should be used instead.",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+    /// <summary>
+    /// Gets a <see cref="DiagnosticDescriptor"/> for an invocation of a <c>Math</c> or <c>MathF</c> API.
+    /// <para>
+    /// Format: <c>"The shader {0} is not precompiled, but runtime compilation is not enabled (either precompile the shader by using [D2DShaderProfile], which is recommended, or enable runtime compilation using [D2DEnableRuntimeCompilation])"</c>.
+    /// </para>
+    /// </summary>
+    public static readonly DiagnosticDescriptor D2DRuntimeCompilationDisabled = new(
+        id: "CMPSD2D0076",
+        title: "D2D runtime compilation disabled",
+        messageFormat: "The shader {0} is not precompiled, but runtime compilation is not enabled (either precompile the shader by using [D2DShaderProfile], which is recommended, or enable runtime compilation using [D2DEnableRuntimeCompilation])",
+        category: "ComputeSharp.D2D1.Shaders",
+        defaultSeverity: DiagnosticSeverity.Error,
+        isEnabledByDefault: true,
+        description: "Shaders must either be precompiled using [D2DShaderProfile], which is recommended, or runtime compilation for shaders must be enabled using [D2DEnableRuntimeCompilation].",
+        helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 }
