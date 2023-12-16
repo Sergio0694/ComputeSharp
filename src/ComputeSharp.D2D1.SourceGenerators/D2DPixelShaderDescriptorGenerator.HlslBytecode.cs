@@ -205,7 +205,8 @@ partial class D2DPixelShaderDescriptorGenerator
                     using ComPtr<ID3DBlob> dxcBlobBytecode = D3DCompiler.Compile(
                         key.HlslSource.AsSpan(),
                         key.ShaderProfile,
-                        key.CompileOptions);
+                        key.CompileOptions,
+                        out bool requiresDoublePrecisionSupport);
 
                     token.ThrowIfCancellationRequested();
 
@@ -216,7 +217,7 @@ partial class D2DPixelShaderDescriptorGenerator
 
                     ImmutableArray<byte> bytecode = Unsafe.As<byte[], ImmutableArray<byte>>(ref array);
 
-                    return new HlslBytecodeInfo.Success(bytecode);
+                    return new HlslBytecodeInfo.Success(bytecode, requiresDoublePrecisionSupport);
                 }
                 catch (Win32Exception e)
                 {

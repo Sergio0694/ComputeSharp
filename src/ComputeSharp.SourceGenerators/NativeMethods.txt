@@ -5,3 +5,4 @@ IDxcCompiler3
 IDxcUtils
 IDxcResult
 IUnknown
+S_OK

@@ -5,6 +5,7 @@
 
 using System;
 using System.Runtime.CompilerServices;
+using Windows.Win32.Foundation;
 using Windows.Win32.System.Com;
 
 namespace Windows.Win32;
@@ -41,6 +42,18 @@ internal unsafe struct ComPtr<T> : IDisposable
 
             _ = ((IUnknown*)pointer)->Release();
         }
+    }
+
+    /// <summary>Increments the reference count for the current COM object, if any, and copies its address to a target raw pointer.</summary>
+    /// <param name="ptr">The target raw pointer to copy the address of the current COM object to.</param>
+    /// <returns>This method always returns <see cref="HRESULT.S_OK"/>.</returns>
+    public readonly HRESULT CopyTo(T** ptr)
+    {
+        _ = ((IUnknown*)this.ptr)->AddRef();
+
+        *ptr = this.ptr;
+
+        return HRESULT.S_OK;
     }
 
     /// <summary>Gets the currently wrapped raw pointer to a COM object.</summary>
