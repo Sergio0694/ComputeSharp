@@ -82,3 +82,7 @@ CMPSD2D0072 | ComputeSharp.D2D1.Shaders | Error | [Documentation](https://github
 CMPSD2D0073 | ComputeSharp.D2D1.Shaders | Error | [Documentation](https://github.com/Sergio0694/ComputeSharp)
 CMPSD2D0074 | ComputeSharp.D2D1.Shaders | Error | [Documentation](https://github.com/Sergio0694/ComputeSharp)
 CMPSD2D0075 | ComputeSharp.D2D1.Shaders | Error | [Documentation](https://github.com/Sergio0694/ComputeSharp)
+CMPSD2D0076 | ComputeSharp.D2D1.Shaders | Error | [Documentation](https://github.com/Sergio0694/ComputeSharp)
+CMPSD2D0077 | ComputeSharp.D2D1.Shaders | Info | [Documentation](https://github.com/Sergio0694/ComputeSharp)
+CMPSD2D0078 | ComputeSharp.D2D1.Shaders | Warning | [Documentation](https://github.com/Sergio0694/ComputeSharp)
+CMPSD2D0079 | ComputeSharp.D2D1.Shaders | Warning | [Documentation](https://github.com/Sergio0694/ComputeSharp)

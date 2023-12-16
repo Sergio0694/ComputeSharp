@@ -19,6 +19,4 @@ namespace ComputeSharp.D2D1;
 /// </para>
 /// </summary>
 [AttributeUsage(AttributeTargets.Struct, AllowMultiple = false)]
-public sealed class D2DGeneratedPixelShaderDescriptorAttribute : Attribute
-{
-}
+public sealed class D2DGeneratedPixelShaderDescriptorAttribute : Attribute;

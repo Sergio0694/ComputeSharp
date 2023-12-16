@@ -22,6 +22,4 @@ namespace ComputeSharp;
 /// </para>
 /// </summary>
 [AttributeUsage(AttributeTargets.Struct, AllowMultiple = false)]
-public sealed class GeneratedComputeShaderDescriptorAttribute : Attribute
-{
-}
+public sealed class GeneratedComputeShaderDescriptorAttribute : Attribute;

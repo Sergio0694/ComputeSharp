@@ -21,6 +21,4 @@ namespace ComputeSharp;
 /// </para>
 /// </remarks>
 [AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
-public sealed class GloballyCoherentAttribute : Attribute
-{
-}
+public sealed class GloballyCoherentAttribute : Attribute;

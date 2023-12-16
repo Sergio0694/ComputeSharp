@@ -1125,4 +1125,69 @@ partial class DiagnosticDescriptors
         isEnabledByDefault: true,
         description: "Methods from the Math and MathF types cannot be used in a shader, and equivalent APIs from the Hlsl type should be used instead.",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+    /// <summary>
+    /// Gets a <see cref="DiagnosticDescriptor"/> for a shader not precompiled but with runtime compilation disabled.
+    /// <para>
+    /// Format: <c>"The shader {0} is not precompiled, but runtime compilation is not enabled (either precompile the shader by using [D2DShaderProfile], which is recommended, or enable runtime compilation using [D2DEnableRuntimeCompilation])"</c>.
+    /// </para>
+    /// </summary>
+    public static readonly DiagnosticDescriptor D2DRuntimeCompilationDisabled = new(
+        id: "CMPSD2D0076",
+        title: "D2D runtime compilation disabled",
+        messageFormat: "The shader {0} is not precompiled, but runtime compilation is not enabled (either precompile the shader by using [D2DShaderProfile], which is recommended, or enable runtime compilation using [D2DEnableRuntimeCompilation])",
+        category: "ComputeSharp.D2D1.Shaders",
+        defaultSeverity: DiagnosticSeverity.Error,
+        isEnabledByDefault: true,
+        description: "Shaders must either be precompiled using [D2DShaderProfile], which is recommended, or runtime compilation for shaders must be enabled using [D2DEnableRuntimeCompilation].",
+        helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+    /// <summary>
+    /// Gets a <see cref="DiagnosticDescriptor"/> for an unnecessary [D2DEnableRuntimeCompilation] use.
+    /// <para>
+    /// Format: <c>"The shader {0} is annotated with [D2DEnableRuntimeCompilation], but its containing assembly is already annotated with this attribute (so using it again on the shader type is unnecessary)"</c>.
+    /// </para>
+    /// </summary>
+    public static readonly DiagnosticDescriptor D2DRuntimeCompilationAlreadyEnabled = new(
+        id: "CMPSD2D0077",
+        title: "D2D runtime compilation already enabled",
+        messageFormat: "The shader {0} is annotated with [D2DEnableRuntimeCompilation], but its containing assembly is already annotated with this attribute (so using it again on the shader type is unnecessary)",
+        category: "ComputeSharp.D2D1.Shaders",
+        defaultSeverity: DiagnosticSeverity.Info,
+        isEnabledByDefault: true,
+        description: "If an assembly is annotated with [D2DEnableRuntimeCompilation], that applies to all shader types within it. That means that using [D2DEnableRuntimeCompilation] on shader types too is unnecessary.",
+        helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+    /// <summary>
+    /// Gets a <see cref="DiagnosticDescriptor"/> for an unnecessary [D2DEnableRuntimeCompilation] use on .
+    /// <para>
+    /// Format: <c>"The shader {0} is annotated with [D2DEnableRuntimeCompilation], but it is also being precompiled, as it has [D2DShaderProfile] on the type or containing assembly (so using [D2DEnableRuntimeCompilation] is unnecessary)"</c>.
+    /// </para>
+    /// </summary>
+    public static readonly DiagnosticDescriptor D2DRuntimeCompilationOnTypeNotNecessary = new(
+        id: "CMPSD2D0078",
+        title: "D2D runtime compilation on type is not necessary",
+        messageFormat: "The shader {0} is annotated with [D2DEnableRuntimeCompilation], but it is also being precompiled, as it has [D2DShaderProfile] on the type or containing assembly (so using [D2DEnableRuntimeCompilation] is unnecessary)",
+        category: "ComputeSharp.D2D1.Shaders",
+        defaultSeverity: DiagnosticSeverity.Warning,
+        isEnabledByDefault: true,
+        description: "If a shader is precompiled (ie. it has [D2DShaderProfile] on the type declaration or on its containing assembly), also using [D2DEnableRuntimeCompilation] is unnecessary.",
+        helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+    /// <summary>
+    /// Gets a <see cref="DiagnosticDescriptor"/> for an unnecessary [D2DEnableRuntimeCompilation] use on an assembly.
+    /// <para>
+    /// Format: <c>"The assembly {0} is annotated with [D2DEnableRuntimeCompilation], but it is also has an assembly-level [D2DShaderProfile] attribute, which will cause all shaders to be precompiled (so using [D2DEnableRuntimeCompilation] is unnecessary)"</c>.
+    /// </para>
+    /// </summary>
+    public static readonly DiagnosticDescriptor D2DRuntimeCompilationOnAssemblyNotNecessary = new(
+        id: "CMPSD2D0079",
+        title: "D2D runtime compilation on assembly is not necessary",
+        messageFormat: "The assembly {0} is annotated with [D2DEnableRuntimeCompilation], but it is also has an assembly-level [D2DShaderProfile] attribute, which will cause all shaders to be precompiled (so using [D2DEnableRuntimeCompilation] is unnecessary)",
+        category: "ComputeSharp.D2D1.Shaders",
+        defaultSeverity: DiagnosticSeverity.Warning,
+        isEnabledByDefault: true,
+        description: "If an assembly is using [D2DShaderProfile] (meaning that all shaders declared within it will be precompiled), also using [D2DEnableRuntimeCompilation] is unnecessary.",
+        helpLinkUri: "https://github.com/Sergio0694/ComputeSharp",
+        customTags: WellKnownDiagnosticTags.CompilationEnd);
 }

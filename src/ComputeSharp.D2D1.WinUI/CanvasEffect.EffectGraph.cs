@@ -228,9 +228,7 @@ partial class CanvasEffect
     /// This interface only implemented by <see cref="EffectNode{T}"/> and it's not meant to be implemented by external types.
     /// </para>
     /// </remarks>
-    protected interface IEffectNode
-    {
-    }
+    protected interface IEffectNode;
 
     /// <summary>
     /// A marker interface for a generic effect node that was registered from an <see cref="EffectGraph"/> value.
@@ -246,16 +244,12 @@ partial class CanvasEffect
     /// </para>
     /// </remarks>
     protected interface IEffectNode<out T> : IEffectNode
-        where T : ICanvasImage
-    {
-    }
+        where T : ICanvasImage;
 
     /// <summary>
     /// A marker type for an effect node that can be registered and retrieved from an <see cref="EffectGraph"/> value.
     /// </summary>
     /// <typeparam name="T">The type of <see cref="ICanvasImage"/> associated with the current effect node.</typeparam>
     protected sealed class EffectNode<T> : IEffectNode<T>
-        where T : class, ICanvasImage
-    {
-    }
+        where T : class, ICanvasImage;
 }
