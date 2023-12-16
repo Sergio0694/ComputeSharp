@@ -30,6 +30,8 @@ public class Test_D2DPixelShaderSourceGenerator
             using float3 = global::ComputeSharp.Float3;
             using float4 = global::ComputeSharp.Float4;
 
+            [assembly: D2DEnableRuntimeCompilation]
+
             namespace MyNamespace;
 
             [D2DInputCount(0)]
@@ -679,6 +681,8 @@ public class Test_D2DPixelShaderSourceGenerator
             using float3 = global::ComputeSharp.Float3;
             using float4 = global::ComputeSharp.Float4;
 
+            [assembly: D2DEnableRuntimeCompilation]
+
             namespace MyNamespace;
 
             [D2DEffectId("B30E1384-DEE1-4200-9312-321521DF3B00")]
@@ -985,6 +989,8 @@ public class Test_D2DPixelShaderSourceGenerator
             using float3 = global::ComputeSharp.Float3;
             using float4 = global::ComputeSharp.Float4;
 
+            [assembly: D2DEnableRuntimeCompilation]
+
             namespace MyNamespace;
 
             [D2DInputCount(0)]
@@ -1280,6 +1286,8 @@ public class Test_D2DPixelShaderSourceGenerator
             using ComputeSharp.D2D1;
             using float4 = global::ComputeSharp.Float4;
 
+            [assembly: D2DEnableRuntimeCompilation]
+
             namespace MyNamespace;
 
             [D2DInputCount(2)]
@@ -1566,6 +1574,8 @@ public class Test_D2DPixelShaderSourceGenerator
             using int2 = global::ComputeSharp.Int2;
             using float4 = global::ComputeSharp.Float4;
 
+            [assembly: D2DEnableRuntimeCompilation]
+
             namespace MyNamespace;
 
             [D2DInputCount(0)]
@@ -1802,6 +1812,7 @@ public class Test_D2DPixelShaderSourceGenerator
     private static async Task VerifyGeneratedDiagnosticsAsync(string source, (string Filename, string Source) result)
     {
         // Also validate all analyzers
+        await CSharpAnalyzerWithLanguageVersionTest<D2DRuntimeCompilationDisabledAnalyzer>.VerifyAnalyzerAsync(source);
         await CSharpAnalyzerWithLanguageVersionTest<InvalidAssemblyLevelCompileOptionsAnalyzer>.VerifyAnalyzerAsync(source);
         await CSharpAnalyzerWithLanguageVersionTest<InvalidD2D1CompileOptionsEnableLinkingOnShaderTypeAnalyzer>.VerifyAnalyzerAsync(source);
         await CSharpAnalyzerWithLanguageVersionTest<InvalidD2DGeneratedPixelShaderDescriptorAttributeTargetAnalyzer>.VerifyAnalyzerAsync(source);

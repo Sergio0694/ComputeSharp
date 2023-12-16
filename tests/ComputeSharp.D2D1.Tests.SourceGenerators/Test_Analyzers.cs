@@ -196,4 +196,70 @@ public class Test_Analyzers
 
         await CSharpAnalyzerWithLanguageVersionTest<InvalidD2DGeneratedPixelShaderDescriptorAttributeTargetAnalyzer>.VerifyAnalyzerAsync(source);
     }
+
+    [TestMethod]
+    public async Task ShaderWithNoPrecompiledBytecode_WithNoD2DEnableRuntimeCompilation_Warns()
+    {
+        const string source = """
+            using ComputeSharp;
+            using ComputeSharp.D2D1;
+
+            [D2DInputCount(0)]
+            [D2DGeneratedPixelShaderDescriptor]
+            internal partial struct {|CMPSD2D0076:MyType|} : ID2D1PixelShader
+            {
+                public Float4 Execute()
+                {
+                    return 0;
+                }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<D2DRuntimeCompilationDisabledAnalyzer>.VerifyAnalyzerAsync(source);
+    }
+
+    [TestMethod]
+    public async Task ShaderWithNoPrecompiledBytecode_WithD2DEnableRuntimeCompilation_OnType_DoesNotWarn()
+    {
+        const string source = """
+            using ComputeSharp;
+            using ComputeSharp.D2D1;
+
+            [D2DInputCount(0)]
+            [D2DGeneratedPixelShaderDescriptor]
+            [D2DEnableRuntimeCompilation]
+            internal partial struct MyType : ID2D1PixelShader
+            {
+                public Float4 Execute()
+                {
+                    return 0;
+                }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<D2DRuntimeCompilationDisabledAnalyzer>.VerifyAnalyzerAsync(source);
+    }
+
+    [TestMethod]
+    public async Task ShaderWithNoPrecompiledBytecode_WithD2DEnableRuntimeCompilation_OnAssembly_DoesNotWarn()
+    {
+        const string source = """
+            using ComputeSharp;
+            using ComputeSharp.D2D1;
+
+            [assembly: D2DEnableRuntimeCompilation]
+
+            [D2DInputCount(0)]
+            [D2DGeneratedPixelShaderDescriptor]
+            internal partial struct MyType : ID2D1PixelShader
+            {
+                public Float4 Execute()
+                {
+                    return 0;
+                }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<D2DRuntimeCompilationDisabledAnalyzer>.VerifyAnalyzerAsync(source);
+    }
 }
