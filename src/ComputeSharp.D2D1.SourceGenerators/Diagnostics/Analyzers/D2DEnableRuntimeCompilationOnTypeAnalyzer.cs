@@ -8,16 +8,16 @@ using static ComputeSharp.SourceGeneration.Diagnostics.DiagnosticDescriptors;
 namespace ComputeSharp.D2D1.SourceGenerators;
 
 /// <summary>
-/// A diagnostic analyzer that generates an error whenever a shader is not precompiled but runtime compilation is not enabled.
+/// A diagnostic analyzer that generates diagnostics for the [D2DEnableRuntimeCompilation] attribute, when used on a type.
 /// </summary>
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
-public sealed class D2DRuntimeCompilationDisabledAnalyzer : DiagnosticAnalyzer
+public sealed class D2DEnableRuntimeCompilationOnTypeAnalyzer : DiagnosticAnalyzer
 {
     /// <inheritdoc/>
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = ImmutableArray.Create(
         D2DRuntimeCompilationDisabled,
         D2DRuntimeCompilationAlreadyEnabled,
-        D2DRuntimeCompilationNotNecessary);
+        D2DRuntimeCompilationOnTypeNotNecessary);
 
     /// <inheritdoc/>
     public override void Initialize(AnalysisContext context)
@@ -78,7 +78,7 @@ public sealed class D2DRuntimeCompilationDisabledAnalyzer : DiagnosticAnalyzer
                     if (hasD2DEnableRuntimeCompilationAttributeOnType)
                     {
                         context.ReportDiagnostic(Diagnostic.Create(
-                            D2DRuntimeCompilationNotNecessary,
+                            D2DRuntimeCompilationOnTypeNotNecessary,
                             d2DEnableRuntimeCompilationAttributeData!.GetLocation(),
                             typeSymbol));
                     }

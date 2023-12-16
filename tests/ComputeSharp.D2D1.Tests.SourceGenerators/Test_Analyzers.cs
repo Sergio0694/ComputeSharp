@@ -215,7 +215,7 @@ public class Test_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<D2DRuntimeCompilationDisabledAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerWithLanguageVersionTest<D2DEnableRuntimeCompilationOnTypeAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -237,7 +237,7 @@ public class Test_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<D2DRuntimeCompilationDisabledAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerWithLanguageVersionTest<D2DEnableRuntimeCompilationOnTypeAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -260,7 +260,7 @@ public class Test_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<D2DRuntimeCompilationDisabledAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerWithLanguageVersionTest<D2DEnableRuntimeCompilationOnTypeAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -284,7 +284,7 @@ public class Test_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<D2DRuntimeCompilationDisabledAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerWithLanguageVersionTest<D2DEnableRuntimeCompilationOnTypeAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -308,7 +308,7 @@ public class Test_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<D2DRuntimeCompilationDisabledAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerWithLanguageVersionTest<D2DEnableRuntimeCompilationOnTypeAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -331,6 +331,19 @@ public class Test_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<D2DRuntimeCompilationDisabledAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerWithLanguageVersionTest<D2DEnableRuntimeCompilationOnTypeAnalyzer>.VerifyAnalyzerAsync(source);
+    }
+
+    [TestMethod]
+    public async Task UnnecessaryD2DEnableRuntimeCompilation_OnAssembly_Warns()
+    {
+        const string source = """
+            using ComputeSharp.D2D1;
+
+            [assembly: D2DShaderProfile(D2D1ShaderProfile.PixelShader50)]
+            [assembly: {|CMPSD2D0079:D2DEnableRuntimeCompilation|}]
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<D2DEnableRuntimeCompilationOnAssemblyAnalyzer>.VerifyAnalyzerAsync(source);
     }
 }

@@ -1812,7 +1812,8 @@ public class Test_D2DPixelShaderSourceGenerator
     private static async Task VerifyGeneratedDiagnosticsAsync(string source, (string Filename, string Source) result)
     {
         // Also validate all analyzers
-        await CSharpAnalyzerWithLanguageVersionTest<D2DRuntimeCompilationDisabledAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerWithLanguageVersionTest<D2DEnableRuntimeCompilationOnAssemblyAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerWithLanguageVersionTest<D2DEnableRuntimeCompilationOnTypeAnalyzer>.VerifyAnalyzerAsync(source);
         await CSharpAnalyzerWithLanguageVersionTest<InvalidAssemblyLevelCompileOptionsAnalyzer>.VerifyAnalyzerAsync(source);
         await CSharpAnalyzerWithLanguageVersionTest<InvalidD2D1CompileOptionsEnableLinkingOnShaderTypeAnalyzer>.VerifyAnalyzerAsync(source);
         await CSharpAnalyzerWithLanguageVersionTest<InvalidD2DGeneratedPixelShaderDescriptorAttributeTargetAnalyzer>.VerifyAnalyzerAsync(source);
