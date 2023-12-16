@@ -268,5 +268,45 @@ partial class D2DPixelShaderDescriptorGenerator
                 diagnostics.Add(diagnostic);
             }
         }
+
+        /// <summary>
+        /// Gets the diagnostics for when double precision support is configured incorrectly.
+        /// </summary>
+        /// <param name="structDeclarationSymbol">The input <see cref="INamedTypeSymbol"/> instance to process.</param>
+        /// <param name="info">The source <see cref="HlslBytecodeInfo"/> instance.</param>
+        /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
+        public static void GetDoublePrecisionSupportDiagnostics(
+            INamedTypeSymbol structDeclarationSymbol,
+            HlslBytecodeInfo info,
+            ImmutableArrayBuilder<DiagnosticInfo> diagnostics)
+        {
+            // If we have no compiled HLSL bytecode, there is nothing more to do
+            if (info is not HlslBytecodeInfo.Success success)
+            {
+                return;
+            }
+
+            bool hasD2DRequiresDoublePrecisionSupportAttribute = structDeclarationSymbol.TryGetAttributeWithFullyQualifiedMetadataName(
+                "ComputeSharp.D2D1.D2DRequiresDoublePrecisionSupportAttribute",
+                out AttributeData? attributeData);
+
+            // Check the two cases where diagnostics are necessary:
+            //   - The shader does not have [D2DRequiresDoublePrecisionSupport], but it needs it
+            //   - The shader has [D2DRequiresDoublePrecisionSupport], but it does not need it
+            if (!hasD2DRequiresDoublePrecisionSupportAttribute && success.RequiresDoublePrecisionSupport)
+            {
+                diagnostics.Add(DiagnosticInfo.Create(
+                    MissingD2DRequiresDoublePrecisionSupportAttribute,
+                    structDeclarationSymbol,
+                    structDeclarationSymbol));
+            }
+            else if (hasD2DRequiresDoublePrecisionSupportAttribute && !success.RequiresDoublePrecisionSupport)
+            {
+                diagnostics.Add(DiagnosticInfo.Create(
+                    UnnecessaryD2DRequiresDoublePrecisionSupportAttribute,
+                    attributeData!.GetLocation(),
+                    structDeclarationSymbol));
+            }
+        }
     }
 }

@@ -37,14 +37,24 @@ internal sealed record DiagnosticInfo(
     /// Creates a new <see cref="DiagnosticInfo"/> instance with the specified parameters.
     /// </summary>
     /// <param name="descriptor">The input <see cref="DiagnosticDescriptor"/> for the diagnostics to create.</param>
+    /// <param name="location">The location to use for the diagnostic.</param>
+    /// <param name="args">The optional arguments for the formatted message to include.</param>
+    /// <returns>A new <see cref="DiagnosticInfo"/> instance with the specified parameters.</returns>
+    public static DiagnosticInfo Create(DiagnosticDescriptor descriptor, Location? location, params object[] args)
+    {
+        return new(descriptor, location?.SourceTree, location?.SourceSpan ?? default, args.Select(static arg => arg.ToString()).ToImmutableArray());
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="DiagnosticInfo"/> instance with the specified parameters.
+    /// </summary>
+    /// <param name="descriptor">The input <see cref="DiagnosticDescriptor"/> for the diagnostics to create.</param>
     /// <param name="symbol">The source <see cref="ISymbol"/> to attach the diagnostics to.</param>
     /// <param name="args">The optional arguments for the formatted message to include.</param>
     /// <returns>A new <see cref="DiagnosticInfo"/> instance with the specified parameters.</returns>
     public static DiagnosticInfo Create(DiagnosticDescriptor descriptor, ISymbol symbol, params object[] args)
     {
-        Location location = symbol.Locations.First();
-
-        return new(descriptor, location.SourceTree, location.SourceSpan, args.Select(static arg => arg.ToString()).ToImmutableArray());
+        return Create(descriptor, symbol.Locations.First(), args);
     }
 
     /// <summary>
@@ -56,8 +66,6 @@ internal sealed record DiagnosticInfo(
     /// <returns>A new <see cref="DiagnosticInfo"/> instance with the specified parameters.</returns>
     public static DiagnosticInfo Create(DiagnosticDescriptor descriptor, SyntaxNode node, params object[] args)
     {
-        Location location = node.GetLocation();
-
-        return new(descriptor, location.SourceTree, location.SourceSpan, args.Select(static arg => arg.ToString()).ToImmutableArray());
+        return Create(descriptor, node.GetLocation(), args);
     }
 }
