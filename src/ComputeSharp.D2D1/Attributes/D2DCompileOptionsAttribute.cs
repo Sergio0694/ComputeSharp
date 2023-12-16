@@ -24,12 +24,12 @@ namespace ComputeSharp.D2D1;
 /// This attribute can also be added to a whole assembly, and will be used by default if not overridden by a shader type.
 /// </para>
 /// </summary>
-/// <param name="options">The compiler options to use to compile the shader.</param>
+/// <param name="options">The compile options to use to compile the shader.</param>
 [AttributeUsage(AttributeTargets.Struct | AttributeTargets.Assembly | AttributeTargets.Method, AllowMultiple = false)]
 public sealed class D2DCompileOptionsAttribute(D2D1CompileOptions options) : Attribute
 {
     /// <summary>
-    /// Gets the number of threads in each thread group for the X axis
+    /// Gets the compile options to use to compile the shader.
     /// </summary>
     public D2D1CompileOptions Options { get; } = options;
 }
