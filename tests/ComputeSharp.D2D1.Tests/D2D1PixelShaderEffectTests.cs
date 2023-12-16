@@ -1,11 +1,14 @@
 using System;
 using System.ComponentModel;
+using ComputeSharp.D2D1;
 using ComputeSharp.D2D1.Interop;
 using ComputeSharp.D2D1.Tests.Effects;
 using ComputeSharp.D2D1.Tests.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
+
+[assembly: D2DEnableRuntimeCompilation]
 
 #pragma warning disable IDE0022, IDE0044
 

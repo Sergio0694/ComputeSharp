@@ -1,12 +1,15 @@
 using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using ComputeSharp.D2D1;
 using ComputeSharp.D2D1.Interop;
 using ComputeSharp.D2D1.WinUI.Tests.Helpers;
 using Microsoft.Graphics.Canvas;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
+
+[assembly: D2DEnableRuntimeCompilation]
 
 namespace ComputeSharp.D2D1.WinUI.Tests;
 
