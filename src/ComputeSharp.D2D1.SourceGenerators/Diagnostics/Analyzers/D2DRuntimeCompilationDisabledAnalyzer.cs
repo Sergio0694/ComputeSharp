@@ -14,7 +14,10 @@ namespace ComputeSharp.D2D1.SourceGenerators;
 public sealed class D2DRuntimeCompilationDisabledAnalyzer : DiagnosticAnalyzer
 {
     /// <inheritdoc/>
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = ImmutableArray.Create(D2DRuntimeCompilationDisabled);
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = ImmutableArray.Create(
+        D2DRuntimeCompilationDisabled,
+        D2DRuntimeCompilationAlreadyEnabled,
+        D2DRuntimeCompilationNotNecessary);
 
     /// <inheritdoc/>
     public override void Initialize(AnalysisContext context)
@@ -46,17 +49,43 @@ public sealed class D2DRuntimeCompilationDisabledAnalyzer : DiagnosticAnalyzer
                     return;
                 }
 
-                // If the shader is being precompiled, we don't have anything else to do
-                if (typeSymbol.HasAttributeWithType(d2DShaderProfileAttributeSymbol) ||
-                    typeSymbol.ContainingAssembly.HasAttributeWithType(d2DShaderProfileAttributeSymbol))
+                // This analyzer will detect the following cases:
+                //   1) Shader not precompiled, and missing [D2DEnableRuntimeCompilation] (D2DRuntimeCompilationDisabled)
+                //   2) Shader with [D2DEnableRuntimeCompilation] on the assembly and also on the shader type (D2DRuntimeCompilationAlreadyEnabled)
+                //   3) Shader being precompiled, but also with [D2DEnableRuntimeCompilation] (D2DRuntimeCompilationNotNecessary)
+                bool hasD2DShaderProfileAttributeOnAssembly = typeSymbol.ContainingAssembly.HasAttributeWithType(d2DShaderProfileAttributeSymbol);
+                bool hasD2DShaderProfileAttributeOnType = typeSymbol.HasAttributeWithType(d2DShaderProfileAttributeSymbol);
+                bool hasD2DEnableRuntimeCompilationAttributeOnAssembly = typeSymbol.ContainingAssembly.HasAttributeWithType(d2DEnableRuntimeCompilationAttributeSymbol);
+                bool hasD2DEnableRuntimeCompilationAttributeOnType = typeSymbol.TryGetAttributeWithType(
+                    d2DEnableRuntimeCompilationAttributeSymbol,
+                    out AttributeData? d2DEnableRuntimeCompilationAttributeData);
+
+                // If [D2DEnableRuntimeCompilation] is present on the type and also on the assembly, emit a diagnostic (2)
+                if (hasD2DEnableRuntimeCompilationAttributeOnAssembly && hasD2DEnableRuntimeCompilationAttributeOnType)
                 {
-                    return;
+                    context.ReportDiagnostic(Diagnostic.Create(
+                        D2DRuntimeCompilationAlreadyEnabled,
+                        d2DEnableRuntimeCompilationAttributeData!.GetLocation(),
+                        typeSymbol));
                 }
 
-                // Emit a diagnostic if there is no [D2DEnableRuntimeCompilation] set anywhere
-                if (!typeSymbol.HasAttributeWithType(d2DEnableRuntimeCompilationAttributeSymbol) &&
-                    !typeSymbol.ContainingAssembly.HasAttributeWithType(d2DEnableRuntimeCompilationAttributeSymbol))
+                // Check if the shader is precompiled:
+                //   - If it is, we should check that it's not annotated with [D2DEnableRuntimeCompilation]
+                //   - If it is not, we should check that it is annotated with [D2DEnableRuntimeCompilation]
+                if (hasD2DShaderProfileAttributeOnType || hasD2DShaderProfileAttributeOnAssembly)
                 {
+                    // Emit a diagnostic if [D2DEnableRuntimeCompilation] is present on the type (3)
+                    if (hasD2DEnableRuntimeCompilationAttributeOnType)
+                    {
+                        context.ReportDiagnostic(Diagnostic.Create(
+                            D2DRuntimeCompilationNotNecessary,
+                            d2DEnableRuntimeCompilationAttributeData!.GetLocation(),
+                            typeSymbol));
+                    }
+                }
+                else if (!hasD2DEnableRuntimeCompilationAttributeOnType && !hasD2DEnableRuntimeCompilationAttributeOnAssembly)
+                {
+                    // Emit a diagnostic if there is no [D2DEnableRuntimeCompilation] set anywhere (1)
                     context.ReportDiagnostic(Diagnostic.Create(
                         D2DRuntimeCompilationDisabled,
                         typeSymbol.Locations.FirstOrDefault(),

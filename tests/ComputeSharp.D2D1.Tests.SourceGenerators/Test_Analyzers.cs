@@ -262,4 +262,75 @@ public class Test_Analyzers
 
         await CSharpAnalyzerWithLanguageVersionTest<D2DRuntimeCompilationDisabledAnalyzer>.VerifyAnalyzerAsync(source);
     }
+
+    [TestMethod]
+    public async Task ShaderWithNoPrecompiledBytecode_WithUnnecessaryD2DEnableRuntimeCompilation_Warns()
+    {
+        const string source = """
+            using ComputeSharp;
+            using ComputeSharp.D2D1;
+
+            [assembly: D2DEnableRuntimeCompilation]
+
+            [D2DInputCount(0)]
+            [{|CMPSD2D0077:D2DEnableRuntimeCompilation|}]
+            [D2DGeneratedPixelShaderDescriptor]
+            internal partial struct MyType : ID2D1PixelShader
+            {
+                public Float4 Execute()
+                {
+                    return 0;
+                }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<D2DRuntimeCompilationDisabledAnalyzer>.VerifyAnalyzerAsync(source);
+    }
+
+    [TestMethod]
+    public async Task ShaderWithPrecompiledBytecode_FromAssembly_WithUnnecessaryD2DEnableRuntimeCompilation_Warns()
+    {
+        const string source = """
+            using ComputeSharp;
+            using ComputeSharp.D2D1;
+
+            [assembly: D2DShaderProfile(D2D1ShaderProfile.PixelShader50)]
+
+            [D2DInputCount(0)]
+            [{|CMPSD2D0078:D2DEnableRuntimeCompilation|}]
+            [D2DGeneratedPixelShaderDescriptor]
+            internal partial struct MyType : ID2D1PixelShader
+            {
+                public Float4 Execute()
+                {
+                    return 0;
+                }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<D2DRuntimeCompilationDisabledAnalyzer>.VerifyAnalyzerAsync(source);
+    }
+
+    [TestMethod]
+    public async Task ShaderWithPrecompiledBytecode_FromType_WithUnnecessaryD2DEnableRuntimeCompilation_Warns()
+    {
+        const string source = """
+            using ComputeSharp;
+            using ComputeSharp.D2D1;
+
+            [D2DInputCount(0)]
+            [D2DShaderProfile(D2D1ShaderProfile.PixelShader50)]
+            [{|CMPSD2D0078:D2DEnableRuntimeCompilation|}]
+            [D2DGeneratedPixelShaderDescriptor]
+            internal partial struct MyType : ID2D1PixelShader
+            {
+                public Float4 Execute()
+                {
+                    return 0;
+                }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<D2DRuntimeCompilationDisabledAnalyzer>.VerifyAnalyzerAsync(source);
+    }
 }
