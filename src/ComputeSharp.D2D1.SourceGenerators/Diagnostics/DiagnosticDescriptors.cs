@@ -1222,4 +1222,20 @@ partial class DiagnosticDescriptors
         isEnabledByDefault: true,
         description: "Shaders not performing any double precision operations should not be annotated with [D2DRequiresDoublePrecisionSupport], as the attribute is not needed in that case.",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+    /// <summary>
+    /// Gets a <see cref="DiagnosticDescriptor"/> for a shader is using [UnnecessaryD2DRequiresDoublePrecisionSupportAttribute] incorrectly.
+    /// <para>
+    /// Format: <c>"The shader {0} has the [D2DRequiresDoublePrecisionSupport] attribute on it, but it is not precompiled, so validation for use of double precision operations cannot be performed"</c>.
+    /// </para>
+    /// </summary>
+    public static readonly DiagnosticDescriptor InvalidD2DRequiresDoublePrecisionSupportAttribute = new(
+        id: "CMPSD2D0082",
+        title: "Invalid [D2DRequiresDoublePrecisionSupport] attribute",
+        messageFormat: "The shader {0} has the [D2DRequiresDoublePrecisionSupport] attribute on it, but it is not precompiled, so validation for use of double precision operations cannot be performed",
+        category: "ComputeSharp.D2D1.Shaders",
+        defaultSeverity: DiagnosticSeverity.Warning,
+        isEnabledByDefault: true,
+        description: "Shaders can only be annotated with [D2DRequiresDoublePrecisionSupport] to perform validation for use of double precision operations if they are precompiled.",
+        helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 }
