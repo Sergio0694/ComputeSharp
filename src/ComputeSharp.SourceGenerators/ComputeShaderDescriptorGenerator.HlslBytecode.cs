@@ -10,6 +10,8 @@ using ComputeSharp.SourceGeneration.Models;
 using ComputeSharp.SourceGenerators.Dxc;
 using ComputeSharp.SourceGenerators.Models;
 using Microsoft.CodeAnalysis;
+using Windows.Win32;
+using Windows.Win32.Graphics.Direct3D.Dxc;
 using static ComputeSharp.SourceGeneration.Diagnostics.DiagnosticDescriptors;
 
 namespace ComputeSharp.SourceGenerators;
@@ -53,11 +55,21 @@ partial class ComputeShaderDescriptorGenerator
                     token.ThrowIfCancellationRequested();
 
                     // Compile the shader bytecode
-                    byte[] bytecode = DxcShaderCompiler.Instance.Compile(key.HlslSource.AsSpan(), key.CompileOptions, token);
+                    using ComPtr<IDxcBlob> dxcBlob = DxcShaderCompiler.Instance.Compile(
+                        key.HlslSource.AsSpan(),
+                        key.CompileOptions,
+                        token);
 
                     token.ThrowIfCancellationRequested();
 
-                    return new HlslBytecodeInfo.Success(Unsafe.As<byte[], ImmutableArray<byte>>(ref bytecode));
+                    byte* buffer = (byte*)dxcBlob.Get()->GetBufferPointer();
+                    int length = checked((int)dxcBlob.Get()->GetBufferSize());
+
+                    byte[] array = new ReadOnlySpan<byte>(buffer, length).ToArray();
+
+                    ImmutableArray<byte> bytecode = Unsafe.As<byte[], ImmutableArray<byte>>(ref array);
+
+                    return new HlslBytecodeInfo.Success(bytecode);
                 }
                 catch (Win32Exception e)
                 {

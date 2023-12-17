@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -73,7 +74,7 @@ internal sealed unsafe class DxcShaderCompiler
     /// <param name="compileOptions">The compile options to use.</param>
     /// <param name="token">The <see cref="CancellationToken"/> used to cancel the operation, if needed.</param>
     /// <returns>The bytecode for the compiled shader.</returns>
-    public byte[] Compile(ReadOnlySpan<char> source, CompileOptions compileOptions, CancellationToken token)
+    public ComPtr<IDxcBlob> Compile(ReadOnlySpan<char> source, CompileOptions compileOptions, CancellationToken token)
     {
         using ComPtr<IDxcResult> dxcResult = default;
 
@@ -232,20 +233,18 @@ internal sealed unsafe class DxcShaderCompiler
 
         dxcResult.Get()->GetStatus(&status).Assert();
 
-        // The compilation was successful, so we can extract the shader bytecode
-        if (status == 0)
+        // Throw an exception with the input messages, if the compilation fails
+        if (status != 0)
         {
-            using ComPtr<IDxcBlob> dxcBlobBytecode = default;
-
-            dxcResult.Get()->GetResult(dxcBlobBytecode.GetAddressOf()).Assert();
-
-            byte* buffer = (byte*)dxcBlobBytecode.Get()->GetBufferPointer();
-            int length = checked((int)dxcBlobBytecode.Get()->GetBufferSize());
-
-            return new ReadOnlySpan<byte>(buffer, length).ToArray();
+            ThrowHslsCompilationException(dxcResult.Get());
         }
 
-        return ThrowHslsCompilationException(dxcResult.Get());
+        using ComPtr<IDxcBlob> dxcBlobBytecode = default;
+
+        // The compilation was successful, so we can extract the shader bytecode
+        dxcResult.Get()->GetResult(dxcBlobBytecode.GetAddressOf()).Assert();
+
+        return dxcBlobBytecode.Move();
     }
 
     /// <summary>
@@ -253,8 +252,9 @@ internal sealed unsafe class DxcShaderCompiler
     /// </summary>
     /// <param name="dxcResult">The input (faulting) operation.</param>
     /// <returns>This method always throws and never actually returs.</returns>
+    [DoesNotReturn]
     [MethodImpl(MethodImplOptions.NoInlining)]
-    private static byte[] ThrowHslsCompilationException(IDxcResult* dxcResult)
+    private static void ThrowHslsCompilationException(IDxcResult* dxcResult)
     {
         using ComPtr<IDxcBlobEncoding> dxcBlobEncodingError = default;
 
