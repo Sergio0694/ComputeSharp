@@ -18,6 +18,12 @@ partial class HlslBytecodeSyntaxProcessor
     /// <inheritdoc/>
     private static partial ComPtr<IDxcBlob> Compile(HlslBytecodeInfoKey key, CancellationToken token)
     {
+        // Try to load dxcompiler.dll and dxil.dll
+        DxcLibraryLoader.LoadNativeDxcLibraries();
+
+        token.ThrowIfCancellationRequested();
+
+        // Compile the shader bytecode using DXC
         return DxcShaderCompiler.Instance.Compile(
             key.HlslSource.AsSpan(),
             key.CompileOptions,
