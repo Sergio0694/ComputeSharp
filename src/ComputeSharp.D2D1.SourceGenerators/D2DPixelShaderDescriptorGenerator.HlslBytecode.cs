@@ -205,7 +205,8 @@ partial class D2DPixelShaderDescriptorGenerator
                     using ComPtr<ID3DBlob> d3DBlob = D3DCompiler.Compile(
                         key.HlslSource.AsSpan(),
                         key.ShaderProfile,
-                        key.CompileOptions);
+                        key.CompileOptions,
+                        token);
 
                     token.ThrowIfCancellationRequested();
 
