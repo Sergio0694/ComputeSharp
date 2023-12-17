@@ -205,8 +205,12 @@ partial class D2DPixelShaderDescriptorGenerator
                     using ComPtr<ID3DBlob> dxcBlobBytecode = D3DCompiler.Compile(
                         key.HlslSource.AsSpan(),
                         key.ShaderProfile,
-                        key.CompileOptions,
-                        out bool requiresDoublePrecisionSupport);
+                        key.CompileOptions);
+
+                    token.ThrowIfCancellationRequested();
+
+                    // Check whether double precision operations are required
+                    bool requiresDoublePrecisionSupport = D3DCompiler.IsDoublePrecisionSupportRequired(dxcBlobBytecode.Get());
 
                     token.ThrowIfCancellationRequested();
 

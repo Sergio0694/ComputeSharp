@@ -9,7 +9,6 @@ using Windows.Win32;
 using Windows.Win32.Foundation;
 using Windows.Win32.Graphics.Direct3D;
 using Windows.Win32.Graphics.Direct3D.Fxc;
-using Windows.Win32.Graphics.Direct3D11;
 using DirectX = Windows.Win32.PInvoke;
 #else
 using ComputeSharp.D2D1.Extensions;
@@ -35,17 +34,7 @@ internal static unsafe partial class D3DCompiler
     /// <param name="shaderProfile">The shader profile to use to compile the shader.</param>
     /// <param name="options">The options to use to compile the shader.</param>
     /// <returns>The bytecode for the compiled shader.</returns>
-    public static ComPtr<ID3DBlob> Compile(
-        ReadOnlySpan<char> source,
-        D2D1ShaderProfile shaderProfile,
-#if SOURCE_GENERATOR
-#pragma warning disable CS1573
-        D2D1CompileOptions options,
-        out bool requiresDoublePrecisionSupport) // Whether the shader requires support for double precision operations
-#pragma warning restore CS1573
-#else
-        D2D1CompileOptions options)
-#endif
+    public static ComPtr<ID3DBlob> Compile(ReadOnlySpan<char> source, D2D1ShaderProfile shaderProfile, D2D1CompileOptions options)
     {
         int maxLength = Encoding.ASCII.GetMaxByteCount(source.Length);
         byte[] buffer = ArrayPool<byte>.Shared.Rent(maxLength);
@@ -69,10 +58,6 @@ internal static unsafe partial class D3DCompiler
 
         try
         {
-#if SOURCE_GENERATOR
-            using ComPtr<ID3DBlob> d3DBlobWithAllParts = default;
-#endif
-
             // Compile the standalone D2D1 full shader
             using ComPtr<ID3DBlob> d3DBlobFullShader = Compile(
                 source: buffer.AsSpan(0, writtenBytes),
@@ -81,28 +66,7 @@ internal static unsafe partial class D3DCompiler
                 entryPoint: ASCII.Execute,
                 target: ASCII.GetPixelShaderProfile(shaderProfile),
                 flags: (uint)options,
-#if !SOURCE_GENERATOR
                 stripReflectionData: stripReflectionData);
-#else
-                stripReflectionData: stripReflectionData,
-                d3DBlobWithAllParts: d3DBlobWithAllParts.GetAddressOf());
-
-            // Check whether double precision operations are required
-            using (ComPtr<ID3D11ShaderReflection> d3D11ShaderReflection = default)
-            {
-                Guid iidOfID3D11ShaderReflection = ID3D11ShaderReflection.IID_Guid;
-
-                DirectX.D3DReflect(
-                    pSrcData: d3DBlobWithAllParts.Get()->GetBufferPointer(),
-                    SrcDataSize: d3DBlobWithAllParts.Get()->GetBufferSize(),
-                    pInterface: &iidOfID3D11ShaderReflection,
-                    ppReflector: (void**)d3D11ShaderReflection.GetAddressOf()).Assert();
-
-                ulong doublePrecisionFlags = DirectX.D3D_SHADER_REQUIRES_DOUBLES | DirectX.D3D_SHADER_REQUIRES_11_1_DOUBLE_EXTENSIONS;
-
-                requiresDoublePrecisionSupport = (d3D11ShaderReflection.Get()->GetRequiresFlags() & doublePrecisionFlags) != 0;
-            }
-#endif
 
             if (!enableLinking)
             {
@@ -117,12 +81,7 @@ internal static unsafe partial class D3DCompiler
                 entryPoint: default,
                 target: ASCII.GetLibraryProfile(shaderProfile),
                 flags: (uint)options,
-#if SOURCE_GENERATOR
-                stripReflectionData: stripReflectionData,
-                d3DBlobWithAllParts: null);
-#else
                 stripReflectionData: stripReflectionData);
-#endif
 
             // Embed it as private data if requested
             using ComPtr<ID3DBlob> d3DBlobLinked = SetD3DPrivateData(d3DBlobFullShader.Get(), d3DBlobFunction.Get());
@@ -154,14 +113,7 @@ internal static unsafe partial class D3DCompiler
         ReadOnlySpan<byte> entryPoint,
         ReadOnlySpan<byte> target,
         uint flags,
-#if SOURCE_GENERATOR
-#pragma warning disable CS1573
-        bool stripReflectionData,
-        ID3DBlob** d3DBlobWithAllParts) // The resulting HLSL bytecode with all parts (ie. including reflection info).
-#pragma warning restore CS1573
-#else
         bool stripReflectionData)
-#endif
     {
         using ComPtr<ID3DBlob> d3DBlobBytecode = default;
         using ComPtr<ID3DBlob> d3DBlobErrors = default;
@@ -238,14 +190,6 @@ internal static unsafe partial class D3DCompiler
         // clear if this is reachable in case the compilation fails (one would assume
         // there would always be a message), but better safe than sorry.
         hResult.Assert();
-
-#if SOURCE_GENERATOR
-        // If requested, also copy the original HLSL bytecode
-        if (d3DBlobWithAllParts is not null)
-        {
-            d3DBlobBytecode.CopyTo(d3DBlobWithAllParts).Assert();
-        }
-#endif
 
         // If requested, strip the reflection data and return that bytecode blob
         if (stripReflectionData)
