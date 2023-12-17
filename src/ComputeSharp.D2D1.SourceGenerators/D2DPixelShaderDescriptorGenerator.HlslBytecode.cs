@@ -202,7 +202,7 @@ partial class D2DPixelShaderDescriptorGenerator
                     token.ThrowIfCancellationRequested();
 
                     // Compile the shader bytecode using the effective parameters
-                    using ComPtr<ID3DBlob> dxcBlobBytecode = D3DCompiler.Compile(
+                    using ComPtr<ID3DBlob> d3DBlob = D3DCompiler.Compile(
                         key.HlslSource.AsSpan(),
                         key.ShaderProfile,
                         key.CompileOptions);
@@ -210,12 +210,12 @@ partial class D2DPixelShaderDescriptorGenerator
                     token.ThrowIfCancellationRequested();
 
                     // Check whether double precision operations are required
-                    bool requiresDoublePrecisionSupport = D3DCompiler.IsDoublePrecisionSupportRequired(dxcBlobBytecode.Get());
+                    bool requiresDoublePrecisionSupport = D3DCompiler.IsDoublePrecisionSupportRequired(d3DBlob.Get());
 
                     token.ThrowIfCancellationRequested();
 
-                    byte* buffer = (byte*)dxcBlobBytecode.Get()->GetBufferPointer();
-                    int length = checked((int)dxcBlobBytecode.Get()->GetBufferSize());
+                    byte* buffer = (byte*)d3DBlob.Get()->GetBufferPointer();
+                    int length = checked((int)d3DBlob.Get()->GetBufferSize());
 
                     byte[] array = new ReadOnlySpan<byte>(buffer, length).ToArray();
 
@@ -257,14 +257,17 @@ partial class D2DPixelShaderDescriptorGenerator
                 diagnostic = DiagnosticInfo.Create(
                     HlslBytecodeFailedWithWin32Exception,
                     structDeclarationSymbol,
-                    [structDeclarationSymbol, win32Error.HResult, win32Error.Message]);
+                    structDeclarationSymbol,
+                    win32Error.HResult,
+                    win32Error.Message);
             }
             else if (info is HlslBytecodeInfo.CompilerError fxcError)
             {
                 diagnostic = DiagnosticInfo.Create(
                     HlslBytecodeFailedWithFxcCompilationException,
                     structDeclarationSymbol,
-                    [structDeclarationSymbol, fxcError.Message]);
+                    structDeclarationSymbol,
+                    fxcError.Message);
             }
 
             if (diagnostic is not null)

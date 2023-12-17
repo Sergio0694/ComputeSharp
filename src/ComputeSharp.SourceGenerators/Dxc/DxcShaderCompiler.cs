@@ -1,10 +1,14 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Threading;
+using ComputeSharp.SourceGeneration.Extensions;
 using Windows.Win32;
 using Windows.Win32.Foundation;
 using Windows.Win32.Graphics.Direct3D.Dxc;
+using Windows.Win32.Graphics.Direct3D12;
+using DirectX = Windows.Win32.PInvoke;
 
 namespace ComputeSharp.SourceGenerators.Dxc;
 
@@ -73,7 +77,7 @@ internal sealed unsafe class DxcShaderCompiler
     /// <param name="compileOptions">The compile options to use.</param>
     /// <param name="token">The <see cref="CancellationToken"/> used to cancel the operation, if needed.</param>
     /// <returns>The bytecode for the compiled shader.</returns>
-    public byte[] Compile(ReadOnlySpan<char> source, CompileOptions compileOptions, CancellationToken token)
+    public ComPtr<IDxcBlob> Compile(ReadOnlySpan<char> source, CompileOptions compileOptions, CancellationToken token)
     {
         using ComPtr<IDxcResult> dxcResult = default;
 
@@ -232,20 +236,62 @@ internal sealed unsafe class DxcShaderCompiler
 
         dxcResult.Get()->GetStatus(&status).Assert();
 
-        // The compilation was successful, so we can extract the shader bytecode
-        if (status == 0)
+        // Throw an exception with the input messages, if the compilation fails
+        if (status != 0)
         {
-            using ComPtr<IDxcBlob> dxcBlobBytecode = default;
-
-            dxcResult.Get()->GetResult(dxcBlobBytecode.GetAddressOf()).Assert();
-
-            byte* buffer = (byte*)dxcBlobBytecode.Get()->GetBufferPointer();
-            int length = checked((int)dxcBlobBytecode.Get()->GetBufferSize());
-
-            return new ReadOnlySpan<byte>(buffer, length).ToArray();
+            ThrowHslsCompilationException(dxcResult.Get());
         }
 
-        return ThrowHslsCompilationException(dxcResult.Get());
+        using ComPtr<IDxcBlob> dxcBlobBytecode = default;
+
+        // The compilation was successful, so we can extract the shader bytecode
+        dxcResult.Get()->GetResult(dxcBlobBytecode.GetAddressOf()).Assert();
+
+        return dxcBlobBytecode.Move();
+    }
+
+    /// <summary>
+    /// Checks whether double precision support is required.
+    /// </summary>
+    /// <param name="dxcBlob">The input HLSL bytecode to inspect.</param>
+    /// <returns>Whether double precision support is required for <paramref name="dxcBlob"/>.</returns>
+    public bool IsDoublePrecisionSupportRequired(IDxcBlob* dxcBlob)
+    {
+        using ComPtr<ID3D12ShaderReflection> d3D12ShaderReflection = default;
+
+        Guid iidOfID3D12ShaderReflection = ID3D12ShaderReflection.IID_Guid;
+
+        DxcBuffer dxcBuffer = default;
+        dxcBuffer.Ptr = dxcBlob->GetBufferPointer();
+        dxcBuffer.Size = dxcBlob->GetBufferSize();
+
+        this.dxcUtils.Get()->CreateReflection(
+            &dxcBuffer,
+            &iidOfID3D12ShaderReflection,
+            (void**)d3D12ShaderReflection.GetAddressOf()).Assert();
+
+        const ulong doublePrecisionFlags = DirectX.D3D_SHADER_REQUIRES_DOUBLES | DirectX.D3D_SHADER_REQUIRES_11_1_DOUBLE_EXTENSIONS;
+
+        return (d3D12ShaderReflection.Get()->GetRequiresFlags() & doublePrecisionFlags) != 0;
+    }
+
+    /// <summary>
+    /// Fixes up an exception message to improve the way it's displayed in VS.
+    /// </summary>
+    /// <param name="message">The input exception message.</param>
+    /// <returns>The updated exception message.</returns>
+    public static string FixupExceptionMessage(string message)
+    {
+        // Add square brackets around error headers
+        message = Regex.Replace(message, @"^(error|warning):", static m => $"[{m.Groups[1].Value}]:", RegexOptions.Multiline);
+
+        // Remove lines with notes
+        message = Regex.Replace(message, @"^note:.+", string.Empty, RegexOptions.Multiline);
+
+        // Remove syntax error indicators
+        message = Regex.Replace(message, @"^ +\^", string.Empty, RegexOptions.Multiline);
+
+        return message.NormalizeToSingleLine();
     }
 
     /// <summary>
@@ -253,8 +299,9 @@ internal sealed unsafe class DxcShaderCompiler
     /// </summary>
     /// <param name="dxcResult">The input (faulting) operation.</param>
     /// <returns>This method always throws and never actually returs.</returns>
+    [DoesNotReturn]
     [MethodImpl(MethodImplOptions.NoInlining)]
-    private static byte[] ThrowHslsCompilationException(IDxcResult* dxcResult)
+    private static void ThrowHslsCompilationException(IDxcResult* dxcResult)
     {
         using ComPtr<IDxcBlobEncoding> dxcBlobEncodingError = default;
 

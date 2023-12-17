@@ -11,17 +11,8 @@ internal abstract record HlslBytecodeInfo
     /// A successfully compiled HLSL shader.
     /// </summary>
     /// <param name="Bytecode">The resulting HLSL bytecode.</param>
-    public sealed record Success(
-#if D3D12_GENERATOR
-        EquatableArray<byte> Bytecode)
-#else
-
-#pragma warning disable CS1573
-        EquatableArray<byte> Bytecode,
-        bool RequiresDoublePrecisionSupport) // Whether the shader requires support for double precision operations.
-#pragma warning restore CS1573
-#endif
-        : HlslBytecodeInfo;
+    /// <param name="RequiresDoublePrecisionSupport">Whether the shader requires support for double precision operations.</param>
+    public sealed record Success(EquatableArray<byte> Bytecode, bool RequiresDoublePrecisionSupport) : HlslBytecodeInfo;
 
     /// <summary>
     /// An HLSL shader that failed to compile due to a Win32 error.

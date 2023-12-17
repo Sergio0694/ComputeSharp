@@ -1639,6 +1639,57 @@ public class DiagnosticsTests
         VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0046");
     }
 
+    [TestMethod]
+    public void MissingRequiresDoublePrecisionSupportAttribute()
+    {
+        const string source = """
+            using ComputeSharp;
+
+            namespace MyNamespace;
+
+            [ThreadGroupSize(DefaultThreadGroupSizes.X)]
+            [GeneratedComputeShaderDescriptor]
+            internal readonly partial struct MyShader : IComputeShader
+            {
+                private readonly ReadWriteBuffer<float> results;
+                private readonly float time;
+
+                public void Execute()
+                {
+                    results[ThreadIds.X] = (float)(Hlsl.Abs(time * 2.0));
+                }
+            }
+            """;
+
+        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0064");
+    }
+
+    [TestMethod]
+    public void UnnecessaryRequiresDoublePrecisionSupportAttribute()
+    {
+        const string source = """
+            using ComputeSharp;
+
+            namespace MyNamespace;
+
+            [ThreadGroupSize(DefaultThreadGroupSizes.X)]
+            [RequiresDoublePrecisionSupport]
+            [GeneratedComputeShaderDescriptor]
+            internal readonly partial struct MyShader : IComputeShader
+            {
+                private readonly ReadWriteBuffer<float> results;
+                private readonly float time;
+
+                public void Execute()
+                {
+                    results[ThreadIds.X] = (float)(time * 2.0f);
+                }
+            }
+            """;
+
+        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0065");
+    }
+
     /// <summary>
     /// Verifies the output of a source generator.
     /// </summary>

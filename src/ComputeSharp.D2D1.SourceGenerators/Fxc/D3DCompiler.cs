@@ -26,7 +26,7 @@ partial class D3DCompiler
             pInterface: &iidOfID3D11ShaderReflection,
             ppReflector: (void**)d3D11ShaderReflection.GetAddressOf()).Assert();
 
-        ulong doublePrecisionFlags = DirectX.D3D_SHADER_REQUIRES_DOUBLES | DirectX.D3D_SHADER_REQUIRES_11_1_DOUBLE_EXTENSIONS;
+        const ulong doublePrecisionFlags = DirectX.D3D_SHADER_REQUIRES_DOUBLES | DirectX.D3D_SHADER_REQUIRES_11_1_DOUBLE_EXTENSIONS;
 
         return (d3D11ShaderReflection.Get()->GetRequiresFlags() & doublePrecisionFlags) != 0;
     }

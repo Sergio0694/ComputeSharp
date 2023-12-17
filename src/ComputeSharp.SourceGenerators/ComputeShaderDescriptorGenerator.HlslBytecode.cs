@@ -2,7 +2,6 @@ using System;
 using System.Collections.Immutable;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Text.RegularExpressions;
 using System.Threading;
 using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Helpers;
@@ -10,6 +9,8 @@ using ComputeSharp.SourceGeneration.Models;
 using ComputeSharp.SourceGenerators.Dxc;
 using ComputeSharp.SourceGenerators.Models;
 using Microsoft.CodeAnalysis;
+using Windows.Win32;
+using Windows.Win32.Graphics.Direct3D.Dxc;
 using static ComputeSharp.SourceGeneration.Diagnostics.DiagnosticDescriptors;
 
 namespace ComputeSharp.SourceGenerators;
@@ -53,19 +54,34 @@ partial class ComputeShaderDescriptorGenerator
                     token.ThrowIfCancellationRequested();
 
                     // Compile the shader bytecode
-                    byte[] bytecode = DxcShaderCompiler.Instance.Compile(key.HlslSource.AsSpan(), key.CompileOptions, token);
+                    using ComPtr<IDxcBlob> dxcBlob = DxcShaderCompiler.Instance.Compile(
+                        key.HlslSource.AsSpan(),
+                        key.CompileOptions,
+                        token);
 
                     token.ThrowIfCancellationRequested();
 
-                    return new HlslBytecodeInfo.Success(Unsafe.As<byte[], ImmutableArray<byte>>(ref bytecode));
+                    // Check whether double precision operations are required
+                    bool requiresDoublePrecisionSupport = DxcShaderCompiler.Instance.IsDoublePrecisionSupportRequired(dxcBlob.Get());
+
+                    token.ThrowIfCancellationRequested();
+
+                    byte* buffer = (byte*)dxcBlob.Get()->GetBufferPointer();
+                    int length = checked((int)dxcBlob.Get()->GetBufferSize());
+
+                    byte[] array = new ReadOnlySpan<byte>(buffer, length).ToArray();
+
+                    ImmutableArray<byte> bytecode = Unsafe.As<byte[], ImmutableArray<byte>>(ref array);
+
+                    return new HlslBytecodeInfo.Success(bytecode, requiresDoublePrecisionSupport);
                 }
                 catch (Win32Exception e)
                 {
-                    return new HlslBytecodeInfo.Win32Error(e.NativeErrorCode, FixupExceptionMessage(e.Message));
+                    return new HlslBytecodeInfo.Win32Error(e.NativeErrorCode, DxcShaderCompiler.FixupExceptionMessage(e.Message));
                 }
                 catch (DxcCompilationException e)
                 {
-                    return new HlslBytecodeInfo.CompilerError(FixupExceptionMessage(e.Message));
+                    return new HlslBytecodeInfo.CompilerError(DxcShaderCompiler.FixupExceptionMessage(e.Message));
                 }
             }
 
@@ -108,14 +124,17 @@ partial class ComputeShaderDescriptorGenerator
                 diagnostic = DiagnosticInfo.Create(
                     HlslBytecodeFailedWithWin32Exception,
                     structDeclarationSymbol,
-                    [structDeclarationSymbol, win32Error.HResult, win32Error.Message]);
+                    structDeclarationSymbol,
+                    win32Error.HResult,
+                    win32Error.Message);
             }
             else if (info is HlslBytecodeInfo.CompilerError dxcError)
             {
                 diagnostic = DiagnosticInfo.Create(
                     HlslBytecodeFailedWithDxcCompilationException,
                     structDeclarationSymbol,
-                    [structDeclarationSymbol, dxcError.Message]);
+                    structDeclarationSymbol,
+                    dxcError.Message);
             }
 
             if (diagnostic is not null)
@@ -125,22 +144,41 @@ partial class ComputeShaderDescriptorGenerator
         }
 
         /// <summary>
-        /// Fixes up an exception message to improve the way it's displayed in VS.
+        /// Gets the diagnostics for when double precision support is configured incorrectly.
         /// </summary>
-        /// <param name="message">The input exception message.</param>
-        /// <returns>The updated exception message.</returns>
-        private static string FixupExceptionMessage(string message)
+        /// <param name="structDeclarationSymbol">The input <see cref="INamedTypeSymbol"/> instance to process.</param>
+        /// <param name="info">The source <see cref="HlslBytecodeInfo"/> instance.</param>
+        /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
+        public static void GetDoublePrecisionSupportDiagnostics(
+            INamedTypeSymbol structDeclarationSymbol,
+            HlslBytecodeInfo info,
+            ImmutableArrayBuilder<DiagnosticInfo> diagnostics)
         {
-            // Add square brackets around error headers
-            message = Regex.Replace(message, @"^(error|warning):", static m => $"[{m.Groups[1].Value}]:", RegexOptions.Multiline);
+            // If we have no compiled HLSL bytecode, there is nothing more to do
+            if (info is not HlslBytecodeInfo.Success success)
+            {
+                return;
+            }
 
-            // Remove lines with notes
-            message = Regex.Replace(message, @"^note:.+", string.Empty, RegexOptions.Multiline);
+            bool hasD2DRequiresDoublePrecisionSupportAttribute = structDeclarationSymbol.TryGetAttributeWithFullyQualifiedMetadataName(
+                "ComputeSharp.RequiresDoublePrecisionSupportAttribute",
+                out AttributeData? attributeData);
 
-            // Remove syntax error indicators
-            message = Regex.Replace(message, @"^ +\^", string.Empty, RegexOptions.Multiline);
-
-            return message.NormalizeToSingleLine();
+            // Check the two cases where diagnostics are necessary (same as the D2D generator)
+            if (!hasD2DRequiresDoublePrecisionSupportAttribute && success.RequiresDoublePrecisionSupport)
+            {
+                diagnostics.Add(DiagnosticInfo.Create(
+                    MissingRequiresDoublePrecisionSupportAttribute,
+                    structDeclarationSymbol,
+                    structDeclarationSymbol));
+            }
+            else if (hasD2DRequiresDoublePrecisionSupportAttribute && !success.RequiresDoublePrecisionSupport)
+            {
+                diagnostics.Add(DiagnosticInfo.Create(
+                    UnnecessaryRequiresDoublePrecisionSupportAttribute,
+                    attributeData!.GetLocation(),
+                    structDeclarationSymbol));
+            }
         }
     }
 }

@@ -1,6 +1,9 @@
 CLSID_DxcCompiler
 CLSID_DxcLibrary
 DxcCreateInstance
+D3D_SHADER_REQUIRES_DOUBLES
+D3D_SHADER_REQUIRES_11_1_DOUBLE_EXTENSIONS
+ID3D12ShaderReflection
 IDxcCompiler3
 IDxcUtils
 IDxcResult

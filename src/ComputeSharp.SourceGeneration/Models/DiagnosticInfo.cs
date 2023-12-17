@@ -42,7 +42,17 @@ internal sealed record DiagnosticInfo(
     /// <returns>A new <see cref="DiagnosticInfo"/> instance with the specified parameters.</returns>
     public static DiagnosticInfo Create(DiagnosticDescriptor descriptor, Location? location, params object[] args)
     {
-        return new(descriptor, location?.SourceTree, location?.SourceSpan ?? default, args.Select(static arg => arg.ToString()).ToImmutableArray());
+        // The returned DiagnosticInfo instances will be used inside incremental collections. Because of
+        // that, we pre-transform all arguments with ToString(), so they are guaranteed to be equatable
+        // from the start and not to keep compilations alive (if eg. they happen to be symbol objects).
+        EquatableArray<string> textArgs = args.Select(static arg => arg.ToString()).ToImmutableArray();
+
+        if (location is null)
+        {
+            return new(descriptor, null, default, textArgs);
+        }
+
+        return new(descriptor, location.SourceTree, location.SourceSpan, textArgs);
     }
 
     /// <summary>
@@ -54,7 +64,7 @@ internal sealed record DiagnosticInfo(
     /// <returns>A new <see cref="DiagnosticInfo"/> instance with the specified parameters.</returns>
     public static DiagnosticInfo Create(DiagnosticDescriptor descriptor, ISymbol symbol, params object[] args)
     {
-        return Create(descriptor, symbol.Locations.First(), args);
+        return Create(descriptor, symbol.Locations.FirstOrDefault(), args);
     }
 
     /// <summary>

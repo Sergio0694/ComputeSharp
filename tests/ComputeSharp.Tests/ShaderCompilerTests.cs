@@ -361,6 +361,7 @@ namespace ComputeSharp.Tests
 
         [AutoConstructor]
         [ThreadGroupSize(DefaultThreadGroupSizes.X)]
+        [RequiresDoublePrecisionSupport]
         [GeneratedComputeShaderDescriptor]
         public readonly partial struct DoublePrecisionSupportShader : IComputeShader
         {

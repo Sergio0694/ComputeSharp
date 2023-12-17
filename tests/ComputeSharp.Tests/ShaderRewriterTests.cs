@@ -52,6 +52,7 @@ public partial class ShaderRewriterTests
 
     [AutoConstructor]
     [ThreadGroupSize(DefaultThreadGroupSizes.X)]
+    [RequiresDoublePrecisionSupport]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct NanAndInfiniteShader : IComputeShader
     {
@@ -622,6 +623,7 @@ public partial class ShaderRewriterTests
 
     [AutoConstructor]
     [ThreadGroupSize(DefaultThreadGroupSizes.X)]
+    [RequiresDoublePrecisionSupport]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct DoubleConstantsInShaderConstantFieldsShader : IComputeShader
     {
