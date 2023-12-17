@@ -62,6 +62,11 @@ partial class ComputeShaderDescriptorGenerator
 
                     token.ThrowIfCancellationRequested();
 
+                    // Check whether double precision operations are required
+                    bool requiresDoublePrecisionSupport = DxcShaderCompiler.Instance.IsDoublePrecisionSupportRequired(dxcBlob.Get());
+
+                    token.ThrowIfCancellationRequested();
+
                     byte* buffer = (byte*)dxcBlob.Get()->GetBufferPointer();
                     int length = checked((int)dxcBlob.Get()->GetBufferSize());
 
@@ -69,7 +74,7 @@ partial class ComputeShaderDescriptorGenerator
 
                     ImmutableArray<byte> bytecode = Unsafe.As<byte[], ImmutableArray<byte>>(ref array);
 
-                    return new HlslBytecodeInfo.Success(bytecode);
+                    return new HlslBytecodeInfo.Success(bytecode, requiresDoublePrecisionSupport);
                 }
                 catch (Win32Exception e)
                 {

@@ -6,6 +6,8 @@ using System.Threading;
 using Windows.Win32;
 using Windows.Win32.Foundation;
 using Windows.Win32.Graphics.Direct3D.Dxc;
+using Windows.Win32.Graphics.Direct3D12;
+using DirectX = Windows.Win32.PInvoke;
 
 namespace ComputeSharp.SourceGenerators.Dxc;
 
@@ -245,6 +247,31 @@ internal sealed unsafe class DxcShaderCompiler
         dxcResult.Get()->GetResult(dxcBlobBytecode.GetAddressOf()).Assert();
 
         return dxcBlobBytecode.Move();
+    }
+
+    /// <summary>
+    /// Checks whether double precision support is required.
+    /// </summary>
+    /// <param name="dxcBlob">The input HLSL bytecode to inspect.</param>
+    /// <returns>Whether double precision support is required for <paramref name="dxcBlob"/>.</returns>
+    public bool IsDoublePrecisionSupportRequired(IDxcBlob* dxcBlob)
+    {
+        using ComPtr<ID3D12ShaderReflection> d3D12ShaderReflection = default;
+
+        Guid iidOfID3D12ShaderReflection = ID3D12ShaderReflection.IID_Guid;
+
+        DxcBuffer dxcBuffer = default;
+        dxcBuffer.Ptr = dxcBlob->GetBufferPointer();
+        dxcBuffer.Size = dxcBlob->GetBufferSize();
+
+        this.dxcUtils.Get()->CreateReflection(
+            &dxcBuffer,
+            &iidOfID3D12ShaderReflection,
+            (void**)d3D12ShaderReflection.GetAddressOf()).Assert();
+
+        const ulong doublePrecisionFlags = DirectX.D3D_SHADER_REQUIRES_DOUBLES | DirectX.D3D_SHADER_REQUIRES_11_1_DOUBLE_EXTENSIONS;
+
+        return (d3D12ShaderReflection.Get()->GetRequiresFlags() & doublePrecisionFlags) != 0;
     }
 
     /// <summary>
