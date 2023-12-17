@@ -257,14 +257,17 @@ partial class D2DPixelShaderDescriptorGenerator
                 diagnostic = DiagnosticInfo.Create(
                     HlslBytecodeFailedWithWin32Exception,
                     structDeclarationSymbol,
-                    [structDeclarationSymbol, win32Error.HResult, win32Error.Message]);
+                    structDeclarationSymbol,
+                    win32Error.HResult,
+                    win32Error.Message);
             }
             else if (info is HlslBytecodeInfo.CompilerError fxcError)
             {
                 diagnostic = DiagnosticInfo.Create(
                     HlslBytecodeFailedWithFxcCompilationException,
                     structDeclarationSymbol,
-                    [structDeclarationSymbol, fxcError.Message]);
+                    structDeclarationSymbol,
+                    fxcError.Message);
             }
 
             if (diagnostic is not null)
