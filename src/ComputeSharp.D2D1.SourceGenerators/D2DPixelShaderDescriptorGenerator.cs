@@ -163,13 +163,13 @@ public sealed partial class D2DPixelShaderDescriptorGenerator : IIncrementalGene
                         isCompilationEnabled);
 
                     // Get the existing compiled shader, or compile the processed HLSL code
-                    HlslBytecodeInfo hlslInfo = HlslBytecode.GetInfo(ref hlslInfoKey, token);
+                    HlslBytecodeInfo hlslInfo = HlslBytecodeSyntaxProcessor.GetInfo(ref hlslInfoKey, token);
 
                     token.ThrowIfCancellationRequested();
 
                     // Append any diagnostic for the shader compilation
-                    HlslBytecode.GetInfoDiagnostics(typeSymbol, hlslInfo, diagnostics);
-                    HlslBytecode.GetDoublePrecisionSupportDiagnostics(typeSymbol, hlslInfo, diagnostics);
+                    HlslBytecodeSyntaxProcessor.GetInfoDiagnostics(typeSymbol, hlslInfo, diagnostics);
+                    HlslBytecodeSyntaxProcessor.GetDoublePrecisionSupportDiagnostics(typeSymbol, hlslInfo, diagnostics);
 
                     token.ThrowIfCancellationRequested();
 

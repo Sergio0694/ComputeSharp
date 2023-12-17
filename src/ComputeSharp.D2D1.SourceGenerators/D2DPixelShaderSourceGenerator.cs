@@ -4,10 +4,10 @@ using ComputeSharp.D2D1.SourceGenerators.Models;
 using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Helpers;
 using ComputeSharp.SourceGeneration.Models;
+using ComputeSharp.SourceGeneration.SyntaxProcessors;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using static ComputeSharp.D2D1.SourceGenerators.D2DPixelShaderDescriptorGenerator;
 
 namespace ComputeSharp.D2D1.SourceGenerators;
 
@@ -55,7 +55,7 @@ public sealed partial class D2DPixelShaderSourceGenerator : IIncrementalGenerato
                         isCompilationEnabled);
 
                     // Get the existing compiled shader, or compile the processed HLSL code
-                    HlslBytecodeInfo hlslInfo = HlslBytecode.GetInfo(ref hlslInfoKey, token);
+                    HlslBytecodeInfo hlslInfo = HlslBytecodeSyntaxProcessor.GetInfo(ref hlslInfoKey, token);
 
                     token.ThrowIfCancellationRequested();
 

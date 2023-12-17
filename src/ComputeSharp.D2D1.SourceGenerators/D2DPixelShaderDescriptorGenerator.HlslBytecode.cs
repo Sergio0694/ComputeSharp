@@ -1,16 +1,8 @@
 using System;
-using System.Collections.Immutable;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Threading;
-using ComputeSharp.D2D1.Shaders.Translation;
-using ComputeSharp.D2D1.SourceGenerators.Models;
 using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Helpers;
 using ComputeSharp.SourceGeneration.Models;
 using Microsoft.CodeAnalysis;
-using Windows.Win32;
-using Windows.Win32.Graphics.Direct3D;
 using static ComputeSharp.SourceGeneration.Diagnostics.DiagnosticDescriptors;
 
 namespace ComputeSharp.D2D1.SourceGenerators;
@@ -23,11 +15,6 @@ partial class D2DPixelShaderDescriptorGenerator
     /// </summary>
     internal static partial class HlslBytecode
     {
-        /// <summary>
-        /// The shared cache of <see cref="HlslBytecodeInfo"/> values.
-        /// </summary>
-        private static readonly DynamicCache<HlslBytecodeInfoKey, HlslBytecodeInfo> HlslBytecodeCache = new();
-
         /// <summary>
         /// Extracts the requested shader profile for the current shader.
         /// </summary>
@@ -177,143 +164,6 @@ partial class D2DPixelShaderDescriptorGenerator
             }
 
             return isSimpleInputShader;
-        }
-
-        /// <summary>
-        /// Gets the <see cref="HlslBytecodeInfo"/> instance for the input shader info.
-        /// </summary>
-        /// <param name="key">The <see cref="HlslBytecodeInfoKey"/> instance for the shader to compile.</param>
-        /// <param name="token">The <see cref="CancellationToken"/> used to cancel the operation, if needed.</param>
-        /// <returns>The <see cref="HlslBytecodeInfo"/> instance for the current shader.</returns>
-        public static HlslBytecodeInfo GetInfo(ref HlslBytecodeInfoKey key, CancellationToken token)
-        {
-            static unsafe HlslBytecodeInfo GetInfo(HlslBytecodeInfoKey key, CancellationToken token)
-            {
-                // Check if the compilation is not enabled (eg. if there's been errors earlier in the pipeline).
-                // In this case, skip the compilation, as diagnostic will be emitted for those anyway.
-                // Compiling would just add overhead and result in more errors, as the HLSL would be invalid.
-                if (!key.IsCompilationEnabled)
-                {
-                    return HlslBytecodeInfo.Missing.Instance;
-                }
-
-                try
-                {
-                    token.ThrowIfCancellationRequested();
-
-                    // Compile the shader bytecode using the effective parameters
-                    using ComPtr<ID3DBlob> d3DBlob = D3DCompiler.Compile(
-                        key.HlslSource.AsSpan(),
-                        key.ShaderProfile,
-                        key.CompileOptions);
-
-                    token.ThrowIfCancellationRequested();
-
-                    // Check whether double precision operations are required
-                    bool requiresDoublePrecisionSupport = D3DCompiler.IsDoublePrecisionSupportRequired(d3DBlob.Get());
-
-                    token.ThrowIfCancellationRequested();
-
-                    byte* buffer = (byte*)d3DBlob.Get()->GetBufferPointer();
-                    int length = checked((int)d3DBlob.Get()->GetBufferSize());
-
-                    byte[] array = new ReadOnlySpan<byte>(buffer, length).ToArray();
-
-                    ImmutableArray<byte> bytecode = Unsafe.As<byte[], ImmutableArray<byte>>(ref array);
-
-                    return new HlslBytecodeInfo.Success(bytecode, requiresDoublePrecisionSupport);
-                }
-                catch (Win32Exception e)
-                {
-                    return new HlslBytecodeInfo.Win32Error(e.NativeErrorCode, D3DCompiler.PrettifyFxcErrorMessage(e.Message));
-                }
-                catch (FxcCompilationException e)
-                {
-                    return new HlslBytecodeInfo.CompilerError(D3DCompiler.PrettifyFxcErrorMessage(e.Message));
-                }
-            }
-
-            // Get or create the HLSL bytecode compilation result for the input key. The dynamic cache
-            // will take care of retrieving an existing cached value if the same shader has been compiled
-            // already with the same parameters. After this call, callers must use the updated key value.
-            return HlslBytecodeCache.GetOrCreate(ref key, GetInfo, token);
-        }
-
-        /// <summary>
-        /// Gets any diagnostics from a processed <see cref="HlslBytecodeInfo"/> instance.
-        /// </summary>
-        /// <param name="structDeclarationSymbol">The input <see cref="INamedTypeSymbol"/> instance to process.</param>
-        /// <param name="info">The source <see cref="HlslBytecodeInfo"/> instance.</param>
-        /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
-        public static void GetInfoDiagnostics(
-            INamedTypeSymbol structDeclarationSymbol,
-            HlslBytecodeInfo info,
-            ImmutableArrayBuilder<DiagnosticInfo> diagnostics)
-        {
-            DiagnosticInfo? diagnostic = null;
-
-            if (info is HlslBytecodeInfo.Win32Error win32Error)
-            {
-                diagnostic = DiagnosticInfo.Create(
-                    HlslBytecodeFailedWithWin32Exception,
-                    structDeclarationSymbol,
-                    structDeclarationSymbol,
-                    win32Error.HResult,
-                    win32Error.Message);
-            }
-            else if (info is HlslBytecodeInfo.CompilerError fxcError)
-            {
-                diagnostic = DiagnosticInfo.Create(
-                    HlslBytecodeFailedWithFxcCompilationException,
-                    structDeclarationSymbol,
-                    structDeclarationSymbol,
-                    fxcError.Message);
-            }
-
-            if (diagnostic is not null)
-            {
-                diagnostics.Add(diagnostic);
-            }
-        }
-
-        /// <summary>
-        /// Gets the diagnostics for when double precision support is configured incorrectly.
-        /// </summary>
-        /// <param name="structDeclarationSymbol">The input <see cref="INamedTypeSymbol"/> instance to process.</param>
-        /// <param name="info">The source <see cref="HlslBytecodeInfo"/> instance.</param>
-        /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
-        public static void GetDoublePrecisionSupportDiagnostics(
-            INamedTypeSymbol structDeclarationSymbol,
-            HlslBytecodeInfo info,
-            ImmutableArrayBuilder<DiagnosticInfo> diagnostics)
-        {
-            // If we have no compiled HLSL bytecode, there is nothing more to do
-            if (info is not HlslBytecodeInfo.Success success)
-            {
-                return;
-            }
-
-            bool hasD2DRequiresDoublePrecisionSupportAttribute = structDeclarationSymbol.TryGetAttributeWithFullyQualifiedMetadataName(
-                "ComputeSharp.D2D1.D2DRequiresDoublePrecisionSupportAttribute",
-                out AttributeData? attributeData);
-
-            // Check the two cases where diagnostics are necessary:
-            //   - The shader does not have [D2DRequiresDoublePrecisionSupport], but it needs it
-            //   - The shader has [D2DRequiresDoublePrecisionSupport], but it does not need it
-            if (!hasD2DRequiresDoublePrecisionSupportAttribute && success.RequiresDoublePrecisionSupport)
-            {
-                diagnostics.Add(DiagnosticInfo.Create(
-                    MissingD2DRequiresDoublePrecisionSupportAttribute,
-                    structDeclarationSymbol,
-                    structDeclarationSymbol));
-            }
-            else if (hasD2DRequiresDoublePrecisionSupportAttribute && !success.RequiresDoublePrecisionSupport)
-            {
-                diagnostics.Add(DiagnosticInfo.Create(
-                    UnnecessaryD2DRequiresDoublePrecisionSupportAttribute,
-                    attributeData!.GetLocation(),
-                    structDeclarationSymbol));
-            }
         }
     }
 }

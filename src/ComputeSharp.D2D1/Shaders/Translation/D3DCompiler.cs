@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 #if SOURCE_GENERATOR
+using System.Threading;
 using Windows.Win32;
 using Windows.Win32.Foundation;
 using Windows.Win32.Graphics.Direct3D;
@@ -34,21 +35,23 @@ internal static unsafe partial class D3DCompiler
     /// <param name="shaderProfile">The shader profile to use to compile the shader.</param>
     /// <param name="options">The options to use to compile the shader.</param>
     /// <returns>The bytecode for the compiled shader.</returns>
-    public static ComPtr<ID3DBlob> Compile(ReadOnlySpan<char> source, D2D1ShaderProfile shaderProfile, D2D1CompileOptions options)
+    public static ComPtr<ID3DBlob> Compile(
+        ReadOnlySpan<char> source,
+        D2D1ShaderProfile shaderProfile,
+#if SOURCE_GENERATOR
+#pragma warning disable CS1573
+        D2D1CompileOptions options,
+        CancellationToken token) // The cancellation token used to cancel the operation.
+#pragma warning restore CS1573
+#else
+        D2D1CompileOptions options)
+#endif
     {
+        // Transcode the input HLSL source from Unicode to ASCII encoding
         int maxLength = Encoding.ASCII.GetMaxByteCount(source.Length);
         byte[] buffer = ArrayPool<byte>.Shared.Rent(maxLength);
-        int writtenBytes;
-
-#if SOURCE_GENERATOR
-        fixed (char* pSource = source)
-        fixed (byte* pBuffer = buffer)
-        {
-            writtenBytes = Encoding.ASCII.GetBytes(pSource, source.Length, pBuffer, buffer.Length);
-        }
-#else
-        writtenBytes = Encoding.ASCII.GetBytes(source, buffer);
-#endif
+        int writtenBytes = Encoding.ASCII.GetBytes(source, buffer);
+        ReadOnlySpan<byte> sourceAscii = new(buffer, 0, writtenBytes);
 
         bool enableLinking = (options & D2D1CompileOptions.EnableLinking) == D2D1CompileOptions.EnableLinking;
         bool stripReflectionData = (options & D2D1CompileOptions.StripReflectionData) == D2D1CompileOptions.StripReflectionData;
@@ -58,9 +61,13 @@ internal static unsafe partial class D3DCompiler
 
         try
         {
+#if SOURCE_GENERATOR
+            token.ThrowIfCancellationRequested();
+#endif
+
             // Compile the standalone D2D1 full shader
             using ComPtr<ID3DBlob> d3DBlobFullShader = Compile(
-                source: buffer.AsSpan(0, writtenBytes),
+                source: sourceAscii,
                 macro: ASCII.D2D_FULL_SHADER,
                 d2DEntry: ASCII.Execute,
                 entryPoint: ASCII.Execute,
@@ -73,9 +80,13 @@ internal static unsafe partial class D3DCompiler
                 return d3DBlobFullShader.Move();
             }
 
+#if SOURCE_GENERATOR
+            token.ThrowIfCancellationRequested();
+#endif
+
             // Compile the export function
             using ComPtr<ID3DBlob> d3DBlobFunction = Compile(
-                source: buffer.AsSpan(0, writtenBytes),
+                source: sourceAscii,
                 macro: ASCII.D2D_FUNCTION,
                 d2DEntry: ASCII.Execute,
                 entryPoint: default,

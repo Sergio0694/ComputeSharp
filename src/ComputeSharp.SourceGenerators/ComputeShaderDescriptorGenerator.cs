@@ -117,12 +117,12 @@ public sealed partial class ComputeShaderDescriptorGenerator : IIncrementalGener
                     HlslBytecodeInfoKey hlslInfoKey = new(hlslSource, compileOptions, isCompilationEnabled);
 
                     // Try to get the HLSL bytecode
-                    HlslBytecodeInfo hlslInfo = HlslBytecode.GetBytecode(ref hlslInfoKey, token);
+                    HlslBytecodeInfo hlslInfo = HlslBytecodeSyntaxProcessor.GetInfo(ref hlslInfoKey, token);
 
                     token.ThrowIfCancellationRequested();
 
-                    HlslBytecode.GetInfoDiagnostics(typeSymbol, hlslInfo, diagnostics);
-                    HlslBytecode.GetDoublePrecisionSupportDiagnostics(typeSymbol, hlslInfo, diagnostics);
+                    HlslBytecodeSyntaxProcessor.GetInfoDiagnostics(typeSymbol, hlslInfo, diagnostics);
+                    HlslBytecodeSyntaxProcessor.GetDoublePrecisionSupportDiagnostics(typeSymbol, hlslInfo, diagnostics);
 
                     token.ThrowIfCancellationRequested();
 

@@ -42,13 +42,13 @@ internal sealed unsafe class DxcShaderCompiler
         using ComPtr<IDxcCompiler3> dxcCompiler = default;
         using ComPtr<IDxcUtils> dxcUtils = default;
 
-        PInvoke.DxcCreateInstance(
-            PInvoke.CLSID_DxcCompiler,
+        DirectX.DxcCreateInstance(
+            DirectX.CLSID_DxcCompiler,
             IDxcCompiler3.IID_Guid,
             out *(void**)dxcCompiler.GetAddressOf()).Assert();
 
-        PInvoke.DxcCreateInstance(
-            PInvoke.CLSID_DxcLibrary,
+        DirectX.DxcCreateInstance(
+            DirectX.CLSID_DxcLibrary,
             IDxcUtils.IID_Guid,
             out *(void**)dxcUtils.GetAddressOf()).Assert();
 
@@ -250,11 +250,7 @@ internal sealed unsafe class DxcShaderCompiler
         return dxcBlobBytecode.Move();
     }
 
-    /// <summary>
-    /// Checks whether double precision support is required.
-    /// </summary>
-    /// <param name="dxcBlob">The input HLSL bytecode to inspect.</param>
-    /// <returns>Whether double precision support is required for <paramref name="dxcBlob"/>.</returns>
+    /// <inheritdoc cref="SourceGeneration.SyntaxProcessors.HlslBytecodeSyntaxProcessor.IsDoublePrecisionSupportRequired"/>
     public bool IsDoublePrecisionSupportRequired(IDxcBlob* dxcBlob)
     {
         using ComPtr<ID3D12ShaderReflection> d3D12ShaderReflection = default;
@@ -275,11 +271,7 @@ internal sealed unsafe class DxcShaderCompiler
         return (d3D12ShaderReflection.Get()->GetRequiresFlags() & doublePrecisionFlags) != 0;
     }
 
-    /// <summary>
-    /// Fixes up an exception message to improve the way it's displayed in VS.
-    /// </summary>
-    /// <param name="message">The input exception message.</param>
-    /// <returns>The updated exception message.</returns>
+    /// <inheritdoc cref="SourceGeneration.SyntaxProcessors.HlslBytecodeSyntaxProcessor.FixupErrorMessage"/>
     public static string FixupExceptionMessage(string message)
     {
         // Add square brackets around error headers
