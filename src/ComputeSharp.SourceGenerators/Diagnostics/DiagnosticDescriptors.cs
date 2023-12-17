@@ -901,4 +901,36 @@ partial class DiagnosticDescriptors
         isEnabledByDefault: true,
         description: "Methods from the Math and MathF types cannot be used in a shader, and equivalent APIs from the Hlsl type should be used instead.",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+    /// <summary>
+    /// Gets a <see cref="DiagnosticDescriptor"/> for a shader missing [RequiresDoublePrecisionSupport].
+    /// <para>
+    /// Format: <c>"The shader {0} requires double precision support, but it does not have the [RequiresDoublePrecisionSupport] attribute on it (adding the attribute is necessary to explicitly opt-in to that functionality)"</c>.
+    /// </para>
+    /// </summary>
+    public static readonly DiagnosticDescriptor MissingRequiresDoublePrecisionSupportAttribute = new(
+        id: "CMPS0064",
+        title: "Missing [RequiresDoublePrecisionSupport] attribute",
+        messageFormat: "The shader {0} requires double precision support, but it does not have the [RequiresDoublePrecisionSupport] attribute on it (adding the attribute is necessary to explicitly opt-in to that functionality)",
+        category: "ComputeSharp.Shaders",
+        defaultSeverity: DiagnosticSeverity.Error,
+        isEnabledByDefault: true,
+        description: "Shaders performing double precision operations must be annotated with [RequiresDoublePrecisionSupport] to explicitly opt-in to that functionality.",
+        helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+    /// <summary>
+    /// Gets a <see cref="DiagnosticDescriptor"/> for a shader is unnecessarily using [RequiresDoublePrecisionSupportAttribute].
+    /// <para>
+    /// Format: <c>"The shader {0} does not require double precision support, but it has the [RequiresDoublePrecisionSupport] attribute on it (using the attribute is not needed if the shader is not performing any double precision operations)"</c>.
+    /// </para>
+    /// </summary>
+    public static readonly DiagnosticDescriptor UnnecessaryRequiresDoublePrecisionSupportAttribute = new(
+        id: "CMPS0065",
+        title: "Unnecessary [RequiresDoublePrecisionSupport] attribute",
+        messageFormat: "The shader {0} does not require double precision support, but it has the [RequiresDoublePrecisionSupport] attribute on it (using the attribute is not needed if the shader is not performing any double precision operations)",
+        category: "ComputeSharp.Shaders",
+        defaultSeverity: DiagnosticSeverity.Warning,
+        isEnabledByDefault: true,
+        description: "Shaders not performing any double precision operations should not be annotated with [RequiresDoublePrecisionSupport], as the attribute is not needed in that case.",
+        helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 }

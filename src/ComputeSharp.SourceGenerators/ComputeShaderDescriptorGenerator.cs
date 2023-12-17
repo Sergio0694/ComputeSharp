@@ -122,6 +122,7 @@ public sealed partial class ComputeShaderDescriptorGenerator : IIncrementalGener
                     token.ThrowIfCancellationRequested();
 
                     HlslBytecode.GetInfoDiagnostics(typeSymbol, hlslInfo, diagnostics);
+                    HlslBytecode.GetDoublePrecisionSupportDiagnostics(typeSymbol, hlslInfo, diagnostics);
 
                     token.ThrowIfCancellationRequested();
 
