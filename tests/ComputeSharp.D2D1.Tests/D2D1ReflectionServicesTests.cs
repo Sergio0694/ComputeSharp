@@ -125,6 +125,7 @@ public partial class D2D1ReflectionServicesTests
     }
 
     [D2DInputCount(1)]
+    [D2DRequiresDoublePrecisionSupport]
     [D2DShaderProfile(D2D1ShaderProfile.PixelShader50)]
     [D2DGeneratedPixelShaderDescriptor]
     [AutoConstructor]

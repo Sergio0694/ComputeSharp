@@ -169,6 +169,7 @@ public sealed partial class D2DPixelShaderDescriptorGenerator : IIncrementalGene
 
                     // Append any diagnostic for the shader compilation
                     HlslBytecode.GetInfoDiagnostics(typeSymbol, hlslInfo, diagnostics);
+                    HlslBytecode.GetDoublePrecisionSupportDiagnostics(typeSymbol, hlslInfo, diagnostics);
 
                     token.ThrowIfCancellationRequested();
 

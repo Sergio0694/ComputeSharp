@@ -346,4 +346,73 @@ public class Test_Analyzers
 
         await CSharpAnalyzerWithLanguageVersionTest<D2DEnableRuntimeCompilationOnAssemblyAnalyzer>.VerifyAnalyzerAsync(source);
     }
+
+    [TestMethod]
+    public async Task ShaderWithPrecompiledBytecode_FromAssembly_WithD2DRequiresDoublePrecisionSupport_DoesNotWarn()
+    {
+        const string source = """
+            using ComputeSharp;
+            using ComputeSharp.D2D1;
+
+            [assembly: D2DShaderProfile(D2D1ShaderProfile.PixelShader50)]
+
+            [D2DInputCount(0)]
+            [D2DRequiresDoublePrecisionSupport]
+            [D2DGeneratedPixelShaderDescriptor]
+            internal partial struct MyType : ID2D1PixelShader
+            {
+                public Float4 Execute()
+                {
+                    return 0;
+                }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<InvalidD2DRequiresDoublePrecisionSupportAnalyzer>.VerifyAnalyzerAsync(source);
+    }
+
+    [TestMethod]
+    public async Task ShaderWithPrecompiledBytecode_FromType_WithD2DRequiresDoublePrecisionSupport_DoesNotWarn()
+    {
+        const string source = """
+            using ComputeSharp;
+            using ComputeSharp.D2D1;
+
+            [D2DInputCount(0)]
+            [D2DShaderProfile(D2D1ShaderProfile.PixelShader50)]
+            [D2DRequiresDoublePrecisionSupport]
+            [D2DGeneratedPixelShaderDescriptor]
+            internal partial struct MyType : ID2D1PixelShader
+            {
+                public Float4 Execute()
+                {
+                    return 0;
+                }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<InvalidD2DRequiresDoublePrecisionSupportAnalyzer>.VerifyAnalyzerAsync(source);
+    }
+
+    [TestMethod]
+    public async Task ShaderWithNoPrecompiledBytecode_WithD2DRequiresDoublePrecisionSupport_Warns()
+    {
+        const string source = """
+            using ComputeSharp;
+            using ComputeSharp.D2D1;
+
+            [D2DInputCount(0)]
+            [{|CMPSD2D0082:D2DRequiresDoublePrecisionSupport|}]
+            [D2DGeneratedPixelShaderDescriptor]
+            internal partial struct MyType : ID2D1PixelShader
+            {
+                public Float4 Execute()
+                {
+                    return 0;
+                }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<InvalidD2DRequiresDoublePrecisionSupportAnalyzer>.VerifyAnalyzerAsync(source);
+    }
 }
