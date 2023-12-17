@@ -265,7 +265,7 @@ partial class D2DPixelShaderDescriptorGenerator
             else if (info is HlslBytecodeInfo.CompilerError fxcError)
             {
                 diagnostic = DiagnosticInfo.Create(
-                    HlslBytecodeFailedWithFxcCompilationException,
+                    HlslBytecodeFailedWithCompilationException,
                     structDeclarationSymbol,
                     structDeclarationSymbol,
                     fxcError.Message);
@@ -304,14 +304,14 @@ partial class D2DPixelShaderDescriptorGenerator
             if (!hasD2DRequiresDoublePrecisionSupportAttribute && success.RequiresDoublePrecisionSupport)
             {
                 diagnostics.Add(DiagnosticInfo.Create(
-                    MissingD2DRequiresDoublePrecisionSupportAttribute,
+                    MissingRequiresDoublePrecisionSupportAttribute,
                     structDeclarationSymbol,
                     structDeclarationSymbol));
             }
             else if (hasD2DRequiresDoublePrecisionSupportAttribute && !success.RequiresDoublePrecisionSupport)
             {
                 diagnostics.Add(DiagnosticInfo.Create(
-                    UnnecessaryD2DRequiresDoublePrecisionSupportAttribute,
+                    UnnecessaryRequiresDoublePrecisionSupportAttribute,
                     attributeData!.GetLocation(),
                     structDeclarationSymbol));
             }

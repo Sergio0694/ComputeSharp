@@ -627,7 +627,7 @@ partial class DiagnosticDescriptors
     /// Format: <c>"The shader of type {0} failed to compile due to an HLSL compiler error (Message: "{1}")"</c>.
     /// </para>
     /// </summary>
-    public static readonly DiagnosticDescriptor HlslBytecodeFailedWithDxcCompilationException = new(
+    public static readonly DiagnosticDescriptor HlslBytecodeFailedWithCompilationException = new(
         id: "CMPS0046",
         title: "HLSL bytecode compilation failed due to an HLSL compiler error",
         messageFormat: """The shader of type {0} failed to compile due to an HLSL compiler error (Message: "{1}")""",

@@ -466,7 +466,7 @@ partial class DiagnosticDescriptors
     /// Format: <c>"The shader of type {0} failed to compile due to an HLSL compiler error (Message: "{1}")"</c>.
     /// </para>
     /// </summary>
-    public static readonly DiagnosticDescriptor HlslBytecodeFailedWithFxcCompilationException = new(
+    public static readonly DiagnosticDescriptor HlslBytecodeFailedWithCompilationException = new(
         id: "CMPSD2D0034",
         title: "HLSL bytecode compilation failed due to an HLSL compiler error",
         messageFormat: """The shader of type {0} failed to compile due to an HLSL compiler error (Message: "{1}")""",
@@ -1197,7 +1197,7 @@ partial class DiagnosticDescriptors
     /// Format: <c>"The shader {0} requires double precision support, but it does not have the [D2DRequiresDoublePrecisionSupport] attribute on it (adding the attribute is necessary to explicitly opt-in to that functionality)"</c>.
     /// </para>
     /// </summary>
-    public static readonly DiagnosticDescriptor MissingD2DRequiresDoublePrecisionSupportAttribute = new(
+    public static readonly DiagnosticDescriptor MissingRequiresDoublePrecisionSupportAttribute = new(
         id: "CMPSD2D0080",
         title: "Missing [D2DRequiresDoublePrecisionSupport] attribute",
         messageFormat: "The shader {0} requires double precision support, but it does not have the [D2DRequiresDoublePrecisionSupport] attribute on it (adding the attribute is necessary to explicitly opt-in to that functionality)",
@@ -1213,7 +1213,7 @@ partial class DiagnosticDescriptors
     /// Format: <c>"The shader {0} does not require double precision support, but it has the [D2DRequiresDoublePrecisionSupport] attribute on it (using the attribute is not needed if the shader is not performing any double precision operations)"</c>.
     /// </para>
     /// </summary>
-    public static readonly DiagnosticDescriptor UnnecessaryD2DRequiresDoublePrecisionSupportAttribute = new(
+    public static readonly DiagnosticDescriptor UnnecessaryRequiresDoublePrecisionSupportAttribute = new(
         id: "CMPSD2D0081",
         title: "Unnecessary [D2DRequiresDoublePrecisionSupport] attribute",
         messageFormat: "The shader {0} does not require double precision support, but it has the [D2DRequiresDoublePrecisionSupport] attribute on it (using the attribute is not needed if the shader is not performing any double precision operations)",

@@ -131,7 +131,7 @@ partial class ComputeShaderDescriptorGenerator
             else if (info is HlslBytecodeInfo.CompilerError dxcError)
             {
                 diagnostic = DiagnosticInfo.Create(
-                    HlslBytecodeFailedWithDxcCompilationException,
+                    HlslBytecodeFailedWithCompilationException,
                     structDeclarationSymbol,
                     structDeclarationSymbol,
                     dxcError.Message);

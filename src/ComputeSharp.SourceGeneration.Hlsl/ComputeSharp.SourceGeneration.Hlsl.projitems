@@ -29,6 +29,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Models\HlslBytecodeInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Interfaces\IConstantBufferInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\TypeAliases.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SyntaxProcessors\HlslBytecodeSyntaxProcessor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SyntaxProcessors\ConstantBufferSyntaxProcessor.Generation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\HlslSourceHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SyntaxProcessors\HlslDefinitionsSyntaxProcessor.cs" />
