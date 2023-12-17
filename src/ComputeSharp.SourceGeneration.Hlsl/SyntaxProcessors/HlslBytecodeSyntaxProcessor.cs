@@ -142,21 +142,21 @@ internal static partial class HlslBytecodeSyntaxProcessor
             return;
         }
 
-        bool hasD2DRequiresDoublePrecisionSupportAttribute = structDeclarationSymbol.TryGetAttributeWithFullyQualifiedMetadataName(
-            RequiresDoublePrecisionSupportAttributeName,
+        bool hasRequiresDoublePrecisionSupportAttribute = structDeclarationSymbol.TryGetAttributeWithFullyQualifiedMetadataName(
+            GetRequiresDoublePrecisionSupportAttributeName(),
             out AttributeData? attributeData);
 
         // Check the two cases where diagnostics are necessary:
         //   - The shader does not have [[D2D]RequiresDoublePrecisionSupport], but it needs it
         //   - The shader has [[D2D]RequiresDoublePrecisionSupport], but it does not need it
-        if (!hasD2DRequiresDoublePrecisionSupportAttribute && success.RequiresDoublePrecisionSupport)
+        if (!hasRequiresDoublePrecisionSupportAttribute && success.RequiresDoublePrecisionSupport)
         {
             diagnostics.Add(DiagnosticInfo.Create(
                 MissingRequiresDoublePrecisionSupportAttribute,
                 structDeclarationSymbol,
                 structDeclarationSymbol));
         }
-        else if (hasD2DRequiresDoublePrecisionSupportAttribute && !success.RequiresDoublePrecisionSupport)
+        else if (hasRequiresDoublePrecisionSupportAttribute && !success.RequiresDoublePrecisionSupport)
         {
             diagnostics.Add(DiagnosticInfo.Create(
                 UnnecessaryRequiresDoublePrecisionSupportAttribute,
@@ -164,6 +164,12 @@ internal static partial class HlslBytecodeSyntaxProcessor
                 structDeclarationSymbol));
         }
     }
+
+    /// <summary>
+    /// Gets the type name for the attribute to indicate that double precision support is required.
+    /// </summary>
+    /// <returns>The type name for the attribute to indicate that double precision support is required.</returns>
+    private static partial string GetRequiresDoublePrecisionSupportAttributeName();
 
     /// <summary>
     /// Compiles the input HLSL source into bytecode.

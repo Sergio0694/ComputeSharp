@@ -10,10 +10,11 @@ namespace ComputeSharp.SourceGeneration.SyntaxProcessors;
 /// <inheritdoc/>
 partial class HlslBytecodeSyntaxProcessor
 {
-    /// <summary>
-    /// The name of the attribute to enable double precision support.
-    /// </summary>
-    private const string RequiresDoublePrecisionSupportAttributeName = "ComputeSharp.D2D1.D2DRequiresDoublePrecisionSupportAttribute";
+    /// <inheritdoc/>
+    private static partial string GetRequiresDoublePrecisionSupportAttributeName()
+    {
+        return "ComputeSharp.D2D1.D2DRequiresDoublePrecisionSupportAttribute";
+    }
 
     /// <inheritdoc/>
     private static partial ComPtr<ID3DBlob> Compile(HlslBytecodeInfoKey key, CancellationToken token)
