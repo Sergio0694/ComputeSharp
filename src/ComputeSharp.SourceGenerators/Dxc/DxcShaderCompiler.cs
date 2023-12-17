@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Threading;
+using ComputeSharp.SourceGeneration.Extensions;
 using Windows.Win32;
 using Windows.Win32.Foundation;
 using Windows.Win32.Graphics.Direct3D.Dxc;
@@ -272,6 +273,25 @@ internal sealed unsafe class DxcShaderCompiler
         const ulong doublePrecisionFlags = DirectX.D3D_SHADER_REQUIRES_DOUBLES | DirectX.D3D_SHADER_REQUIRES_11_1_DOUBLE_EXTENSIONS;
 
         return (d3D12ShaderReflection.Get()->GetRequiresFlags() & doublePrecisionFlags) != 0;
+    }
+
+    /// <summary>
+    /// Fixes up an exception message to improve the way it's displayed in VS.
+    /// </summary>
+    /// <param name="message">The input exception message.</param>
+    /// <returns>The updated exception message.</returns>
+    public static string FixupExceptionMessage(string message)
+    {
+        // Add square brackets around error headers
+        message = Regex.Replace(message, @"^(error|warning):", static m => $"[{m.Groups[1].Value}]:", RegexOptions.Multiline);
+
+        // Remove lines with notes
+        message = Regex.Replace(message, @"^note:.+", string.Empty, RegexOptions.Multiline);
+
+        // Remove syntax error indicators
+        message = Regex.Replace(message, @"^ +\^", string.Empty, RegexOptions.Multiline);
+
+        return message.NormalizeToSingleLine();
     }
 
     /// <summary>

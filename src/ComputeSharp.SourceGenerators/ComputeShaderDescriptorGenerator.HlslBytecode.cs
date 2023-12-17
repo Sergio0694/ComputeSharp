@@ -2,7 +2,6 @@ using System;
 using System.Collections.Immutable;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Text.RegularExpressions;
 using System.Threading;
 using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Helpers;
@@ -78,11 +77,11 @@ partial class ComputeShaderDescriptorGenerator
                 }
                 catch (Win32Exception e)
                 {
-                    return new HlslBytecodeInfo.Win32Error(e.NativeErrorCode, FixupExceptionMessage(e.Message));
+                    return new HlslBytecodeInfo.Win32Error(e.NativeErrorCode, DxcShaderCompiler.FixupExceptionMessage(e.Message));
                 }
                 catch (DxcCompilationException e)
                 {
-                    return new HlslBytecodeInfo.CompilerError(FixupExceptionMessage(e.Message));
+                    return new HlslBytecodeInfo.CompilerError(DxcShaderCompiler.FixupExceptionMessage(e.Message));
                 }
             }
 
@@ -139,25 +138,6 @@ partial class ComputeShaderDescriptorGenerator
             {
                 diagnostics.Add(diagnostic);
             }
-        }
-
-        /// <summary>
-        /// Fixes up an exception message to improve the way it's displayed in VS.
-        /// </summary>
-        /// <param name="message">The input exception message.</param>
-        /// <returns>The updated exception message.</returns>
-        private static string FixupExceptionMessage(string message)
-        {
-            // Add square brackets around error headers
-            message = Regex.Replace(message, @"^(error|warning):", static m => $"[{m.Groups[1].Value}]:", RegexOptions.Multiline);
-
-            // Remove lines with notes
-            message = Regex.Replace(message, @"^note:.+", string.Empty, RegexOptions.Multiline);
-
-            // Remove syntax error indicators
-            message = Regex.Replace(message, @"^ +\^", string.Empty, RegexOptions.Multiline);
-
-            return message.NormalizeToSingleLine();
         }
     }
 }
