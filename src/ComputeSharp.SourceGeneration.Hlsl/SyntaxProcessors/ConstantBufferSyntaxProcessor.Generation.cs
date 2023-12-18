@@ -81,13 +81,15 @@ partial class ConstantBufferSyntaxProcessor
                 {
                     switch (field)
                     {
-                        case FieldInfo.Primitive { TypeName: "System.Boolean" } primitive:
+                        case FieldInfo.Primitive { TypeName: "System.Boolean" or "ComputeSharp.Bool" } primitive:
 
-                            // Append a field as a global::ComputeSharp.Bool value (will use the implicit conversion from bool values)
+                            // Append a field as a Bool value for the native constant buffer layout. This is the case both for
+                            // fields of type System.Boolean (they will use the implicit conversion from bool values), as well
+                            // as for fields that were originally declared as Bool from the start (not recommended, but supported).
                             writer.WriteFieldXmlSummary(field, fullyQualifiedTypeName);
                             writer.WriteFieldXmlRemarks(field);
                             writer.WriteLine($"""[FieldOffset({primitive.Offset})]""");
-                            writer.WriteLine($"""public global::ComputeSharp.Bool {string.Join("_", primitive.FieldPath.Select(static path => path.Name))};""");
+                            writer.WriteLine($"""public Bool {string.Join("_", primitive.FieldPath.Select(static path => path.Name))};""");
                             break;
                         case FieldInfo.Primitive primitive:
 
@@ -265,6 +267,14 @@ partial class ConstantBufferSyntaxProcessor
                             FieldPathPart.Nested nested => nested.TypeName,
                             _ => HlslKnownTypes.GetMappedName(fieldInfo.TypeName)
                         };
+
+                        // Special case: if the field was actually of type ComputeSharp.Bool, and not System.Boolean,
+                        // we need to preserve the original type name, and we cannot use the mapped type name (bool),
+                        // as it would cause the generated field accessor to fail (the field type would not match).
+                        if (fieldInfo.TypeName == "ComputeSharp.Bool")
+                        {
+                            typeName = "Bool";
+                        }
 
                         // Get the friendly type name for the field. If this nested field is the
                         // first path, then the parent is the shader type itself. Otherwise, the
