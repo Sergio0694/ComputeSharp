@@ -1,11 +1,12 @@
 using System.Collections.Immutable;
+using ComputeSharp.SourceGeneration.Helpers;
 
-namespace ComputeSharp.SourceGeneration.Helpers;
+namespace ComputeSharp.SourceGeneration.SyntaxProcessors;
 
 /// <summary>
-/// A helper type to write HLSL source.
+/// A processor responsible for formatting shared HLSL source for all shader types.
 /// </summary>
-internal static class HlslSourceHelper
+internal static class HlslSourceSyntaxProcessor
 {
     /// <summary>
     /// Writes the header included at the top of each generated HLSL shader.

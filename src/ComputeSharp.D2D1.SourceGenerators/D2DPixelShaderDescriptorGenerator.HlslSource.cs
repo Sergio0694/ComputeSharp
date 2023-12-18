@@ -451,13 +451,13 @@ partial class D2DPixelShaderDescriptorGenerator
         /// <summary>
         /// Produces the series of statements to build the current HLSL source.
         /// </summary>
-        /// <param name="definedConstants"><inheritdoc cref="HlslSourceHelper.WriteTopDeclarations" path="/param[@name='definedConstants']/node()"/></param>
-        /// <param name="valueFields"><inheritdoc cref="HlslSourceHelper.WriteCapturedFields" path="/param[@name='valueFields']/node()"/></param>
+        /// <param name="definedConstants"><inheritdoc cref="HlslSourceSyntaxProcessor.WriteTopDeclarations" path="/param[@name='definedConstants']/node()"/></param>
+        /// <param name="valueFields"><inheritdoc cref="HlslSourceSyntaxProcessor.WriteCapturedFields" path="/param[@name='valueFields']/node()"/></param>
         /// <param name="resourceTextureFields">The sequence of captured resource textures for the current shader.</param>
-        /// <param name="staticFields"><inheritdoc cref="HlslSourceHelper.WriteTopDeclarations" path="/param[@name='staticFields']/node()"/></param>
-        /// <param name="processedMethods"><inheritdoc cref="HlslSourceHelper.WriteTopDeclarations" path="/param[@name='processedMethods']/node()"/></param>
-        /// <param name="typeDeclarations"><inheritdoc cref="HlslSourceHelper.WriteTopDeclarations" path="/param[@name='typeDeclarations']/node()"/></param>
-        /// <param name="typeMethodDeclarations"><inheritdoc cref="HlslSourceHelper.WriteMethodDeclarations" path="/param[@name='typeMethodDeclarations']/node()"/></param>
+        /// <param name="staticFields"><inheritdoc cref="HlslSourceSyntaxProcessor.WriteTopDeclarations" path="/param[@name='staticFields']/node()"/></param>
+        /// <param name="processedMethods"><inheritdoc cref="HlslSourceSyntaxProcessor.WriteTopDeclarations" path="/param[@name='processedMethods']/node()"/></param>
+        /// <param name="typeDeclarations"><inheritdoc cref="HlslSourceSyntaxProcessor.WriteTopDeclarations" path="/param[@name='typeDeclarations']/node()"/></param>
+        /// <param name="typeMethodDeclarations"><inheritdoc cref="HlslSourceSyntaxProcessor.WriteMethodDeclarations" path="/param[@name='typeMethodDeclarations']/node()"/></param>
         /// <param name="executeMethod">The body of the entry point of the shader.</param>
         /// <param name="inputCount">The number of shader inputs to declare.</param>
         /// <param name="inputSimpleIndices">The indicess of the simple shader inputs.</param>
@@ -480,7 +480,7 @@ partial class D2DPixelShaderDescriptorGenerator
         {
             using IndentedTextWriter writer = new();
 
-            HlslSourceHelper.WriteHeader(writer);
+            HlslSourceSyntaxProcessor.WriteHeader(writer);
 
             // Shader metadata
             writer.WriteLine($"#define D2D_INPUT_COUNT {inputCount}");
@@ -503,7 +503,7 @@ partial class D2DPixelShaderDescriptorGenerator
             writer.WriteLine();
 
             // The FXC compiler does not support type forward declarations
-            HlslSourceHelper.WriteTopDeclarations(
+            HlslSourceSyntaxProcessor.WriteTopDeclarations(
                 writer,
                 definedConstants,
                 staticFields,
@@ -511,7 +511,7 @@ partial class D2DPixelShaderDescriptorGenerator
                 typeDeclarations,
                 includeTypeForwardDeclarations: false);
 
-            HlslSourceHelper.WriteCapturedFields(writer, valueFields);
+            HlslSourceSyntaxProcessor.WriteCapturedFields(writer, valueFields);
 
             // Resource textures
             foreach (HlslResourceTextureField field in resourceTextureFields)
@@ -521,7 +521,7 @@ partial class D2DPixelShaderDescriptorGenerator
                 writer.WriteLine($"SamplerState __sampler__{field.Name} : register(s{field.Index});");
             }
 
-            HlslSourceHelper.WriteMethodDeclarations(writer, processedMethods, typeMethodDeclarations);
+            HlslSourceSyntaxProcessor.WriteMethodDeclarations(writer, processedMethods, typeMethodDeclarations);
 
             // Entry point
             writer.WriteLine(executeMethod);
