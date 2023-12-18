@@ -1232,5 +1232,34 @@ namespace ComputeSharp.D2D1.Tests
             // Just a sanity check that the generated code is present
             Assert.AreEqual(0, D2D1PixelShader.GetInputCount<ContainingClass.ContainingRecord.ContainingStruct.ContainingRecordStruct.IContainingInterface.DeeplyNestedShader>());
         }
+
+        // https://github.com/Sergio0694/ComputeSharp/issues/727
+        [TestMethod]
+        public unsafe void ShaderWithComputeSharpBoolInstanceField_IsMarshalledCorrectly()
+        {
+            Assert.AreEqual(4, D2D1PixelShader.GetConstantBufferSize<ShaderWithComputeSharpBoolInstanceField>());
+
+            ShaderWithComputeSharpBoolInstanceField shader = new(true);
+
+            ReadOnlyMemory<byte> memory = D2D1PixelShader.GetConstantBuffer(in shader);
+
+            ShaderWithComputeSharpBoolInstanceField roundTrip = D2D1PixelShader.CreateFromConstantBuffer<ShaderWithComputeSharpBoolInstanceField>(memory.Span);
+
+            Assert.IsTrue(shader.value);
+        }
+
+        [D2DInputCount(0)]
+        [D2DShaderProfile(D2D1ShaderProfile.PixelShader50)]
+        [D2DGeneratedPixelShaderDescriptor]
+        [AutoConstructor]
+        internal readonly partial struct ShaderWithComputeSharpBoolInstanceField : ID2D1PixelShader
+        {
+            public readonly Bool value;
+
+            public float4 Execute()
+            {
+                return Hlsl.BoolToFloat(this.value);
+            }
+        }
     }
 }
