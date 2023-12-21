@@ -64,8 +64,8 @@ internal static class TolerantImageComparer
             Memory<TPixel> aMemory = expected.DangerousGetPixelRowMemory(y);
             Memory<TPixel> bMemory = actual.DangerousGetPixelRowMemory(y);
 
-            PixelOperations<TPixel>.Instance.ToRgba32(actual.GetConfiguration(), aMemory.Span, aBuffer);
-            PixelOperations<TPixel>.Instance.ToRgba32(actual.GetConfiguration(), bMemory.Span, bBuffer);
+            PixelOperations<TPixel>.Instance.ToRgba32(actual.Configuration, aMemory.Span, aBuffer);
+            PixelOperations<TPixel>.Instance.ToRgba32(actual.Configuration, bMemory.Span, bBuffer);
 
             for (int x = 0; x < width; x++)
             {
