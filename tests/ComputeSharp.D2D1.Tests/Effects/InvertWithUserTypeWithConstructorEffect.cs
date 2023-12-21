@@ -6,9 +6,9 @@ public struct ColorWrapper
 {
     private float4 value;
 
-    public ColorWrapper(float4 color)
+    public ColorWrapper(float4 value)
     {
-        this.value = color;
+        this.value = value;
     }
 
     public float4 Invert()

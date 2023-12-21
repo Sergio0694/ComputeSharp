@@ -1193,6 +1193,91 @@ namespace ComputeSharp.Tests
                 return x * 4;
             }
         }
+
+        // See https://github.com/Sergio0694/ComputeSharp/issues/726
+        [TestMethod]
+        public void ShaderUsingThisExpressions_IsProcessedCorrectly()
+        {
+            ShaderInfo info = ReflectionServices.GetShaderInfo<ShaderUsingThisExpressions>();
+
+            Assert.AreEqual(
+                """
+                // ================================================
+                //                  AUTO GENERATED
+                // ================================================
+                // This shader was created by ComputeSharp.
+                // See: https://github.com/Sergio0694/ComputeSharp.
+
+                #define __GroupSize__get_X 64
+                #define __GroupSize__get_Y 1
+                #define __GroupSize__get_Z 1
+
+                struct ComputeSharp_Tests_ShaderCompilerTests_ShaderUsingThisExpressions_Data;
+
+                struct ComputeSharp_Tests_ShaderCompilerTests_ShaderUsingThisExpressions_Data
+                {
+                    int value;
+                    void SetValue(int value);
+                };
+
+                cbuffer _ : register(b0)
+                {
+                    uint __x;
+                    uint __y;
+                    uint __z;
+                    float alpha;
+                }
+
+                RWStructuredBuffer<float4> __reserved__buffer : register(u0);
+
+                void ComputeSharp_Tests_ShaderCompilerTests_ShaderUsingThisExpressions_Data::SetValue(int value)
+                {
+                    this.value = value;
+                }
+
+                [NumThreads(__GroupSize__get_X, __GroupSize__get_Y, __GroupSize__get_Z)]
+                void Execute(uint3 ThreadIds : SV_DispatchThreadID)
+                {
+                    if (ThreadIds.x < __x && ThreadIds.y < __y && ThreadIds.z < __z)
+                    {
+                        ComputeSharp_Tests_ShaderCompilerTests_ShaderUsingThisExpressions_Data data = (ComputeSharp_Tests_ShaderCompilerTests_ShaderUsingThisExpressions_Data)0;
+                        data.SetValue(3);
+                        __reserved__buffer[ThreadIds.x] = float4(data.value, data.value, data.value, alpha);
+                    }
+                }
+                """,
+                info.HlslSource);
+        }
+
+        [AutoConstructor]
+        [ThreadGroupSize(DefaultThreadGroupSizes.X)]
+        [GeneratedComputeShaderDescriptor]
+        internal readonly partial struct ShaderUsingThisExpressions : IComputeShader
+        {
+            public readonly ReadWriteBuffer<float4> buffer;
+            public readonly float alpha;
+
+            private struct Data
+            {
+                public int value;
+
+                public void SetValue(int value)
+                {
+                    this.value = value;
+                }
+            }
+
+            public void Execute()
+            {
+                Data data = default;
+
+                data.SetValue(3);
+
+                // The 'this.' expression for shader captured values should be stripped.
+                // The one for accessing struct instance members, however, should not be.
+                this.buffer[ThreadIds.X] = new float4(data.value, data.value, data.value, this.alpha);
+            }
+        }
     }
 }
 

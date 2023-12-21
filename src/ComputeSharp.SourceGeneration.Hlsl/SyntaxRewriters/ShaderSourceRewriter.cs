@@ -383,10 +383,20 @@ internal sealed partial class ShaderSourceRewriter(
                     return IdentifierName(constantName);
                 }
 
-                // If the member access is a this.<FIELD> access, rewrite it to strip "this."
+                // Special handling for 'this.' expressions, which are not always allowed in HLSL
                 if (node.Expression.IsKind(SyntaxKind.ThisExpression))
                 {
-                    return updatedNode.Name;
+                    // If the member access is a this.<FIELD> access, rewrite it to strip 'this.', but only if accessing instance
+                    // fields from the shader type itself (as using 'this.' in that case is not allowed in HLSL, and also it's not
+                    // really useful anyway given that those fields are readonly, so less likely to cause observable conflicts).
+                    if (SymbolEqualityComparer.Default.Equals(fieldOperation.Field.ContainingType, this.shaderType))
+                    {
+                        return updatedNode.Name;
+                    }
+
+                    // For all other cases, we can keep it in, as HLSL does allow using it to access instance fields of custom
+                    // struct types. This is allowed by both FXC and DXC, on all shader profiles, so it's always safe to do.
+                    return updatedNode;
                 }
 
                 // Handle static fields, which can be either in the shader type itself, or in external types

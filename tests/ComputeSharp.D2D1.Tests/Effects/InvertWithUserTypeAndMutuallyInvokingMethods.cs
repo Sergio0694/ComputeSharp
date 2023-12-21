@@ -6,9 +6,9 @@ public struct ColorWrapperUsingExternalType
 {
     private float4 value;
 
-    public ColorWrapperUsingExternalType(float4 color)
+    public ColorWrapperUsingExternalType(float4 value)
     {
-        this.value = color;
+        this.value = value;
     }
 
     public readonly float4 Invert()
