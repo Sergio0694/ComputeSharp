@@ -489,14 +489,14 @@ partial class ComputeShaderDescriptorGenerator
         /// <param name="threadsX">The thread ids value for the X axis.</param>
         /// <param name="threadsY">The thread ids value for the Y axis.</param>
         /// <param name="threadsZ">The thread ids value for the Z axis.</param>
-        /// <param name="definedConstants"><inheritdoc cref="HlslSourceHelper.WriteTopDeclarations" path="/param[@name='definedConstants']/node()"/></param>
+        /// <param name="definedConstants"><inheritdoc cref="HlslSourceSyntaxProcessor.WriteTopDeclarations" path="/param[@name='definedConstants']/node()"/></param>
         /// <param name="resourceFields">The sequence of resource instance fields for the current shader.</param>
-        /// <param name="valueFields"><inheritdoc cref="HlslSourceHelper.WriteCapturedFields" path="/param[@name='valueFields']/node()"/></param>
-        /// <param name="staticFields"><inheritdoc cref="HlslSourceHelper.WriteTopDeclarations" path="/param[@name='staticFields']/node()"/></param>
+        /// <param name="valueFields"><inheritdoc cref="HlslSourceSyntaxProcessor.WriteCapturedFields" path="/param[@name='valueFields']/node()"/></param>
+        /// <param name="staticFields"><inheritdoc cref="HlslSourceSyntaxProcessor.WriteTopDeclarations" path="/param[@name='staticFields']/node()"/></param>
         /// <param name="sharedBuffers">The sequence of shared buffers declared by the shader.</param>
-        /// <param name="processedMethods"><inheritdoc cref="HlslSourceHelper.WriteTopDeclarations" path="/param[@name='processedMethods']/node()"/></param>
-        /// <param name="typeDeclarations"><inheritdoc cref="HlslSourceHelper.WriteTopDeclarations" path="/param[@name='typeDeclarations']/node()"/></param>
-        /// <param name="typeMethodDeclarations"><inheritdoc cref="HlslSourceHelper.WriteMethodDeclarations" path="/param[@name='typeMethodDeclarations']/node()"/></param>
+        /// <param name="processedMethods"><inheritdoc cref="HlslSourceSyntaxProcessor.WriteTopDeclarations" path="/param[@name='processedMethods']/node()"/></param>
+        /// <param name="typeDeclarations"><inheritdoc cref="HlslSourceSyntaxProcessor.WriteTopDeclarations" path="/param[@name='typeDeclarations']/node()"/></param>
+        /// <param name="typeMethodDeclarations"><inheritdoc cref="HlslSourceSyntaxProcessor.WriteMethodDeclarations" path="/param[@name='typeMethodDeclarations']/node()"/></param>
         /// <param name="isComputeShader">Whether or not the current shader type is a compute shader.</param>
         /// <param name="implicitTextureType">The type of the implicit target texture, if present.</param>
         /// <param name="isSamplerUsed">Whether the static sampler is used by the shader.</param>
@@ -521,14 +521,14 @@ partial class ComputeShaderDescriptorGenerator
         {
             using IndentedTextWriter writer = new();
 
-            HlslSourceHelper.WriteHeader(writer);
+            HlslSourceSyntaxProcessor.WriteHeader(writer);
 
             // Group size constants
             writer.WriteLine($"#define __GroupSize__get_X {threadsX}");
             writer.WriteLine($"#define __GroupSize__get_Y {threadsY}");
             writer.WriteLine($"#define __GroupSize__get_Z {threadsZ}");
 
-            HlslSourceHelper.WriteTopDeclarations(
+            HlslSourceSyntaxProcessor.WriteTopDeclarations(
                 writer,
                 definedConstants,
                 staticFields,
@@ -545,7 +545,7 @@ partial class ComputeShaderDescriptorGenerator
                 writer.WriteLine("uint __y;");
                 writer.WriteLineIf(isComputeShader, "uint __z;");
 
-                HlslSourceHelper.WriteCapturedFields(writer, valueFields);
+                HlslSourceSyntaxProcessor.WriteCapturedFields(writer, valueFields);
             }
 
             int constantBuffersCount = 1;
@@ -593,7 +593,7 @@ partial class ComputeShaderDescriptorGenerator
                 writer.WriteLine($"groupshared {buffer.Type} {buffer.Name} [{count}];");
             }
 
-            HlslSourceHelper.WriteMethodDeclarations(writer, processedMethods, typeMethodDeclarations);
+            HlslSourceSyntaxProcessor.WriteMethodDeclarations(writer, processedMethods, typeMethodDeclarations);
 
             // Entry point
             writer.WriteLine("[NumThreads(__GroupSize__get_X, __GroupSize__get_Y, __GroupSize__get_Z)]");

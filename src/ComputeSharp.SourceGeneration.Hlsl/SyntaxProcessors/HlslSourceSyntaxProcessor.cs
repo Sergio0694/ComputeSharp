@@ -1,11 +1,12 @@
 using System.Collections.Immutable;
+using ComputeSharp.SourceGeneration.Helpers;
 
-namespace ComputeSharp.SourceGeneration.Helpers;
+namespace ComputeSharp.SourceGeneration.SyntaxProcessors;
 
 /// <summary>
-/// A helper type to write HLSL source.
+/// A processor responsible for formatting shared HLSL source for all shader types.
 /// </summary>
-internal static class HlslSourceHelper
+internal static class HlslSourceSyntaxProcessor
 {
     /// <summary>
     /// Writes the header included at the top of each generated HLSL shader.
@@ -67,6 +68,18 @@ internal static class HlslSourceHelper
             writer.WriteLine(skipIfPresent: true);
         }
 
+        // Declared types (these have to be declared early on in the shader so that even if
+        // forward declarations for types are not supported, like is the case for D2D shaders
+        // using the FXC compiler, the resulting HLSL code is valid in case any forward
+        // declaration of methods in the shader has one of these types in its signature).
+        foreach (HlslUserType userType in typeDeclarations)
+        {
+            writer.WriteLine(skipIfPresent: true);
+            writer.WriteLine(userType.Definition);
+        }
+
+        writer.WriteLine(skipIfPresent: true);
+
         // Forward declarations of shader/static methods
         foreach (HlslMethod method in processedMethods)
         {
@@ -87,15 +100,6 @@ internal static class HlslSourceHelper
             {
                 writer.WriteLine($"{field.TypeDeclaration} {field.Name};");
             }
-        }
-
-        writer.WriteLine(skipIfPresent: true);
-
-        // Declared types
-        foreach (HlslUserType userType in typeDeclarations)
-        {
-            writer.WriteLine(skipIfPresent: true);
-            writer.WriteLine(userType.Definition);
         }
 
         writer.WriteLine(skipIfPresent: true);

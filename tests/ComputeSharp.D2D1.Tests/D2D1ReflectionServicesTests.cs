@@ -51,7 +51,7 @@ public partial class D2D1ReflectionServicesTests
                 float4 value4 = __reserved__texture.Sample(__sampler____reserved__texture, float2(0, 0.5));
                 return input0 + input1 + input2 + value3 + value4;
             }
-            """.Replace("\r\n", "\n"), shaderInfo.HlslSource);
+            """, shaderInfo.HlslSource);
 
         CollectionAssert.AreEqual(D2D1PixelShader.LoadBytecode<ReflectedShader>().ToArray(), shaderInfo.HlslBytecode.ToArray());
     }
@@ -119,7 +119,7 @@ public partial class D2D1ReflectionServicesTests
             {
                 return (float4)(D2DGetInput(0) + (double4)amount);
             }
-            """.Replace("\r\n", "\n"), shaderInfo.HlslSource);
+            """, shaderInfo.HlslSource);
 
         CollectionAssert.AreEqual(D2D1PixelShader.LoadBytecode<ReflectedShaderWithDoubleOperations>().ToArray(), shaderInfo.HlslBytecode.ToArray());
     }

@@ -992,19 +992,6 @@ namespace ComputeSharp.Tests
                 struct ComputeSharp_Tests_ShaderCompilerTests_StructType1;
                 struct ComputeSharp_Tests_ShaderCompilerTests_StructType2;
 
-                int InstanceMethodInShader();
-
-                static float StaticMethodInShader(float x);
-
-                static float ComputeSharp_Tests_ShaderCompilerTests_StructType1_StaticMethod(int x);
-
-                static float ComputeSharp_Tests_ShaderCompilerTests_StructType2_StaticMethod(int x);
-
-                static const float Init = abs(__ComputeSharp_Tests_ShaderCompilerTests_ShaderWithAllSupportedMembers__PI);
-                static int Temp;
-                static int ComputeSharp_Tests_ShaderCompilerTests_ExternalContainerClass_Temp;
-                static const float ComputeSharp_Tests_ShaderCompilerTests_ExternalContainerClass_PI2 = 3.14 * 2;
-
                 struct ComputeSharp_Tests_ShaderCompilerTests_StructType1
                 {
                     int X;
@@ -1019,6 +1006,19 @@ namespace ComputeSharp.Tests
                     float2 V;
                     float Combine(ComputeSharp_Tests_ShaderCompilerTests_StructType1 other);
                 };
+
+                int InstanceMethodInShader();
+
+                static float StaticMethodInShader(float x);
+
+                static float ComputeSharp_Tests_ShaderCompilerTests_StructType1_StaticMethod(int x);
+
+                static float ComputeSharp_Tests_ShaderCompilerTests_StructType2_StaticMethod(int x);
+
+                static const float Init = abs(__ComputeSharp_Tests_ShaderCompilerTests_ShaderWithAllSupportedMembers__PI);
+                static int Temp;
+                static int ComputeSharp_Tests_ShaderCompilerTests_ExternalContainerClass_Temp;
+                static const float ComputeSharp_Tests_ShaderCompilerTests_ExternalContainerClass_PI2 = 3.14 * 2;
 
                 cbuffer _ : register(b0)
                 {
