@@ -6,8 +6,8 @@
     <!-- Samples don't need public XML docs for all APIs -->
     <NoWarn>$(NoWarn);CS1591</NoWarn>
 
-    <!-- Ignore obsolete warnings (due to APIs pending removal for 3.0) -->
-    <NoWarn>$(NoWarn);CS0618</NoWarn>
+    <!-- Ignore platform compatibility warnings -->
+    <NoWarn>$(NoWarn);CA1416</NoWarn>
   </PropertyGroup>
 
   <!-- Reference PolySharp for all sample projects -->
