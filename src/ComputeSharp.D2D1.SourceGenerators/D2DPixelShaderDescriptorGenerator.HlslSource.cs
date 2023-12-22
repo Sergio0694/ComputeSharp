@@ -480,8 +480,6 @@ partial class D2DPixelShaderDescriptorGenerator
         {
             using IndentedTextWriter writer = new();
 
-            HlslSourceSyntaxProcessor.WriteHeader(writer);
-
             // Shader metadata
             writer.WriteLine($"#define D2D_INPUT_COUNT {inputCount}");
 

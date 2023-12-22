@@ -521,8 +521,6 @@ partial class ComputeShaderDescriptorGenerator
         {
             using IndentedTextWriter writer = new();
 
-            HlslSourceSyntaxProcessor.WriteHeader(writer);
-
             // Group size constants
             writer.WriteLine($"#define __GroupSize__get_X {threadsX}");
             writer.WriteLine($"#define __GroupSize__get_Y {threadsY}");

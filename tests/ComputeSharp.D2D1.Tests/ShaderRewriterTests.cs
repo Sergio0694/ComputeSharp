@@ -15,12 +15,6 @@ public partial class ShaderRewriterTests
         D2D1ShaderInfo shaderInfo = D2D1ReflectionServices.GetShaderInfo<ClassWithShader.ShaderWithStructAndInstanceMethodUsingIt>();
 
         Assert.AreEqual("""
-            // ================================================
-            //                  AUTO GENERATED
-            // ================================================
-            // This shader was created by ComputeSharp.
-            // See: https://github.com/Sergio0694/ComputeSharp.
-
             #define D2D_INPUT_COUNT 0
 
             #include "d2d1effecthelpers.hlsli"

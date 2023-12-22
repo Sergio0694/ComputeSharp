@@ -615,12 +615,6 @@ namespace ComputeSharp.Tests
 
             Assert.AreEqual(
                 """
-                // ================================================
-                //                  AUTO GENERATED
-                // ================================================
-                // This shader was created by ComputeSharp.
-                // See: https://github.com/Sergio0694/ComputeSharp.
-
                 #define __GroupSize__get_X 64
                 #define __GroupSize__get_Y 1
                 #define __GroupSize__get_Z 1
@@ -713,12 +707,6 @@ namespace ComputeSharp.Tests
 
             Assert.AreEqual(
                 """
-                // ================================================
-                //                  AUTO GENERATED
-                // ================================================
-                // This shader was created by ComputeSharp.
-                // See: https://github.com/Sergio0694/ComputeSharp.
-
                 #define __GroupSize__get_X 64
                 #define __GroupSize__get_Y 1
                 #define __GroupSize__get_Z 1
@@ -795,12 +783,6 @@ namespace ComputeSharp.Tests
 
             Assert.AreEqual(
                 """
-                // ================================================
-                //                  AUTO GENERATED
-                // ================================================
-                // This shader was created by ComputeSharp.
-                // See: https://github.com/Sergio0694/ComputeSharp.
-
                 #define __GroupSize__get_X 64
                 #define __GroupSize__get_Y 1
                 #define __GroupSize__get_Z 1
@@ -880,12 +862,6 @@ namespace ComputeSharp.Tests
 
             Assert.AreEqual(
                 """
-                // ================================================
-                //                  AUTO GENERATED
-                // ================================================
-                // This shader was created by ComputeSharp.
-                // See: https://github.com/Sergio0694/ComputeSharp.
-
                 #define __GroupSize__get_X 64
                 #define __GroupSize__get_Y 1
                 #define __GroupSize__get_Z 1
@@ -977,12 +953,6 @@ namespace ComputeSharp.Tests
 
             Assert.AreEqual(
                 """
-                // ================================================
-                //                  AUTO GENERATED
-                // ================================================
-                // This shader was created by ComputeSharp.
-                // See: https://github.com/Sergio0694/ComputeSharp.
-
                 #define __GroupSize__get_X 64
                 #define __GroupSize__get_Y 1
                 #define __GroupSize__get_Z 1
@@ -1202,12 +1172,6 @@ namespace ComputeSharp.Tests
 
             Assert.AreEqual(
                 """
-                // ================================================
-                //                  AUTO GENERATED
-                // ================================================
-                // This shader was created by ComputeSharp.
-                // See: https://github.com/Sergio0694/ComputeSharp.
-
                 #define __GroupSize__get_X 64
                 #define __GroupSize__get_Y 1
                 #define __GroupSize__get_Z 1

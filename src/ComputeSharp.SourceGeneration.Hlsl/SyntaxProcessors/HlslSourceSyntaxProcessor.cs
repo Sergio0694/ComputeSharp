@@ -9,23 +9,6 @@ namespace ComputeSharp.SourceGeneration.SyntaxProcessors;
 internal static class HlslSourceSyntaxProcessor
 {
     /// <summary>
-    /// Writes the header included at the top of each generated HLSL shader.
-    /// </summary>
-    /// <param name="writer">The <see cref="IndentedTextWriter"/> instance to write into.</param>
-    public static void WriteHeader(IndentedTextWriter writer)
-    {
-        writer.WriteLine("""
-            // ================================================
-            //                  AUTO GENERATED
-            // ================================================
-            // This shader was created by ComputeSharp.
-            // See: https://github.com/Sergio0694/ComputeSharp.
-            """, isMultiline: true);
-
-        writer.WriteLine();
-    }
-
-    /// <summary>
     /// Writes the top declarations in each generated HLSL shader:
     /// <list type="bullet">
     ///   <item>Defined constants.</item>
