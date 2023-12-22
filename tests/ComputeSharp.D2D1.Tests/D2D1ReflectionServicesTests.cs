@@ -19,12 +19,6 @@ public partial class D2D1ReflectionServicesTests
         Assert.IsNotNull(shaderInfo.CompilerVersion);
 
         Assert.AreEqual("""
-            // ================================================
-            //                  AUTO GENERATED
-            // ================================================
-            // This shader was created by ComputeSharp.
-            // See: https://github.com/Sergio0694/ComputeSharp.
-
             #define D2D_INPUT_COUNT 3
             #define D2D_INPUT0_SIMPLE
             #define D2D_INPUT1_COMPLEX
@@ -103,12 +97,6 @@ public partial class D2D1ReflectionServicesTests
         Assert.IsNotNull(shaderInfo.CompilerVersion);
 
         Assert.AreEqual("""
-            // ================================================
-            //                  AUTO GENERATED
-            // ================================================
-            // This shader was created by ComputeSharp.
-            // See: https://github.com/Sergio0694/ComputeSharp.
-
             #define D2D_INPUT_COUNT 1
 
             #include "d2d1effecthelpers.hlsli"

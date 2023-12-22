@@ -236,12 +236,6 @@ public partial class D2D1ShaderCompilerTests
     public void CompileShaderWithWarning()
     {
         const string source = """
-            // ================================================
-            //                  AUTO GENERATED
-            // ================================================
-            // This shader was created by ComputeSharp.
-            // See: https://github.com/Sergio0694/ComputeSharp.
-
             #define D2D_INPUT_COUNT 0
 
             #include "d2d1effecthelpers.hlsli"
@@ -268,12 +262,6 @@ public partial class D2D1ShaderCompilerTests
     public void CompileShaderWithWarning_Suppressed()
     {
         const string source = """
-            // ================================================
-            //                  AUTO GENERATED
-            // ================================================
-            // This shader was created by ComputeSharp.
-            // See: https://github.com/Sergio0694/ComputeSharp.
-
             #define D2D_INPUT_COUNT 0
 
             #include "d2d1effecthelpers.hlsli"

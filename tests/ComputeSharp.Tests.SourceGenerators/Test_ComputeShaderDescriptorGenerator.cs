@@ -97,12 +97,6 @@ public class Test_ComputeShaderDescriptorGenerator
                     [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
                     static string global::ComputeSharp.Descriptors.IComputeShaderDescriptor<MyShader>.HlslSource =>
                         """
-                        // ================================================
-                        //                  AUTO GENERATED
-                        // ================================================
-                        // This shader was created by ComputeSharp.
-                        // See: https://github.com/Sergio0694/ComputeSharp.
-
                         #define __GroupSize__get_X 8
                         #define __GroupSize__get_Y 8
                         #define __GroupSize__get_Z 1
@@ -395,12 +389,6 @@ public class Test_ComputeShaderDescriptorGenerator
                     [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
                     static string global::ComputeSharp.Descriptors.IComputeShaderDescriptor<MyShader>.HlslSource =>
                         """
-                        // ================================================
-                        //                  AUTO GENERATED
-                        // ================================================
-                        // This shader was created by ComputeSharp.
-                        // See: https://github.com/Sergio0694/ComputeSharp.
-
                         #define __GroupSize__get_X 8
                         #define __GroupSize__get_Y 8
                         #define __GroupSize__get_Z 1
@@ -663,12 +651,6 @@ public class Test_ComputeShaderDescriptorGenerator
                     [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
                     static string global::ComputeSharp.Descriptors.IComputeShaderDescriptor<MyShader>.HlslSource =>
                         """
-                        // ================================================
-                        //                  AUTO GENERATED
-                        // ================================================
-                        // This shader was created by ComputeSharp.
-                        // See: https://github.com/Sergio0694/ComputeSharp.
-
                         #define __GroupSize__get_X 8
                         #define __GroupSize__get_Y 8
                         #define __GroupSize__get_Z 1

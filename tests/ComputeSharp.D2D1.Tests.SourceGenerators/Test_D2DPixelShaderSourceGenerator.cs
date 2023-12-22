@@ -185,12 +185,6 @@ public class Test_D2DPixelShaderSourceGenerator
                     [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
                     static string global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<MyShader>.HlslSource =>
                         """
-                        // ================================================
-                        //                  AUTO GENERATED
-                        // ================================================
-                        // This shader was created by ComputeSharp.
-                        // See: https://github.com/Sergio0694/ComputeSharp.
-
                         #define D2D_INPUT_COUNT 0
                         #define D2D_REQUIRES_SCENE_POSITION
 
@@ -487,12 +481,6 @@ public class Test_D2DPixelShaderSourceGenerator
                     [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
                     static string global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<MyShader>.HlslSource =>
                         """
-                        // ================================================
-                        //                  AUTO GENERATED
-                        // ================================================
-                        // This shader was created by ComputeSharp.
-                        // See: https://github.com/Sergio0694/ComputeSharp.
-
                         #define D2D_INPUT_COUNT 0
                         #define D2D_REQUIRES_SCENE_POSITION
 
@@ -841,12 +829,6 @@ public class Test_D2DPixelShaderSourceGenerator
                     [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
                     static string global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<MyShader>.HlslSource =>
                         """
-                        // ================================================
-                        //                  AUTO GENERATED
-                        // ================================================
-                        // This shader was created by ComputeSharp.
-                        // See: https://github.com/Sergio0694/ComputeSharp.
-
                         #define D2D_INPUT_COUNT 0
                         #define D2D_REQUIRES_SCENE_POSITION
 
@@ -1141,12 +1123,6 @@ public class Test_D2DPixelShaderSourceGenerator
                     [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
                     static string global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<MyShader>.HlslSource =>
                         """
-                        // ================================================
-                        //                  AUTO GENERATED
-                        // ================================================
-                        // This shader was created by ComputeSharp.
-                        // See: https://github.com/Sergio0694/ComputeSharp.
-
                         #define D2D_INPUT_COUNT 0
                         #define D2D_REQUIRES_SCENE_POSITION
 
@@ -1438,12 +1414,6 @@ public class Test_D2DPixelShaderSourceGenerator
                     [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
                     static string global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<MyShader>.HlslSource =>
                         """
-                        // ================================================
-                        //                  AUTO GENERATED
-                        // ================================================
-                        // This shader was created by ComputeSharp.
-                        // See: https://github.com/Sergio0694/ComputeSharp.
-
                         #define D2D_INPUT_COUNT 2
                         #define D2D_INPUT0_SIMPLE
                         #define D2D_INPUT1_COMPLEX
@@ -1727,12 +1697,6 @@ public class Test_D2DPixelShaderSourceGenerator
                     [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
                     static string global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<MyShader>.HlslSource =>
                         """
-                        // ================================================
-                        //                  AUTO GENERATED
-                        // ================================================
-                        // This shader was created by ComputeSharp.
-                        // See: https://github.com/Sergio0694/ComputeSharp.
-
                         #define D2D_INPUT_COUNT 0
                         #define D2D_REQUIRES_SCENE_POSITION
 
