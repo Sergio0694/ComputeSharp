@@ -82,7 +82,7 @@
     Only needed for the .Core project and all source generators.
   -->
   <ItemGroup Condition="'$(MSBuildProjectName)' == 'ComputeSharp.Core' OR $(IsSourceGeneratorProject)">
-    <PackageReference Include="PolySharp" Version="1.13.2">
+    <PackageReference Include="PolySharp" Version="1.14.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>build;analyzers</IncludeAssets>
     </PackageReference>
