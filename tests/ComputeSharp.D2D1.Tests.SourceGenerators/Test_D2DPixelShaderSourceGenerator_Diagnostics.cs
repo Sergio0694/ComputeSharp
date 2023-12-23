@@ -13,7 +13,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace ComputeSharp.D2D1.Tests.SourceGenerators;
 
 [TestClass]
-public class Test_D2DPixelShaderSourceGenerator_DIagnostics
+public class Test_D2DPixelShaderSourceGenerator_Diagnostics
 {
     [TestMethod]
     public void MissingD2DRequiresDoublePrecisionSupportAttribute()

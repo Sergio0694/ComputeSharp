@@ -13,7 +13,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace ComputeSharp.Tests.SourceGenerators;
 
 [TestClass]
-public class DiagnosticsTests
+public class Test_ComputeShaderDescriptorGenerator_Diagnostics
 {
     [TestMethod]
     public void InvalidShaderField()
