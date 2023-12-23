@@ -1,17 +1,6 @@
-extern alias Core;
-extern alias D3D12;
-
-using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
-using Basic.Reference.Assemblies;
 using ComputeSharp.SourceGenerators;
 using ComputeSharp.Tests.SourceGenerators.Helpers;
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ComputeSharp.Tests.SourceGenerators;
@@ -874,7 +863,6 @@ public class Test_ComputeShaderDescriptorGenerator
     /// <returns>The task for the operation.</returns>
     private static async Task VerifyGeneratedDiagnosticsAsync(string source, (string Filename, string Source) result)
     {
-        // Also validate all analyzers
         await CSharpAnalyzerWithLanguageVersionTest<InvalidComputeContextCopyAnalyzer>.VerifyAnalyzerAsync(source);
         await CSharpAnalyzerWithLanguageVersionTest<InvalidGeneratedComputeShaderDescriptorAttributeTargetAnalyzer>.VerifyAnalyzerAsync(source);
         await CSharpAnalyzerWithLanguageVersionTest<InvalidGloballyCoherentFieldDeclarationAnalyzer>.VerifyAnalyzerAsync(source);
@@ -886,40 +874,6 @@ public class Test_ComputeShaderDescriptorGenerator
         await CSharpAnalyzerWithLanguageVersionTest<NotAccessibleGeneratedComputeShaderDescriptorAttributeTargetAnalyzer>.VerifyAnalyzerAsync(source);
         await CSharpAnalyzerWithLanguageVersionTest<NotReadOnlyComputeShaderTypeWithFieldsAnalyzer>.VerifyAnalyzerAsync(source);
 
-        // Get all assembly references for the .NET TFM and ComputeSharp
-        IEnumerable<MetadataReference> metadataReferences =
-        [
-            .. Net80.References.All,
-            MetadataReference.CreateFromFile(typeof(Core::ComputeSharp.Hlsl).Assembly.Location),
-            MetadataReference.CreateFromFile(typeof(D3D12::ComputeSharp.IComputeShader).Assembly.Location)
-        ];
-
-        // Parse the source text (C# 12)
-        SyntaxTree sourceTree = CSharpSyntaxTree.ParseText(
-            source,
-            CSharpParseOptions.Default.WithLanguageVersion(LanguageVersion.CSharp12));
-
-        // Create the original compilation
-        CSharpCompilation compilation = CSharpCompilation.Create(
-            "original",
-            [sourceTree],
-            metadataReferences,
-            new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary, allowUnsafe: true));
-
-        // Create the generator driver with the shader generator
-        GeneratorDriver driver = CSharpGeneratorDriver.Create(new ComputeShaderDescriptorGenerator()).WithUpdatedParseOptions((CSharpParseOptions)sourceTree.Options);
-
-        // Run all source generators on the input source code
-        _ = driver.RunGeneratorsAndUpdateCompilation(compilation, out Compilation outputCompilation, out ImmutableArray<Diagnostic> diagnostics);
-
-        // Ensure that no diagnostics were generated
-        CollectionAssert.AreEquivalent(Array.Empty<Diagnostic>(), diagnostics);
-
-        // Update the assembly version using the version from the assembly of the input generators.
-        // This allows the tests to not need updates whenever the version of the MVVM Toolkit changes.
-        string expectedText = result.Source.Replace("<ASSEMBLY_VERSION>", $"\"{typeof(ComputeShaderDescriptorGenerator).Assembly.GetName().Version}\"");
-        string actualText = outputCompilation.SyntaxTrees.Single(tree => Path.GetFileName(tree.FilePath) == result.Filename).ToString();
-
-        Assert.AreEqual(expectedText, actualText);
+        CSharpGeneratorTest<ComputeShaderDescriptorGenerator>.VerifySources(source, result);
     }
 }

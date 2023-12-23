@@ -1,17 +1,6 @@
-extern alias Core;
-extern alias D2D1;
-
-using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
-using Basic.Reference.Assemblies;
 using ComputeSharp.D2D1.SourceGenerators;
 using ComputeSharp.Tests.SourceGenerators.Helpers;
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ComputeSharp.D2D1.Tests.SourceGenerators;
@@ -1775,7 +1764,6 @@ public class Test_D2DPixelShaderSourceGenerator
     /// <returns>The task for the operation.</returns>
     private static async Task VerifyGeneratedDiagnosticsAsync(string source, (string Filename, string Source) result)
     {
-        // Also validate all analyzers
         await CSharpAnalyzerWithLanguageVersionTest<D2DEnableRuntimeCompilationOnAssemblyAnalyzer>.VerifyAnalyzerAsync(source);
         await CSharpAnalyzerWithLanguageVersionTest<D2DEnableRuntimeCompilationOnTypeAnalyzer>.VerifyAnalyzerAsync(source);
         await CSharpAnalyzerWithLanguageVersionTest<InvalidAssemblyLevelCompileOptionsAnalyzer>.VerifyAnalyzerAsync(source);
@@ -1791,40 +1779,6 @@ public class Test_D2DPixelShaderSourceGenerator
         await CSharpAnalyzerWithLanguageVersionTest<NotAccessibleFieldTypeInD2DGeneratedShaderDescriptorAttributeTargetAnalyzer>.VerifyAnalyzerAsync(source);
         await CSharpAnalyzerWithLanguageVersionTest<NotReadOnlyPixelShaderTypeWithFieldsAnalyzer>.VerifyAnalyzerAsync(source);
 
-        // Get all assembly references for the .NET TFM and ComputeSharp
-        IEnumerable<MetadataReference> metadataReferences =
-        [
-            .. Net80.References.All,
-            MetadataReference.CreateFromFile(typeof(Core::ComputeSharp.Hlsl).Assembly.Location),
-            MetadataReference.CreateFromFile(typeof(D2D1::ComputeSharp.D2D1.ID2D1PixelShader).Assembly.Location)
-        ];
-
-        // Parse the source text (C# 12)
-        SyntaxTree sourceTree = CSharpSyntaxTree.ParseText(
-            source,
-            CSharpParseOptions.Default.WithLanguageVersion(LanguageVersion.CSharp12));
-
-        // Create the original compilation
-        CSharpCompilation compilation = CSharpCompilation.Create(
-            "original",
-            [sourceTree],
-            metadataReferences,
-            new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary, allowUnsafe: true));
-
-        // Create the generator driver with the D2D shader generator
-        GeneratorDriver driver = CSharpGeneratorDriver.Create(new D2DPixelShaderDescriptorGenerator()).WithUpdatedParseOptions((CSharpParseOptions)sourceTree.Options);
-
-        // Run all source generators on the input source code
-        _ = driver.RunGeneratorsAndUpdateCompilation(compilation, out Compilation outputCompilation, out ImmutableArray<Diagnostic> diagnostics);
-
-        // Ensure that no diagnostics were generated
-        CollectionAssert.AreEquivalent(Array.Empty<Diagnostic>(), diagnostics);
-
-        // Update the assembly version using the version from the assembly of the input generators.
-        // This allows the tests to not need updates whenever the version of the MVVM Toolkit changes.
-        string expectedText = result.Source.Replace("<ASSEMBLY_VERSION>", $"\"{typeof(D2DPixelShaderDescriptorGenerator).Assembly.GetName().Version}\"");
-        string actualText = outputCompilation.SyntaxTrees.Single(tree => Path.GetFileName(tree.FilePath) == result.Filename).ToString();
-
-        Assert.AreEqual(expectedText, actualText);
+        CSharpGeneratorTest<D2DPixelShaderDescriptorGenerator>.VerifySources(source, result);
     }
 }

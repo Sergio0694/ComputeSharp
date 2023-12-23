@@ -1,19 +1,11 @@
-extern alias Core;
-extern alias D3D12;
-
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Linq;
-using Basic.Reference.Assemblies;
 using ComputeSharp.SourceGenerators;
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
+using ComputeSharp.Tests.SourceGenerators.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ComputeSharp.Tests.SourceGenerators;
 
 [TestClass]
-public class DiagnosticsTests
+public class Test_ComputeShaderDescriptorGenerator_Diagnostics
 {
     [TestMethod]
     public void InvalidShaderField()
@@ -33,7 +25,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0001", "CMPS0047");
+        CSharpGeneratorTest<ComputeShaderDescriptorGenerator>.VerifyDiagnostics(source, "CMPS0001", "CMPS0047");
     }
 
     [TestMethod]
@@ -54,7 +46,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0001", "CMPS0047");
+        CSharpGeneratorTest<ComputeShaderDescriptorGenerator>.VerifyDiagnostics(source, "CMPS0001", "CMPS0047");
     }
 
     [TestMethod]
@@ -72,7 +64,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0005", "CMPS0047");
+        CSharpGeneratorTest<ComputeShaderDescriptorGenerator>.VerifyDiagnostics(source, "CMPS0005", "CMPS0047");
     }
 
     [TestMethod]
@@ -102,7 +94,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, diagnosticsId, "CMPS0047");
+        CSharpGeneratorTest<ComputeShaderDescriptorGenerator>.VerifyDiagnostics(source, diagnosticsId, "CMPS0047");
     }
 
     [TestMethod]
@@ -129,7 +121,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, diagnosticsId, "CMPS0047");
+        CSharpGeneratorTest<ComputeShaderDescriptorGenerator>.VerifyDiagnostics(source, diagnosticsId, "CMPS0047");
     }
 
     [TestMethod]
@@ -154,7 +146,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0006", "CMPS0047");
+        CSharpGeneratorTest<ComputeShaderDescriptorGenerator>.VerifyDiagnostics(source, "CMPS0006", "CMPS0047");
     }
 
     [TestMethod]
@@ -177,7 +169,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0010", "CMPS0031", "CMPS0047", "CMPS0050");
+        CSharpGeneratorTest<ComputeShaderDescriptorGenerator>.VerifyDiagnostics(source, "CMPS0010", "CMPS0031", "CMPS0047", "CMPS0050");
     }
 
     [TestMethod]
@@ -200,7 +192,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0010", "CMPS0031", "CMPS0047", "CMPS0050");
+        CSharpGeneratorTest<ComputeShaderDescriptorGenerator>.VerifyDiagnostics(source, "CMPS0010", "CMPS0031", "CMPS0047", "CMPS0050");
     }
 
     [TestMethod]
@@ -223,7 +215,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0011", "CMPS0031", "CMPS0047", "CMPS0050");
+        CSharpGeneratorTest<ComputeShaderDescriptorGenerator>.VerifyDiagnostics(source, "CMPS0011", "CMPS0031", "CMPS0047", "CMPS0050");
     }
 
     [TestMethod]
@@ -248,7 +240,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0012", "CMPS0047");
+        CSharpGeneratorTest<ComputeShaderDescriptorGenerator>.VerifyDiagnostics(source, "CMPS0012", "CMPS0047");
     }
 
     [TestMethod]
@@ -270,7 +262,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0012", "CMPS0047");
+        CSharpGeneratorTest<ComputeShaderDescriptorGenerator>.VerifyDiagnostics(source, "CMPS0012", "CMPS0047");
     }
 
     [TestMethod]
@@ -293,7 +285,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0012", "CMPS0013", "CMPS0047");
+        CSharpGeneratorTest<ComputeShaderDescriptorGenerator>.VerifyDiagnostics(source, "CMPS0012", "CMPS0013", "CMPS0047");
     }
 
     [TestMethod]
@@ -318,7 +310,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0014", "CMPS0047");
+        CSharpGeneratorTest<ComputeShaderDescriptorGenerator>.VerifyDiagnostics(source, "CMPS0014", "CMPS0047");
     }
 
     [TestMethod]
@@ -346,7 +338,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0015", "CMPS0047");
+        CSharpGeneratorTest<ComputeShaderDescriptorGenerator>.VerifyDiagnostics(source, "CMPS0015", "CMPS0047");
     }
 
     [TestMethod]
@@ -371,7 +363,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0016", "CMPS0032", "CMPS0035", "CMPS0047");
+        CSharpGeneratorTest<ComputeShaderDescriptorGenerator>.VerifyDiagnostics(source, "CMPS0016", "CMPS0032", "CMPS0035", "CMPS0047");
     }
 
     [TestMethod]
@@ -396,7 +388,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0017", "CMPS0047");
+        CSharpGeneratorTest<ComputeShaderDescriptorGenerator>.VerifyDiagnostics(source, "CMPS0017", "CMPS0047");
     }
 
     [TestMethod]
@@ -421,7 +413,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0018", "CMPS0047");
+        CSharpGeneratorTest<ComputeShaderDescriptorGenerator>.VerifyDiagnostics(source, "CMPS0018", "CMPS0047");
     }
 
     [TestMethod]
@@ -444,7 +436,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0019", "CMPS0047");
+        CSharpGeneratorTest<ComputeShaderDescriptorGenerator>.VerifyDiagnostics(source, "CMPS0019", "CMPS0047");
     }
 
     [TestMethod]
@@ -467,7 +459,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0020", "CMPS0047");
+        CSharpGeneratorTest<ComputeShaderDescriptorGenerator>.VerifyDiagnostics(source, "CMPS0020", "CMPS0047");
     }
 
     [TestMethod]
@@ -492,7 +484,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0021", "CMPS0047");
+        CSharpGeneratorTest<ComputeShaderDescriptorGenerator>.VerifyDiagnostics(source, "CMPS0021", "CMPS0047");
     }
 
     [TestMethod]
@@ -515,7 +507,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0022", "CMPS0047");
+        CSharpGeneratorTest<ComputeShaderDescriptorGenerator>.VerifyDiagnostics(source, "CMPS0022", "CMPS0047");
     }
 
     [TestMethod]
@@ -540,7 +532,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0023", "CMPS0047");
+        CSharpGeneratorTest<ComputeShaderDescriptorGenerator>.VerifyDiagnostics(source, "CMPS0023", "CMPS0047");
     }
 
     [TestMethod]
@@ -563,7 +555,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0024", "CMPS0047");
+        CSharpGeneratorTest<ComputeShaderDescriptorGenerator>.VerifyDiagnostics(source, "CMPS0024", "CMPS0047");
     }
 
     [TestMethod]
@@ -586,7 +578,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0032", "CMPS0025", "CMPS0047");
+        CSharpGeneratorTest<ComputeShaderDescriptorGenerator>.VerifyDiagnostics(source, "CMPS0032", "CMPS0025", "CMPS0047");
     }
 
     [TestMethod]
@@ -609,7 +601,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0026", "CMPS0047");
+        CSharpGeneratorTest<ComputeShaderDescriptorGenerator>.VerifyDiagnostics(source, "CMPS0026", "CMPS0047");
     }
 
     [TestMethod]
@@ -637,7 +629,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0027", "CMPS0047");
+        CSharpGeneratorTest<ComputeShaderDescriptorGenerator>.VerifyDiagnostics(source, "CMPS0027", "CMPS0047");
     }
 
     [TestMethod]
@@ -660,7 +652,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0028", "CMPS0047", "CMPS0050");
+        CSharpGeneratorTest<ComputeShaderDescriptorGenerator>.VerifyDiagnostics(source, "CMPS0028", "CMPS0047", "CMPS0050");
     }
 
     [TestMethod]
@@ -683,7 +675,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0029", "CMPS0031", "CMPS0047", "CMPS0050");
+        CSharpGeneratorTest<ComputeShaderDescriptorGenerator>.VerifyDiagnostics(source, "CMPS0029", "CMPS0031", "CMPS0047", "CMPS0050");
     }
 
     [TestMethod]
@@ -708,7 +700,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0029", "CMPS0031", "CMPS0047");
+        CSharpGeneratorTest<ComputeShaderDescriptorGenerator>.VerifyDiagnostics(source, "CMPS0029", "CMPS0031", "CMPS0047");
     }
 
     [TestMethod]
@@ -737,7 +729,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0030", "CMPS0047", "CMPS0050");
+        CSharpGeneratorTest<ComputeShaderDescriptorGenerator>.VerifyDiagnostics(source, "CMPS0030", "CMPS0047", "CMPS0050");
     }
 
     [TestMethod]
@@ -760,7 +752,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0031", "CMPS0047", "CMPS0050");
+        CSharpGeneratorTest<ComputeShaderDescriptorGenerator>.VerifyDiagnostics(source, "CMPS0031", "CMPS0047", "CMPS0050");
     }
 
     [TestMethod]
@@ -783,7 +775,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0032", "CMPS0047");
+        CSharpGeneratorTest<ComputeShaderDescriptorGenerator>.VerifyDiagnostics(source, "CMPS0032", "CMPS0047");
     }
 
     [TestMethod]
@@ -806,7 +798,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0033", "CMPS0047");
+        CSharpGeneratorTest<ComputeShaderDescriptorGenerator>.VerifyDiagnostics(source, "CMPS0033", "CMPS0047");
     }
 
     [TestMethod]
@@ -831,7 +823,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0034", "CMPS0047");
+        CSharpGeneratorTest<ComputeShaderDescriptorGenerator>.VerifyDiagnostics(source, "CMPS0034", "CMPS0047");
     }
 
     [TestMethod]
@@ -856,7 +848,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0035", "CMPS0047");
+        CSharpGeneratorTest<ComputeShaderDescriptorGenerator>.VerifyDiagnostics(source, "CMPS0035", "CMPS0047");
     }
 
     [TestMethod]
@@ -881,7 +873,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0035", "CMPS0047");
+        CSharpGeneratorTest<ComputeShaderDescriptorGenerator>.VerifyDiagnostics(source, "CMPS0035", "CMPS0047");
     }
 
     [TestMethod]
@@ -904,7 +896,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0036", "CMPS0047");
+        CSharpGeneratorTest<ComputeShaderDescriptorGenerator>.VerifyDiagnostics(source, "CMPS0036", "CMPS0047");
     }
 
     [TestMethod]
@@ -932,7 +924,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0037", "CMPS0047", "CMPS0050");
+        CSharpGeneratorTest<ComputeShaderDescriptorGenerator>.VerifyDiagnostics(source, "CMPS0037", "CMPS0047", "CMPS0050");
     }
 
     [TestMethod]
@@ -956,7 +948,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0038", "CMPS0047");
+        CSharpGeneratorTest<ComputeShaderDescriptorGenerator>.VerifyDiagnostics(source, "CMPS0038", "CMPS0047");
     }
 
     [TestMethod]
@@ -980,7 +972,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0040", "CMPS0047");
+        CSharpGeneratorTest<ComputeShaderDescriptorGenerator>.VerifyDiagnostics(source, "CMPS0040", "CMPS0047");
     }
 
     [TestMethod]
@@ -1009,7 +1001,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0040", "CMPS0047");
+        CSharpGeneratorTest<ComputeShaderDescriptorGenerator>.VerifyDiagnostics(source, "CMPS0040", "CMPS0047");
     }
 
     [TestMethod]
@@ -1036,7 +1028,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0040", "CMPS0047");
+        CSharpGeneratorTest<ComputeShaderDescriptorGenerator>.VerifyDiagnostics(source, "CMPS0040", "CMPS0047");
     }
 
     [TestMethod]
@@ -1060,7 +1052,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0040", "CMPS0047");
+        CSharpGeneratorTest<ComputeShaderDescriptorGenerator>.VerifyDiagnostics(source, "CMPS0040", "CMPS0047");
     }
 
     [TestMethod]
@@ -1084,7 +1076,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0040", "CMPS0047");
+        CSharpGeneratorTest<ComputeShaderDescriptorGenerator>.VerifyDiagnostics(source, "CMPS0040", "CMPS0047");
     }
 
     [TestMethod]
@@ -1112,7 +1104,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0041", "CMPS0047");
+        CSharpGeneratorTest<ComputeShaderDescriptorGenerator>.VerifyDiagnostics(source, "CMPS0041", "CMPS0047");
     }
 
     [TestMethod]
@@ -1142,7 +1134,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0044");
+        CSharpGeneratorTest<ComputeShaderDescriptorGenerator>.VerifyDiagnostics(source, "CMPS0044");
     }
 
     [TestMethod]
@@ -1166,7 +1158,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0048");
+        CSharpGeneratorTest<ComputeShaderDescriptorGenerator>.VerifyDiagnostics(source, "CMPS0048");
     }
 
     [TestMethod]
@@ -1190,7 +1182,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0048");
+        CSharpGeneratorTest<ComputeShaderDescriptorGenerator>.VerifyDiagnostics(source, "CMPS0048");
     }
 
     [TestMethod]
@@ -1214,7 +1206,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0048");
+        CSharpGeneratorTest<ComputeShaderDescriptorGenerator>.VerifyDiagnostics(source, "CMPS0048");
     }
 
     [TestMethod]
@@ -1238,7 +1230,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0049", "CMPS0047");
+        CSharpGeneratorTest<ComputeShaderDescriptorGenerator>.VerifyDiagnostics(source, "CMPS0049", "CMPS0047");
     }
 
     [TestMethod]
@@ -1262,7 +1254,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0063", "CMPS0047");
+        CSharpGeneratorTest<ComputeShaderDescriptorGenerator>.VerifyDiagnostics(source, "CMPS0063", "CMPS0047");
     }
 
     [TestMethod]
@@ -1286,7 +1278,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0047", "CMPS0050");
+        CSharpGeneratorTest<ComputeShaderDescriptorGenerator>.VerifyDiagnostics(source, "CMPS0047", "CMPS0050");
     }
 
     [TestMethod]
@@ -1316,7 +1308,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0047", "CMPS0050");
+        CSharpGeneratorTest<ComputeShaderDescriptorGenerator>.VerifyDiagnostics(source, "CMPS0047", "CMPS0050");
     }
 
     [TestMethod]
@@ -1344,7 +1336,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0047", "CMPS0050");
+        CSharpGeneratorTest<ComputeShaderDescriptorGenerator>.VerifyDiagnostics(source, "CMPS0047", "CMPS0050");
     }
 
     // See https://github.com/Sergio0694/ComputeSharp/issues/690
@@ -1371,7 +1363,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0047", "CMPS0059");
+        CSharpGeneratorTest<ComputeShaderDescriptorGenerator>.VerifyDiagnostics(source, "CMPS0047", "CMPS0059");
     }
 
     [TestMethod]
@@ -1397,7 +1389,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0047", "CMPS0059");
+        CSharpGeneratorTest<ComputeShaderDescriptorGenerator>.VerifyDiagnostics(source, "CMPS0047", "CMPS0059");
     }
 
     [TestMethod]
@@ -1418,7 +1410,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0031", "CMPS0047", "CMPS0059");
+        CSharpGeneratorTest<ComputeShaderDescriptorGenerator>.VerifyDiagnostics(source, "CMPS0031", "CMPS0047", "CMPS0059");
     }
 
     [TestMethod]
@@ -1439,7 +1431,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0031", "CMPS0047", "CMPS0060");
+        CSharpGeneratorTest<ComputeShaderDescriptorGenerator>.VerifyDiagnostics(source, "CMPS0031", "CMPS0047", "CMPS0060");
     }
 
     [TestMethod]
@@ -1472,7 +1464,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0047", "CMPS0061");
+        CSharpGeneratorTest<ComputeShaderDescriptorGenerator>.VerifyDiagnostics(source, "CMPS0047", "CMPS0061");
     }
 
     [TestMethod]
@@ -1501,7 +1493,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0047", "CMPS0049");
+        CSharpGeneratorTest<ComputeShaderDescriptorGenerator>.VerifyDiagnostics(source, "CMPS0047", "CMPS0049");
     }
 
     [TestMethod]
@@ -1533,7 +1525,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0047", "CMPS0062");
+        CSharpGeneratorTest<ComputeShaderDescriptorGenerator>.VerifyDiagnostics(source, "CMPS0047", "CMPS0062");
     }
 
     [TestMethod]
@@ -1570,7 +1562,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0047", "CMPS0062");
+        CSharpGeneratorTest<ComputeShaderDescriptorGenerator>.VerifyDiagnostics(source, "CMPS0047", "CMPS0062");
     }
 
     [TestMethod]
@@ -1636,7 +1628,7 @@ public class DiagnosticsTests
         // The HLSL compilation is expected to fail because recursion is not actually supported:
         //
         // "error: recursive functions not allowed"
-        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0046");
+        CSharpGeneratorTest<ComputeShaderDescriptorGenerator>.VerifyDiagnostics(source, "CMPS0046");
     }
 
     [TestMethod]
@@ -1661,7 +1653,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0064");
+        CSharpGeneratorTest<ComputeShaderDescriptorGenerator>.VerifyDiagnostics(source, "CMPS0064");
     }
 
     [TestMethod]
@@ -1687,56 +1679,6 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0065");
-    }
-
-    /// <summary>
-    /// Verifies the output of a source generator.
-    /// </summary>
-    /// <typeparam name="TGenerator">The generator type to use.</typeparam>
-    /// <param name="source">The input source to process.</param>
-    /// <param name="diagnosticsIds">The expected diagnostics ids to be generated.</param>
-    private static void VerifyGeneratedDiagnostics<TGenerator>(string source, params string[] diagnosticsIds)
-        where TGenerator : class, IIncrementalGenerator, new()
-    {
-        // Get all assembly references for the .NET TFM and ComputeSharp
-        IEnumerable<MetadataReference> metadataReferences =
-        [
-            .. Net80.References.All,
-            MetadataReference.CreateFromFile(typeof(Core::ComputeSharp.Hlsl).Assembly.Location),
-            MetadataReference.CreateFromFile(typeof(D3D12::ComputeSharp.IComputeShader).Assembly.Location)
-        ];
-
-        // Parse the source text (C# 12)
-        SyntaxTree sourceTree = CSharpSyntaxTree.ParseText(
-            source,
-            CSharpParseOptions.Default.WithLanguageVersion(LanguageVersion.CSharp12));
-
-        // Create the original compilation
-        CSharpCompilation compilation = CSharpCompilation.Create(
-            "original",
-            [sourceTree],
-            metadataReferences,
-            new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary, allowUnsafe: true));
-
-        // Run the generator on the source compilation, get the diagnostics
-        _ = CSharpGeneratorDriver.Create(new TGenerator()).RunGeneratorsAndUpdateCompilation(
-            compilation,
-            out Compilation outputCompilation,
-            out ImmutableArray<Diagnostic> diagnostics);
-
-        Dictionary<string, Diagnostic> diagnosticMap = diagnostics.DistinctBy(diagnostic => diagnostic.Id).ToDictionary(diagnostic => diagnostic.Id);
-
-        // Check that the diagnostics match
-        Assert.IsTrue(diagnosticMap.Keys.ToHashSet().SetEquals(diagnosticsIds), $"Diagnostics didn't match. {string.Join(", ", diagnosticMap.Values)}");
-
-        // If the compilation was supposed to succeed, ensure that no further errors were generated
-        if (diagnosticsIds.Length == 0)
-        {
-            // Compute diagnostics for the final compiled output (just include errors)
-            List<Diagnostic> outputCompilationDiagnostics = outputCompilation.GetDiagnostics().Where(diagnostic => diagnostic.Severity == DiagnosticSeverity.Error).ToList();
-
-            Assert.IsTrue(outputCompilationDiagnostics.Count == 0, $"resultingIds: {string.Join(", ", outputCompilationDiagnostics)}");
-        }
+        CSharpGeneratorTest<ComputeShaderDescriptorGenerator>.VerifyDiagnostics(source, "CMPS0065");
     }
 }
