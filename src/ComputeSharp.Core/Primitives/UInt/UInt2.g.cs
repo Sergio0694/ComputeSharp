@@ -489,6 +489,27 @@ public unsafe partial struct UInt2
     public static implicit operator UInt2(uint x) => new(x, x);
 
     /// <summary>
+    /// Casts a <see cref="UInt2"/> value to a <see cref="Float2"/> one.
+    /// </summary>
+    /// <param name="xy">The input <see cref="UInt2"/> value to cast.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static implicit operator Float2(UInt2 xy) => default;
+
+    /// <summary>
+    /// Casts a <see cref="UInt2"/> value to a <see cref="Double2"/> one.
+    /// </summary>
+    /// <param name="xy">The input <see cref="UInt2"/> value to cast.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static implicit operator Double2(UInt2 xy) => default;
+
+    /// <summary>
+    /// Casts a <see cref="UInt2"/> value to a <see cref="Int2"/> one.
+    /// </summary>
+    /// <param name="xy">The input <see cref="UInt2"/> value to cast.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static explicit operator Int2(UInt2 xy) => default;
+
+    /// <summary>
     /// Sums two <see cref="UInt2"/> values.
     /// </summary>
     /// <param name="left">The first <see cref="UInt2"/> value to sum.</param>

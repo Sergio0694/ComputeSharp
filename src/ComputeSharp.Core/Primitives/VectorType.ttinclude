@@ -264,6 +264,31 @@ public unsafe partial struct <#=typeName#>
     /// <param name="x">The value to use for the components of the new <see cref="<#=typeName#>"/> instance.</param>
     public static implicit operator <#=typeName#>(<#=hlslElementTypeName#> x) => new(<#=string.Join(", ", Enumerable.Range(0, i).Select(_ => "x"))#>);
 <#
+    // Generate the cast operators, when applicable
+    foreach (string targetType in new[] { "Float", "Double", "Int", "UInt" })
+    {
+        if (elementTypeName != "Bool" && elementTypeName != targetType)
+        {
+            WriteLine("");
+
+            string parameterName = new string("xyzw".Take(i).ToArray());
+            bool isImplicit =
+                (elementTypeName == "Float" && targetType == "Double") ||
+                (elementTypeName == "Int" && targetType == "Float") ||
+                (elementTypeName == "Int" && targetType == "Double") ||
+                (elementTypeName == "UInt" && targetType == "Float") ||
+                (elementTypeName == "UInt" && targetType == "Double");
+#>
+    /// <summary>
+    /// Casts a <see cref="<#=typeName#>"/> value to a <see cref="<#=targetType#><#=i#>"/> one.
+    /// </summary>
+    /// <param name="<#=parameterName#>">The input <see cref="<#=typeName#>"/> value to cast.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static <#=isImplicit ? "implicit" : "explicit"#> operator <#=targetType#><#=i#>(<#=typeName#> <#=parameterName#>) => default;
+<#
+        }
+    }
+
     // Generate the negation operator
     if (elementTypeName != "UInt")
     {

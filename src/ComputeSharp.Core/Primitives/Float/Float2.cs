@@ -20,25 +20,4 @@ public partial struct Float2
     /// </summary>
     /// <param name="xy">The input <see cref="Vector2"/> value to cast.</param>
     public static unsafe implicit operator Float2(Vector2 xy) => *(Float2*)&xy;
-
-    /// <summary>
-    /// Casts a <see cref="Float2"/> value to a <see cref="Double2"/> one.
-    /// </summary>
-    /// <param name="xy">The input <see cref="Float2"/> value to cast.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public static implicit operator Double2(Float2 xy) => default;
-
-    /// <summary>
-    /// Casts a <see cref="Float2"/> value to a <see cref="Int2"/> one.
-    /// </summary>
-    /// <param name="xy">The input <see cref="Float2"/> value to cast.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public static explicit operator Int2(Float2 xy) => default;
-
-    /// <summary>
-    /// Casts a <see cref="Float2"/> value to a <see cref="UInt2"/> one.
-    /// </summary>
-    /// <param name="xy">The input <see cref="Float2"/> value to cast.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public static explicit operator UInt2(Float2 xy) => default;
 }

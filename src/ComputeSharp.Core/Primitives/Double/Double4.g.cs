@@ -5166,6 +5166,27 @@ public unsafe partial struct Double4
     public static implicit operator Double4(double x) => new(x, x, x, x);
 
     /// <summary>
+    /// Casts a <see cref="Double4"/> value to a <see cref="Float4"/> one.
+    /// </summary>
+    /// <param name="xyzw">The input <see cref="Double4"/> value to cast.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static explicit operator Float4(Double4 xyzw) => default;
+
+    /// <summary>
+    /// Casts a <see cref="Double4"/> value to a <see cref="Int4"/> one.
+    /// </summary>
+    /// <param name="xyzw">The input <see cref="Double4"/> value to cast.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static explicit operator Int4(Double4 xyzw) => default;
+
+    /// <summary>
+    /// Casts a <see cref="Double4"/> value to a <see cref="UInt4"/> one.
+    /// </summary>
+    /// <param name="xyzw">The input <see cref="Double4"/> value to cast.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static explicit operator UInt4(Double4 xyzw) => default;
+
+    /// <summary>
     /// Negates a <see cref="Double4"/> value.
     /// </summary>
     /// <param name="xyzw">The <see cref="Double4"/> value to negate.</param>
