@@ -19,6 +19,7 @@ unsafe partial struct PixelShaderEffect
     {
         return ((PixelShaderEffect*)effect)->SetResourceTextureManagerAtIndex(0, data, dataSize);
     }
+
     /// <inheritdoc cref="D2D1_PROPERTY_BINDING.getFunction"/>
     [UnmanagedCallersOnly]
     public static HRESULT GetResourceTextureManager1Impl(IUnknown* effect, byte* data, uint dataSize, uint* actualSize)
@@ -32,6 +33,7 @@ unsafe partial struct PixelShaderEffect
     {
         return ((PixelShaderEffect*)effect)->SetResourceTextureManagerAtIndex(1, data, dataSize);
     }
+
     /// <inheritdoc cref="D2D1_PROPERTY_BINDING.getFunction"/>
     [UnmanagedCallersOnly]
     public static HRESULT GetResourceTextureManager2Impl(IUnknown* effect, byte* data, uint dataSize, uint* actualSize)
@@ -45,6 +47,7 @@ unsafe partial struct PixelShaderEffect
     {
         return ((PixelShaderEffect*)effect)->SetResourceTextureManagerAtIndex(2, data, dataSize);
     }
+
     /// <inheritdoc cref="D2D1_PROPERTY_BINDING.getFunction"/>
     [UnmanagedCallersOnly]
     public static HRESULT GetResourceTextureManager3Impl(IUnknown* effect, byte* data, uint dataSize, uint* actualSize)
@@ -58,6 +61,7 @@ unsafe partial struct PixelShaderEffect
     {
         return ((PixelShaderEffect*)effect)->SetResourceTextureManagerAtIndex(3, data, dataSize);
     }
+
     /// <inheritdoc cref="D2D1_PROPERTY_BINDING.getFunction"/>
     [UnmanagedCallersOnly]
     public static HRESULT GetResourceTextureManager4Impl(IUnknown* effect, byte* data, uint dataSize, uint* actualSize)
@@ -71,6 +75,7 @@ unsafe partial struct PixelShaderEffect
     {
         return ((PixelShaderEffect*)effect)->SetResourceTextureManagerAtIndex(4, data, dataSize);
     }
+
     /// <inheritdoc cref="D2D1_PROPERTY_BINDING.getFunction"/>
     [UnmanagedCallersOnly]
     public static HRESULT GetResourceTextureManager5Impl(IUnknown* effect, byte* data, uint dataSize, uint* actualSize)
@@ -84,6 +89,7 @@ unsafe partial struct PixelShaderEffect
     {
         return ((PixelShaderEffect*)effect)->SetResourceTextureManagerAtIndex(5, data, dataSize);
     }
+
     /// <inheritdoc cref="D2D1_PROPERTY_BINDING.getFunction"/>
     [UnmanagedCallersOnly]
     public static HRESULT GetResourceTextureManager6Impl(IUnknown* effect, byte* data, uint dataSize, uint* actualSize)
@@ -97,6 +103,7 @@ unsafe partial struct PixelShaderEffect
     {
         return ((PixelShaderEffect*)effect)->SetResourceTextureManagerAtIndex(6, data, dataSize);
     }
+
     /// <inheritdoc cref="D2D1_PROPERTY_BINDING.getFunction"/>
     [UnmanagedCallersOnly]
     public static HRESULT GetResourceTextureManager7Impl(IUnknown* effect, byte* data, uint dataSize, uint* actualSize)
@@ -110,6 +117,7 @@ unsafe partial struct PixelShaderEffect
     {
         return ((PixelShaderEffect*)effect)->SetResourceTextureManagerAtIndex(7, data, dataSize);
     }
+
     /// <inheritdoc cref="D2D1_PROPERTY_BINDING.getFunction"/>
     [UnmanagedCallersOnly]
     public static HRESULT GetResourceTextureManager8Impl(IUnknown* effect, byte* data, uint dataSize, uint* actualSize)
@@ -123,6 +131,7 @@ unsafe partial struct PixelShaderEffect
     {
         return ((PixelShaderEffect*)effect)->SetResourceTextureManagerAtIndex(8, data, dataSize);
     }
+
     /// <inheritdoc cref="D2D1_PROPERTY_BINDING.getFunction"/>
     [UnmanagedCallersOnly]
     public static HRESULT GetResourceTextureManager9Impl(IUnknown* effect, byte* data, uint dataSize, uint* actualSize)
@@ -136,6 +145,7 @@ unsafe partial struct PixelShaderEffect
     {
         return ((PixelShaderEffect*)effect)->SetResourceTextureManagerAtIndex(9, data, dataSize);
     }
+
     /// <inheritdoc cref="D2D1_PROPERTY_BINDING.getFunction"/>
     [UnmanagedCallersOnly]
     public static HRESULT GetResourceTextureManager10Impl(IUnknown* effect, byte* data, uint dataSize, uint* actualSize)
@@ -149,6 +159,7 @@ unsafe partial struct PixelShaderEffect
     {
         return ((PixelShaderEffect*)effect)->SetResourceTextureManagerAtIndex(10, data, dataSize);
     }
+
     /// <inheritdoc cref="D2D1_PROPERTY_BINDING.getFunction"/>
     [UnmanagedCallersOnly]
     public static HRESULT GetResourceTextureManager11Impl(IUnknown* effect, byte* data, uint dataSize, uint* actualSize)
@@ -162,6 +173,7 @@ unsafe partial struct PixelShaderEffect
     {
         return ((PixelShaderEffect*)effect)->SetResourceTextureManagerAtIndex(11, data, dataSize);
     }
+
     /// <inheritdoc cref="D2D1_PROPERTY_BINDING.getFunction"/>
     [UnmanagedCallersOnly]
     public static HRESULT GetResourceTextureManager12Impl(IUnknown* effect, byte* data, uint dataSize, uint* actualSize)
@@ -175,6 +187,7 @@ unsafe partial struct PixelShaderEffect
     {
         return ((PixelShaderEffect*)effect)->SetResourceTextureManagerAtIndex(12, data, dataSize);
     }
+
     /// <inheritdoc cref="D2D1_PROPERTY_BINDING.getFunction"/>
     [UnmanagedCallersOnly]
     public static HRESULT GetResourceTextureManager13Impl(IUnknown* effect, byte* data, uint dataSize, uint* actualSize)
@@ -188,6 +201,7 @@ unsafe partial struct PixelShaderEffect
     {
         return ((PixelShaderEffect*)effect)->SetResourceTextureManagerAtIndex(13, data, dataSize);
     }
+
     /// <inheritdoc cref="D2D1_PROPERTY_BINDING.getFunction"/>
     [UnmanagedCallersOnly]
     public static HRESULT GetResourceTextureManager14Impl(IUnknown* effect, byte* data, uint dataSize, uint* actualSize)
@@ -201,6 +215,7 @@ unsafe partial struct PixelShaderEffect
     {
         return ((PixelShaderEffect*)effect)->SetResourceTextureManagerAtIndex(14, data, dataSize);
     }
+
     /// <inheritdoc cref="D2D1_PROPERTY_BINDING.getFunction"/>
     [UnmanagedCallersOnly]
     public static HRESULT GetResourceTextureManager15Impl(IUnknown* effect, byte* data, uint dataSize, uint* actualSize)
