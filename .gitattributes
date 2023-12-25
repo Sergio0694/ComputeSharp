@@ -29,6 +29,12 @@
 *.txt          text      eol=lf
 *.yml          text      eol=lf
 
+# T4 files need CRLF to be processed correctly. When using LF, the T4
+# generator will produce unwanted newlines in the output files. The
+# same fix for this is also present in the .editorconfig file.
+*.tt           text      eol=crlf
+*.ttinclude    text      eol=crlf
+
 # Images
 *.png          binary
 *.jpg          binary
