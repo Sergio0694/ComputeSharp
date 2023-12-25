@@ -174,7 +174,7 @@ public static unsafe class InteropServices
     /// <param name="ppvObject">The address of a pointer to an interface with the IID specified in <paramref name="riid"/>.</param>
     /// <returns>
     /// <c>S_OK</c> if the interface is supported, and <c>E_NOINTERFACE</c> otherwise.
-    /// If ppvObject (the address) is nullptr, then this method returns <c>E_POINTER</c>.
+    /// If <paramref name="ppvObject"/> (the address) is <see langword="null"/>, then this method returns <c>E_POINTER</c>.
     /// </returns>
     /// <exception cref="ObjectDisposedException">The <paramref name="device"/> instance has been disposed.</exception>
     public static int TryGetID3D12Device(GraphicsDevice device, Guid* riid, void** ppvObject)
@@ -194,7 +194,7 @@ public static unsafe class InteropServices
     /// <param name="ppvObject">The address of a pointer to an interface with the IID specified in <paramref name="riid"/>.</param>
     /// <returns>
     /// <c>S_OK</c> if the interface is supported, and <c>E_NOINTERFACE</c> otherwise.
-    /// If ppvObject (the address) is nullptr, then this method returns <c>E_POINTER</c>.
+    /// If <paramref name="ppvObject"/> (the address) is <see langword="null"/>, then this method returns <c>E_POINTER</c>.
     /// </returns>
     /// <exception cref="ObjectDisposedException">The <paramref name="buffer"/> instance has been disposed.</exception>
     public static int TryGetID3D12Resource<T>(Buffer<T> buffer, Guid* riid, void** ppvObject)
@@ -215,7 +215,7 @@ public static unsafe class InteropServices
     /// <param name="ppvObject">The address of a pointer to an interface with the IID specified in <paramref name="riid"/>.</param>
     /// <returns>
     /// <c>S_OK</c> if the interface is supported, and <c>E_NOINTERFACE</c> otherwise.
-    /// If ppvObject (the address) is nullptr, then this method returns <c>E_POINTER</c>.
+    /// If <paramref name="ppvObject"/> (the address) is <see langword="null"/>, then this method returns <c>E_POINTER</c>.
     /// </returns>
     /// <exception cref="ObjectDisposedException">The <paramref name="texture"/> instance has been disposed.</exception>
     public static int TryGetID3D12Resource<T>(Texture1D<T> texture, Guid* riid, void** ppvObject)
@@ -236,7 +236,7 @@ public static unsafe class InteropServices
     /// <param name="ppvObject">The address of a pointer to an interface with the IID specified in <paramref name="riid"/>.</param>
     /// <returns>
     /// <c>S_OK</c> if the interface is supported, and <c>E_NOINTERFACE</c> otherwise.
-    /// If ppvObject (the address) is nullptr, then this method returns <c>E_POINTER</c>.
+    /// If <paramref name="ppvObject"/> (the address) is <see langword="null"/>, then this method returns <c>E_POINTER</c>.
     /// </returns>
     /// <exception cref="ObjectDisposedException">The <paramref name="texture"/> instance has been disposed.</exception>
     public static int TryGetID3D12Resource<T>(Texture2D<T> texture, Guid* riid, void** ppvObject)
@@ -257,7 +257,7 @@ public static unsafe class InteropServices
     /// <param name="ppvObject">The address of a pointer to an interface with the IID specified in <paramref name="riid"/>.</param>
     /// <returns>
     /// <c>S_OK</c> if the interface is supported, and <c>E_NOINTERFACE</c> otherwise.
-    /// If ppvObject (the address) is nullptr, then this method returns <c>E_POINTER</c>.
+    /// If <paramref name="ppvObject"/> (the address) is <see langword="null"/>, then this method returns <c>E_POINTER</c>.
     /// </returns>
     /// <exception cref="ObjectDisposedException">The <paramref name="texture"/> instance has been disposed.</exception>
     public static int TryGetID3D12Resource<T>(Texture3D<T> texture, Guid* riid, void** ppvObject)
@@ -278,7 +278,7 @@ public static unsafe class InteropServices
     /// <param name="ppvObject">The address of a pointer to an interface with the IID specified in <paramref name="riid"/>.</param>
     /// <returns>
     /// <c>S_OK</c> if the interface is supported, and <c>E_NOINTERFACE</c> otherwise.
-    /// If ppvObject (the address) is nullptr, then this method returns <c>E_POINTER</c>.
+    /// If <paramref name="ppvObject"/> (the address) is <see langword="null"/>, then this method returns <c>E_POINTER</c>.
     /// </returns>
     /// <exception cref="ObjectDisposedException">The <paramref name="buffer"/> instance has been disposed.</exception>
     public static int TryGetID3D12Resource<T>(TransferBuffer<T> buffer, Guid* riid, void** ppvObject)
@@ -299,7 +299,7 @@ public static unsafe class InteropServices
     /// <param name="ppvObject">The address of a pointer to an interface with the IID specified in <paramref name="riid"/>.</param>
     /// <returns>
     /// <c>S_OK</c> if the interface is supported, and <c>E_NOINTERFACE</c> otherwise.
-    /// If ppvObject (the address) is nullptr, then this method returns <c>E_POINTER</c>.
+    /// If <paramref name="ppvObject"/> (the address) is <see langword="null"/>, then this method returns <c>E_POINTER</c>.
     /// </returns>
     /// <exception cref="ObjectDisposedException">The <paramref name="texture"/> instance has been disposed.</exception>
     public static int TryGetID3D12Resource<T>(TransferTexture2D<T> texture, Guid* riid, void** ppvObject)
@@ -320,7 +320,7 @@ public static unsafe class InteropServices
     /// <param name="ppvObject">The address of a pointer to an interface with the IID specified in <paramref name="riid"/>.</param>
     /// <returns>
     /// <c>S_OK</c> if the interface is supported, and <c>E_NOINTERFACE</c> otherwise.
-    /// If ppvObject (the address) is nullptr, then this method returns <c>E_POINTER</c>.
+    /// If <paramref name="ppvObject"/> (the address) is <see langword="null"/>, then this method returns <c>E_POINTER</c>.
     /// </returns>
     /// <exception cref="ObjectDisposedException">The <paramref name="texture"/> instance has been disposed.</exception>
     public static int TryGetID3D12Resource<T>(TransferTexture3D<T> texture, Guid* riid, void** ppvObject)
