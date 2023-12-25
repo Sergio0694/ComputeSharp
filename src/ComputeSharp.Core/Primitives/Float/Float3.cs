@@ -10,43 +10,6 @@ namespace ComputeSharp;
 public partial struct Float3
 {
     /// <summary>
-    /// Creates a new <see cref="Float3"/> instance with the specified parameters.
-    /// </summary>
-    /// <param name="x">The value to assign to the first vector component.</param>
-    /// <param name="y">The value to assign to the second vector component.</param>
-    /// <param name="z">The value to assign to the third vector component.</param>
-    public Float3(float x, float y, float z)
-    {
-        this.x = x;
-        this.y = y;
-        this.z = z;
-    }
-
-    /// <summary>
-    /// Creates a new <see cref="Float3"/> instance with the specified parameters.
-    /// </summary>
-    /// <param name="xy">The value to assign to the first and second vector components.</param>
-    /// <param name="z">The value to assign to the third vector component.</param>
-    public Float3(Float2 xy, float z)
-    {
-        this.x = xy.X;
-        this.y = xy.Y;
-        this.z = z;
-    }
-
-    /// <summary>
-    /// Creates a new <see cref="Float3"/> instance with the specified parameters.
-    /// </summary>
-    /// <param name="x">The value to assign to the first vector component.</param>
-    /// <param name="yz">The value to assign to the second and thirt vector components.</param>
-    public Float3(float x, Float2 yz)
-    {
-        this.x = x;
-        this.y = yz.X;
-        this.z = yz.Y;
-    }
-
-    /// <summary>
     /// Creates a new <see cref="Float3"/> value with the same value for all its components.
     /// </summary>
     /// <param name="x">The value to use for the components of the new <see cref="Float3"/> instance.</param>
