@@ -10,12 +10,6 @@ namespace ComputeSharp;
 public partial struct Float3
 {
     /// <summary>
-    /// Creates a new <see cref="Float3"/> value with the same value for all its components.
-    /// </summary>
-    /// <param name="x">The value to use for the components of the new <see cref="Float3"/> instance.</param>
-    public static implicit operator Float3(float x) => new(x, x, x);
-
-    /// <summary>
     /// Casts a <see cref="Float3"/> value to a <see cref="Vector3"/> one.
     /// </summary>
     /// <param name="xyz">The input <see cref="Float3"/> value to cast.</param>

@@ -484,6 +484,12 @@ public unsafe partial struct Int2
     }
 
     /// <summary>
+    /// Creates a new <see cref="Int2"/> value with the same value for all its components.
+    /// </summary>
+    /// <param name="x">The value to use for the components of the new <see cref="Int2"/> instance.</param>
+    public static implicit operator Int2(int x) => new(x, x);
+
+    /// <summary>
     /// Negates a <see cref="Int2"/> value.
     /// </summary>
     /// <param name="xy">The <see cref="Int2"/> value to negate.</param>

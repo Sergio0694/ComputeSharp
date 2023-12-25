@@ -484,6 +484,12 @@ public unsafe partial struct Float2
     }
 
     /// <summary>
+    /// Creates a new <see cref="Float2"/> value with the same value for all its components.
+    /// </summary>
+    /// <param name="x">The value to use for the components of the new <see cref="Float2"/> instance.</param>
+    public static implicit operator Float2(float x) => new(x, x);
+
+    /// <summary>
     /// Negates a <see cref="Float2"/> value.
     /// </summary>
     /// <param name="xy">The <see cref="Float2"/> value to negate.</param>

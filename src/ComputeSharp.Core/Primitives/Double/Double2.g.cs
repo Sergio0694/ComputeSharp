@@ -483,6 +483,12 @@ public unsafe partial struct Double2
     }
 
     /// <summary>
+    /// Creates a new <see cref="Double2"/> value with the same value for all its components.
+    /// </summary>
+    /// <param name="x">The value to use for the components of the new <see cref="Double2"/> instance.</param>
+    public static implicit operator Double2(double x) => new(x, x);
+
+    /// <summary>
     /// Negates a <see cref="Double2"/> value.
     /// </summary>
     /// <param name="xy">The <see cref="Double2"/> value to negate.</param>

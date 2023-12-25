@@ -8,12 +8,6 @@ namespace ComputeSharp;
 public partial struct Double3
 {
     /// <summary>
-    /// Creates a new <see cref="Double3"/> value with the same value for all its components.
-    /// </summary>
-    /// <param name="x">The value to use for the components of the new <see cref="Double3"/> instance.</param>
-    public static implicit operator Double3(double x) => new(x, x, x);
-
-    /// <summary>
     /// Casts a <see cref="Double3"/> value to a <see cref="Int3"/> one.
     /// </summary>
     /// <param name="xyz">The input <see cref="Double3"/> value to cast.</param>

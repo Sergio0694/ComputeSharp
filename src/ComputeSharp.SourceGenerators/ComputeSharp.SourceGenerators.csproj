@@ -21,9 +21,6 @@
     <Compile Include="..\ComputeSharp.Core\Intrinsics\Hlsl.g.cs" Link="ComputeSharp.Core\Intrinsics\Hlsl.g.cs" />
     <Compile Include="..\ComputeSharp.Core\Intrinsics\Hlsl.Void.g.cs" Link="ComputeSharp.Core\Intrinsics\Hlsl.Void.g.cs" />
     <Compile Include="..\ComputeSharp.Core\Primitives\Bool\Bool.cs" Link="ComputeSharp.Core\Primitives\Bool\Bool.cs" />
-    <Compile Include="..\ComputeSharp.Core\Primitives\Bool\Bool2.cs" Link="ComputeSharp.Core\Primitives\Bool\Bool2.cs" />
-    <Compile Include="..\ComputeSharp.Core\Primitives\Bool\Bool3.cs" Link="ComputeSharp.Core\Primitives\Bool\Bool3.cs" />
-    <Compile Include="..\ComputeSharp.Core\Primitives\Bool\Bool4.cs" Link="ComputeSharp.Core\Primitives\Bool\Bool4.cs" />
     <Compile Include="..\ComputeSharp.Core\Primitives\Bool\Bool2.g.cs" Link="ComputeSharp.Core\Primitives\Bool\Bool2.g.cs" />
     <Compile Include="..\ComputeSharp.Core\Primitives\Bool\Bool3.g.cs" Link="ComputeSharp.Core\Primitives\Bool\Bool3.g.cs" />
     <Compile Include="..\ComputeSharp.Core\Primitives\Bool\Bool4.g.cs" Link="ComputeSharp.Core\Primitives\Bool\Bool4.g.cs" />

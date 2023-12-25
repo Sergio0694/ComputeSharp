@@ -8,12 +8,6 @@ namespace ComputeSharp;
 public partial struct UInt2
 {
     /// <summary>
-    /// Creates a new <see cref="UInt2"/> value with the same value for all its components.
-    /// </summary>
-    /// <param name="x">The value to use for the components of the new <see cref="UInt2"/> instance.</param>
-    public static implicit operator UInt2(uint x) => new(x, x);
-
-    /// <summary>
     /// Casts a <see cref="UInt2"/> value to a <see cref="Int2"/> one.
     /// </summary>
     /// <param name="xy">The input <see cref="UInt2"/> value to cast.</param>

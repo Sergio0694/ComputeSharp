@@ -5160,6 +5160,12 @@ public unsafe partial struct UInt4
     }
 
     /// <summary>
+    /// Creates a new <see cref="UInt4"/> value with the same value for all its components.
+    /// </summary>
+    /// <param name="x">The value to use for the components of the new <see cref="UInt4"/> instance.</param>
+    public static implicit operator UInt4(uint x) => new(x, x, x, x);
+
+    /// <summary>
     /// Sums two <see cref="UInt4"/> values.
     /// </summary>
     /// <param name="left">The first <see cref="UInt4"/> value to sum.</param>

@@ -1824,6 +1824,12 @@ public unsafe partial struct Int3
     }
 
     /// <summary>
+    /// Creates a new <see cref="Int3"/> value with the same value for all its components.
+    /// </summary>
+    /// <param name="x">The value to use for the components of the new <see cref="Int3"/> instance.</param>
+    public static implicit operator Int3(int x) => new(x, x, x);
+
+    /// <summary>
     /// Negates a <see cref="Int3"/> value.
     /// </summary>
     /// <param name="xyz">The <see cref="Int3"/> value to negate.</param>

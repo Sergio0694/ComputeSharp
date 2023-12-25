@@ -256,6 +256,14 @@ public unsafe partial struct <#=typeName#>
 <#
     }
 
+    WriteLine("");
+#>
+    /// <summary>
+    /// Creates a new <see cref="<#=typeName#>"/> value with the same value for all its components.
+    /// </summary>
+    /// <param name="x">The value to use for the components of the new <see cref="<#=typeName#>"/> instance.</param>
+    public static implicit operator <#=typeName#>(<#=hlslElementTypeName#> x) => new(<#=string.Join(", ", Enumerable.Range(0, i).Select(_ => "x"))#>);
+<#
     // Generate the negation operator
     if (elementTypeName != "UInt")
     {
