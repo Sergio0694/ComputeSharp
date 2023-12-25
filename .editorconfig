@@ -46,6 +46,10 @@ insert_final_newline = true
 [*.xaml]
 indent_size = 4
 
+## T4 files (these need CRLT of the T4 generator will add unwanted newlines)
+[*.{tt,ttinclude}]
+end_of_line = crlf
+
 # C# files
 [*.cs]
 
