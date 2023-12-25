@@ -1,0 +1,186 @@
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text.RegularExpressions" #>
+<#
+// Enumerates all combinations of values that sum up to a given size.
+// This method is only supported for valid sizes for HLSL vector types.
+string[][] GetConstructorParameterCombinations(int size)
+{
+    switch (size)
+    {
+        case 2:
+            return new[] { new[] { "T", "T" } };
+        case 3:
+            return new[]
+            {
+                new[] { "T", "T", "T" },
+                new[] { "T2", "T" },
+                new[] { "T1x2", "T" },
+                new[] { "T2x1", "T" },
+                new[] { "T", "T2" },
+                new[] { "T", "T1x2" },
+                new[] { "T", "T2x1" }
+            };
+        case 4:
+            return new[]
+            {
+                new[] { "T", "T", "T", "T" },
+                new[] { "T2", "T", "T" },
+                new[] { "T1x2", "T", "T" },
+                new[] { "T2x1", "T", "T" },
+                new[] { "T", "T2", "T" },
+                new[] { "T", "T1x2", "T" },
+                new[] { "T", "T2x1", "T" },
+                new[] { "T", "T", "T2" },
+                new[] { "T", "T", "T1x2" },
+                new[] { "T", "T", "T2x1" },
+                new[] { "T2", "T2" },
+                new[] { "T2", "T1x2" },
+                new[] { "T2", "T2x1" },
+                new[] { "T1x2", "T2" },
+                new[] { "T1x2", "T1x2" },
+                new[] { "T1x2", "T2x1" },
+                new[] { "T2x1", "T2" },
+                new[] { "T2x1", "T1x2" },
+                new[] { "T2x1", "T2x1" },
+                new[] { "T3", "T" },
+                new[] { "T1x3", "T" },
+                new[] { "T3x1", "T" },
+                new[] { "T", "T3" },
+                new[] { "T", "T1x3" },
+                new[] { "T", "T3x1" }
+            };
+        default:
+            throw new ArgumentOutOfRangeException("size");
+    }
+}
+
+// Gets the size of the parameters for a given constructor
+int[] GetConstructorParameterSizes(string[] parameters)
+{
+    return parameters.Select(p =>
+    {
+        if (p == "T3" || p == "T1x3" || p == "T3x1") return 3;
+        if (p == "T2" || p == "T1x2" || p == "T2x1") return 2;
+        return 1;
+    }).ToArray();
+}
+
+// Gets the sequence of constructor parameter names for a given sequence of sizes
+string[] GetConstructorParameterNames(int[] parameterSizes)
+{
+    List<string> parameterNames = new List<string>();
+    int offset = 0;
+
+    foreach (int parameterSize in parameterSizes)
+    {
+        parameterNames.Add("xyzw".Substring(offset, parameterSize));
+
+        offset += parameterSize;
+    }
+
+    return parameterNames.ToArray();
+}
+
+// Get the ordinal name for a given index
+string GetOrdinalName(int index)
+{
+    switch (index)
+    {
+        case 0: return "first";
+        case 1: return "second";
+        case 2: return "third";
+        default: return "fourth";
+    }
+}
+
+// Generates all constructor declarations for a specified type
+void GenerateConstructors(string typeName, int elementSize)
+{
+    string elementTypeName = Regex.Match(typeName, @"^[A-Za-z]+").Value;
+    string hlslElementTypeName = elementTypeName.ToLower();
+
+    foreach (string[] parameters in GetConstructorParameterCombinations(elementSize))
+    {
+        int[] parameterSizes = GetConstructorParameterSizes(parameters);
+        string[] parameterNames = GetConstructorParameterNames(parameterSizes);
+
+        WriteLine("/// <summary>");
+        WriteLine($"/// Creates a new <see cref=\"{typeName}\"/> instance with the specified parameters.");
+        WriteLine("/// </summary>");
+
+        int inputOffset = 0;
+
+        // Declare all constructor parameters
+        foreach (string parameterName in parameterNames)
+        {
+            if (parameterName.Length == 1)
+            {
+                WriteLine($"/// <param name=\"{parameterName}\">The value to assign to the {GetOrdinalName(inputOffset)} vector component.</param>");
+            }
+            else
+            {
+                string ordinals = string.Join(", ", Enumerable.Range(0, inputOffset + parameterName.Length - 1).Select(GetOrdinalName));
+
+                ordinals += $" and {GetOrdinalName(inputOffset + parameterName.Length - 1)}";
+
+                WriteLine($"/// <param name=\"{parameterName}\">The value to assign to the {ordinals} vector components.</param>");
+            }
+
+            inputOffset += parameterName.Length;
+        }
+
+        Write($"public {typeName}(");
+
+        // Write all the declared parameters for the current constructor
+        Write(string.Join(", ", parameterNames.Select((name, index) =>
+        {
+            return name.Length == 1
+                ? $"{hlslElementTypeName} {name}"
+                : $"{parameters[index].Replace("T", elementTypeName)} {name}";
+        })));
+
+        WriteLine(")");
+        WriteLine("{");
+        PushIndent("    ");
+
+        inputOffset = 0;
+
+        // Write all constructor statements
+        for (int i = 0; i < parameterSizes.Length; i++)
+        {
+            for (int j = 0; j < parameterSizes[i]; j++)
+            {
+                 Write($"this.{"xyzw"[inputOffset++]} = ");
+
+                 string expression;
+
+                 if (parameters[i].EndsWith("x1"))
+                 {
+                     expression = $"{parameterNames[i]}.M{j + 1}1";
+                 }
+                 else if (parameters[i].Contains('x'))
+                 {
+                     expression = $"{parameterNames[i]}.M1{j + 1}";
+                 }
+                 else if (parameterSizes[i] > 1)
+                 {
+                     expression = $"{parameterNames[i]}.{char.ToUpperInvariant("xyzw"[j])}";
+                 }
+                 else
+                 {
+                     expression = $"{parameterNames[i]}";
+                 }
+
+                 WriteLine(typeName.StartsWith("Bool")
+                    ? $"{expression} ? 1 : 0;"
+                    : $"{expression};");
+            }
+        }
+
+        PopIndent();
+        WriteLine("}");
+        WriteLine("");
+    }
+}
+#>

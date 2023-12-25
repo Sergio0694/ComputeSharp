@@ -21,6 +21,91 @@ public unsafe partial struct Bool3
     private int z;
 
     /// <summary>
+    /// Creates a new <see cref="Bool3"/> instance with the specified parameters.
+    /// </summary>
+    /// <param name="x">The value to assign to the first vector component.</param>
+    /// <param name="y">The value to assign to the second vector component.</param>
+    /// <param name="z">The value to assign to the third vector component.</param>
+    public Bool3(bool x, bool y, bool z)
+    {
+        this.x = x ? 1 : 0;
+        this.y = y ? 1 : 0;
+        this.z = z ? 1 : 0;
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="Bool3"/> instance with the specified parameters.
+    /// </summary>
+    /// <param name="xy">The value to assign to the first and second vector components.</param>
+    /// <param name="z">The value to assign to the third vector component.</param>
+    public Bool3(Bool2 xy, bool z)
+    {
+        this.x = xy.X ? 1 : 0;
+        this.y = xy.Y ? 1 : 0;
+        this.z = z ? 1 : 0;
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="Bool3"/> instance with the specified parameters.
+    /// </summary>
+    /// <param name="xy">The value to assign to the first and second vector components.</param>
+    /// <param name="z">The value to assign to the third vector component.</param>
+    public Bool3(Bool1x2 xy, bool z)
+    {
+        this.x = xy.M11 ? 1 : 0;
+        this.y = xy.M12 ? 1 : 0;
+        this.z = z ? 1 : 0;
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="Bool3"/> instance with the specified parameters.
+    /// </summary>
+    /// <param name="xy">The value to assign to the first and second vector components.</param>
+    /// <param name="z">The value to assign to the third vector component.</param>
+    public Bool3(Bool2x1 xy, bool z)
+    {
+        this.x = xy.M11 ? 1 : 0;
+        this.y = xy.M21 ? 1 : 0;
+        this.z = z ? 1 : 0;
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="Bool3"/> instance with the specified parameters.
+    /// </summary>
+    /// <param name="x">The value to assign to the first vector component.</param>
+    /// <param name="yz">The value to assign to the first, second and third vector components.</param>
+    public Bool3(bool x, Bool2 yz)
+    {
+        this.x = x ? 1 : 0;
+        this.y = yz.X ? 1 : 0;
+        this.z = yz.Y ? 1 : 0;
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="Bool3"/> instance with the specified parameters.
+    /// </summary>
+    /// <param name="x">The value to assign to the first vector component.</param>
+    /// <param name="yz">The value to assign to the first, second and third vector components.</param>
+    public Bool3(bool x, Bool1x2 yz)
+    {
+        this.x = x ? 1 : 0;
+        this.y = yz.M11 ? 1 : 0;
+        this.z = yz.M12 ? 1 : 0;
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="Bool3"/> instance with the specified parameters.
+    /// </summary>
+    /// <param name="x">The value to assign to the first vector component.</param>
+    /// <param name="yz">The value to assign to the first, second and third vector components.</param>
+    public Bool3(bool x, Bool2x1 yz)
+    {
+        this.x = x ? 1 : 0;
+        this.y = yz.M11 ? 1 : 0;
+        this.z = yz.M21 ? 1 : 0;
+    }
+
+    /// <summary>
     /// Gets a reference to a specific component in the current <see cref="Bool3"/> instance.
     /// </summary>
     /// <param name="i">The index of the component to access.</param>

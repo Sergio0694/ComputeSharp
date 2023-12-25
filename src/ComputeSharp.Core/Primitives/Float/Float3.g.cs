@@ -24,6 +24,91 @@ public unsafe partial struct Float3
     private float z;
 
     /// <summary>
+    /// Creates a new <see cref="Float3"/> instance with the specified parameters.
+    /// </summary>
+    /// <param name="x">The value to assign to the first vector component.</param>
+    /// <param name="y">The value to assign to the second vector component.</param>
+    /// <param name="z">The value to assign to the third vector component.</param>
+    public Float3(float x, float y, float z)
+    {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="Float3"/> instance with the specified parameters.
+    /// </summary>
+    /// <param name="xy">The value to assign to the first and second vector components.</param>
+    /// <param name="z">The value to assign to the third vector component.</param>
+    public Float3(Float2 xy, float z)
+    {
+        this.x = xy.X;
+        this.y = xy.Y;
+        this.z = z;
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="Float3"/> instance with the specified parameters.
+    /// </summary>
+    /// <param name="xy">The value to assign to the first and second vector components.</param>
+    /// <param name="z">The value to assign to the third vector component.</param>
+    public Float3(Float1x2 xy, float z)
+    {
+        this.x = xy.M11;
+        this.y = xy.M12;
+        this.z = z;
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="Float3"/> instance with the specified parameters.
+    /// </summary>
+    /// <param name="xy">The value to assign to the first and second vector components.</param>
+    /// <param name="z">The value to assign to the third vector component.</param>
+    public Float3(Float2x1 xy, float z)
+    {
+        this.x = xy.M11;
+        this.y = xy.M21;
+        this.z = z;
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="Float3"/> instance with the specified parameters.
+    /// </summary>
+    /// <param name="x">The value to assign to the first vector component.</param>
+    /// <param name="yz">The value to assign to the first, second and third vector components.</param>
+    public Float3(float x, Float2 yz)
+    {
+        this.x = x;
+        this.y = yz.X;
+        this.z = yz.Y;
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="Float3"/> instance with the specified parameters.
+    /// </summary>
+    /// <param name="x">The value to assign to the first vector component.</param>
+    /// <param name="yz">The value to assign to the first, second and third vector components.</param>
+    public Float3(float x, Float1x2 yz)
+    {
+        this.x = x;
+        this.y = yz.M11;
+        this.z = yz.M12;
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="Float3"/> instance with the specified parameters.
+    /// </summary>
+    /// <param name="x">The value to assign to the first vector component.</param>
+    /// <param name="yz">The value to assign to the first, second and third vector components.</param>
+    public Float3(float x, Float2x1 yz)
+    {
+        this.x = x;
+        this.y = yz.M11;
+        this.z = yz.M21;
+    }
+
+    /// <summary>
     /// Gets a reference to a specific component in the current <see cref="Float3"/> instance.
     /// </summary>
     /// <param name="i">The index of the component to access.</param>

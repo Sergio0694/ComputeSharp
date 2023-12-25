@@ -21,6 +21,17 @@ public unsafe partial struct Float2
     private float y;
 
     /// <summary>
+    /// Creates a new <see cref="Float2"/> instance with the specified parameters.
+    /// </summary>
+    /// <param name="x">The value to assign to the first vector component.</param>
+    /// <param name="y">The value to assign to the second vector component.</param>
+    public Float2(float x, float y)
+    {
+        this.x = x;
+        this.y = y;
+    }
+
+    /// <summary>
     /// Gets a reference to a specific component in the current <see cref="Float2"/> instance.
     /// </summary>
     /// <param name="i">The index of the component to access.</param>

@@ -1,8 +1,9 @@
 <#@include file="..\Intrinsics\Hlsl.MulOverloads.ttinclude" #>
+<#@include file="VectorType.Ctors.ttinclude" #>
+<#@ import namespace="System.Collections.Generic" #>
 <#@ import namespace="System.Linq" #>
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Text.RegularExpressions" #>
-<#@ import namespace="System.Collections.Generic" #>
 <#@ output extension=".g.cs"#>
 <#
 IEnumerable<string> EnumeratePropertyNames(string characters)
@@ -95,6 +96,9 @@ public unsafe partial struct <#=typeName#>
         WriteLine($"private {fieldElementTypeName} {name};");
         WriteLine("");
     }
+
+    // Generate the constructors
+    GenerateConstructors(typeName, i);
 
     PopIndent();
 #>

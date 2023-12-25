@@ -20,6 +20,17 @@ public unsafe partial struct Double2
     private double y;
 
     /// <summary>
+    /// Creates a new <see cref="Double2"/> instance with the specified parameters.
+    /// </summary>
+    /// <param name="x">The value to assign to the first vector component.</param>
+    /// <param name="y">The value to assign to the second vector component.</param>
+    public Double2(double x, double y)
+    {
+        this.x = x;
+        this.y = y;
+    }
+
+    /// <summary>
     /// Gets a reference to a specific component in the current <see cref="Double2"/> instance.
     /// </summary>
     /// <param name="i">The index of the component to access.</param>

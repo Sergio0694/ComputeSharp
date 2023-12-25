@@ -1242,6 +1242,38 @@ namespace ComputeSharp.Tests
                 this.buffer[ThreadIds.X] = new float4(data.value, data.value, data.value, this.alpha);
             }
         }
+
+        // See https://github.com/Sergio0694/ComputeSharp/issues/435
+        [TestMethod]
+        public void HlslVectorTypeConstructorCombinations()
+        {
+            _ = ReflectionServices.GetShaderInfo<HlslVectorTypeConstructorCombinationsShader>();
+        }
+
+        [AutoConstructor]
+        [ThreadGroupSize(DefaultThreadGroupSizes.X)]
+        [GeneratedComputeShaderDescriptor]
+        public readonly partial struct HlslVectorTypeConstructorCombinationsShader : IComputeShader
+        {
+            public readonly ReadWriteBuffer<float> buffer;
+            public readonly float2 f2;
+            public readonly int4 i4;
+            public readonly int2 i2;
+            public readonly int3 i3;
+
+            public void Execute()
+            {
+                float3 f3 = new float3(f2, 0) + new float3(0, f2);
+                float4 f4 = new float4(0, f3) + new float4(0, f2, 1) + new float4(0, 1, f2) + new float4((float1x3)f3, 0);
+
+                int4 temp = new int4(i2, 0, 1) + new int4(new int3x1(i3.X, i3.Y, i3.Z), 0);
+
+                // Just here to avoid warnings, this shader doesn't really have to do anything
+                buffer[0] = f3[0];
+                buffer[1] = f4[1];
+                buffer[2] = temp[0];
+            }
+        }
     }
 }
 

@@ -8,17 +8,6 @@ namespace ComputeSharp;
 public partial struct Int2
 {
     /// <summary>
-    /// Creates a new <see cref="Int2"/> instance with the specified parameters.
-    /// </summary>
-    /// <param name="x">The value to assign to the first vector component.</param>
-    /// <param name="y">The value to assign to the second vector component.</param>
-    public Int2(int x, int y)
-    {
-        this.x = x;
-        this.y = y;
-    }
-
-    /// <summary>
     /// Creates a new <see cref="Int2"/> value with the same value for all its components.
     /// </summary>
     /// <param name="x">The value to use for the components of the new <see cref="Int2"/> instance.</param>

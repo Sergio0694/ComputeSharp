@@ -26,6 +26,342 @@ public unsafe partial struct UInt4
     private uint w;
 
     /// <summary>
+    /// Creates a new <see cref="UInt4"/> instance with the specified parameters.
+    /// </summary>
+    /// <param name="x">The value to assign to the first vector component.</param>
+    /// <param name="y">The value to assign to the second vector component.</param>
+    /// <param name="z">The value to assign to the third vector component.</param>
+    /// <param name="w">The value to assign to the fourth vector component.</param>
+    public UInt4(uint x, uint y, uint z, uint w)
+    {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+        this.w = w;
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="UInt4"/> instance with the specified parameters.
+    /// </summary>
+    /// <param name="xy">The value to assign to the first and second vector components.</param>
+    /// <param name="z">The value to assign to the third vector component.</param>
+    /// <param name="w">The value to assign to the fourth vector component.</param>
+    public UInt4(UInt2 xy, uint z, uint w)
+    {
+        this.x = xy.X;
+        this.y = xy.Y;
+        this.z = z;
+        this.w = w;
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="UInt4"/> instance with the specified parameters.
+    /// </summary>
+    /// <param name="xy">The value to assign to the first and second vector components.</param>
+    /// <param name="z">The value to assign to the third vector component.</param>
+    /// <param name="w">The value to assign to the fourth vector component.</param>
+    public UInt4(UInt1x2 xy, uint z, uint w)
+    {
+        this.x = xy.M11;
+        this.y = xy.M12;
+        this.z = z;
+        this.w = w;
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="UInt4"/> instance with the specified parameters.
+    /// </summary>
+    /// <param name="xy">The value to assign to the first and second vector components.</param>
+    /// <param name="z">The value to assign to the third vector component.</param>
+    /// <param name="w">The value to assign to the fourth vector component.</param>
+    public UInt4(UInt2x1 xy, uint z, uint w)
+    {
+        this.x = xy.M11;
+        this.y = xy.M21;
+        this.z = z;
+        this.w = w;
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="UInt4"/> instance with the specified parameters.
+    /// </summary>
+    /// <param name="x">The value to assign to the first vector component.</param>
+    /// <param name="yz">The value to assign to the first, second and third vector components.</param>
+    /// <param name="w">The value to assign to the fourth vector component.</param>
+    public UInt4(uint x, UInt2 yz, uint w)
+    {
+        this.x = x;
+        this.y = yz.X;
+        this.z = yz.Y;
+        this.w = w;
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="UInt4"/> instance with the specified parameters.
+    /// </summary>
+    /// <param name="x">The value to assign to the first vector component.</param>
+    /// <param name="yz">The value to assign to the first, second and third vector components.</param>
+    /// <param name="w">The value to assign to the fourth vector component.</param>
+    public UInt4(uint x, UInt1x2 yz, uint w)
+    {
+        this.x = x;
+        this.y = yz.M11;
+        this.z = yz.M12;
+        this.w = w;
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="UInt4"/> instance with the specified parameters.
+    /// </summary>
+    /// <param name="x">The value to assign to the first vector component.</param>
+    /// <param name="yz">The value to assign to the first, second and third vector components.</param>
+    /// <param name="w">The value to assign to the fourth vector component.</param>
+    public UInt4(uint x, UInt2x1 yz, uint w)
+    {
+        this.x = x;
+        this.y = yz.M11;
+        this.z = yz.M21;
+        this.w = w;
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="UInt4"/> instance with the specified parameters.
+    /// </summary>
+    /// <param name="x">The value to assign to the first vector component.</param>
+    /// <param name="y">The value to assign to the second vector component.</param>
+    /// <param name="zw">The value to assign to the first, second, third and fourth vector components.</param>
+    public UInt4(uint x, uint y, UInt2 zw)
+    {
+        this.x = x;
+        this.y = y;
+        this.z = zw.X;
+        this.w = zw.Y;
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="UInt4"/> instance with the specified parameters.
+    /// </summary>
+    /// <param name="x">The value to assign to the first vector component.</param>
+    /// <param name="y">The value to assign to the second vector component.</param>
+    /// <param name="zw">The value to assign to the first, second, third and fourth vector components.</param>
+    public UInt4(uint x, uint y, UInt1x2 zw)
+    {
+        this.x = x;
+        this.y = y;
+        this.z = zw.M11;
+        this.w = zw.M12;
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="UInt4"/> instance with the specified parameters.
+    /// </summary>
+    /// <param name="x">The value to assign to the first vector component.</param>
+    /// <param name="y">The value to assign to the second vector component.</param>
+    /// <param name="zw">The value to assign to the first, second, third and fourth vector components.</param>
+    public UInt4(uint x, uint y, UInt2x1 zw)
+    {
+        this.x = x;
+        this.y = y;
+        this.z = zw.M11;
+        this.w = zw.M21;
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="UInt4"/> instance with the specified parameters.
+    /// </summary>
+    /// <param name="xy">The value to assign to the first and second vector components.</param>
+    /// <param name="zw">The value to assign to the first, second, third and fourth vector components.</param>
+    public UInt4(UInt2 xy, UInt2 zw)
+    {
+        this.x = xy.X;
+        this.y = xy.Y;
+        this.z = zw.X;
+        this.w = zw.Y;
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="UInt4"/> instance with the specified parameters.
+    /// </summary>
+    /// <param name="xy">The value to assign to the first and second vector components.</param>
+    /// <param name="zw">The value to assign to the first, second, third and fourth vector components.</param>
+    public UInt4(UInt2 xy, UInt1x2 zw)
+    {
+        this.x = xy.X;
+        this.y = xy.Y;
+        this.z = zw.M11;
+        this.w = zw.M12;
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="UInt4"/> instance with the specified parameters.
+    /// </summary>
+    /// <param name="xy">The value to assign to the first and second vector components.</param>
+    /// <param name="zw">The value to assign to the first, second, third and fourth vector components.</param>
+    public UInt4(UInt2 xy, UInt2x1 zw)
+    {
+        this.x = xy.X;
+        this.y = xy.Y;
+        this.z = zw.M11;
+        this.w = zw.M21;
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="UInt4"/> instance with the specified parameters.
+    /// </summary>
+    /// <param name="xy">The value to assign to the first and second vector components.</param>
+    /// <param name="zw">The value to assign to the first, second, third and fourth vector components.</param>
+    public UInt4(UInt1x2 xy, UInt2 zw)
+    {
+        this.x = xy.M11;
+        this.y = xy.M12;
+        this.z = zw.X;
+        this.w = zw.Y;
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="UInt4"/> instance with the specified parameters.
+    /// </summary>
+    /// <param name="xy">The value to assign to the first and second vector components.</param>
+    /// <param name="zw">The value to assign to the first, second, third and fourth vector components.</param>
+    public UInt4(UInt1x2 xy, UInt1x2 zw)
+    {
+        this.x = xy.M11;
+        this.y = xy.M12;
+        this.z = zw.M11;
+        this.w = zw.M12;
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="UInt4"/> instance with the specified parameters.
+    /// </summary>
+    /// <param name="xy">The value to assign to the first and second vector components.</param>
+    /// <param name="zw">The value to assign to the first, second, third and fourth vector components.</param>
+    public UInt4(UInt1x2 xy, UInt2x1 zw)
+    {
+        this.x = xy.M11;
+        this.y = xy.M12;
+        this.z = zw.M11;
+        this.w = zw.M21;
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="UInt4"/> instance with the specified parameters.
+    /// </summary>
+    /// <param name="xy">The value to assign to the first and second vector components.</param>
+    /// <param name="zw">The value to assign to the first, second, third and fourth vector components.</param>
+    public UInt4(UInt2x1 xy, UInt2 zw)
+    {
+        this.x = xy.M11;
+        this.y = xy.M21;
+        this.z = zw.X;
+        this.w = zw.Y;
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="UInt4"/> instance with the specified parameters.
+    /// </summary>
+    /// <param name="xy">The value to assign to the first and second vector components.</param>
+    /// <param name="zw">The value to assign to the first, second, third and fourth vector components.</param>
+    public UInt4(UInt2x1 xy, UInt1x2 zw)
+    {
+        this.x = xy.M11;
+        this.y = xy.M21;
+        this.z = zw.M11;
+        this.w = zw.M12;
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="UInt4"/> instance with the specified parameters.
+    /// </summary>
+    /// <param name="xy">The value to assign to the first and second vector components.</param>
+    /// <param name="zw">The value to assign to the first, second, third and fourth vector components.</param>
+    public UInt4(UInt2x1 xy, UInt2x1 zw)
+    {
+        this.x = xy.M11;
+        this.y = xy.M21;
+        this.z = zw.M11;
+        this.w = zw.M21;
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="UInt4"/> instance with the specified parameters.
+    /// </summary>
+    /// <param name="xyz">The value to assign to the first, second and third vector components.</param>
+    /// <param name="w">The value to assign to the fourth vector component.</param>
+    public UInt4(UInt3 xyz, uint w)
+    {
+        this.x = xyz.X;
+        this.y = xyz.Y;
+        this.z = xyz.Z;
+        this.w = w;
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="UInt4"/> instance with the specified parameters.
+    /// </summary>
+    /// <param name="xyz">The value to assign to the first, second and third vector components.</param>
+    /// <param name="w">The value to assign to the fourth vector component.</param>
+    public UInt4(UInt1x3 xyz, uint w)
+    {
+        this.x = xyz.M11;
+        this.y = xyz.M12;
+        this.z = xyz.M13;
+        this.w = w;
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="UInt4"/> instance with the specified parameters.
+    /// </summary>
+    /// <param name="xyz">The value to assign to the first, second and third vector components.</param>
+    /// <param name="w">The value to assign to the fourth vector component.</param>
+    public UInt4(UInt3x1 xyz, uint w)
+    {
+        this.x = xyz.M11;
+        this.y = xyz.M21;
+        this.z = xyz.M31;
+        this.w = w;
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="UInt4"/> instance with the specified parameters.
+    /// </summary>
+    /// <param name="x">The value to assign to the first vector component.</param>
+    /// <param name="yzw">The value to assign to the first, second, third and fourth vector components.</param>
+    public UInt4(uint x, UInt3 yzw)
+    {
+        this.x = x;
+        this.y = yzw.X;
+        this.z = yzw.Y;
+        this.w = yzw.Z;
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="UInt4"/> instance with the specified parameters.
+    /// </summary>
+    /// <param name="x">The value to assign to the first vector component.</param>
+    /// <param name="yzw">The value to assign to the first, second, third and fourth vector components.</param>
+    public UInt4(uint x, UInt1x3 yzw)
+    {
+        this.x = x;
+        this.y = yzw.M11;
+        this.z = yzw.M12;
+        this.w = yzw.M13;
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="UInt4"/> instance with the specified parameters.
+    /// </summary>
+    /// <param name="x">The value to assign to the first vector component.</param>
+    /// <param name="yzw">The value to assign to the first, second, third and fourth vector components.</param>
+    public UInt4(uint x, UInt3x1 yzw)
+    {
+        this.x = x;
+        this.y = yzw.M11;
+        this.z = yzw.M21;
+        this.w = yzw.M31;
+    }
+
+    /// <summary>
     /// Gets a reference to a specific component in the current <see cref="UInt4"/> instance.
     /// </summary>
     /// <param name="i">The index of the component to access.</param>
