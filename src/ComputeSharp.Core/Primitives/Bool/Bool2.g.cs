@@ -18,6 +18,17 @@ public unsafe partial struct Bool2
     private int y;
 
     /// <summary>
+    /// Creates a new <see cref="Bool2"/> instance with the specified parameters.
+    /// </summary>
+    /// <param name="x">The value to assign to the first vector component.</param>
+    /// <param name="y">The value to assign to the second vector component.</param>
+    public Bool2(bool x, bool y)
+    {
+        this.x = x;
+        this.y = y;
+    }
+
+    /// <summary>
     /// Gets a reference to a specific component in the current <see cref="Bool2"/> instance.
     /// </summary>
     /// <param name="i">The index of the component to access.</param>

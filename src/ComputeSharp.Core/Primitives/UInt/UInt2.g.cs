@@ -20,6 +20,17 @@ public unsafe partial struct UInt2
     private uint y;
 
     /// <summary>
+    /// Creates a new <see cref="UInt2"/> instance with the specified parameters.
+    /// </summary>
+    /// <param name="x">The value to assign to the first vector component.</param>
+    /// <param name="y">The value to assign to the second vector component.</param>
+    public UInt2(uint x, uint y)
+    {
+        this.x = x;
+        this.y = y;
+    }
+
+    /// <summary>
     /// Gets a reference to a specific component in the current <see cref="UInt2"/> instance.
     /// </summary>
     /// <param name="i">The index of the component to access.</param>
