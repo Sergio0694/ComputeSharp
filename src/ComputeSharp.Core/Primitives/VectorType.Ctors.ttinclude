@@ -153,22 +153,28 @@ void GenerateConstructors(string typeName, int elementSize)
             {
                  Write($"this.{"xyzw"[inputOffset++]} = ");
 
+                 string expression;
+
                  if (parameters[i].EndsWith("x1"))
                  {
-                     WriteLine($"{parameterNames[i]}.M{j + 1}1;");
+                     expression = $"{parameterNames[i]}.M{j + 1}1";
                  }
                  else if (parameters[i].Contains('x'))
                  {
-                     WriteLine($"{parameterNames[i]}.M1{j + 1};");
+                     expression = $"{parameterNames[i]}.M1{j + 1}";
                  }
                  else if (parameterSizes[i] > 1)
                  {
-                     WriteLine($"{parameterNames[i]}.{char.ToUpperInvariant("xyzw"[j])};");
+                     expression = $"{parameterNames[i]}.{char.ToUpperInvariant("xyzw"[j])}";
                  }
                  else
                  {
-                     WriteLine($"{parameterNames[i]};");
+                     expression = $"{parameterNames[i]}";
                  }
+
+                 WriteLine(typeName.StartsWith("Bool")
+                    ? $"{expression} ? 1 : 0;"
+                    : $"{expression};");
             }
         }
 

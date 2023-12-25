@@ -24,8 +24,8 @@ public unsafe partial struct Bool2
     /// <param name="y">The value to assign to the second vector component.</param>
     public Bool2(bool x, bool y)
     {
-        this.x = x;
-        this.y = y;
+        this.x = x ? 1 : 0;
+        this.y = y ? 1 : 0;
     }
 
     /// <summary>

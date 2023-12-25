@@ -32,10 +32,10 @@ public unsafe partial struct Bool4
     /// <param name="w">The value to assign to the fourth vector component.</param>
     public Bool4(bool x, bool y, bool z, bool w)
     {
-        this.x = x;
-        this.y = y;
-        this.z = z;
-        this.w = w;
+        this.x = x ? 1 : 0;
+        this.y = y ? 1 : 0;
+        this.z = z ? 1 : 0;
+        this.w = w ? 1 : 0;
     }
 
     /// <summary>
@@ -46,10 +46,10 @@ public unsafe partial struct Bool4
     /// <param name="w">The value to assign to the fourth vector component.</param>
     public Bool4(Bool2 xy, bool z, bool w)
     {
-        this.x = xy.X;
-        this.y = xy.Y;
-        this.z = z;
-        this.w = w;
+        this.x = xy.X ? 1 : 0;
+        this.y = xy.Y ? 1 : 0;
+        this.z = z ? 1 : 0;
+        this.w = w ? 1 : 0;
     }
 
     /// <summary>
@@ -60,10 +60,10 @@ public unsafe partial struct Bool4
     /// <param name="w">The value to assign to the fourth vector component.</param>
     public Bool4(Bool1x2 xy, bool z, bool w)
     {
-        this.x = xy.M11;
-        this.y = xy.M12;
-        this.z = z;
-        this.w = w;
+        this.x = xy.M11 ? 1 : 0;
+        this.y = xy.M12 ? 1 : 0;
+        this.z = z ? 1 : 0;
+        this.w = w ? 1 : 0;
     }
 
     /// <summary>
@@ -74,10 +74,10 @@ public unsafe partial struct Bool4
     /// <param name="w">The value to assign to the fourth vector component.</param>
     public Bool4(Bool2x1 xy, bool z, bool w)
     {
-        this.x = xy.M11;
-        this.y = xy.M21;
-        this.z = z;
-        this.w = w;
+        this.x = xy.M11 ? 1 : 0;
+        this.y = xy.M21 ? 1 : 0;
+        this.z = z ? 1 : 0;
+        this.w = w ? 1 : 0;
     }
 
     /// <summary>
@@ -88,10 +88,10 @@ public unsafe partial struct Bool4
     /// <param name="w">The value to assign to the fourth vector component.</param>
     public Bool4(bool x, Bool2 yz, bool w)
     {
-        this.x = x;
-        this.y = yz.X;
-        this.z = yz.Y;
-        this.w = w;
+        this.x = x ? 1 : 0;
+        this.y = yz.X ? 1 : 0;
+        this.z = yz.Y ? 1 : 0;
+        this.w = w ? 1 : 0;
     }
 
     /// <summary>
@@ -102,10 +102,10 @@ public unsafe partial struct Bool4
     /// <param name="w">The value to assign to the fourth vector component.</param>
     public Bool4(bool x, Bool1x2 yz, bool w)
     {
-        this.x = x;
-        this.y = yz.M11;
-        this.z = yz.M12;
-        this.w = w;
+        this.x = x ? 1 : 0;
+        this.y = yz.M11 ? 1 : 0;
+        this.z = yz.M12 ? 1 : 0;
+        this.w = w ? 1 : 0;
     }
 
     /// <summary>
@@ -116,10 +116,10 @@ public unsafe partial struct Bool4
     /// <param name="w">The value to assign to the fourth vector component.</param>
     public Bool4(bool x, Bool2x1 yz, bool w)
     {
-        this.x = x;
-        this.y = yz.M11;
-        this.z = yz.M21;
-        this.w = w;
+        this.x = x ? 1 : 0;
+        this.y = yz.M11 ? 1 : 0;
+        this.z = yz.M21 ? 1 : 0;
+        this.w = w ? 1 : 0;
     }
 
     /// <summary>
@@ -130,10 +130,10 @@ public unsafe partial struct Bool4
     /// <param name="zw">The value to assign to the first, second, third and fourth vector components.</param>
     public Bool4(bool x, bool y, Bool2 zw)
     {
-        this.x = x;
-        this.y = y;
-        this.z = zw.X;
-        this.w = zw.Y;
+        this.x = x ? 1 : 0;
+        this.y = y ? 1 : 0;
+        this.z = zw.X ? 1 : 0;
+        this.w = zw.Y ? 1 : 0;
     }
 
     /// <summary>
@@ -144,10 +144,10 @@ public unsafe partial struct Bool4
     /// <param name="zw">The value to assign to the first, second, third and fourth vector components.</param>
     public Bool4(bool x, bool y, Bool1x2 zw)
     {
-        this.x = x;
-        this.y = y;
-        this.z = zw.M11;
-        this.w = zw.M12;
+        this.x = x ? 1 : 0;
+        this.y = y ? 1 : 0;
+        this.z = zw.M11 ? 1 : 0;
+        this.w = zw.M12 ? 1 : 0;
     }
 
     /// <summary>
@@ -158,10 +158,10 @@ public unsafe partial struct Bool4
     /// <param name="zw">The value to assign to the first, second, third and fourth vector components.</param>
     public Bool4(bool x, bool y, Bool2x1 zw)
     {
-        this.x = x;
-        this.y = y;
-        this.z = zw.M11;
-        this.w = zw.M21;
+        this.x = x ? 1 : 0;
+        this.y = y ? 1 : 0;
+        this.z = zw.M11 ? 1 : 0;
+        this.w = zw.M21 ? 1 : 0;
     }
 
     /// <summary>
@@ -171,10 +171,10 @@ public unsafe partial struct Bool4
     /// <param name="zw">The value to assign to the first, second, third and fourth vector components.</param>
     public Bool4(Bool2 xy, Bool2 zw)
     {
-        this.x = xy.X;
-        this.y = xy.Y;
-        this.z = zw.X;
-        this.w = zw.Y;
+        this.x = xy.X ? 1 : 0;
+        this.y = xy.Y ? 1 : 0;
+        this.z = zw.X ? 1 : 0;
+        this.w = zw.Y ? 1 : 0;
     }
 
     /// <summary>
@@ -184,10 +184,10 @@ public unsafe partial struct Bool4
     /// <param name="zw">The value to assign to the first, second, third and fourth vector components.</param>
     public Bool4(Bool2 xy, Bool1x2 zw)
     {
-        this.x = xy.X;
-        this.y = xy.Y;
-        this.z = zw.M11;
-        this.w = zw.M12;
+        this.x = xy.X ? 1 : 0;
+        this.y = xy.Y ? 1 : 0;
+        this.z = zw.M11 ? 1 : 0;
+        this.w = zw.M12 ? 1 : 0;
     }
 
     /// <summary>
@@ -197,10 +197,10 @@ public unsafe partial struct Bool4
     /// <param name="zw">The value to assign to the first, second, third and fourth vector components.</param>
     public Bool4(Bool2 xy, Bool2x1 zw)
     {
-        this.x = xy.X;
-        this.y = xy.Y;
-        this.z = zw.M11;
-        this.w = zw.M21;
+        this.x = xy.X ? 1 : 0;
+        this.y = xy.Y ? 1 : 0;
+        this.z = zw.M11 ? 1 : 0;
+        this.w = zw.M21 ? 1 : 0;
     }
 
     /// <summary>
@@ -210,10 +210,10 @@ public unsafe partial struct Bool4
     /// <param name="zw">The value to assign to the first, second, third and fourth vector components.</param>
     public Bool4(Bool1x2 xy, Bool2 zw)
     {
-        this.x = xy.M11;
-        this.y = xy.M12;
-        this.z = zw.X;
-        this.w = zw.Y;
+        this.x = xy.M11 ? 1 : 0;
+        this.y = xy.M12 ? 1 : 0;
+        this.z = zw.X ? 1 : 0;
+        this.w = zw.Y ? 1 : 0;
     }
 
     /// <summary>
@@ -223,10 +223,10 @@ public unsafe partial struct Bool4
     /// <param name="zw">The value to assign to the first, second, third and fourth vector components.</param>
     public Bool4(Bool1x2 xy, Bool1x2 zw)
     {
-        this.x = xy.M11;
-        this.y = xy.M12;
-        this.z = zw.M11;
-        this.w = zw.M12;
+        this.x = xy.M11 ? 1 : 0;
+        this.y = xy.M12 ? 1 : 0;
+        this.z = zw.M11 ? 1 : 0;
+        this.w = zw.M12 ? 1 : 0;
     }
 
     /// <summary>
@@ -236,10 +236,10 @@ public unsafe partial struct Bool4
     /// <param name="zw">The value to assign to the first, second, third and fourth vector components.</param>
     public Bool4(Bool1x2 xy, Bool2x1 zw)
     {
-        this.x = xy.M11;
-        this.y = xy.M12;
-        this.z = zw.M11;
-        this.w = zw.M21;
+        this.x = xy.M11 ? 1 : 0;
+        this.y = xy.M12 ? 1 : 0;
+        this.z = zw.M11 ? 1 : 0;
+        this.w = zw.M21 ? 1 : 0;
     }
 
     /// <summary>
@@ -249,10 +249,10 @@ public unsafe partial struct Bool4
     /// <param name="zw">The value to assign to the first, second, third and fourth vector components.</param>
     public Bool4(Bool2x1 xy, Bool2 zw)
     {
-        this.x = xy.M11;
-        this.y = xy.M21;
-        this.z = zw.X;
-        this.w = zw.Y;
+        this.x = xy.M11 ? 1 : 0;
+        this.y = xy.M21 ? 1 : 0;
+        this.z = zw.X ? 1 : 0;
+        this.w = zw.Y ? 1 : 0;
     }
 
     /// <summary>
@@ -262,10 +262,10 @@ public unsafe partial struct Bool4
     /// <param name="zw">The value to assign to the first, second, third and fourth vector components.</param>
     public Bool4(Bool2x1 xy, Bool1x2 zw)
     {
-        this.x = xy.M11;
-        this.y = xy.M21;
-        this.z = zw.M11;
-        this.w = zw.M12;
+        this.x = xy.M11 ? 1 : 0;
+        this.y = xy.M21 ? 1 : 0;
+        this.z = zw.M11 ? 1 : 0;
+        this.w = zw.M12 ? 1 : 0;
     }
 
     /// <summary>
@@ -275,10 +275,10 @@ public unsafe partial struct Bool4
     /// <param name="zw">The value to assign to the first, second, third and fourth vector components.</param>
     public Bool4(Bool2x1 xy, Bool2x1 zw)
     {
-        this.x = xy.M11;
-        this.y = xy.M21;
-        this.z = zw.M11;
-        this.w = zw.M21;
+        this.x = xy.M11 ? 1 : 0;
+        this.y = xy.M21 ? 1 : 0;
+        this.z = zw.M11 ? 1 : 0;
+        this.w = zw.M21 ? 1 : 0;
     }
 
     /// <summary>
@@ -288,10 +288,10 @@ public unsafe partial struct Bool4
     /// <param name="w">The value to assign to the fourth vector component.</param>
     public Bool4(Bool3 xyz, bool w)
     {
-        this.x = xyz.X;
-        this.y = xyz.Y;
-        this.z = xyz.Z;
-        this.w = w;
+        this.x = xyz.X ? 1 : 0;
+        this.y = xyz.Y ? 1 : 0;
+        this.z = xyz.Z ? 1 : 0;
+        this.w = w ? 1 : 0;
     }
 
     /// <summary>
@@ -301,10 +301,10 @@ public unsafe partial struct Bool4
     /// <param name="w">The value to assign to the fourth vector component.</param>
     public Bool4(Bool1x3 xyz, bool w)
     {
-        this.x = xyz.M11;
-        this.y = xyz.M12;
-        this.z = xyz.M13;
-        this.w = w;
+        this.x = xyz.M11 ? 1 : 0;
+        this.y = xyz.M12 ? 1 : 0;
+        this.z = xyz.M13 ? 1 : 0;
+        this.w = w ? 1 : 0;
     }
 
     /// <summary>
@@ -314,10 +314,10 @@ public unsafe partial struct Bool4
     /// <param name="w">The value to assign to the fourth vector component.</param>
     public Bool4(Bool3x1 xyz, bool w)
     {
-        this.x = xyz.M11;
-        this.y = xyz.M21;
-        this.z = xyz.M31;
-        this.w = w;
+        this.x = xyz.M11 ? 1 : 0;
+        this.y = xyz.M21 ? 1 : 0;
+        this.z = xyz.M31 ? 1 : 0;
+        this.w = w ? 1 : 0;
     }
 
     /// <summary>
@@ -327,10 +327,10 @@ public unsafe partial struct Bool4
     /// <param name="yzw">The value to assign to the first, second, third and fourth vector components.</param>
     public Bool4(bool x, Bool3 yzw)
     {
-        this.x = x;
-        this.y = yzw.X;
-        this.z = yzw.Y;
-        this.w = yzw.Z;
+        this.x = x ? 1 : 0;
+        this.y = yzw.X ? 1 : 0;
+        this.z = yzw.Y ? 1 : 0;
+        this.w = yzw.Z ? 1 : 0;
     }
 
     /// <summary>
@@ -340,10 +340,10 @@ public unsafe partial struct Bool4
     /// <param name="yzw">The value to assign to the first, second, third and fourth vector components.</param>
     public Bool4(bool x, Bool1x3 yzw)
     {
-        this.x = x;
-        this.y = yzw.M11;
-        this.z = yzw.M12;
-        this.w = yzw.M13;
+        this.x = x ? 1 : 0;
+        this.y = yzw.M11 ? 1 : 0;
+        this.z = yzw.M12 ? 1 : 0;
+        this.w = yzw.M13 ? 1 : 0;
     }
 
     /// <summary>
@@ -353,10 +353,10 @@ public unsafe partial struct Bool4
     /// <param name="yzw">The value to assign to the first, second, third and fourth vector components.</param>
     public Bool4(bool x, Bool3x1 yzw)
     {
-        this.x = x;
-        this.y = yzw.M11;
-        this.z = yzw.M21;
-        this.w = yzw.M31;
+        this.x = x ? 1 : 0;
+        this.y = yzw.M11 ? 1 : 0;
+        this.z = yzw.M21 ? 1 : 0;
+        this.w = yzw.M31 ? 1 : 0;
     }
 
     /// <summary>
