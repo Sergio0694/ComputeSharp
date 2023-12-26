@@ -77,13 +77,15 @@ internal static class CSharpGeneratorTest<TGenerator>
     /// <param name="executeReason">The reason for the first <c>"Execute"</c> step.</param>
     /// <param name="diagnosticsReason">The reason for the <c>"Diagnostics"</c> step.</param>
     /// <param name="outputReason">The reason for the <c>"Output"</c> step.</param>
+    /// <param name="diagnosticsSourceReason">The reason for the output step for the diagnostics.</param>
     /// <param name="sourceReason">The reason for the final output source.</param>
     public static void VerifyIncrementalSteps(
         string source,
         string updatedSource,
         IncrementalStepRunReason executeReason,
-        IncrementalStepRunReason diagnosticsReason,
+        IncrementalStepRunReason? diagnosticsReason,
         IncrementalStepRunReason outputReason,
+        IncrementalStepRunReason? diagnosticsSourceReason,
         IncrementalStepRunReason sourceReason)
     {
         Compilation compilation = CreateCompilation(source);
@@ -105,19 +107,61 @@ internal static class CSharpGeneratorTest<TGenerator>
 
         GeneratorRunResult result = driver.GetRunResult().Results.Single();
 
-        // Get the generated sources (only one output file should be produced)
-        (object Value, IncrementalStepRunReason Reason)[] sourceOuputs =
-            result.TrackedOutputSteps
-            .SelectMany(outputStep => outputStep.Value)
-            .SelectMany(output => output.Outputs)
-            .ToArray();
+        // Get the generated sources and validate them. We have two possible cases: if no diagnostics
+        // are produced, then just the output source node is triggered. Otherwise, we'll also have one
+        // output node which is used to emit the gathered diagnostics from the initial transform step.
+        if (diagnosticsSourceReason is not null)
+        {
+            Assert.AreEqual(
+                expected: 2,
+                actual:
+                    result.TrackedOutputSteps
+                    .SelectMany(outputStep => outputStep.Value)
+                    .SelectMany(output => output.Outputs)
+                    .Count());
 
-        Assert.AreEqual(1, sourceOuputs.Length);
-        Assert.AreEqual(sourceReason, sourceOuputs[0].Reason);
+            // The "Diagnostics" name has one more parent compared to "Output", because it also
+            // has one extra Where(...) call on the node (used to filter out empty diagnostics).
+            Assert.AreEqual(
+                expected: diagnosticsSourceReason,
+                actual:
+                    result.TrackedOutputSteps
+                    .Single().Value
+                    .Single(run => run.Inputs[0].Source.Inputs[0].Source.Name == "Diagnostics")
+                    .Outputs.Single().Reason);
+
+            Assert.AreEqual(
+                expected: sourceReason,
+                actual:
+                    result.TrackedOutputSteps
+                    .Single().Value
+                    .Single(run => run.Inputs[0].Source.Name == "Output")
+                    .Outputs.Single().Reason);
+        }
+        else
+        {
+            (object Value, IncrementalStepRunReason Reason)[] sourceOuputs =
+                result.TrackedOutputSteps
+                .SelectMany(outputStep => outputStep.Value)
+                .SelectMany(output => output.Outputs)
+                .ToArray();
+
+            Assert.AreEqual(1, sourceOuputs.Length);
+            Assert.AreEqual(sourceReason, sourceOuputs[0].Reason);
+        }
 
         Assert.AreEqual(executeReason, result.TrackedSteps["Execute"].Single().Outputs[0].Reason);
-        Assert.AreEqual(diagnosticsReason, result.TrackedSteps["Diagnostics"].Single().Outputs[0].Reason);
         Assert.AreEqual(outputReason, result.TrackedSteps["Output"].Single().Outputs[0].Reason);
+
+        // Check the diagnostics reason, which might not be present
+        if (diagnosticsReason is not null)
+        {
+            Assert.AreEqual(diagnosticsReason, result.TrackedSteps["Diagnostics"].Single().Outputs[0].Reason);
+        }
+        else
+        {
+            Assert.IsFalse(result.TrackedSteps.ContainsKey("Diagnostics"));
+        }
     }
 
     /// <summary>
