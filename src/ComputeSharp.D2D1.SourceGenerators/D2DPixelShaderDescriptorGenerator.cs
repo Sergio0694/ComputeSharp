@@ -206,7 +206,8 @@ public sealed partial class D2DPixelShaderDescriptorGenerator : IIncrementalGene
         IncrementalValuesProvider<EquatableArray<DiagnosticInfo>> diagnosticInfo =
             shaderInfo
             .Select(static (item, _) => item.Diagnostcs)
-            .WithTrackingName(WellKnownTrackingNames.Diagnostics);
+            .WithTrackingName(WellKnownTrackingNames.Diagnostics)
+            .Where(static item => !item.IsEmpty);
 
         // Next, select one with just the shader info (and no diagnostics), so that changes there don't trigger generation unnecessarily
         IncrementalValuesProvider<D2D1ShaderInfo> outputInfo =

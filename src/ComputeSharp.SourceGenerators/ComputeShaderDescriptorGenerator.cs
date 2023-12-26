@@ -154,7 +154,8 @@ public sealed partial class ComputeShaderDescriptorGenerator : IIncrementalGener
         IncrementalValuesProvider<EquatableArray<DiagnosticInfo>> diagnosticInfo =
             shaderInfo
             .Select(static (item, _) => item.Diagnostcs)
-            .WithTrackingName(WellKnownTrackingNames.Diagnostics);
+            .WithTrackingName(WellKnownTrackingNames.Diagnostics)
+            .Where(static item => !item.IsEmpty);
 
         // Gather the models to produce sources for
         IncrementalValuesProvider<ShaderInfo> outputInfo =
