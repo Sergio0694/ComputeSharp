@@ -2,6 +2,7 @@ using System.Collections.Immutable;
 using System.ComponentModel;
 using System.Linq;
 using ComputeSharp.D2D1.SourceGenerators.Models;
+using ComputeSharp.SourceGeneration.Constants;
 using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Helpers;
 using ComputeSharp.SourceGeneration.Models;
@@ -197,13 +198,22 @@ public sealed partial class D2DPixelShaderDescriptorGenerator : IIncrementalGene
                         HlslInfo: hlslInfo,
                         Diagnostcs: diagnostics.ToImmutable());
                 })
+            .WithTrackingName(WellKnownTrackingNames.Execute)
             .Where(static item => item is not null)!;
 
-        // We need to create two more incremental steps to ensure we correctly emit diagnostics and re-generate sources:
-        //   - One with just the diagnostics, which will trigger every time any of them changes
-        //   - One with just the shader info (and no diagnostics), so that changes there don't trigger generation unnecessarily
-        IncrementalValuesProvider<EquatableArray<DiagnosticInfo>> diagnosticInfo = shaderInfo.Select(static (item, _) => item.Diagnostcs);
-        IncrementalValuesProvider<D2D1ShaderInfo> outputInfo = shaderInfo.Select(static (item, _) => item with { Diagnostcs = default });
+        // We need to create two more incremental steps to ensure we correctly emit diagnostics and re-generate sources.
+        // First, select an incremental provider with just the diagnostics, which will trigger every time any of them changes.
+        IncrementalValuesProvider<EquatableArray<DiagnosticInfo>> diagnosticInfo =
+            shaderInfo
+            .Select(static (item, _) => item.Diagnostcs)
+            .WithTrackingName(WellKnownTrackingNames.Diagnostics)
+            .Where(static item => !item.IsEmpty);
+
+        // Next, select one with just the shader info (and no diagnostics), so that changes there don't trigger generation unnecessarily
+        IncrementalValuesProvider<D2D1ShaderInfo> outputInfo =
+            shaderInfo
+            .Select(static (item, _) => item with { Diagnostcs = default })
+            .WithTrackingName(WellKnownTrackingNames.Output);
 
         // Output the diagnostics, if any
         context.ReportDiagnostics(diagnosticInfo);
