@@ -1819,6 +1819,12 @@ public unsafe partial struct Bool3
     }
 
     /// <summary>
+    /// Creates a new <see cref="Bool3"/> value with the same value for all its components.
+    /// </summary>
+    /// <param name="x">The value to use for the components of the new <see cref="Bool3"/> instance.</param>
+    public static implicit operator Bool3(bool x) => new(x, x, x);
+
+    /// <summary>
     /// Negates a <see cref="Bool3"/> value.
     /// </summary>
     /// <param name="xyz">The <see cref="Bool3"/> value to negate.</param>

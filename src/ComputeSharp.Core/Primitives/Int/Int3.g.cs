@@ -1824,6 +1824,33 @@ public unsafe partial struct Int3
     }
 
     /// <summary>
+    /// Creates a new <see cref="Int3"/> value with the same value for all its components.
+    /// </summary>
+    /// <param name="x">The value to use for the components of the new <see cref="Int3"/> instance.</param>
+    public static implicit operator Int3(int x) => new(x, x, x);
+
+    /// <summary>
+    /// Casts a <see cref="Int3"/> value to a <see cref="Float3"/> one.
+    /// </summary>
+    /// <param name="xyz">The input <see cref="Int3"/> value to cast.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static implicit operator Float3(Int3 xyz) => default;
+
+    /// <summary>
+    /// Casts a <see cref="Int3"/> value to a <see cref="Double3"/> one.
+    /// </summary>
+    /// <param name="xyz">The input <see cref="Int3"/> value to cast.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static implicit operator Double3(Int3 xyz) => default;
+
+    /// <summary>
+    /// Casts a <see cref="Int3"/> value to a <see cref="UInt3"/> one.
+    /// </summary>
+    /// <param name="xyz">The input <see cref="Int3"/> value to cast.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static explicit operator UInt3(Int3 xyz) => default;
+
+    /// <summary>
     /// Negates a <see cref="Int3"/> value.
     /// </summary>
     /// <param name="xyz">The <see cref="Int3"/> value to negate.</param>
