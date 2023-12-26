@@ -62,7 +62,7 @@ internal static unsafe class Win32ApplicationRunner
                 lpfnWndProc = &WindowProc,
                 hInstance = hInstance,
                 hCursor = Windows.LoadCursorW(HINSTANCE.NULL, IDC.IDC_ARROW),
-                lpszClassName = (ushort*)name
+                lpszClassName = name
             };
 
             // Register the window class
@@ -80,7 +80,7 @@ internal static unsafe class Win32ApplicationRunner
             hwnd = Windows.CreateWindowExW(
                 0,
                 windowClassEx.lpszClassName,
-                (ushort*)title,
+                title,
                 WS.WS_OVERLAPPEDWINDOW,
                 Windows.CW_USEDEFAULT,
                 Windows.CW_USEDEFAULT,

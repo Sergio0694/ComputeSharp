@@ -4,15 +4,15 @@ using ABI.Microsoft.Graphics.Canvas;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 using TerraFX.Interop.WinRT;
-using Windows.Graphics.DirectX;
-using Windows.Graphics.Imaging;
 using WinRT;
 
 namespace ComputeSharp.SwapChain.D2D1.Backend;
 
+using BitmapSize = Windows.Graphics.Imaging.BitmapSize;
 using CanvasDevice = Microsoft.Graphics.Canvas.CanvasDevice;
 using CanvasDrawingSession = Microsoft.Graphics.Canvas.CanvasDrawingSession;
 using CanvasSwapChain = Microsoft.Graphics.Canvas.CanvasSwapChain;
+using DirectXPixelFormat = Windows.Graphics.DirectX.DirectXPixelFormat;
 using Windows = TerraFX.Interop.Windows.Windows;
 
 /// <summary>
