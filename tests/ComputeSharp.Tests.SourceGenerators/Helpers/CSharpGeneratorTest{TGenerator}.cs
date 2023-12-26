@@ -70,15 +70,62 @@ internal static class CSharpGeneratorTest<TGenerator>
     }
 
     /// <summary>
-    /// Runs a generator and gathers the output results.
+    /// Verifies the incremental generator steps for a given source generator.
     /// </summary>
     /// <param name="source">The input source to process.</param>
-    /// <param name="compilation"><inheritdoc cref="GeneratorDriver.RunGeneratorsAndUpdateCompilation" path="/param[@name='outputCompilation']/node()"/></param>
-    /// <param name="diagnostics"><inheritdoc cref="GeneratorDriver.RunGeneratorsAndUpdateCompilation" path="/param[@name='diagnostics']/node()"/></param>
-    private static void RunGenerator(
+    /// <param name="updatedSource">The updated source to process.</param>
+    /// <param name="executeReason">The reason for the first <c>"Execute"</c> step.</param>
+    /// <param name="diagnosticsReason">The reason for the <c>"Diagnostics"</c> step.</param>
+    /// <param name="outputReason">The reason for the <c>"Output"</c> step.</param>
+    /// <param name="sourceReason">The reason for the final output source.</param>
+    public static void VerifyIncrementalSteps(
         string source,
-        out Compilation compilation,
-        out ImmutableArray<Diagnostic> diagnostics)
+        string updatedSource,
+        IncrementalStepRunReason executeReason,
+        IncrementalStepRunReason diagnosticsReason,
+        IncrementalStepRunReason outputReason,
+        IncrementalStepRunReason sourceReason)
+    {
+        Compilation compilation = CreateCompilation(source);
+
+        GeneratorDriver driver = CSharpGeneratorDriver.Create(
+            generators: [new TGenerator().AsSourceGenerator()],
+            driverOptions: new GeneratorDriverOptions(IncrementalGeneratorOutputKind.None, trackIncrementalGeneratorSteps: true));
+
+        // Run the generator on the initial sources
+        driver = driver.RunGenerators(compilation);
+
+        // Update the compilation by replacing the source
+        compilation = compilation.ReplaceSyntaxTree(
+            compilation.SyntaxTrees.First(),
+            CSharpSyntaxTree.ParseText(updatedSource, CSharpParseOptions.Default.WithLanguageVersion(LanguageVersion.CSharp12)));
+
+        // Run the generators again on the updated source
+        driver = driver.RunGenerators(compilation);
+
+        GeneratorRunResult result = driver.GetRunResult().Results.Single();
+
+        // Get the generated sources (only one output file should be produced)
+        (object Value, IncrementalStepRunReason Reason)[] sourceOuputs =
+            result.TrackedOutputSteps
+            .SelectMany(outputStep => outputStep.Value)
+            .SelectMany(output => output.Outputs)
+            .ToArray();
+
+        Assert.AreEqual(1, sourceOuputs.Length);
+        Assert.AreEqual(sourceReason, sourceOuputs[0].Reason);
+
+        Assert.AreEqual(executeReason, result.TrackedSteps["Execute"].Single().Outputs[0].Reason);
+        Assert.AreEqual(diagnosticsReason, result.TrackedSteps["Diagnostics"].Single().Outputs[0].Reason);
+        Assert.AreEqual(outputReason, result.TrackedSteps["Output"].Single().Outputs[0].Reason);
+    }
+
+    /// <summary>
+    /// Creates a compilation from a given source.
+    /// </summary>
+    /// <param name="source">The input source to process.</param>
+    /// <returns>The resulting <see cref="Compilation"/> object.</returns>
+    private static CSharpCompilation CreateCompilation(string source)
     {
         // Get all assembly references for the .NET TFM and ComputeSharp
         IEnumerable<MetadataReference> metadataReferences =
@@ -98,14 +145,28 @@ internal static class CSharpGeneratorTest<TGenerator>
             CSharpParseOptions.Default.WithLanguageVersion(LanguageVersion.CSharp12));
 
         // Create the original compilation
-        CSharpCompilation originalCompilation = CSharpCompilation.Create(
+        return CSharpCompilation.Create(
             "original",
             [sourceTree],
             metadataReferences,
             new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary, allowUnsafe: true));
+    }
+
+    /// <summary>
+    /// Runs a generator and gathers the output results.
+    /// </summary>
+    /// <param name="source">The input source to process.</param>
+    /// <param name="compilation"><inheritdoc cref="GeneratorDriver.RunGeneratorsAndUpdateCompilation" path="/param[@name='outputCompilation']/node()"/></param>
+    /// <param name="diagnostics"><inheritdoc cref="GeneratorDriver.RunGeneratorsAndUpdateCompilation" path="/param[@name='diagnostics']/node()"/></param>
+    private static void RunGenerator(
+        string source,
+        out Compilation compilation,
+        out ImmutableArray<Diagnostic> diagnostics)
+    {
+        Compilation originalCompilation = CreateCompilation(source);
 
         // Create the generator driver with the D2D shader generator
-        GeneratorDriver driver = CSharpGeneratorDriver.Create(new TGenerator()).WithUpdatedParseOptions((CSharpParseOptions)sourceTree.Options);
+        GeneratorDriver driver = CSharpGeneratorDriver.Create(new TGenerator()).WithUpdatedParseOptions(originalCompilation.SyntaxTrees.First().Options);
 
         // Run all source generators on the input source code
         _ = driver.RunGeneratorsAndUpdateCompilation(originalCompilation, out compilation, out diagnostics);
