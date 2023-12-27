@@ -985,4 +985,74 @@ public partial class ShaderRewriterTests
             return this.Number;
         }
     }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
+    public void HlslMatrixTypesCastOperators(Device device)
+    {
+        using ReadWriteBuffer<float> buffer1 = device.Get().AllocateReadWriteBuffer<float>(3);
+        using ReadWriteBuffer<int> buffer2 = device.Get().AllocateReadWriteBuffer<int>(8);
+        using ReadWriteBuffer<uint> buffer3 = device.Get().AllocateReadWriteBuffer<uint>(8);
+
+        device.Get().For(1, new HlslMatrixTypesCastOperatorsShader(buffer1, buffer2, buffer3));
+
+        float[] results1 = buffer1.ToArray();
+        int[] results2 = buffer2.ToArray();
+        uint[] results3 = buffer3.ToArray();
+
+        CollectionAssert.AreEqual(
+            expected: new float[] { 111, 222, 333 },
+            actual: results1,
+            comparer: Comparer<float>.Create(static (x, y) => Math.Abs(x - y) < 0.000001f ? 0 : x.CompareTo(y)));
+
+        CollectionAssert.AreEqual(
+            expected: new[] { 1, 3, 4, 5, 6, 1, 2, 3 },
+            actual: results2);
+
+        CollectionAssert.AreEqual(
+            expected: new uint[] { 1, 3, 4, 5, 6, 1, 2, 3 },
+            actual: results3);
+    }
+
+    [AutoConstructor]
+    [ThreadGroupSize(DefaultThreadGroupSizes.X)]
+    [GeneratedComputeShaderDescriptor]
+    internal readonly partial struct HlslMatrixTypesCastOperatorsShader : IComputeShader
+    {
+        public readonly ReadWriteBuffer<float> buffer1;
+        public readonly ReadWriteBuffer<int> buffer2;
+        public readonly ReadWriteBuffer<uint> buffer3;
+
+        public void Execute()
+        {
+            int1x3 i1x3 = new(111, 222, 333);
+            float2x4 f2x4 = new(1, 3.14f, 4, 5, 6.28f, 1.11f, 2.22f, 3.33f);
+
+            float1x3 f1x3 = (float1x3)i1x3;
+            int2x4 i2x4 = (int2x4)f2x4;
+            uint2x4 ui2x4 = (uint2x4)f2x4;
+
+            buffer1[0] = f1x3.M11;
+            buffer1[1] = f1x3.M12;
+            buffer1[2] = f1x3.M13;
+
+            buffer2[0] = i2x4.M11;
+            buffer2[1] = i2x4.M12;
+            buffer2[2] = i2x4.M13;
+            buffer2[3] = i2x4.M14;
+            buffer2[4] = i2x4.M21;
+            buffer2[5] = i2x4.M22;
+            buffer2[6] = i2x4.M23;
+            buffer2[7] = i2x4.M24;
+
+            buffer3[0] = ui2x4.M11;
+            buffer3[1] = ui2x4.M12;
+            buffer3[2] = ui2x4.M13;
+            buffer3[3] = ui2x4.M14;
+            buffer3[4] = ui2x4.M21;
+            buffer3[5] = ui2x4.M22;
+            buffer3[6] = ui2x4.M23;
+            buffer3[7] = ui2x4.M24;
+        }
+    }
 }

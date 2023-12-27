@@ -10,7 +10,12 @@ void GenerateAllMatrixProperties(string typeName, int elementSize)
 {
 #>
 using System.Diagnostics.CodeAnalysis;
-using System.Runtime.CompilerServices;
+<#
+    if (typeName == "Bool")
+    {
+        WriteLine("using System.Runtime.CompilerServices;");
+    }
+#>
 using System.Runtime.InteropServices;
 <#
     if (typeName == "Float" || typeName == "Int")
@@ -249,6 +254,30 @@ public unsafe partial struct <#=fullTypeName#>
     PopIndent();
     WriteLine("}");
     PopIndent();
+
+    // Generate the cast operators, when applicable
+    foreach (string targetType in new[] { "Float", "Double", "Int", "UInt" })
+    {
+        if (typeName != "Bool" && typeName != targetType)
+        {
+            WriteLine("");
+
+            bool isImplicit =
+                (typeName == "Float" && targetType == "Double") ||
+                (typeName == "Int" && targetType == "Float") ||
+                (typeName == "Int" && targetType == "Double") ||
+                (typeName == "UInt" && targetType == "Float") ||
+                (typeName == "UInt" && targetType == "Double");
+#>
+    /// <summary>
+    /// Casts a <see cref="<#=fullTypeName#>"/> value to a <see cref="<#=targetType#><#=rows#>x<#=columns#>"/> one.
+    /// </summary>
+    /// <param name="matrix">The input <see cref="<#=fullTypeName#>"/> value to cast.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static <#=isImplicit ? "implicit" : "explicit"#> operator <#=targetType#><#=rows#>x<#=columns#>(<#=fullTypeName#> matrix) => default;
+<#
+        }
+    }
 
     // Generate the negation operator
     if (typeName != "UInt")
