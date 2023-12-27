@@ -517,6 +517,13 @@ internal sealed partial class ShaderSourceRewriter(
                     // Allow specialized types to track the method invocation, if needed
                     TrackKnownMethodInvocation(metadataName);
 
+                    // Special case: handle known named intrinsics being invoked.
+                    // These have special lowering to the right HLSL constructs.
+                    if (VisitKnownNamedIntrinsicInvocationExpression(node, updatedNode, mapping) is SyntaxNode namedIntrinsic)
+                    {
+                        return namedIntrinsic;
+                    }
+
                     return updatedNode.WithExpression(IdentifierName(mapping!));
                 }
 

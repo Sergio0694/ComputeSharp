@@ -108,6 +108,12 @@ internal sealed partial class StaticFieldRewriter(
                     mapping = HlslKnownMethods.GetMappedNameWithParameters(method.Name, method.Parameters.Select(static p => p.Type.Name));
                 }
 
+                // Handle named intrinsics (see ShaderSourceRewriter for more info)
+                if (VisitKnownNamedIntrinsicInvocationExpression(node, updatedNode, mapping) is SyntaxNode namedIntrinsic)
+                {
+                    return namedIntrinsic;
+                }
+
                 return updatedNode.WithExpression(IdentifierName(mapping!));
             }
         }
