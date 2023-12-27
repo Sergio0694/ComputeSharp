@@ -468,14 +468,19 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
             // Conditional select invocations are rewritten as follows:
             //
             // C#:   Hlsl.ConditionalSelect(mask, left, right)
-            // HLSL: (mask ? left : right)
+            // HLSL (DX12): select(mask, left, right)
+            // HLSL (D2D1): (mask ? left : right)
             case "ConditionalSelect":
+#if D3D12_SOURCE_GENERATOR
+                return updatedNode.WithExpression(IdentifierName("select"));
+#else
                 return
                     ParenthesizedExpression(
                         ConditionalExpression(
                             updatedNode.ArgumentList.Arguments[0].Expression,
                             updatedNode.ArgumentList.Arguments[1].Expression,
                             updatedNode.ArgumentList.Arguments[2].Expression));
+#endif
             default:
                 throw new NotSupportedException($"""Unrecognized intrinsic "{intrinsicName}".""");
         }
