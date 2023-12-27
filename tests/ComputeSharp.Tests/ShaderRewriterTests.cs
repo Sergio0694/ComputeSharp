@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ComputeSharp.Interop;
 using ComputeSharp.Tests.Attributes;
 using ComputeSharp.Tests.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -1053,6 +1054,142 @@ public partial class ShaderRewriterTests
             buffer3[5] = ui2x4.M22;
             buffer3[6] = ui2x4.M23;
             buffer3[7] = ui2x4.M24;
+        }
+    }
+
+    // See https://github.com/Sergio0694/ComputeSharp/issues/735
+    [CombinatorialTestMethod]
+    [AllDevices]
+    public void KnownNamedIntrinsic_ConditionalSelect(Device device)
+    {
+        using ReadWriteBuffer<float> buffer1 = device.Get().AllocateReadWriteBuffer<float>(4);
+        using ReadWriteBuffer<int> buffer2 = device.Get().AllocateReadWriteBuffer<int>(3);
+        using ReadWriteBuffer<uint> buffer3 = device.Get().AllocateReadWriteBuffer<uint>(8);
+
+        device.Get().For(1, new KnownNamedIntrinsic_ConditionalSelectShader(buffer1, buffer2, buffer3));
+
+        float[] results1 = buffer1.ToArray();
+        int[] results2 = buffer2.ToArray();
+        uint[] results3 = buffer3.ToArray();
+
+        CollectionAssert.AreEqual(
+            expected: new[] { 1, 6, 3.14f, 4 },
+            actual: results1,
+            comparer: Comparer<float>.Create(static (x, y) => Math.Abs(x - y) < 0.000001f ? 0 : x.CompareTo(y)));
+
+        CollectionAssert.AreEqual(
+            expected: new[] { 1, 2, 6 },
+            actual: results2);
+
+        CollectionAssert.AreEqual(
+           expected: new uint[] { 1, 2, 333, 4, 555, 666, 777, 8 },
+           actual: results3);
+
+        ShaderInfo info = ReflectionServices.GetShaderInfo<KnownNamedIntrinsic_ConditionalSelectShader>();
+
+        Assert.AreEqual(
+            """
+            #define __GroupSize__get_X 64
+            #define __GroupSize__get_Y 1
+            #define __GroupSize__get_Z 1
+
+            cbuffer _ : register(b0)
+            {
+                uint __x;
+                uint __y;
+                uint __z;
+            }
+
+            RWStructuredBuffer<float> buffer1 : register(u0);
+
+            RWStructuredBuffer<int> buffer2 : register(u1);
+
+            RWStructuredBuffer<uint> buffer3 : register(u2);
+
+            [NumThreads(__GroupSize__get_X, __GroupSize__get_Y, __GroupSize__get_Z)]
+            void Execute(uint3 ThreadIds : SV_DispatchThreadID)
+            {
+                if (ThreadIds.x < __x && ThreadIds.y < __y && ThreadIds.z < __z)
+                {
+                    bool4 mask4 = bool4(true, false, true, true);
+                    float4 float4_1 = float4(1, 2, 3.14, 4);
+                    float4 float4_2 = float4(5, 6, 7, 8);
+                    float4 float4_r = select(mask4, float4_1, float4_2);
+                    buffer1[0] = float4_r.x;
+                    buffer1[1] = float4_r.y;
+                    buffer1[2] = float4_r.z;
+                    buffer1[3] = float4_r.w;
+                    bool1x3 mask1x3 = bool1x3((bool)true, (bool)true, (bool)false);
+                    int1x3 int1x3_1 = int1x3((int)1, (int)2, (int)3);
+                    int1x3 int1x3_2 = int1x3((int)4, (int)5, (int)6);
+                    int1x3 int1x3_r = select(mask1x3, int1x3_1, int1x3_2);
+                    buffer2[0] = int1x3_r._m00;
+                    buffer2[1] = int1x3_r._m01;
+                    buffer2[2] = int1x3_r._m02;
+                    bool2x4 mask2x4 = bool2x4((bool)true, (bool)true, (bool)false, (bool)true, (bool)false, (bool)false, (bool)false, (bool)true);
+                    uint2x4 uint2x4_1 = uint2x4((uint)1, (uint)2, (uint)3, (uint)4, (uint)5, (uint)6, (uint)7, (uint)8);
+                    uint2x4 uint2x4_2 = uint2x4((uint)111, (uint)222, (uint)333, (uint)444, (uint)555, (uint)666, (uint)777, (uint)888);
+                    uint2x4 uint2x4_r = select(mask2x4, uint2x4_1, uint2x4_2);
+                    buffer3[0] = uint2x4_r._m00;
+                    buffer3[1] = uint2x4_r._m01;
+                    buffer3[2] = uint2x4_r._m02;
+                    buffer3[3] = uint2x4_r._m03;
+                    buffer3[4] = uint2x4_r._m10;
+                    buffer3[5] = uint2x4_r._m11;
+                    buffer3[6] = uint2x4_r._m12;
+                    buffer3[7] = uint2x4_r._m13;
+                }
+            }
+            """,
+            info.HlslSource);
+    }
+
+    [AutoConstructor]
+    [ThreadGroupSize(DefaultThreadGroupSizes.X)]
+    [GeneratedComputeShaderDescriptor]
+    internal readonly partial struct KnownNamedIntrinsic_ConditionalSelectShader : IComputeShader
+    {
+        public readonly ReadWriteBuffer<float> buffer1;
+        public readonly ReadWriteBuffer<int> buffer2;
+        public readonly ReadWriteBuffer<uint> buffer3;
+
+        public void Execute()
+        {
+            bool4 mask4 = new(true, false, true, true);
+            float4 float4_1 = new(1, 2, 3.14f, 4);
+            float4 float4_2 = new(5, 6, 7, 8);
+
+            float4 float4_r = Hlsl.ConditionalSelect(mask4, float4_1, float4_2);
+
+            buffer1[0] = float4_r.X;
+            buffer1[1] = float4_r.Y;
+            buffer1[2] = float4_r.Z;
+            buffer1[3] = float4_r.W;
+
+            bool1x3 mask1x3 = new(true, true, false);
+            int1x3 int1x3_1 = new(1, 2, 3);
+            int1x3 int1x3_2 = new(4, 5, 6);
+
+            int1x3 int1x3_r = Hlsl.ConditionalSelect(mask1x3, int1x3_1, int1x3_2);
+
+            buffer2[0] = int1x3_r.M11;
+            buffer2[1] = int1x3_r.M12;
+            buffer2[2] = int1x3_r.M13;
+
+            bool2x4 mask2x4 = new(true, true, false, true, false, false, false, true);
+            uint2x4 uint2x4_1 = new(1, 2, 3, 4, 5, 6, 7, 8);
+            uint2x4 uint2x4_2 = new(111, 222, 333, 444, 555, 666, 777, 888);
+
+            uint2x4 uint2x4_r = Hlsl.ConditionalSelect(mask2x4, uint2x4_1, uint2x4_2);
+
+            buffer3[0] = uint2x4_r.M11;
+            buffer3[1] = uint2x4_r.M12;
+            buffer3[2] = uint2x4_r.M13;
+            buffer3[3] = uint2x4_r.M14;
+            buffer3[4] = uint2x4_r.M21;
+            buffer3[5] = uint2x4_r.M22;
+            buffer3[6] = uint2x4_r.M23;
+            buffer3[7] = uint2x4_r.M24;
         }
     }
 }
