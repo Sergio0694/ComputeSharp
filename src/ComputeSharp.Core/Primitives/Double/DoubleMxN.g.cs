@@ -91,6 +91,27 @@ public unsafe partial struct Double1x1
     }
 
     /// <summary>
+    /// Casts a <see cref="Double1x1"/> value to a <see cref="Float1x1"/> one.
+    /// </summary>
+    /// <param name="matrix">The input <see cref="Double1x1"/> value to cast.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static explicit operator Float1x1(Double1x1 matrix) => default;
+
+    /// <summary>
+    /// Casts a <see cref="Double1x1"/> value to a <see cref="Int1x1"/> one.
+    /// </summary>
+    /// <param name="matrix">The input <see cref="Double1x1"/> value to cast.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static explicit operator Int1x1(Double1x1 matrix) => default;
+
+    /// <summary>
+    /// Casts a <see cref="Double1x1"/> value to a <see cref="UInt1x1"/> one.
+    /// </summary>
+    /// <param name="matrix">The input <see cref="Double1x1"/> value to cast.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static explicit operator UInt1x1(Double1x1 matrix) => default;
+
+    /// <summary>
     /// Negates a <see cref="Double1x1"/> value.
     /// </summary>
     /// <param name="matrix">The <see cref="Double1x1"/> value to negate.</param>
@@ -293,6 +314,27 @@ public unsafe partial struct Double1x2
 
         return matrix;
     }
+
+    /// <summary>
+    /// Casts a <see cref="Double1x2"/> value to a <see cref="Float1x2"/> one.
+    /// </summary>
+    /// <param name="matrix">The input <see cref="Double1x2"/> value to cast.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static explicit operator Float1x2(Double1x2 matrix) => default;
+
+    /// <summary>
+    /// Casts a <see cref="Double1x2"/> value to a <see cref="Int1x2"/> one.
+    /// </summary>
+    /// <param name="matrix">The input <see cref="Double1x2"/> value to cast.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static explicit operator Int1x2(Double1x2 matrix) => default;
+
+    /// <summary>
+    /// Casts a <see cref="Double1x2"/> value to a <see cref="UInt1x2"/> one.
+    /// </summary>
+    /// <param name="matrix">The input <see cref="Double1x2"/> value to cast.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static explicit operator UInt1x2(Double1x2 matrix) => default;
 
     /// <summary>
     /// Negates a <see cref="Double1x2"/> value.
@@ -515,6 +557,27 @@ public unsafe partial struct Double1x3
 
         return matrix;
     }
+
+    /// <summary>
+    /// Casts a <see cref="Double1x3"/> value to a <see cref="Float1x3"/> one.
+    /// </summary>
+    /// <param name="matrix">The input <see cref="Double1x3"/> value to cast.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static explicit operator Float1x3(Double1x3 matrix) => default;
+
+    /// <summary>
+    /// Casts a <see cref="Double1x3"/> value to a <see cref="Int1x3"/> one.
+    /// </summary>
+    /// <param name="matrix">The input <see cref="Double1x3"/> value to cast.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static explicit operator Int1x3(Double1x3 matrix) => default;
+
+    /// <summary>
+    /// Casts a <see cref="Double1x3"/> value to a <see cref="UInt1x3"/> one.
+    /// </summary>
+    /// <param name="matrix">The input <see cref="Double1x3"/> value to cast.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static explicit operator UInt1x3(Double1x3 matrix) => default;
 
     /// <summary>
     /// Negates a <see cref="Double1x3"/> value.
@@ -751,6 +814,27 @@ public unsafe partial struct Double1x4
     }
 
     /// <summary>
+    /// Casts a <see cref="Double1x4"/> value to a <see cref="Float1x4"/> one.
+    /// </summary>
+    /// <param name="matrix">The input <see cref="Double1x4"/> value to cast.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static explicit operator Float1x4(Double1x4 matrix) => default;
+
+    /// <summary>
+    /// Casts a <see cref="Double1x4"/> value to a <see cref="Int1x4"/> one.
+    /// </summary>
+    /// <param name="matrix">The input <see cref="Double1x4"/> value to cast.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static explicit operator Int1x4(Double1x4 matrix) => default;
+
+    /// <summary>
+    /// Casts a <see cref="Double1x4"/> value to a <see cref="UInt1x4"/> one.
+    /// </summary>
+    /// <param name="matrix">The input <see cref="Double1x4"/> value to cast.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static explicit operator UInt1x4(Double1x4 matrix) => default;
+
+    /// <summary>
     /// Negates a <see cref="Double1x4"/> value.
     /// </summary>
     /// <param name="matrix">The <see cref="Double1x4"/> value to negate.</param>
@@ -959,6 +1043,27 @@ public unsafe partial struct Double2x1
 
         return matrix;
     }
+
+    /// <summary>
+    /// Casts a <see cref="Double2x1"/> value to a <see cref="Float2x1"/> one.
+    /// </summary>
+    /// <param name="matrix">The input <see cref="Double2x1"/> value to cast.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static explicit operator Float2x1(Double2x1 matrix) => default;
+
+    /// <summary>
+    /// Casts a <see cref="Double2x1"/> value to a <see cref="Int2x1"/> one.
+    /// </summary>
+    /// <param name="matrix">The input <see cref="Double2x1"/> value to cast.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static explicit operator Int2x1(Double2x1 matrix) => default;
+
+    /// <summary>
+    /// Casts a <see cref="Double2x1"/> value to a <see cref="UInt2x1"/> one.
+    /// </summary>
+    /// <param name="matrix">The input <see cref="Double2x1"/> value to cast.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static explicit operator UInt2x1(Double2x1 matrix) => default;
 
     /// <summary>
     /// Negates a <see cref="Double2x1"/> value.
@@ -1206,6 +1311,27 @@ public unsafe partial struct Double2x2
 
         return matrix;
     }
+
+    /// <summary>
+    /// Casts a <see cref="Double2x2"/> value to a <see cref="Float2x2"/> one.
+    /// </summary>
+    /// <param name="matrix">The input <see cref="Double2x2"/> value to cast.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static explicit operator Float2x2(Double2x2 matrix) => default;
+
+    /// <summary>
+    /// Casts a <see cref="Double2x2"/> value to a <see cref="Int2x2"/> one.
+    /// </summary>
+    /// <param name="matrix">The input <see cref="Double2x2"/> value to cast.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static explicit operator Int2x2(Double2x2 matrix) => default;
+
+    /// <summary>
+    /// Casts a <see cref="Double2x2"/> value to a <see cref="UInt2x2"/> one.
+    /// </summary>
+    /// <param name="matrix">The input <see cref="Double2x2"/> value to cast.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static explicit operator UInt2x2(Double2x2 matrix) => default;
 
     /// <summary>
     /// Negates a <see cref="Double2x2"/> value.
@@ -1473,6 +1599,27 @@ public unsafe partial struct Double2x3
 
         return matrix;
     }
+
+    /// <summary>
+    /// Casts a <see cref="Double2x3"/> value to a <see cref="Float2x3"/> one.
+    /// </summary>
+    /// <param name="matrix">The input <see cref="Double2x3"/> value to cast.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static explicit operator Float2x3(Double2x3 matrix) => default;
+
+    /// <summary>
+    /// Casts a <see cref="Double2x3"/> value to a <see cref="Int2x3"/> one.
+    /// </summary>
+    /// <param name="matrix">The input <see cref="Double2x3"/> value to cast.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static explicit operator Int2x3(Double2x3 matrix) => default;
+
+    /// <summary>
+    /// Casts a <see cref="Double2x3"/> value to a <see cref="UInt2x3"/> one.
+    /// </summary>
+    /// <param name="matrix">The input <see cref="Double2x3"/> value to cast.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static explicit operator UInt2x3(Double2x3 matrix) => default;
 
     /// <summary>
     /// Negates a <see cref="Double2x3"/> value.
@@ -1768,6 +1915,27 @@ public unsafe partial struct Double2x4
     }
 
     /// <summary>
+    /// Casts a <see cref="Double2x4"/> value to a <see cref="Float2x4"/> one.
+    /// </summary>
+    /// <param name="matrix">The input <see cref="Double2x4"/> value to cast.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static explicit operator Float2x4(Double2x4 matrix) => default;
+
+    /// <summary>
+    /// Casts a <see cref="Double2x4"/> value to a <see cref="Int2x4"/> one.
+    /// </summary>
+    /// <param name="matrix">The input <see cref="Double2x4"/> value to cast.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static explicit operator Int2x4(Double2x4 matrix) => default;
+
+    /// <summary>
+    /// Casts a <see cref="Double2x4"/> value to a <see cref="UInt2x4"/> one.
+    /// </summary>
+    /// <param name="matrix">The input <see cref="Double2x4"/> value to cast.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static explicit operator UInt2x4(Double2x4 matrix) => default;
+
+    /// <summary>
     /// Negates a <see cref="Double2x4"/> value.
     /// </summary>
     /// <param name="matrix">The <see cref="Double2x4"/> value to negate.</param>
@@ -1982,6 +2150,27 @@ public unsafe partial struct Double3x1
 
         return matrix;
     }
+
+    /// <summary>
+    /// Casts a <see cref="Double3x1"/> value to a <see cref="Float3x1"/> one.
+    /// </summary>
+    /// <param name="matrix">The input <see cref="Double3x1"/> value to cast.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static explicit operator Float3x1(Double3x1 matrix) => default;
+
+    /// <summary>
+    /// Casts a <see cref="Double3x1"/> value to a <see cref="Int3x1"/> one.
+    /// </summary>
+    /// <param name="matrix">The input <see cref="Double3x1"/> value to cast.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static explicit operator Int3x1(Double3x1 matrix) => default;
+
+    /// <summary>
+    /// Casts a <see cref="Double3x1"/> value to a <see cref="UInt3x1"/> one.
+    /// </summary>
+    /// <param name="matrix">The input <see cref="Double3x1"/> value to cast.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static explicit operator UInt3x1(Double3x1 matrix) => default;
 
     /// <summary>
     /// Negates a <see cref="Double3x1"/> value.
@@ -2256,6 +2445,27 @@ public unsafe partial struct Double3x2
 
         return matrix;
     }
+
+    /// <summary>
+    /// Casts a <see cref="Double3x2"/> value to a <see cref="Float3x2"/> one.
+    /// </summary>
+    /// <param name="matrix">The input <see cref="Double3x2"/> value to cast.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static explicit operator Float3x2(Double3x2 matrix) => default;
+
+    /// <summary>
+    /// Casts a <see cref="Double3x2"/> value to a <see cref="Int3x2"/> one.
+    /// </summary>
+    /// <param name="matrix">The input <see cref="Double3x2"/> value to cast.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static explicit operator Int3x2(Double3x2 matrix) => default;
+
+    /// <summary>
+    /// Casts a <see cref="Double3x2"/> value to a <see cref="UInt3x2"/> one.
+    /// </summary>
+    /// <param name="matrix">The input <see cref="Double3x2"/> value to cast.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static explicit operator UInt3x2(Double3x2 matrix) => default;
 
     /// <summary>
     /// Negates a <see cref="Double3x2"/> value.
@@ -2563,6 +2773,27 @@ public unsafe partial struct Double3x3
 
         return matrix;
     }
+
+    /// <summary>
+    /// Casts a <see cref="Double3x3"/> value to a <see cref="Float3x3"/> one.
+    /// </summary>
+    /// <param name="matrix">The input <see cref="Double3x3"/> value to cast.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static explicit operator Float3x3(Double3x3 matrix) => default;
+
+    /// <summary>
+    /// Casts a <see cref="Double3x3"/> value to a <see cref="Int3x3"/> one.
+    /// </summary>
+    /// <param name="matrix">The input <see cref="Double3x3"/> value to cast.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static explicit operator Int3x3(Double3x3 matrix) => default;
+
+    /// <summary>
+    /// Casts a <see cref="Double3x3"/> value to a <see cref="UInt3x3"/> one.
+    /// </summary>
+    /// <param name="matrix">The input <see cref="Double3x3"/> value to cast.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static explicit operator UInt3x3(Double3x3 matrix) => default;
 
     /// <summary>
     /// Negates a <see cref="Double3x3"/> value.
@@ -2911,6 +3142,27 @@ public unsafe partial struct Double3x4
     }
 
     /// <summary>
+    /// Casts a <see cref="Double3x4"/> value to a <see cref="Float3x4"/> one.
+    /// </summary>
+    /// <param name="matrix">The input <see cref="Double3x4"/> value to cast.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static explicit operator Float3x4(Double3x4 matrix) => default;
+
+    /// <summary>
+    /// Casts a <see cref="Double3x4"/> value to a <see cref="Int3x4"/> one.
+    /// </summary>
+    /// <param name="matrix">The input <see cref="Double3x4"/> value to cast.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static explicit operator Int3x4(Double3x4 matrix) => default;
+
+    /// <summary>
+    /// Casts a <see cref="Double3x4"/> value to a <see cref="UInt3x4"/> one.
+    /// </summary>
+    /// <param name="matrix">The input <see cref="Double3x4"/> value to cast.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static explicit operator UInt3x4(Double3x4 matrix) => default;
+
+    /// <summary>
     /// Negates a <see cref="Double3x4"/> value.
     /// </summary>
     /// <param name="matrix">The <see cref="Double3x4"/> value to negate.</param>
@@ -3137,6 +3389,27 @@ public unsafe partial struct Double4x1
 
         return matrix;
     }
+
+    /// <summary>
+    /// Casts a <see cref="Double4x1"/> value to a <see cref="Float4x1"/> one.
+    /// </summary>
+    /// <param name="matrix">The input <see cref="Double4x1"/> value to cast.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static explicit operator Float4x1(Double4x1 matrix) => default;
+
+    /// <summary>
+    /// Casts a <see cref="Double4x1"/> value to a <see cref="Int4x1"/> one.
+    /// </summary>
+    /// <param name="matrix">The input <see cref="Double4x1"/> value to cast.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static explicit operator Int4x1(Double4x1 matrix) => default;
+
+    /// <summary>
+    /// Casts a <see cref="Double4x1"/> value to a <see cref="UInt4x1"/> one.
+    /// </summary>
+    /// <param name="matrix">The input <see cref="Double4x1"/> value to cast.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static explicit operator UInt4x1(Double4x1 matrix) => default;
 
     /// <summary>
     /// Negates a <see cref="Double4x1"/> value.
@@ -3438,6 +3711,27 @@ public unsafe partial struct Double4x2
 
         return matrix;
     }
+
+    /// <summary>
+    /// Casts a <see cref="Double4x2"/> value to a <see cref="Float4x2"/> one.
+    /// </summary>
+    /// <param name="matrix">The input <see cref="Double4x2"/> value to cast.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static explicit operator Float4x2(Double4x2 matrix) => default;
+
+    /// <summary>
+    /// Casts a <see cref="Double4x2"/> value to a <see cref="Int4x2"/> one.
+    /// </summary>
+    /// <param name="matrix">The input <see cref="Double4x2"/> value to cast.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static explicit operator Int4x2(Double4x2 matrix) => default;
+
+    /// <summary>
+    /// Casts a <see cref="Double4x2"/> value to a <see cref="UInt4x2"/> one.
+    /// </summary>
+    /// <param name="matrix">The input <see cref="Double4x2"/> value to cast.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static explicit operator UInt4x2(Double4x2 matrix) => default;
 
     /// <summary>
     /// Negates a <see cref="Double4x2"/> value.
@@ -3785,6 +4079,27 @@ public unsafe partial struct Double4x3
 
         return matrix;
     }
+
+    /// <summary>
+    /// Casts a <see cref="Double4x3"/> value to a <see cref="Float4x3"/> one.
+    /// </summary>
+    /// <param name="matrix">The input <see cref="Double4x3"/> value to cast.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static explicit operator Float4x3(Double4x3 matrix) => default;
+
+    /// <summary>
+    /// Casts a <see cref="Double4x3"/> value to a <see cref="Int4x3"/> one.
+    /// </summary>
+    /// <param name="matrix">The input <see cref="Double4x3"/> value to cast.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static explicit operator Int4x3(Double4x3 matrix) => default;
+
+    /// <summary>
+    /// Casts a <see cref="Double4x3"/> value to a <see cref="UInt4x3"/> one.
+    /// </summary>
+    /// <param name="matrix">The input <see cref="Double4x3"/> value to cast.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static explicit operator UInt4x3(Double4x3 matrix) => default;
 
     /// <summary>
     /// Negates a <see cref="Double4x3"/> value.
@@ -4184,6 +4499,27 @@ public unsafe partial struct Double4x4
 
         return matrix;
     }
+
+    /// <summary>
+    /// Casts a <see cref="Double4x4"/> value to a <see cref="Float4x4"/> one.
+    /// </summary>
+    /// <param name="matrix">The input <see cref="Double4x4"/> value to cast.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static explicit operator Float4x4(Double4x4 matrix) => default;
+
+    /// <summary>
+    /// Casts a <see cref="Double4x4"/> value to a <see cref="Int4x4"/> one.
+    /// </summary>
+    /// <param name="matrix">The input <see cref="Double4x4"/> value to cast.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static explicit operator Int4x4(Double4x4 matrix) => default;
+
+    /// <summary>
+    /// Casts a <see cref="Double4x4"/> value to a <see cref="UInt4x4"/> one.
+    /// </summary>
+    /// <param name="matrix">The input <see cref="Double4x4"/> value to cast.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static explicit operator UInt4x4(Double4x4 matrix) => default;
 
     /// <summary>
     /// Negates a <see cref="Double4x4"/> value.
