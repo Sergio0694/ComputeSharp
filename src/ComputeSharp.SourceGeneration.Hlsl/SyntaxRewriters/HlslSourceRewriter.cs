@@ -465,12 +465,12 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
         // This path should only ever be reached for valid ones.
         switch (method)
         {
-            // Conditional select invocations are rewritten as follows:
+            // Select invocations are rewritten as follows:
             //
-            // C#:   Hlsl.ConditionalSelect(mask, left, right)
+            // C#:          Hlsl.Select(mask, left, right)
             // HLSL (DX12): select(mask, left, right)
             // HLSL (D2D1): (mask ? left : right)
-            case "ConditionalSelect":
+            case "Select":
 #if D3D12_SOURCE_GENERATOR
                 return updatedNode.WithExpression(IdentifierName("select"));
 #else

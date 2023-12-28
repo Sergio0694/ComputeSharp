@@ -110,19 +110,19 @@ public partial class ShaderRewriterTests
             float4 float4_1 = new(1, 2, 3.14f, 4);
             float4 float4_2 = new(5, 6, 7, 8);
 
-            float4 float4_r = Hlsl.ConditionalSelect(mask4, float4_1, float4_2);
+            float4 float4_r = Hlsl.Select(mask4, float4_1, float4_2);
 
             bool1x3 mask1x3 = new(true, true, false);
             int1x3 int1x3_1 = new(1, 2, 3);
             int1x3 int1x3_2 = new(4, 5, 6);
 
-            int1x3 int1x3_r = Hlsl.ConditionalSelect(mask1x3, int1x3_1, int1x3_2);
+            int1x3 int1x3_r = Hlsl.Select(mask1x3, int1x3_1, int1x3_2);
 
             bool2x4 mask2x4 = new(true, true, false, true, false, false, false, true);
             uint2x4 uint2x4_1 = new(1, 2, 3, 4, 5, 6, 7, 8);
             uint2x4 uint2x4_2 = new(111, 222, 333, 444, 555, 666, 777, 888);
 
-            uint2x4 uint2x4_r = Hlsl.ConditionalSelect(mask2x4, uint2x4_1, uint2x4_2);
+            uint2x4 uint2x4_r = Hlsl.Select(mask2x4, uint2x4_1, uint2x4_2);
 
             float2x2 f2x2_r = (float2x4)uint2x4_r * new float4x2(float4_r.XY, float4_r.ZW, new float2(int1x3_r.M11, int1x3_r.M12), new float2(int1x3_r.M13, 1.0f));
 
