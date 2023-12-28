@@ -481,6 +481,22 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
                             updatedNode.ArgumentList.Arguments[0].Expression,
                             updatedNode.ArgumentList.Arguments[1].Expression));
 #endif
+            // 'Or' invocations are rewritten as follows:
+            //
+            // C#:          Hlsl.Or(left, right)
+            // HLSL (DX12): or(left, right)
+            // HLSL (D2D1): (left || right)
+            case "Or":
+#if D3D12_SOURCE_GENERATOR
+                return updatedNode.WithExpression(IdentifierName("or"));
+#else
+                return
+                    ParenthesizedExpression(
+                        BinaryExpression(
+                            SyntaxKind.LogicalOrExpression,
+                            updatedNode.ArgumentList.Arguments[0].Expression,
+                            updatedNode.ArgumentList.Arguments[1].Expression));
+#endif
             // 'Select' invocations are rewritten as follows:
             //
             // C#:          Hlsl.Select(mask, left, right)
