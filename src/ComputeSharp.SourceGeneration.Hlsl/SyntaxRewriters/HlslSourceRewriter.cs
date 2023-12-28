@@ -465,7 +465,23 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
         // This path should only ever be reached for valid ones.
         switch (method)
         {
-            // Select invocations are rewritten as follows:
+            // 'And' invocations are rewritten as follows:
+            //
+            // C#:          Hlsl.And(left, right)
+            // HLSL (DX12): and(left, right)
+            // HLSL (D2D1): (left && right)
+            case "And":
+#if D3D12_SOURCE_GENERATOR
+                return updatedNode.WithExpression(IdentifierName("and"));
+#else
+                return
+                    ParenthesizedExpression(
+                        BinaryExpression(
+                            SyntaxKind.LogicalAndExpression,
+                            updatedNode.ArgumentList.Arguments[0].Expression,
+                            updatedNode.ArgumentList.Arguments[1].Expression));
+#endif
+            // 'Select' invocations are rewritten as follows:
             //
             // C#:          Hlsl.Select(mask, left, right)
             // HLSL (DX12): select(mask, left, right)

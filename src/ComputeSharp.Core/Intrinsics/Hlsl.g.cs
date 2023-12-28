@@ -1688,6 +1688,253 @@ partial class Hlsl
     public static bool All(Bool4x4 x) => default;
 
     /// <summary>
+    /// Performs a vectorized, non short-circuiting boolean 'AND' operation between two operands.
+    /// </summary>
+    /// <param name="left">The first input vector or matrix value.</param>
+    /// <param name="right">The second input vector or matrix value.</param>
+    /// <returns>The new vector or matrix value with elements resulting from the boolean operation.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://learn.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-operators#boolean-math-operators"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("__And")]
+    public static Bool2 And(Bool2 left, Bool2 right) => default;
+
+    /// <summary>
+    /// Performs a vectorized, non short-circuiting boolean 'AND' operation between two operands.
+    /// </summary>
+    /// <param name="left">The first input vector or matrix value.</param>
+    /// <param name="right">The second input vector or matrix value.</param>
+    /// <returns>The new vector or matrix value with elements resulting from the boolean operation.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://learn.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-operators#boolean-math-operators"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("__And")]
+    public static Bool3 And(Bool3 left, Bool3 right) => default;
+
+    /// <summary>
+    /// Performs a vectorized, non short-circuiting boolean 'AND' operation between two operands.
+    /// </summary>
+    /// <param name="left">The first input vector or matrix value.</param>
+    /// <param name="right">The second input vector or matrix value.</param>
+    /// <returns>The new vector or matrix value with elements resulting from the boolean operation.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://learn.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-operators#boolean-math-operators"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("__And")]
+    public static Bool4 And(Bool4 left, Bool4 right) => default;
+
+    /// <summary>
+    /// Performs a vectorized, non short-circuiting boolean 'AND' operation between two operands.
+    /// </summary>
+    /// <param name="left">The first input vector or matrix value.</param>
+    /// <param name="right">The second input vector or matrix value.</param>
+    /// <returns>The new vector or matrix value with elements resulting from the boolean operation.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://learn.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-operators#boolean-math-operators"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("__And")]
+    public static Bool1x1 And(Bool1x1 left, Bool1x1 right) => default;
+
+    /// <summary>
+    /// Performs a vectorized, non short-circuiting boolean 'AND' operation between two operands.
+    /// </summary>
+    /// <param name="left">The first input vector or matrix value.</param>
+    /// <param name="right">The second input vector or matrix value.</param>
+    /// <returns>The new vector or matrix value with elements resulting from the boolean operation.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://learn.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-operators#boolean-math-operators"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("__And")]
+    public static Bool1x2 And(Bool1x2 left, Bool1x2 right) => default;
+
+    /// <summary>
+    /// Performs a vectorized, non short-circuiting boolean 'AND' operation between two operands.
+    /// </summary>
+    /// <param name="left">The first input vector or matrix value.</param>
+    /// <param name="right">The second input vector or matrix value.</param>
+    /// <returns>The new vector or matrix value with elements resulting from the boolean operation.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://learn.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-operators#boolean-math-operators"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("__And")]
+    public static Bool1x3 And(Bool1x3 left, Bool1x3 right) => default;
+
+    /// <summary>
+    /// Performs a vectorized, non short-circuiting boolean 'AND' operation between two operands.
+    /// </summary>
+    /// <param name="left">The first input vector or matrix value.</param>
+    /// <param name="right">The second input vector or matrix value.</param>
+    /// <returns>The new vector or matrix value with elements resulting from the boolean operation.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://learn.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-operators#boolean-math-operators"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("__And")]
+    public static Bool1x4 And(Bool1x4 left, Bool1x4 right) => default;
+
+    /// <summary>
+    /// Performs a vectorized, non short-circuiting boolean 'AND' operation between two operands.
+    /// </summary>
+    /// <param name="left">The first input vector or matrix value.</param>
+    /// <param name="right">The second input vector or matrix value.</param>
+    /// <returns>The new vector or matrix value with elements resulting from the boolean operation.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://learn.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-operators#boolean-math-operators"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("__And")]
+    public static Bool2x1 And(Bool2x1 left, Bool2x1 right) => default;
+
+    /// <summary>
+    /// Performs a vectorized, non short-circuiting boolean 'AND' operation between two operands.
+    /// </summary>
+    /// <param name="left">The first input vector or matrix value.</param>
+    /// <param name="right">The second input vector or matrix value.</param>
+    /// <returns>The new vector or matrix value with elements resulting from the boolean operation.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://learn.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-operators#boolean-math-operators"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("__And")]
+    public static Bool2x2 And(Bool2x2 left, Bool2x2 right) => default;
+
+    /// <summary>
+    /// Performs a vectorized, non short-circuiting boolean 'AND' operation between two operands.
+    /// </summary>
+    /// <param name="left">The first input vector or matrix value.</param>
+    /// <param name="right">The second input vector or matrix value.</param>
+    /// <returns>The new vector or matrix value with elements resulting from the boolean operation.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://learn.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-operators#boolean-math-operators"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("__And")]
+    public static Bool2x3 And(Bool2x3 left, Bool2x3 right) => default;
+
+    /// <summary>
+    /// Performs a vectorized, non short-circuiting boolean 'AND' operation between two operands.
+    /// </summary>
+    /// <param name="left">The first input vector or matrix value.</param>
+    /// <param name="right">The second input vector or matrix value.</param>
+    /// <returns>The new vector or matrix value with elements resulting from the boolean operation.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://learn.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-operators#boolean-math-operators"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("__And")]
+    public static Bool2x4 And(Bool2x4 left, Bool2x4 right) => default;
+
+    /// <summary>
+    /// Performs a vectorized, non short-circuiting boolean 'AND' operation between two operands.
+    /// </summary>
+    /// <param name="left">The first input vector or matrix value.</param>
+    /// <param name="right">The second input vector or matrix value.</param>
+    /// <returns>The new vector or matrix value with elements resulting from the boolean operation.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://learn.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-operators#boolean-math-operators"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("__And")]
+    public static Bool3x1 And(Bool3x1 left, Bool3x1 right) => default;
+
+    /// <summary>
+    /// Performs a vectorized, non short-circuiting boolean 'AND' operation between two operands.
+    /// </summary>
+    /// <param name="left">The first input vector or matrix value.</param>
+    /// <param name="right">The second input vector or matrix value.</param>
+    /// <returns>The new vector or matrix value with elements resulting from the boolean operation.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://learn.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-operators#boolean-math-operators"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("__And")]
+    public static Bool3x2 And(Bool3x2 left, Bool3x2 right) => default;
+
+    /// <summary>
+    /// Performs a vectorized, non short-circuiting boolean 'AND' operation between two operands.
+    /// </summary>
+    /// <param name="left">The first input vector or matrix value.</param>
+    /// <param name="right">The second input vector or matrix value.</param>
+    /// <returns>The new vector or matrix value with elements resulting from the boolean operation.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://learn.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-operators#boolean-math-operators"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("__And")]
+    public static Bool3x3 And(Bool3x3 left, Bool3x3 right) => default;
+
+    /// <summary>
+    /// Performs a vectorized, non short-circuiting boolean 'AND' operation between two operands.
+    /// </summary>
+    /// <param name="left">The first input vector or matrix value.</param>
+    /// <param name="right">The second input vector or matrix value.</param>
+    /// <returns>The new vector or matrix value with elements resulting from the boolean operation.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://learn.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-operators#boolean-math-operators"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("__And")]
+    public static Bool3x4 And(Bool3x4 left, Bool3x4 right) => default;
+
+    /// <summary>
+    /// Performs a vectorized, non short-circuiting boolean 'AND' operation between two operands.
+    /// </summary>
+    /// <param name="left">The first input vector or matrix value.</param>
+    /// <param name="right">The second input vector or matrix value.</param>
+    /// <returns>The new vector or matrix value with elements resulting from the boolean operation.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://learn.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-operators#boolean-math-operators"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("__And")]
+    public static Bool4x1 And(Bool4x1 left, Bool4x1 right) => default;
+
+    /// <summary>
+    /// Performs a vectorized, non short-circuiting boolean 'AND' operation between two operands.
+    /// </summary>
+    /// <param name="left">The first input vector or matrix value.</param>
+    /// <param name="right">The second input vector or matrix value.</param>
+    /// <returns>The new vector or matrix value with elements resulting from the boolean operation.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://learn.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-operators#boolean-math-operators"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("__And")]
+    public static Bool4x2 And(Bool4x2 left, Bool4x2 right) => default;
+
+    /// <summary>
+    /// Performs a vectorized, non short-circuiting boolean 'AND' operation between two operands.
+    /// </summary>
+    /// <param name="left">The first input vector or matrix value.</param>
+    /// <param name="right">The second input vector or matrix value.</param>
+    /// <returns>The new vector or matrix value with elements resulting from the boolean operation.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://learn.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-operators#boolean-math-operators"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("__And")]
+    public static Bool4x3 And(Bool4x3 left, Bool4x3 right) => default;
+
+    /// <summary>
+    /// Performs a vectorized, non short-circuiting boolean 'AND' operation between two operands.
+    /// </summary>
+    /// <param name="left">The first input vector or matrix value.</param>
+    /// <param name="right">The second input vector or matrix value.</param>
+    /// <returns>The new vector or matrix value with elements resulting from the boolean operation.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://learn.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-operators#boolean-math-operators"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("__And")]
+    public static Bool4x4 And(Bool4x4 left, Bool4x4 right) => default;
+
+    /// <summary>
     /// Determines if any components of the specified value are non-zero.
     /// </summary>
     /// <param name="x">The specified value.</param>

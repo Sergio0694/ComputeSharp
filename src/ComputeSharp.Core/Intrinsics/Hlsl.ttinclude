@@ -194,6 +194,41 @@ var Intrinsics = new[]
     },
     new
     {
+        Name = "And",
+        HlslName = "__And",
+        Summary = "Performs a vectorized, non short-circuiting boolean 'AND' operation between two operands.",
+        Url = "https://learn.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-operators#boolean-math-operators",
+        Parameters = new[]
+        {
+            new { IsOut = false, Name = "left", Info = "The first input vector or matrix value." },
+            new { IsOut = false, Name = "right", Info = "The second input vector or matrix value." }
+        },
+        Returns = "The new vector or matrix value with elements resulting from the boolean operation.",
+        Overloads = new[]
+        {
+            new { Return = "Bool2", Params = new[] { "Bool2", "Bool2" } },
+            new { Return = "Bool3", Params = new[] { "Bool3", "Bool3" } },
+            new { Return = "Bool4", Params = new[] { "Bool4", "Bool4" } },
+            new { Return = "Bool1x1", Params = new[] { "Bool1x1", "Bool1x1" } },
+            new { Return = "Bool1x2", Params = new[] { "Bool1x2", "Bool1x2" } },
+            new { Return = "Bool1x3", Params = new[] { "Bool1x3", "Bool1x3" } },
+            new { Return = "Bool1x4", Params = new[] { "Bool1x4", "Bool1x4" } },
+            new { Return = "Bool2x1", Params = new[] { "Bool2x1", "Bool2x1" } },
+            new { Return = "Bool2x2", Params = new[] { "Bool2x2", "Bool2x2" } },
+            new { Return = "Bool2x3", Params = new[] { "Bool2x3", "Bool2x3" } },
+            new { Return = "Bool2x4", Params = new[] { "Bool2x4", "Bool2x4" } },
+            new { Return = "Bool3x1", Params = new[] { "Bool3x1", "Bool3x1" } },
+            new { Return = "Bool3x2", Params = new[] { "Bool3x2", "Bool3x2" } },
+            new { Return = "Bool3x3", Params = new[] { "Bool3x3", "Bool3x3" } },
+            new { Return = "Bool3x4", Params = new[] { "Bool3x4", "Bool3x4" } },
+            new { Return = "Bool4x1", Params = new[] { "Bool4x1", "Bool4x1" } },
+            new { Return = "Bool4x2", Params = new[] { "Bool4x2", "Bool4x2" } },
+            new { Return = "Bool4x3", Params = new[] { "Bool4x3", "Bool4x3" } },
+            new { Return = "Bool4x4", Params = new[] { "Bool4x4", "Bool4x4" } }
+        }
+    },
+    new
+    {
         Name = "Any",
         HlslName = "any",
         Summary = "Determines if any components of the specified value are non-zero.",
@@ -2624,7 +2659,8 @@ var Intrinsics = new[]
             new { Return = "Double4x4", Params = new[] { "Double4x4" } }
         }
     },
-    new {
+    new
+    {
         Name = "Select",
         HlslName = "__Select",
         Summary = "Creates a new vector or matrix value with elements selected between two specified source vector or matrix values based on an input boolean mask.",
