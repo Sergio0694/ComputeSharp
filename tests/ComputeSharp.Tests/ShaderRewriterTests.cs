@@ -1192,4 +1192,73 @@ public partial class ShaderRewriterTests
             buffer3[7] = uint2x4_r.M24;
         }
     }
+
+    [TestMethod]
+    public void KnownNamedIntrinsic_AndOr()
+    {
+        ShaderInfo info = ReflectionServices.GetShaderInfo<KnownNamedIntrinsic_AndOrShader>();
+
+        Assert.AreEqual(
+            """
+            #define __GroupSize__get_X 64
+            #define __GroupSize__get_Y 1
+            #define __GroupSize__get_Z 1
+
+            cbuffer _ : register(b0)
+            {
+                uint __x;
+                uint __y;
+                uint __z;
+            }
+
+            RWStructuredBuffer<float> __reserved__buffer : register(u0);
+
+            [NumThreads(__GroupSize__get_X, __GroupSize__get_Y, __GroupSize__get_Z)]
+            void Execute(uint3 ThreadIds : SV_DispatchThreadID)
+            {
+                if (ThreadIds.x < __x && ThreadIds.y < __y && ThreadIds.z < __z)
+                {
+                    bool4 mask4_1 = bool4(true, false, true, true);
+                    bool4 mask4_2 = bool4(true, false, true, true);
+                    bool4 mask4_r_and = and(mask4_1, mask4_2);
+                    bool4 mask4_r_or = or(mask4_1, mask4_2);
+                    bool2x3 mask2x3_1 = bool2x3((bool)true, (bool)false, (bool)true, (bool)true, (bool)false, (bool)false);
+                    bool2x3 mask2x3_2 = bool2x3((bool)true, (bool)false, (bool)true, (bool)true, (bool)true, (bool)true);
+                    bool2x3 mask2x3_r_and = and(mask2x3_1, mask2x3_2);
+                    bool2x3 mask2x3_r_or = or(mask2x3_1, mask2x3_2);
+                    __reserved__buffer[0] = mask4_r_and.x ? 1 : 0;
+                    __reserved__buffer[1] = mask4_r_or.y ? 1 : 0;
+                    __reserved__buffer[2] = mask2x3_r_and._m00 ? 1 : 0;
+                    __reserved__buffer[3] = mask2x3_r_or._m00 ? 1 : 0;
+                }
+            }
+            """,
+            info.HlslSource);
+    }
+
+    [AutoConstructor]
+    [ThreadGroupSize(DefaultThreadGroupSizes.X)]
+    [GeneratedComputeShaderDescriptor]
+    internal readonly partial struct KnownNamedIntrinsic_AndOrShader : IComputeShader
+    {
+        public readonly ReadWriteBuffer<float> buffer;
+
+        public void Execute()
+        {
+            bool4 mask4_1 = new(true, false, true, true);
+            bool4 mask4_2 = new(true, false, true, true);
+            bool4 mask4_r_and = Hlsl.And(mask4_1, mask4_2);
+            bool4 mask4_r_or = Hlsl.Or(mask4_1, mask4_2);
+
+            bool2x3 mask2x3_1 = new(true, false, true, true, false, false);
+            bool2x3 mask2x3_2 = new(true, false, true, true, true, true);
+            bool2x3 mask2x3_r_and = Hlsl.And(mask2x3_1, mask2x3_2);
+            bool2x3 mask2x3_r_or = Hlsl.Or(mask2x3_1, mask2x3_2);
+
+            buffer[0] = mask4_r_and.X ? 1 : 0;
+            buffer[1] = mask4_r_or.Y ? 1 : 0;
+            buffer[2] = mask2x3_r_and.M11 ? 1 : 0;
+            buffer[3] = mask2x3_r_or.M11 ? 1 : 0;
+        }
+    }
 }
