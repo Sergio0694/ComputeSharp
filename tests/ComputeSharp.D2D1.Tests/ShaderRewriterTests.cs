@@ -110,23 +110,73 @@ public partial class ShaderRewriterTests
             float4 float4_1 = new(1, 2, 3.14f, 4);
             float4 float4_2 = new(5, 6, 7, 8);
 
-            float4 float4_r = Hlsl.ConditionalSelect(mask4, float4_1, float4_2);
+            float4 float4_r = Hlsl.Select(mask4, float4_1, float4_2);
 
             bool1x3 mask1x3 = new(true, true, false);
             int1x3 int1x3_1 = new(1, 2, 3);
             int1x3 int1x3_2 = new(4, 5, 6);
 
-            int1x3 int1x3_r = Hlsl.ConditionalSelect(mask1x3, int1x3_1, int1x3_2);
+            int1x3 int1x3_r = Hlsl.Select(mask1x3, int1x3_1, int1x3_2);
 
             bool2x4 mask2x4 = new(true, true, false, true, false, false, false, true);
             uint2x4 uint2x4_1 = new(1, 2, 3, 4, 5, 6, 7, 8);
             uint2x4 uint2x4_2 = new(111, 222, 333, 444, 555, 666, 777, 888);
 
-            uint2x4 uint2x4_r = Hlsl.ConditionalSelect(mask2x4, uint2x4_1, uint2x4_2);
+            uint2x4 uint2x4_r = Hlsl.Select(mask2x4, uint2x4_1, uint2x4_2);
 
             float2x2 f2x2_r = (float2x4)uint2x4_r * new float4x2(float4_r.XY, float4_r.ZW, new float2(int1x3_r.M11, int1x3_r.M12), new float2(int1x3_r.M13, 1.0f));
 
             return new(f2x2_r.M11, f2x2_r.M12, f2x2_r.M21, f2x2_r.M22);
+        }
+    }
+
+    [TestMethod]
+    public void KnownNamedIntrinsic_AndOr()
+    {
+        D2D1ShaderInfo shaderInfo = D2D1ReflectionServices.GetShaderInfo<KnownNamedIntrinsic_AndOrShader>();
+
+        Assert.AreEqual("""
+            #define D2D_INPUT_COUNT 0
+
+            #include "d2d1effecthelpers.hlsli"
+
+            D2D_PS_ENTRY(Execute)
+            {
+                bool4 mask4_1 = bool4(true, false, true, true);
+                bool4 mask4_2 = bool4(true, false, true, true);
+                bool4 mask4_r_and = (mask4_1 && mask4_2);
+                bool4 mask4_r_or = (mask4_1 || mask4_2);
+                bool2x3 mask2x3_1 = bool2x3((bool)true, (bool)false, (bool)true, (bool)true, (bool)false, (bool)false);
+                bool2x3 mask2x3_2 = bool2x3((bool)true, (bool)false, (bool)true, (bool)true, (bool)true, (bool)true);
+                bool2x3 mask2x3_r_and = (mask2x3_1 && mask2x3_2);
+                bool2x3 mask2x3_r_or = (mask2x3_1 || mask2x3_2);
+                return float4(mask4_r_and.x ? 1 : 0, mask4_r_or.y ? 1 : 0, mask2x3_r_and._m00 ? 1 : 0, mask2x3_r_or._m00 ? 1 : 0);
+            }
+            """, shaderInfo.HlslSource);
+    }
+
+    [D2DInputCount(0)]
+    [D2DShaderProfile(D2D1ShaderProfile.PixelShader50)]
+    [D2DGeneratedPixelShaderDescriptor]
+    internal readonly partial struct KnownNamedIntrinsic_AndOrShader : ID2D1PixelShader
+    {
+        public float4 Execute()
+        {
+            bool4 mask4_1 = new(true, false, true, true);
+            bool4 mask4_2 = new(true, false, true, true);
+            bool4 mask4_r_and = Hlsl.And(mask4_1, mask4_2);
+            bool4 mask4_r_or = Hlsl.Or(mask4_1, mask4_2);
+
+            bool2x3 mask2x3_1 = new(true, false, true, true, false, false);
+            bool2x3 mask2x3_2 = new(true, false, true, true, true, true);
+            bool2x3 mask2x3_r_and = Hlsl.And(mask2x3_1, mask2x3_2);
+            bool2x3 mask2x3_r_or = Hlsl.Or(mask2x3_1, mask2x3_2);
+
+            return new(
+                mask4_r_and.X ? 1 : 0,
+                mask4_r_or.Y ? 1 : 0,
+                mask2x3_r_and.M11 ? 1 : 0,
+                mask2x3_r_or.M11 ? 1 : 0);
         }
     }
 }
