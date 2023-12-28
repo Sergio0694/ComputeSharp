@@ -441,4 +441,48 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
         // By default, constructors are not supported, so just return an empty value
         return CastExpression(targetType, LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(0)));
     }
+
+    /// <summary>
+    /// Visits a known named intrinsic invocation expression.
+    /// </summary>
+    /// <param name="node">The original input <see cref="BaseObjectCreationExpressionSyntax"/> instance.</param>
+    /// <param name="updatedNode">The updated <see cref="BaseObjectCreationExpressionSyntax"/> instance with tweaked syntax.</param>
+    /// <param name="intrinsicName">The name of the intrinsic method being invoked.</param>
+    /// <returns>The rewritten <see cref="SyntaxNode"/> for the invocation expression, if valid.</returns>
+    /// <exception cref="NotSupportedException">Thrown if the named intrinsic is not recognized.</exception>
+    protected static SyntaxNode? VisitKnownNamedIntrinsicInvocationExpression(
+        InvocationExpressionSyntax node,
+        InvocationExpressionSyntax updatedNode,
+        string? intrinsicName)
+    {
+        // All named intrinsic methods start with a leading "__" prefix
+        if (intrinsicName.AsSpan() is not ['_', '_', .. ReadOnlySpan<char> method])
+        {
+            return null;
+        }
+
+        // Handle and rewrite the current known named intrinsic.
+        // This path should only ever be reached for valid ones.
+        switch (method)
+        {
+            // Conditional select invocations are rewritten as follows:
+            //
+            // C#:   Hlsl.ConditionalSelect(mask, left, right)
+            // HLSL (DX12): select(mask, left, right)
+            // HLSL (D2D1): (mask ? left : right)
+            case "ConditionalSelect":
+#if D3D12_SOURCE_GENERATOR
+                return updatedNode.WithExpression(IdentifierName("select"));
+#else
+                return
+                    ParenthesizedExpression(
+                        ConditionalExpression(
+                            updatedNode.ArgumentList.Arguments[0].Expression,
+                            updatedNode.ArgumentList.Arguments[1].Expression,
+                            updatedNode.ArgumentList.Arguments[2].Expression));
+#endif
+            default:
+                throw new NotSupportedException($"""Unrecognized intrinsic "{intrinsicName}".""");
+        }
+    }
 }
