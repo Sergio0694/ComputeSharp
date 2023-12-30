@@ -1770,7 +1770,7 @@ public class Test_D2DPixelShaderDescriptorGenerator
         await CSharpAnalyzerWithLanguageVersionTest<InvalidD2D1CompileOptionsEnableLinkingOnShaderTypeAnalyzer>.VerifyAnalyzerAsync(source);
         await CSharpAnalyzerWithLanguageVersionTest<InvalidD2DGeneratedPixelShaderDescriptorAttributeTargetAnalyzer>.VerifyAnalyzerAsync(source);
         await CSharpAnalyzerWithLanguageVersionTest<InvalidD2DRequiresDoublePrecisionSupportAnalyzer>.VerifyAnalyzerAsync(source);
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidD2DResourceTextureIndexUseAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerWithLanguageVersionTest<InvalidD2DResourceTextureIndexAttributeLocationAnalyzer>.VerifyAnalyzerAsync(source);
         await CSharpAnalyzerWithLanguageVersionTest<InvalidEffectIdValueAnalyzer>.VerifyAnalyzerAsync(source);
         await CSharpAnalyzerWithLanguageVersionTest<InvalidEffectMetadataValueAnalyzer>.VerifyAnalyzerAsync(source);
         await CSharpAnalyzerWithLanguageVersionTest<MissingAllowUnsafeBlocksCompilationOptionAnalyzer>.VerifyAnalyzerAsync(source);

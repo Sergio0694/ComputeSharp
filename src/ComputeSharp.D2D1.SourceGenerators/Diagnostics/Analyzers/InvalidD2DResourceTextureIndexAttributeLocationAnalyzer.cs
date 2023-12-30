@@ -8,13 +8,13 @@ using static ComputeSharp.SourceGeneration.Diagnostics.DiagnosticDescriptors;
 namespace ComputeSharp.D2D1.SourceGenerators;
 
 /// <summary>
-/// A diagnostic analyzer that generates an error whenever [D2DResourceTextureIndex] is used incorrectly to annotate an invalid field.
+/// A diagnostic analyzer that generates an error whenever [D2DResourceTextureIndex] is used incorrectly to annotate a field.
 /// </summary>
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
-public sealed class InvalidD2DResourceTextureIndexUseAnalyzer : DiagnosticAnalyzer
+public sealed class InvalidD2DResourceTextureIndexAttributeLocationAnalyzer : DiagnosticAnalyzer
 {
     /// <inheritdoc/>
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = ImmutableArray.Create(InvalidD2DResourceTextureIndexAttributeUse);
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = ImmutableArray.Create(InvalidD2DResourceTextureIndexAttributeLocation);
 
     /// <inheritdoc/>
     public override void Initialize(AnalysisContext context)
@@ -49,7 +49,7 @@ public sealed class InvalidD2DResourceTextureIndexUseAnalyzer : DiagnosticAnalyz
                           SymbolEqualityComparer.Default.Equals(typeSymbol.ConstructedFrom, d2D1ResourceTexture3DSymbol)))
                     {
                         Diagnostic diagnostic = Diagnostic.Create(
-                            InvalidD2DResourceTextureIndexAttributeUse,
+                            InvalidD2DResourceTextureIndexAttributeLocation,
                             fieldSymbol.Locations.First(),
                             fieldSymbol.Name,
                             fieldSymbol.ContainingType,
