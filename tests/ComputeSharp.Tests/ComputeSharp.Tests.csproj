@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <Platforms>AnyCPU;x64;ARM64</Platforms>
@@ -17,7 +17,7 @@
     <PackageReference Include="MSTest.TestAdapter" Version="3.1.1" />
     <PackageReference Include="MSTest.TestFramework" Version="3.1.1" />
     <PackageReference Include="SixLabors.ImageSharp" Version="3.1.1" />
-    <PackageReference Include="TerraFX.Interop.Windows" Version="10.0.22621.2" />
+    <PackageReference Include="TerraFX.Interop.Windows" Version="10.0.22621.5" />
   </ItemGroup>
 
   <ItemGroup>
