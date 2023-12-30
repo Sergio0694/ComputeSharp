@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Immutable;
-using System.Globalization;
 using ComputeSharp.D2D1.SourceGenerators.Models;
 using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Helpers;
@@ -38,7 +37,7 @@ partial class D2DPixelShaderDescriptorGenerator
             {
                 // Only look for fields of a named type symbol (diagnostics is emitted by the HLSL rewriter if it's not the case).
                 // We're only looking for instance fields of unmanaged types in this case (as resource textures are structs).
-                if (fieldSymbol is not { IsStatic: false, Type: INamedTypeSymbol { IsUnmanagedType: true } typeSymbol })
+                if (fieldSymbol is not { IsStatic: false, Type: INamedTypeSymbol { IsUnmanagedType: true, IsGenericType: true } typeSymbol })
                 {
                     continue;
                 }
@@ -48,8 +47,10 @@ partial class D2DPixelShaderDescriptorGenerator
                 // Check that the field is a resource texture type (if not, it will be processed by the HLSL rewriter too)
                 if (HlslKnownTypes.IsResourceTextureType(metadataName))
                 {
-                    // The type name will be ComputeSharp.D2D1.D2D1ResourceTexture1D`1 or the 2D/3D versions
-                    int rank = int.Parse(metadataName.Substring(metadataName.Length - 4, 1), CultureInfo.InvariantCulture);
+                    // The type name will be ComputeSharp.D2D1.D2D1ResourceTexture1D`1 or the 2D/3D versions.
+                    // To avoid the intermediate string and the parsing, we can rely on the fact the metadata
+                    // has already been validated here, so we can get the rank by offsetting the characters.
+                    int rank = metadataName[^4] - '0';
                     int? index = null;
 
                     // Get the index from the [D2DResourceTextureIndex] attribute over the field
