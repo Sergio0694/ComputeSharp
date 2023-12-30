@@ -654,9 +654,9 @@ partial class DiagnosticDescriptors
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 
     /// <summary>
-    /// Gets a <see cref="DiagnosticDescriptor"/> for a shader with an out of range resource texture index (or more).
+    /// Gets a <see cref="DiagnosticDescriptor"/> for a shader with an overlapping resource texture index (or more).
     /// <para>
-    /// Format: <c>"The D2D1 shader of type {0} is using some out of range resource texture indices"</c>.
+    /// Format: <c>"The D2D1 shader of type {0} is using some resource texture indices that overlap with the shader input indices"</c>.
     /// </para>
     /// </summary>
     public static readonly DiagnosticDescriptor ResourceTextureIndexOverlappingWithInputIndex = new(

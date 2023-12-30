@@ -60,17 +60,23 @@ public sealed class InvalidD2DResourceTextureIndexAttributeUseAnalyzer : Diagnos
                 foreach (ISymbol memberSymbol in typeSymbol.GetMembers())
                 {
                     // Only look for valid candidate fields (same logic as in D2DPixelShaderDescriptorGenerator.InputTypes)
-                    if (memberSymbol is not IFieldSymbol { IsStatic: false, Type: INamedTypeSymbol { IsUnmanagedType: true, IsGenericType: true } } fieldSymbol)
+                    if (memberSymbol is not IFieldSymbol { IsStatic: false, Type: INamedTypeSymbol { IsUnmanagedType: true } } fieldSymbol)
+                    {
+                        continue;
+                    }
+
+                    // Specifically check that the type is generic and grab the source one
+                    if (fieldSymbol.Type is not INamedTypeSymbol { ConstructedFrom: { } nonGenericFieldTypeSymbol })
                     {
                         continue;
                     }
 
                     // Check that the field is a D2D resource texture and get the rank
-                    int rank = fieldSymbol.Type switch
+                    int rank = nonGenericFieldTypeSymbol switch
                     {
-                        _ when SymbolEqualityComparer.Default.Equals(d2D1ResourceTexture1DSymbol, fieldSymbol.Type) => 1,
-                        _ when SymbolEqualityComparer.Default.Equals(d2D1ResourceTexture2DSymbol, fieldSymbol.Type) => 2,
-                        _ when SymbolEqualityComparer.Default.Equals(d2D1ResourceTexture3DSymbol, fieldSymbol.Type) => 3,
+                        _ when SymbolEqualityComparer.Default.Equals(d2D1ResourceTexture1DSymbol, nonGenericFieldTypeSymbol) => 1,
+                        _ when SymbolEqualityComparer.Default.Equals(d2D1ResourceTexture2DSymbol, nonGenericFieldTypeSymbol) => 2,
+                        _ when SymbolEqualityComparer.Default.Equals(d2D1ResourceTexture3DSymbol, nonGenericFieldTypeSymbol) => 3,
                         _ => 0
                     };
 
@@ -132,7 +138,7 @@ public sealed class InvalidD2DResourceTextureIndexAttributeUseAnalyzer : Diagnos
                             typeSymbol.Locations.First(),
                             typeSymbol));
 
-                        return;
+                        break;
                     }
                 }
 
@@ -146,7 +152,7 @@ public sealed class InvalidD2DResourceTextureIndexAttributeUseAnalyzer : Diagnos
                             typeSymbol.Locations.First(),
                             typeSymbol));
 
-                        return;
+                        break;
                     }
                 }
 
@@ -154,9 +160,17 @@ public sealed class InvalidD2DResourceTextureIndexAttributeUseAnalyzer : Diagnos
 
                 selectedResourceTextureIndices.Clear();
 
-                // All input description indices must be unique (also take this path for invalid indices)
+                // All input description indices must be unique
                 foreach ((int? index, _) in resourceTextureInfos.WrittenSpan)
                 {
+                    // Skip this path for invalid indices, as those will receive other diagnostics.
+                    // We have to do this to avoid generating false positives for the default value.
+                    // Because indices could be out of range, we also have to skip any of those.
+                    if (index is null or >= 16)
+                    {
+                        continue;
+                    }
+
                     ref bool isResourceTextureIndexUsed = ref selectedResourceTextureIndices[index ?? 0];
 
                     if (isResourceTextureIndexUsed)
@@ -166,7 +180,7 @@ public sealed class InvalidD2DResourceTextureIndexAttributeUseAnalyzer : Diagnos
                             typeSymbol.Locations.First(),
                             typeSymbol));
 
-                        return;
+                        break;
                     }
 
                     isResourceTextureIndexUsed = true;
