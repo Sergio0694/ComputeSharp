@@ -14,12 +14,17 @@ internal static partial class HlslKnownMethods
     /// <summary>
     /// The mapping of supported known methods to HLSL names.
     /// </summary>
-    private static readonly IReadOnlyDictionary<string, string> KnownMethods = BuildKnownMethodsMap();
+    private static readonly Dictionary<string, string> KnownMethods = BuildKnownMethodsMap();
 
     /// <summary>
     /// The mapping of supported known methods that require parameters mapping to HLSL names.
     /// </summary>
-    private static readonly IReadOnlyDictionary<string, string> KnownMethodsParametersMapping = BuildKnownMethodsParametersMappingMap();
+    private static readonly Dictionary<string, string> KnownMethodsParametersMapping = BuildKnownMethodsParametersMappingMap();
+
+    /// <summary>
+    /// The mapping of supported known samplers to HLSL resource type names.
+    /// </summary>
+    private static readonly Dictionary<string, string?> KnownResourceSamplers = BuildKnownResourceSamplers();
 
     /// <summary>
     /// Builds the mapping of supported known methods to HLSL names.
@@ -95,21 +100,16 @@ internal static partial class HlslKnownMethods
     }
 
     /// <summary>
+    /// Builds the mapping of supported known samplers to HLSL resource type names.
+    /// </summary>
+    /// <returns>The mapping of supported known samplers to HLSL resource type names.</returns>
+    private static partial Dictionary<string, string?> BuildKnownResourceSamplers();
+
+    /// <summary>
     /// Adds more known methods to the mapping to use.
     /// </summary>
     /// <param name="knownMethods">The mapping of known methods being built.</param>
     static partial void AddKnownMethods(IDictionary<string, string> knownMethods);
-
-    /// <summary>
-    /// The mapping of supported known samplers to HLSL resource type names.
-    /// </summary>
-    private static readonly IReadOnlyDictionary<string, string?> KnownResourceSamplers = BuildKnownResourceSamplers();
-
-    /// <summary>
-    /// Builds the mapping of supported known samplers to HLSL resource type names.
-    /// </summary>
-    /// <returns>The mapping of supported known samplers to HLSL resource type names.</returns>
-    private static partial IReadOnlyDictionary<string, string?> BuildKnownResourceSamplers();
 
     /// <summary>
     /// Tries to get the mapped HLSL-compatible sampler resource type name for the input indexer name.

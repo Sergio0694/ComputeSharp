@@ -16,7 +16,7 @@ internal static partial class HlslKnownKeywords
     /// <summary>
     /// The mapping of known HLSL keywords.
     /// </summary>
-    private static readonly IReadOnlyCollection<string> KnownKeywords = BuildKnownKeywordsMap();
+    private static readonly HashSet<string> KnownKeywords = BuildKnownKeywordsMap();
 
     /// <summary>
     /// Builds the mapping of all known HLSL keywords.

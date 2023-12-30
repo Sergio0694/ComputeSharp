@@ -6,9 +6,9 @@ namespace ComputeSharp.SourceGeneration.Mappings;
 partial class HlslKnownMethods
 {
     /// <inheritdoc/>
-    private static partial IReadOnlyDictionary<string, string?> BuildKnownResourceSamplers()
+    private static partial Dictionary<string, string?> BuildKnownResourceSamplers()
     {
-        return new Dictionary<string, string?>
+        return new()
         {
             [$"ComputeSharp.ReadOnlyTexture1D`2.Sample({typeof(float).FullName})"] = null,
             [$"ComputeSharp.IReadOnlyTexture1D`1.Sample({typeof(float).FullName})"] = null,
