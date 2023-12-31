@@ -57,22 +57,22 @@ internal static partial class HlslKnownTypes
     /// <summary>
     /// The mapping of supported known vector types to HLSL types.
     /// </summary>
-    private static readonly IReadOnlyDictionary<string, string> KnownVectorTypeMetadataNames = BuildKnownVectorTypeMetadataNames();
+    private static readonly Dictionary<string, string> KnownVectorTypeMetadataNames = BuildKnownVectorTypeMetadataNames();
 
     /// <summary>
     /// The mapping of supported known matrix types to HLSL types.
     /// </summary>
-    private static readonly IReadOnlyDictionary<string, string> KnownMatrixTypesMetadataNames = BuildKnownMatrixTypeMetadataNames();
+    private static readonly Dictionary<string, string> KnownMatrixTypesMetadataNames = BuildKnownMatrixTypeMetadataNames();
 
     /// <summary>
     /// The mapping of supported known types to HLSL types.
     /// </summary>
-    private static readonly IReadOnlyDictionary<string, string> KnownHlslTypeMetadataNames = BuildKnownHlslTypeMetadataNames();
+    private static readonly Dictionary<string, string> KnownHlslTypeMetadataNames = BuildKnownHlslTypeMetadataNames();
 
     /// <summary>
     /// The mapping of type info for all supported known matrix types to HLSL types.
     /// </summary>
-    private static readonly IReadOnlyDictionary<string, NonLinearMatrixTypeInfo> KnownNonLinearMatrixTypeInfo = BuildKnownNonLinearMatrixTypeInfo();
+    private static readonly Dictionary<string, NonLinearMatrixTypeInfo> KnownNonLinearMatrixTypeInfo = BuildKnownNonLinearMatrixTypeInfo();
 
     /// <summary>
     /// Builds the mapping of known HLSL vector types.

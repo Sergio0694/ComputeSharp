@@ -654,9 +654,9 @@ partial class DiagnosticDescriptors
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 
     /// <summary>
-    /// Gets a <see cref="DiagnosticDescriptor"/> for a shader with an out of range resource texture index (or more).
+    /// Gets a <see cref="DiagnosticDescriptor"/> for a shader with an overlapping resource texture index (or more).
     /// <para>
-    /// Format: <c>"The D2D1 shader of type {0} is using some out of range resource texture indices"</c>.
+    /// Format: <c>"The D2D1 shader of type {0} is using some resource texture indices that overlap with the shader input indices"</c>.
     /// </para>
     /// </summary>
     public static readonly DiagnosticDescriptor ResourceTextureIndexOverlappingWithInputIndex = new(
@@ -702,14 +702,14 @@ partial class DiagnosticDescriptors
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 
     /// <summary>
-    /// Gets a <see cref="DiagnosticDescriptor"/> for an invalid use of <c>[D2DResourceTextureIndex]</c>.
+    /// Gets a <see cref="DiagnosticDescriptor"/> for an invalid location of <c>[D2DResourceTextureIndex]</c>.
     /// <para>
-    /// Format: <c>"The field "{0}" (in type {1}) is using [D2DResourceTextureIndex] incorrectly (the attribute can only be used on D2D1 resource texture types, but the field is of type {2})"</c>.
+    /// Format: <c>"The field "{0}" (in type {1}) is using [D2DResourceTextureIndex] on an invalid location (the attribute can only be used on D2D1 resource texture types, but the field is of type {2})"</c>.
     /// </para>
     /// </summary>
-    public static readonly DiagnosticDescriptor InvalidD2DResourceTextureIndexAttributeUse = new(
+    public static readonly DiagnosticDescriptor InvalidD2DResourceTextureIndexAttributeLocation = new(
         id: "CMPSD2D0049",
-        title: "Invalid [D2DResourceTextureIndex] use",
+        title: "Invalid [D2DResourceTextureIndex] location",
         messageFormat: """The field "{0}" (in type {1}) is using [D2DResourceTextureIndex] incorrectly (the attribute can only be used on D2D1 resource texture types, but the field is of type {2})""",
         category: "ComputeSharp.D2D1.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,

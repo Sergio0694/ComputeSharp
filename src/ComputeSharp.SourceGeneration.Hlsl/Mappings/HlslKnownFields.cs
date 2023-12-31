@@ -10,7 +10,7 @@ internal static partial class HlslKnownFields
     /// <summary>
     /// The mapping of supported known fields to HLSL names.
     /// </summary>
-    private static readonly IReadOnlyDictionary<string, string> KnownFields = BuildKnownFieldsMap();
+    private static readonly Dictionary<string, string> KnownFields = BuildKnownFieldsMap();
 
     /// <summary>
     /// Builds the mapping of supported known fields to HLSL names.

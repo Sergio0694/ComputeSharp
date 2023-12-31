@@ -39,6 +39,8 @@ partial class D2DPixelShaderDescriptorGenerator
             int rawInputCount = 0;
             bool isInputCountPresent = false;
 
+            // Note: this logic is shared with InvalidD2DResourceTextureIndexAttributeUseAnalyzer.
+            // If any changes are made here, they should be reflected in that analyzer as well.
             inputCount = 0;
 
             using ImmutableArrayBuilder<int> inputSimpleIndicesBuilder = new();

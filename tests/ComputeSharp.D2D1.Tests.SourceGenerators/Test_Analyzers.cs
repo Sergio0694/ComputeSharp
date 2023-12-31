@@ -415,4 +415,199 @@ public class Test_Analyzers
 
         await CSharpAnalyzerWithLanguageVersionTest<InvalidD2DRequiresDoublePrecisionSupportAnalyzer>.VerifyAnalyzerAsync(source);
     }
+
+    [TestMethod]
+    public async Task MissingD2DResourceTextureIndexAttribute_WarnsOnlyIfMissing()
+    {
+        const string source = """
+            using ComputeSharp;
+            using ComputeSharp.D2D1;
+
+            [D2DInputCount(0)]
+            internal partial struct MyType : ID2D1PixelShader
+            {
+                public D2D1ResourceTexture1D<float> {|CMPSD2D0050:texture1D|};
+                public D2D1ResourceTexture2D<float> {|CMPSD2D0050:texture2D|};
+                public D2D1ResourceTexture3D<float> {|CMPSD2D0050:texture3D|};
+
+                [D2DResourceTextureIndex(0)]
+                public D2D1ResourceTexture1D<float> texture1D_2;
+
+                [D2DResourceTextureIndex(1)]
+                public D2D1ResourceTexture2D<float> texture2D_2;
+
+                [D2DResourceTextureIndex(2)]
+                public D2D1ResourceTexture3D<float> texture3D_2;
+
+                public Float4 Execute()
+                {
+                    return 0;
+                }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<InvalidD2DResourceTextureIndexAttributeUseAnalyzer>.VerifyAnalyzerAsync(source);
+    }
+
+    [TestMethod]
+    public async Task ResourceTextureIndexOverlappingWithInputIndex_Warns()
+    {
+        const string source = """
+            using ComputeSharp;
+            using ComputeSharp.D2D1;
+
+            [D2DInputCount(2)]
+            internal partial struct {|CMPSD2D0046:MyType|} : ID2D1PixelShader
+            {
+                [D2DResourceTextureIndex(1)]
+                public D2D1ResourceTexture1D<float> texture;
+
+                public Float4 Execute()
+                {
+                    return 0;
+                }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<InvalidD2DResourceTextureIndexAttributeUseAnalyzer>.VerifyAnalyzerAsync(source);
+    }
+
+    [TestMethod]
+    public async Task ResourceTextureIndexOverlappingWithInputIndex_WarnsOnlyOnce()
+    {
+        const string source = """
+            using ComputeSharp;
+            using ComputeSharp.D2D1;
+
+            [D2DInputCount(2)]
+            internal partial struct {|CMPSD2D0046:MyType|} : ID2D1PixelShader
+            {
+                [D2DResourceTextureIndex(0)]
+                public D2D1ResourceTexture1D<float> texture1D;
+
+                [D2DResourceTextureIndex(1)]
+                public D2D1ResourceTexture2D<float> texture2D;
+
+                public Float4 Execute()
+                {
+                    return 0;
+                }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<InvalidD2DResourceTextureIndexAttributeUseAnalyzer>.VerifyAnalyzerAsync(source);
+    }
+
+    [TestMethod]
+    public async Task OutOfRangeResourceTextureIndex_Warns()
+    {
+        const string source = """
+            using ComputeSharp;
+            using ComputeSharp.D2D1;
+
+            [D2DInputCount(0)]
+            internal partial struct {|CMPSD2D0047:MyType|} : ID2D1PixelShader
+            {
+                [D2DResourceTextureIndex(16)]
+                public D2D1ResourceTexture1D<float> texture;
+
+                public Float4 Execute()
+                {
+                    return 0;
+                }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<InvalidD2DResourceTextureIndexAttributeUseAnalyzer>.VerifyAnalyzerAsync(source);
+    }
+
+    [TestMethod]
+    public async Task OutOfRangeResourceTextureIndex_WarnsOnlyOnce()
+    {
+        const string source = """
+            using ComputeSharp;
+            using ComputeSharp.D2D1;
+
+            [D2DInputCount(0)]
+            internal partial struct {|CMPSD2D0047:MyType|} : ID2D1PixelShader
+            {
+                [D2DResourceTextureIndex(16)]
+                public D2D1ResourceTexture1D<float> texture1D;
+
+                [D2DResourceTextureIndex(17)]
+                public D2D1ResourceTexture2D<float> texture2D;
+
+                public Float4 Execute()
+                {
+                    return 0;
+                }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<InvalidD2DResourceTextureIndexAttributeUseAnalyzer>.VerifyAnalyzerAsync(source);
+    }
+
+    [TestMethod]
+    public async Task RepeatedD2DResourceTextureIndices_Warns()
+    {
+        const string source = """
+            using ComputeSharp;
+            using ComputeSharp.D2D1;
+
+            [D2DInputCount(0)]
+            internal partial struct {|CMPSD2D0048:MyType|} : ID2D1PixelShader
+            {
+                [D2DResourceTextureIndex(0)]
+                public D2D1ResourceTexture1D<float> texture1;
+
+                [D2DResourceTextureIndex(0)]
+                public D2D1ResourceTexture1D<float> texture2;
+
+                public Float4 Execute()
+                {
+                    return 0;
+                }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<InvalidD2DResourceTextureIndexAttributeUseAnalyzer>.VerifyAnalyzerAsync(source);
+    }
+
+    [TestMethod]
+    public async Task InvalidD2DResourceTextureIndices_MultipleErrors_WarnsOncePerDiagnosticId()
+    {
+        const string source = """
+            using ComputeSharp;
+            using ComputeSharp.D2D1;
+
+            [D2DInputCount(3)]
+            internal partial struct {|CMPSD2D0046:{|CMPSD2D0047:{|CMPSD2D0048:MyType|}|}|} : ID2D1PixelShader
+            {
+                [D2DResourceTextureIndex(0)]
+                public D2D1ResourceTexture1D<float> texture1;
+
+                [D2DResourceTextureIndex(1)]
+                public D2D1ResourceTexture1D<float> texture2;
+
+                [D2DResourceTextureIndex(16)]
+                public D2D1ResourceTexture1D<float> texture3;
+
+                [D2DResourceTextureIndex(17)]
+                public D2D1ResourceTexture2D<float> texture4;
+
+                [D2DResourceTextureIndex(2)]
+                public D2D1ResourceTexture1D<float> texture5;
+
+                [D2DResourceTextureIndex(2)]
+                public D2D1ResourceTexture1D<float> texture6;
+
+                public Float4 Execute()
+                {
+                    return 0;
+                }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<InvalidD2DResourceTextureIndexAttributeUseAnalyzer>.VerifyAnalyzerAsync(source);
+    }
 }

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
@@ -15,7 +14,27 @@ internal static partial class HlslKnownProperties
     /// <summary>
     /// The mapping of supported known properties to HLSL names.
     /// </summary>
-    private static readonly IReadOnlyDictionary<string, string> KnownProperties = BuildKnownPropertiesMap();
+    private static readonly Dictionary<string, string> KnownProperties = BuildKnownPropertiesMap();
+
+    /// <summary>
+    /// The mapping of supported known properties to HLSL names.
+    /// </summary>
+    private static readonly HashSet<string> KnownMatrixIndexers = BuildKnownMatrixIndexers();
+
+    /// <summary>
+    /// The mapping of supported known members to HLSL names.
+    /// </summary>
+    private static readonly HashSet<string> KnownMatrixIndices = BuildKnownMatrixIndices();
+
+    /// <summary>
+    /// The mapping of supported known indexers to HLSL resource type names.
+    /// </summary>
+    private static readonly Dictionary<string, string> KnownResourceIndexers = BuildKnownResourceIndexers();
+
+    /// <summary>
+    /// The mapping of supported known size accessors for HLSL resource types.
+    /// </summary>
+    private static readonly Dictionary<string, (int Rank, int Axis)> KnownSizeAccessors = BuildKnownSizeAccessors();
 
     /// <summary>
     /// Builds the mapping of supported known properties to HLSL names.
@@ -144,22 +163,11 @@ internal static partial class HlslKnownProperties
     }
 
     /// <summary>
-    /// Adds more known members to the mapping to use.
-    /// </summary>
-    /// <param name="knownProperties">The mapping of known properties being built.</param>
-    static partial void AddKnownProperties(IDictionary<string, string> knownProperties);
-
-    /// <summary>
-    /// The mapping of supported known properties to HLSL names.
-    /// </summary>
-    private static readonly IReadOnlyCollection<string> KnownMatrixIndexers = BuildKnownMatrixIndexers();
-
-    /// <summary>
     /// Builds the mapping of swizzled matrix indexer properties.
     /// </summary>
-    private static IReadOnlyCollection<string> BuildKnownMatrixIndexers()
+    private static HashSet<string> BuildKnownMatrixIndexers()
     {
-        return (
+        return new(
             from type in Assembly.GetExecutingAssembly().ExportedTypes
             where Regex.IsMatch(type.FullName, @"ComputeSharp\.(Bool|Double|Float|Int|UInt)[1-4]x[1-4]")
             from property in type.GetProperties()
@@ -167,45 +175,36 @@ internal static partial class HlslKnownProperties
             where indices.Length > 0 &&
                   indices.All(static index => index.ParameterType == typeof(MatrixIndex))
             let metadataName = $"{type.FullName}.this[{string.Join(", ", indices.Select(index => index.ParameterType))}]"
-            select metadataName).ToImmutableHashSet();
+            select metadataName);
     }
-
-    /// <summary>
-    /// The mapping of supported known members to HLSL names.
-    /// </summary>
-    private static readonly IReadOnlyCollection<string> KnownMatrixIndices = BuildKnownMatrixIndices();
 
     /// <summary>
     /// Builds the mapping of swizzled matrix indices.
     /// </summary>
-    private static IReadOnlyCollection<string> BuildKnownMatrixIndices()
+    private static HashSet<string> BuildKnownMatrixIndices()
     {
-        return (
+        return new(
             from name in Enum.GetNames(typeof(MatrixIndex))
-            select $"{typeof(MatrixIndex).FullName}.{name}").ToImmutableHashSet();
+            select $"{typeof(MatrixIndex).FullName}.{name}");
     }
-
-    /// <summary>
-    /// The mapping of supported known indexers to HLSL resource type names.
-    /// </summary>
-    private static readonly IReadOnlyDictionary<string, string> KnownResourceIndexers = BuildKnownResourceIndexers();
 
     /// <summary>
     /// Builds the mapping of supported known indexers to HLSL resource type names.
     /// </summary>
     /// <returns>The mapping of supported known indexers to HLSL resource type names.</returns>
-    private static partial IReadOnlyDictionary<string, string> BuildKnownResourceIndexers();
-
-    /// <summary>
-    /// The mapping of supported known size accessors for HLSL resource types.
-    /// </summary>
-    private static readonly IReadOnlyDictionary<string, (int Rank, int Axis)> KnownSizeAccessors = BuildKnownSizeAccessors();
+    private static partial Dictionary<string, string> BuildKnownResourceIndexers();
 
     /// <summary>
     /// Builds the mapping of supported known size accessors for HLSL resource types.
     /// </summary>
     /// <returns>The mapping of supported known size accessors for HLSL resource types.</returns>
-    private static partial IReadOnlyDictionary<string, (int Rank, int Axis)> BuildKnownSizeAccessors();
+    private static partial Dictionary<string, (int Rank, int Axis)> BuildKnownSizeAccessors();
+
+    /// <summary>
+    /// Adds more known members to the mapping to use.
+    /// </summary>
+    /// <param name="knownProperties">The mapping of known properties being built.</param>
+    static partial void AddKnownProperties(IDictionary<string, string> knownProperties);
 
     /// <summary>
     /// Checks whether or not a given property fullname matches a matrix swizzled indexer.

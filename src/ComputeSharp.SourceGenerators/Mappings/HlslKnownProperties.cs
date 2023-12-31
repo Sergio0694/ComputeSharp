@@ -9,9 +9,9 @@ namespace ComputeSharp.SourceGeneration.Mappings;
 partial class HlslKnownProperties
 {
     /// <inheritdoc/>
-    private static partial IReadOnlyDictionary<string, string> BuildKnownResourceIndexers()
+    private static partial Dictionary<string, string> BuildKnownResourceIndexers()
     {
-        return new Dictionary<string, string>
+        return new()
         {
             [$"ComputeSharp.ReadOnlyTexture2D`1.this[{typeof(int).FullName}, {typeof(int).FullName}]"] = "int2",
             [$"ComputeSharp.ReadOnlyTexture2D`2.this[{typeof(int).FullName}, {typeof(int).FullName}]"] = "int2",
@@ -33,9 +33,9 @@ partial class HlslKnownProperties
     }
 
     /// <inheritdoc/>
-    private static partial IReadOnlyDictionary<string, (int Rank, int Axis)> BuildKnownSizeAccessors()
+    private static partial Dictionary<string, (int Rank, int Axis)> BuildKnownSizeAccessors()
     {
-        return new Dictionary<string, (int, int)>
+        return new()
         {
             ["ComputeSharp.Resources.Buffer`1.Length"] = (2, 0),
             ["ComputeSharp.Resources.Texture1D`1.Width"] = (1, 0),

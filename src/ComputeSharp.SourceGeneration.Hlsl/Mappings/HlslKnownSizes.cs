@@ -14,7 +14,7 @@ internal static class HlslKnownSizes
     /// <summary>
     /// The mapping of supported known sizes to HLSL type names.
     /// </summary>
-    private static readonly IReadOnlyDictionary<string, (int, int)> KnownSizes = BuildKnownSizesMap();
+    private static readonly Dictionary<string, (int, int)> KnownSizes = BuildKnownSizesMap();
 
     /// <summary>
     /// Builds the mapping of known type sizes and alignments.

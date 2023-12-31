@@ -109,9 +109,7 @@ public sealed partial class D2DPixelShaderDescriptorGenerator : IIncrementalGene
 
                     // Get the resource texture info for ResourceTextureDescriptions
                     ResourceTextureDescriptions.GetInfo(
-                        diagnostics,
                         typeSymbol,
-                        inputCount,
                         out ImmutableArray<ResourceTextureDescription> resourceTextureDescriptions);
 
                     token.ThrowIfCancellationRequested();
