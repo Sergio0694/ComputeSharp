@@ -1,9 +1,6 @@
 using System;
 using ComputeSharp.SourceGeneration.Extensions;
-using ComputeSharp.SourceGeneration.Helpers;
-using ComputeSharp.SourceGeneration.Models;
 using Microsoft.CodeAnalysis;
-using static ComputeSharp.SourceGeneration.Diagnostics.DiagnosticDescriptors;
 
 namespace ComputeSharp.D2D1.SourceGenerators;
 
@@ -38,24 +35,16 @@ partial class D2DPixelShaderDescriptorGenerator
         /// <summary>
         /// Extracts the requested compile options for the current shader.
         /// </summary>
-        /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
         /// <param name="structDeclarationSymbol">The input <see cref="INamedTypeSymbol"/> instance to process.</param>
         /// <returns>The requested compile options to use to compile the shader, if present.</returns>
-        public static D2D1CompileOptions? GetRequestedCompileOptions(ImmutableArrayBuilder<DiagnosticInfo> diagnostics, INamedTypeSymbol structDeclarationSymbol)
+        public static D2D1CompileOptions? GetRequestedCompileOptions(INamedTypeSymbol structDeclarationSymbol)
         {
             if (structDeclarationSymbol.TryGetAttributeWithFullyQualifiedMetadataName("ComputeSharp.D2D1.D2DCompileOptionsAttribute", out AttributeData? attributeData))
             {
                 D2D1CompileOptions options = (D2D1CompileOptions)attributeData.ConstructorArguments[0].Value!;
 
-                if ((options & D2D1CompileOptions.PackMatrixColumnMajor) != 0)
-                {
-                    diagnostics.Add(
-                        InvalidPackMatrixColumnMajorOption,
-                        structDeclarationSymbol,
-                        structDeclarationSymbol);
-                }
-
-                // PackMatrixRowMajor is always automatically enabled
+                // PackMatrixRowMajor is always automatically enabled. If by any chance the attribute is requesting
+                // column major packing, the analyzer will emit a diagnostic (same as for the assembly-level case).
                 return options | D2D1CompileOptions.PackMatrixRowMajor;
             }
 
