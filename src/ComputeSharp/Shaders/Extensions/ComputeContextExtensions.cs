@@ -19,7 +19,7 @@ public static class ComputeContextExtensions
     /// <typeparam name="T">The type of items stored on the buffer.</typeparam>
     /// <param name="context">The <see cref="ComputeContext"/> to use to insert the resource barrier.</param>
     /// <param name="buffer">The input <see cref="ReadWriteBuffer{T}"/> instance to insert the barrier for.</param>
-    public static unsafe void Barrier<T>(this in ComputeContext context, ReadWriteBuffer<T> buffer)
+    public static unsafe void Barrier<T>(this ref readonly ComputeContext context, ReadWriteBuffer<T> buffer)
         where T : unmanaged
     {
         default(ArgumentNullException).ThrowIfNull(buffer);
@@ -35,7 +35,7 @@ public static class ComputeContextExtensions
     /// <typeparam name="T">The type of items stored on the texture.</typeparam>
     /// <param name="context">The <see cref="ComputeContext"/> to use to insert the resource barrier.</param>
     /// <param name="texture">The input <see cref="ReadWriteTexture1D{T}"/> instance to insert the barrier for.</param>
-    public static unsafe void Barrier<T>(this in ComputeContext context, ReadWriteTexture1D<T> texture)
+    public static unsafe void Barrier<T>(this ref readonly ComputeContext context, ReadWriteTexture1D<T> texture)
         where T : unmanaged
     {
         default(ArgumentNullException).ThrowIfNull(texture);
@@ -51,7 +51,7 @@ public static class ComputeContextExtensions
     /// <typeparam name="T">The type of items stored on the texture.</typeparam>
     /// <param name="context">The <see cref="ComputeContext"/> to use to insert the resource barrier.</param>
     /// <param name="texture">The input <see cref="ReadWriteTexture2D{T}"/> instance to insert the barrier for.</param>
-    public static unsafe void Barrier<T>(this in ComputeContext context, ReadWriteTexture2D<T> texture)
+    public static unsafe void Barrier<T>(this ref readonly ComputeContext context, ReadWriteTexture2D<T> texture)
         where T : unmanaged
     {
         default(ArgumentNullException).ThrowIfNull(texture);
@@ -67,7 +67,7 @@ public static class ComputeContextExtensions
     /// <typeparam name="T">The type of items stored on the texture.</typeparam>
     /// <param name="context">The <see cref="ComputeContext"/> to use to insert the resource barrier.</param>
     /// <param name="texture">The input <see cref="ReadWriteBuffer{T}"/> instance to insert the barrier for.</param>
-    public static unsafe void Barrier<T>(this in ComputeContext context, ReadWriteTexture3D<T> texture)
+    public static unsafe void Barrier<T>(this ref readonly ComputeContext context, ReadWriteTexture3D<T> texture)
         where T : unmanaged
     {
         default(ArgumentNullException).ThrowIfNull(texture);
@@ -84,7 +84,7 @@ public static class ComputeContextExtensions
     /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
     /// <param name="context">The <see cref="ComputeContext"/> to use to insert the resource barrier.</param>
     /// <param name="texture">The input <see cref="ReadWriteTexture1D{T,TPixel}"/> instance to insert the barrier for.</param>
-    public static unsafe void Barrier<T, TPixel>(this in ComputeContext context, ReadWriteTexture1D<T, TPixel> texture)
+    public static unsafe void Barrier<T, TPixel>(this ref readonly ComputeContext context, ReadWriteTexture1D<T, TPixel> texture)
         where T : unmanaged, IPixel<T, TPixel>
         where TPixel : unmanaged
     {
@@ -102,7 +102,7 @@ public static class ComputeContextExtensions
     /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
     /// <param name="context">The <see cref="ComputeContext"/> to use to insert the resource barrier.</param>
     /// <param name="texture">The input <see cref="ReadWriteTexture2D{T,TPixel}"/> instance to insert the barrier for.</param>
-    public static unsafe void Barrier<T, TPixel>(this in ComputeContext context, ReadWriteTexture2D<T, TPixel> texture)
+    public static unsafe void Barrier<T, TPixel>(this ref readonly ComputeContext context, ReadWriteTexture2D<T, TPixel> texture)
         where T : unmanaged, IPixel<T, TPixel>
         where TPixel : unmanaged
     {
@@ -120,7 +120,7 @@ public static class ComputeContextExtensions
     /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
     /// <param name="context">The <see cref="ComputeContext"/> to use to insert the resource barrier.</param>
     /// <param name="texture">The input <see cref="ReadWriteTexture3D{T,TPixel}"/> instance to insert the barrier for.</param>
-    public static unsafe void Barrier<T, TPixel>(this in ComputeContext context, ReadWriteTexture3D<T, TPixel> texture)
+    public static unsafe void Barrier<T, TPixel>(this ref readonly ComputeContext context, ReadWriteTexture3D<T, TPixel> texture)
         where T : unmanaged, IPixel<T, TPixel>
         where TPixel : unmanaged
     {
@@ -137,7 +137,7 @@ public static class ComputeContextExtensions
     /// <typeparam name="TPixel">The type of pixels stored on the texture.</typeparam>
     /// <param name="context">The <see cref="ComputeContext"/> to use to insert the resource barrier.</param>
     /// <param name="texture">The input <see cref="IReadWriteNormalizedTexture1D{TPixel}"/> instance to insert the barrier for.</param>
-    public static unsafe void Barrier<TPixel>(this in ComputeContext context, IReadWriteNormalizedTexture1D<TPixel> texture)
+    public static unsafe void Barrier<TPixel>(this ref readonly ComputeContext context, IReadWriteNormalizedTexture1D<TPixel> texture)
         where TPixel : unmanaged
     {
         default(ArgumentNullException).ThrowIfNull(texture);
@@ -153,7 +153,7 @@ public static class ComputeContextExtensions
     /// <typeparam name="TPixel">The type of pixels stored on the texture.</typeparam>
     /// <param name="context">The <see cref="ComputeContext"/> to use to insert the resource barrier.</param>
     /// <param name="texture">The input <see cref="IReadWriteNormalizedTexture2D{TPixel}"/> instance to insert the barrier for.</param>
-    public static unsafe void Barrier<TPixel>(this in ComputeContext context, IReadWriteNormalizedTexture2D<TPixel> texture)
+    public static unsafe void Barrier<TPixel>(this ref readonly ComputeContext context, IReadWriteNormalizedTexture2D<TPixel> texture)
         where TPixel : unmanaged
     {
         default(ArgumentNullException).ThrowIfNull(texture);
@@ -169,7 +169,7 @@ public static class ComputeContextExtensions
     /// <typeparam name="TPixel">The type of pixels stored on the texture.</typeparam>
     /// <param name="context">The <see cref="ComputeContext"/> to use to insert the resource barrier.</param>
     /// <param name="texture">The input <see cref="IReadWriteNormalizedTexture3D{TPixel}"/> instance to insert the barrier for.</param>
-    public static unsafe void Barrier<TPixel>(this in ComputeContext context, IReadWriteNormalizedTexture3D<TPixel> texture)
+    public static unsafe void Barrier<TPixel>(this ref readonly ComputeContext context, IReadWriteNormalizedTexture3D<TPixel> texture)
         where TPixel : unmanaged
     {
         default(ArgumentNullException).ThrowIfNull(texture);
@@ -185,7 +185,7 @@ public static class ComputeContextExtensions
     /// <typeparam name="T">The type of items stored on the buffer.</typeparam>
     /// <param name="context">The <see cref="ComputeContext"/> to use to clear the resource.</param>
     /// <param name="buffer">The input <see cref="ReadWriteBuffer{T}"/> instance to clear.</param>
-    public static unsafe void Clear<T>(this in ComputeContext context, ReadWriteBuffer<T> buffer)
+    public static unsafe void Clear<T>(this ref readonly ComputeContext context, ReadWriteBuffer<T> buffer)
         where T : unmanaged
     {
         default(ArgumentNullException).ThrowIfNull(buffer);
@@ -201,7 +201,7 @@ public static class ComputeContextExtensions
     /// <typeparam name="T">The type of items stored on the texture.</typeparam>
     /// <param name="context">The <see cref="ComputeContext"/> to use to clear the resource.</param>
     /// <param name="texture">The input <see cref="ReadWriteTexture1D{T}"/> instance to clear.</param>
-    public static unsafe void Clear<T>(this in ComputeContext context, ReadWriteTexture1D<T> texture)
+    public static unsafe void Clear<T>(this ref readonly ComputeContext context, ReadWriteTexture1D<T> texture)
         where T : unmanaged
     {
         default(ArgumentNullException).ThrowIfNull(texture);
@@ -217,7 +217,7 @@ public static class ComputeContextExtensions
     /// <typeparam name="T">The type of items stored on the texture.</typeparam>
     /// <param name="context">The <see cref="ComputeContext"/> to use to clear the resource.</param>
     /// <param name="texture">The input <see cref="ReadWriteTexture2D{T}"/> instance to clear.</param>
-    public static unsafe void Clear<T>(this in ComputeContext context, ReadWriteTexture2D<T> texture)
+    public static unsafe void Clear<T>(this ref readonly ComputeContext context, ReadWriteTexture2D<T> texture)
         where T : unmanaged
     {
         default(ArgumentNullException).ThrowIfNull(texture);
@@ -233,7 +233,7 @@ public static class ComputeContextExtensions
     /// <typeparam name="T">The type of items stored on the texture.</typeparam>
     /// <param name="context">The <see cref="ComputeContext"/> to use to clear the resource.</param>
     /// <param name="texture">The input <see cref="ReadWriteBuffer{T}"/> instance to clear.</param>
-    public static unsafe void Clear<T>(this in ComputeContext context, ReadWriteTexture3D<T> texture)
+    public static unsafe void Clear<T>(this ref readonly ComputeContext context, ReadWriteTexture3D<T> texture)
         where T : unmanaged
     {
         default(ArgumentNullException).ThrowIfNull(texture);
@@ -250,7 +250,7 @@ public static class ComputeContextExtensions
     /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
     /// <param name="context">The <see cref="ComputeContext"/> to use to clear the resource.</param>
     /// <param name="texture">The input <see cref="ReadWriteTexture1D{T,TPixel}"/> instance to clear.</param>
-    public static unsafe void Clear<T, TPixel>(this in ComputeContext context, ReadWriteTexture1D<T, TPixel> texture)
+    public static unsafe void Clear<T, TPixel>(this ref readonly ComputeContext context, ReadWriteTexture1D<T, TPixel> texture)
         where T : unmanaged, IPixel<T, TPixel>
         where TPixel : unmanaged
     {
@@ -268,7 +268,7 @@ public static class ComputeContextExtensions
     /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
     /// <param name="context">The <see cref="ComputeContext"/> to use to clear the resource.</param>
     /// <param name="texture">The input <see cref="ReadWriteTexture2D{T,TPixel}"/> instance to clear.</param>
-    public static unsafe void Clear<T, TPixel>(this in ComputeContext context, ReadWriteTexture2D<T, TPixel> texture)
+    public static unsafe void Clear<T, TPixel>(this ref readonly ComputeContext context, ReadWriteTexture2D<T, TPixel> texture)
         where T : unmanaged, IPixel<T, TPixel>
         where TPixel : unmanaged
     {
@@ -286,7 +286,7 @@ public static class ComputeContextExtensions
     /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
     /// <param name="context">The <see cref="ComputeContext"/> to use to clear the resource.</param>
     /// <param name="texture">The input <see cref="ReadWriteTexture3D{T,TPixel}"/> instance to clear.</param>
-    public static unsafe void Clear<T, TPixel>(this in ComputeContext context, ReadWriteTexture3D<T, TPixel> texture)
+    public static unsafe void Clear<T, TPixel>(this ref readonly ComputeContext context, ReadWriteTexture3D<T, TPixel> texture)
         where T : unmanaged, IPixel<T, TPixel>
         where TPixel : unmanaged
     {
@@ -303,7 +303,7 @@ public static class ComputeContextExtensions
     /// <typeparam name="TPixel">The type of pixels stored on the texture.</typeparam>
     /// <param name="context">The <see cref="ComputeContext"/> to use to clear the resource.</param>
     /// <param name="texture">The input <see cref="IReadWriteNormalizedTexture1D{TPixel}"/> instance to clear.</param>
-    public static unsafe void Clear<TPixel>(this in ComputeContext context, IReadWriteNormalizedTexture1D<TPixel> texture)
+    public static unsafe void Clear<TPixel>(this ref readonly ComputeContext context, IReadWriteNormalizedTexture1D<TPixel> texture)
         where TPixel : unmanaged
     {
         default(ArgumentNullException).ThrowIfNull(texture);
@@ -321,7 +321,7 @@ public static class ComputeContextExtensions
     /// <typeparam name="TPixel">The type of pixels stored on the texture.</typeparam>
     /// <param name="context">The <see cref="ComputeContext"/> to use to clear the resource.</param>
     /// <param name="texture">The input <see cref="IReadWriteNormalizedTexture2D{TPixel}"/> instance to clear.</param>
-    public static unsafe void Clear<TPixel>(this in ComputeContext context, IReadWriteNormalizedTexture2D<TPixel> texture)
+    public static unsafe void Clear<TPixel>(this ref readonly ComputeContext context, IReadWriteNormalizedTexture2D<TPixel> texture)
         where TPixel : unmanaged
     {
         default(ArgumentNullException).ThrowIfNull(texture);
@@ -339,7 +339,7 @@ public static class ComputeContextExtensions
     /// <typeparam name="TPixel">The type of pixels stored on the texture.</typeparam>
     /// <param name="context">The <see cref="ComputeContext"/> to use to clear the resource.</param>
     /// <param name="texture">The input <see cref="IReadWriteNormalizedTexture3D{TPixel}"/> instance to clear.</param>
-    public static unsafe void Clear<TPixel>(this in ComputeContext context, IReadWriteNormalizedTexture3D<TPixel> texture)
+    public static unsafe void Clear<TPixel>(this ref readonly ComputeContext context, IReadWriteNormalizedTexture3D<TPixel> texture)
         where TPixel : unmanaged
     {
         default(ArgumentNullException).ThrowIfNull(texture);
@@ -359,7 +359,7 @@ public static class ComputeContextExtensions
     /// <param name="context">The <see cref="ComputeContext"/> to use to fill the resource.</param>
     /// <param name="texture">The input <see cref="ReadWriteTexture1D{T,TPixel}"/> instance to fill.</param>
     /// <param name="value">The value to use to fill <paramref name="texture"/>.</param>
-    public static unsafe void Fill<T, TPixel>(this in ComputeContext context, ReadWriteTexture1D<T, TPixel> texture, T value)
+    public static unsafe void Fill<T, TPixel>(this ref readonly ComputeContext context, ReadWriteTexture1D<T, TPixel> texture, T value)
         where T : unmanaged, IPixel<T, TPixel>
         where TPixel : unmanaged
     {
@@ -378,7 +378,7 @@ public static class ComputeContextExtensions
     /// <param name="context">The <see cref="ComputeContext"/> to use to fill the resource.</param>
     /// <param name="texture">The input <see cref="ReadWriteTexture2D{T,TPixel}"/> instance to fill.</param>
     /// <param name="value">The value to use to fill <paramref name="texture"/>.</param>
-    public static unsafe void Fill<T, TPixel>(this in ComputeContext context, ReadWriteTexture2D<T, TPixel> texture, T value)
+    public static unsafe void Fill<T, TPixel>(this ref readonly ComputeContext context, ReadWriteTexture2D<T, TPixel> texture, T value)
         where T : unmanaged, IPixel<T, TPixel>
         where TPixel : unmanaged
     {
@@ -397,7 +397,7 @@ public static class ComputeContextExtensions
     /// <param name="context">The <see cref="ComputeContext"/> to use to fill the resource.</param>
     /// <param name="texture">The input <see cref="ReadWriteTexture3D{T,TPixel}"/> instance to fill.</param>
     /// <param name="value">The value to use to fill <paramref name="texture"/>.</param>
-    public static unsafe void Fill<T, TPixel>(this in ComputeContext context, ReadWriteTexture3D<T, TPixel> texture, T value)
+    public static unsafe void Fill<T, TPixel>(this ref readonly ComputeContext context, ReadWriteTexture3D<T, TPixel> texture, T value)
         where T : unmanaged, IPixel<T, TPixel>
         where TPixel : unmanaged
     {
@@ -415,7 +415,7 @@ public static class ComputeContextExtensions
     /// <param name="context">The <see cref="ComputeContext"/> to use to fill the resource.</param>
     /// <param name="texture">The input <see cref="IReadWriteNormalizedTexture1D{TPixel}"/> instance to fill.</param>
     /// <param name="value">The value to use to fill <paramref name="texture"/>.</param>
-    public static unsafe void Fill<TPixel>(this in ComputeContext context, IReadWriteNormalizedTexture1D<TPixel> texture, TPixel value)
+    public static unsafe void Fill<TPixel>(this ref readonly ComputeContext context, IReadWriteNormalizedTexture1D<TPixel> texture, TPixel value)
         where TPixel : unmanaged
     {
         default(ArgumentNullException).ThrowIfNull(texture);
@@ -438,7 +438,7 @@ public static class ComputeContextExtensions
     /// <param name="context">The <see cref="ComputeContext"/> to use to fill the resource.</param>
     /// <param name="texture">The input <see cref="IReadWriteNormalizedTexture2D{TPixel}"/> instance to fill.</param>
     /// <param name="value">The value to use to fill <paramref name="texture"/>.</param>
-    public static unsafe void Fill<TPixel>(this in ComputeContext context, IReadWriteNormalizedTexture2D<TPixel> texture, TPixel value)
+    public static unsafe void Fill<TPixel>(this ref readonly ComputeContext context, IReadWriteNormalizedTexture2D<TPixel> texture, TPixel value)
         where TPixel : unmanaged
     {
         default(ArgumentNullException).ThrowIfNull(texture);
@@ -461,7 +461,7 @@ public static class ComputeContextExtensions
     /// <param name="context">The <see cref="ComputeContext"/> to use to fill the resource.</param>
     /// <param name="texture">The input <see cref="IReadWriteNormalizedTexture3D{TPixel}"/> instance to fill.</param>
     /// <param name="value">The value to use to fill <paramref name="texture"/>.</param>
-    public static unsafe void Fill<TPixel>(this in ComputeContext context, IReadWriteNormalizedTexture3D<TPixel> texture, TPixel value)
+    public static unsafe void Fill<TPixel>(this ref readonly ComputeContext context, IReadWriteNormalizedTexture3D<TPixel> texture, TPixel value)
         where TPixel : unmanaged
     {
         default(ArgumentNullException).ThrowIfNull(texture);
@@ -484,7 +484,7 @@ public static class ComputeContextExtensions
     /// <param name="context">The <see cref="ComputeContext"/> to use to run the shader.</param>
     /// <param name="x">The number of iterations to run on the X axis.</param>
     /// <param name="shader">The input <typeparamref name="T"/> instance representing the compute shader to run.</param>
-    public static void For<T>(this in ComputeContext context, int x, in T shader)
+    public static void For<T>(this ref readonly ComputeContext context, int x, in T shader)
         where T : struct, IComputeShader, IComputeShaderDescriptor<T>
     {
         context.Run(x, in shader);
@@ -498,7 +498,7 @@ public static class ComputeContextExtensions
     /// <param name="x">The number of iterations to run on the X axis.</param>
     /// <param name="y">The number of iterations to run on the Y axis.</param>
     /// <param name="shader">The input <typeparamref name="T"/> instance representing the compute shader to run.</param>
-    public static void For<T>(this in ComputeContext context, int x, int y, in T shader)
+    public static void For<T>(this ref readonly ComputeContext context, int x, int y, in T shader)
         where T : struct, IComputeShader, IComputeShaderDescriptor<T>
     {
         context.Run(x, y, in shader);
@@ -513,7 +513,7 @@ public static class ComputeContextExtensions
     /// <param name="y">The number of iterations to run on the Y axis.</param>
     /// <param name="z">The number of iterations to run on the Z axis.</param>
     /// <param name="shader">The input <typeparamref name="T"/> instance representing the compute shader to run.</param>
-    public static void For<T>(this in ComputeContext context, int x, int y, int z, in T shader)
+    public static void For<T>(this ref readonly ComputeContext context, int x, int y, int z, in T shader)
         where T : struct, IComputeShader, IComputeShaderDescriptor<T>
     {
         context.Run(x, y, z, in shader);
@@ -526,7 +526,7 @@ public static class ComputeContextExtensions
     /// <typeparam name="TPixel">The type of pixels being processed by the shader.</typeparam>
     /// <param name="context">The <see cref="ComputeContext"/> to use to run the shader.</param>
     /// <param name="texture">The target texture to apply the pixel shader to.</param>
-    public static void ForEach<T, TPixel>(this in ComputeContext context, IReadWriteNormalizedTexture2D<TPixel> texture)
+    public static void ForEach<T, TPixel>(this ref readonly ComputeContext context, IReadWriteNormalizedTexture2D<TPixel> texture)
         where T : struct, IComputeShader<TPixel>, IComputeShaderDescriptor<T>
         where TPixel : unmanaged
     {
@@ -543,7 +543,7 @@ public static class ComputeContextExtensions
     /// <param name="context">The <see cref="ComputeContext"/> to use to run the shader.</param>
     /// <param name="texture">The target texture to apply the pixel shader to.</param>
     /// <param name="shader">The input <typeparamref name="T"/> instance representing the pixel shader to run.</param>
-    public static void ForEach<T, TPixel>(this in ComputeContext context, IReadWriteNormalizedTexture2D<TPixel> texture, in T shader)
+    public static void ForEach<T, TPixel>(this ref readonly ComputeContext context, IReadWriteNormalizedTexture2D<TPixel> texture, in T shader)
         where T : struct, IComputeShader<TPixel>, IComputeShaderDescriptor<T>
         where TPixel : unmanaged
     {
@@ -558,7 +558,7 @@ public static class ComputeContextExtensions
     /// <param name="context">The <see cref="ComputeContext"/> to use to transition the resource.</param>
     /// <param name="texture">The input <see cref="ReadWriteTexture1D{T}"/> instance to transition.</param>
     /// <param name="resourceState">The state to transition the input resource to.</param>
-    public static unsafe void Transition(this in ComputeContext context, ReadWriteTexture1D<float> texture, ResourceState resourceState)
+    public static unsafe void Transition(this ref readonly ComputeContext context, ReadWriteTexture1D<float> texture, ResourceState resourceState)
     {
         default(ArgumentNullException).ThrowIfNull(texture);
 
@@ -575,7 +575,7 @@ public static class ComputeContextExtensions
     /// <param name="context">The <see cref="ComputeContext"/> to use to transition the resource.</param>
     /// <param name="texture">The input <see cref="ReadWriteTexture1D{T}"/> instance to transition.</param>
     /// <param name="resourceState">The state to transition the input resource to.</param>
-    public static unsafe void Transition(this in ComputeContext context, ReadWriteTexture1D<Float2> texture, ResourceState resourceState)
+    public static unsafe void Transition(this ref readonly ComputeContext context, ReadWriteTexture1D<Float2> texture, ResourceState resourceState)
     {
         default(ArgumentNullException).ThrowIfNull(texture);
 
@@ -592,7 +592,7 @@ public static class ComputeContextExtensions
     /// <param name="context">The <see cref="ComputeContext"/> to use to transition the resource.</param>
     /// <param name="texture">The input <see cref="ReadWriteTexture1D{T}"/> instance to transition.</param>
     /// <param name="resourceState">The state to transition the input resource to.</param>
-    public static unsafe void Transition(this in ComputeContext context, ReadWriteTexture1D<Float3> texture, ResourceState resourceState)
+    public static unsafe void Transition(this ref readonly ComputeContext context, ReadWriteTexture1D<Float3> texture, ResourceState resourceState)
     {
         default(ArgumentNullException).ThrowIfNull(texture);
 
@@ -609,7 +609,7 @@ public static class ComputeContextExtensions
     /// <param name="context">The <see cref="ComputeContext"/> to use to transition the resource.</param>
     /// <param name="texture">The input <see cref="ReadWriteTexture1D{T}"/> instance to transition.</param>
     /// <param name="resourceState">The state to transition the input resource to.</param>
-    public static unsafe void Transition(this in ComputeContext context, ReadWriteTexture1D<Float4> texture, ResourceState resourceState)
+    public static unsafe void Transition(this ref readonly ComputeContext context, ReadWriteTexture1D<Float4> texture, ResourceState resourceState)
     {
         default(ArgumentNullException).ThrowIfNull(texture);
 
@@ -628,7 +628,7 @@ public static class ComputeContextExtensions
     /// <param name="context">The <see cref="ComputeContext"/> to use to transition the resource.</param>
     /// <param name="texture">The input <see cref="ReadWriteTexture1D{T,TPixel}"/> instance to transition.</param>
     /// <param name="resourceState">The state to transition the input resource to.</param>
-    public static unsafe void Transition<T, TPixel>(this in ComputeContext context, ReadWriteTexture1D<T, TPixel> texture, ResourceState resourceState)
+    public static unsafe void Transition<T, TPixel>(this ref readonly ComputeContext context, ReadWriteTexture1D<T, TPixel> texture, ResourceState resourceState)
         where T : unmanaged, IPixel<T, TPixel>
         where TPixel : unmanaged
     {
@@ -647,7 +647,7 @@ public static class ComputeContextExtensions
     /// <param name="context">The <see cref="ComputeContext"/> to use to transition the resource.</param>
     /// <param name="texture">The input <see cref="ReadWriteTexture2D{T}"/> instance to transition.</param>
     /// <param name="resourceState">The state to transition the input resource to.</param>
-    public static unsafe void Transition(this in ComputeContext context, ReadWriteTexture2D<float> texture, ResourceState resourceState)
+    public static unsafe void Transition(this ref readonly ComputeContext context, ReadWriteTexture2D<float> texture, ResourceState resourceState)
     {
         default(ArgumentNullException).ThrowIfNull(texture);
 
@@ -664,7 +664,7 @@ public static class ComputeContextExtensions
     /// <param name="context">The <see cref="ComputeContext"/> to use to transition the resource.</param>
     /// <param name="texture">The input <see cref="ReadWriteTexture2D{T}"/> instance to transition.</param>
     /// <param name="resourceState">The state to transition the input resource to.</param>
-    public static unsafe void Transition(this in ComputeContext context, ReadWriteTexture2D<Float2> texture, ResourceState resourceState)
+    public static unsafe void Transition(this ref readonly ComputeContext context, ReadWriteTexture2D<Float2> texture, ResourceState resourceState)
     {
         default(ArgumentNullException).ThrowIfNull(texture);
 
@@ -681,7 +681,7 @@ public static class ComputeContextExtensions
     /// <param name="context">The <see cref="ComputeContext"/> to use to transition the resource.</param>
     /// <param name="texture">The input <see cref="ReadWriteTexture2D{T}"/> instance to transition.</param>
     /// <param name="resourceState">The state to transition the input resource to.</param>
-    public static unsafe void Transition(this in ComputeContext context, ReadWriteTexture2D<Float3> texture, ResourceState resourceState)
+    public static unsafe void Transition(this ref readonly ComputeContext context, ReadWriteTexture2D<Float3> texture, ResourceState resourceState)
     {
         default(ArgumentNullException).ThrowIfNull(texture);
 
@@ -698,7 +698,7 @@ public static class ComputeContextExtensions
     /// <param name="context">The <see cref="ComputeContext"/> to use to transition the resource.</param>
     /// <param name="texture">The input <see cref="ReadWriteTexture2D{T}"/> instance to transition.</param>
     /// <param name="resourceState">The state to transition the input resource to.</param>
-    public static unsafe void Transition(this in ComputeContext context, ReadWriteTexture2D<Float4> texture, ResourceState resourceState)
+    public static unsafe void Transition(this ref readonly ComputeContext context, ReadWriteTexture2D<Float4> texture, ResourceState resourceState)
     {
         default(ArgumentNullException).ThrowIfNull(texture);
 
@@ -717,7 +717,7 @@ public static class ComputeContextExtensions
     /// <param name="context">The <see cref="ComputeContext"/> to use to transition the resource.</param>
     /// <param name="texture">The input <see cref="ReadWriteTexture2D{T,TPixel}"/> instance to transition.</param>
     /// <param name="resourceState">The state to transition the input resource to.</param>
-    public static unsafe void Transition<T, TPixel>(this in ComputeContext context, ReadWriteTexture2D<T, TPixel> texture, ResourceState resourceState)
+    public static unsafe void Transition<T, TPixel>(this ref readonly ComputeContext context, ReadWriteTexture2D<T, TPixel> texture, ResourceState resourceState)
         where T : unmanaged, IPixel<T, TPixel>
         where TPixel : unmanaged
     {
@@ -736,7 +736,7 @@ public static class ComputeContextExtensions
     /// <param name="context">The <see cref="ComputeContext"/> to use to transition the resource.</param>
     /// <param name="texture">The input <see cref="ReadWriteTexture3D{T}"/> instance to transition.</param>
     /// <param name="resourceState">The state to transition the input resource to.</param>
-    public static unsafe void Transition(this in ComputeContext context, ReadWriteTexture3D<float> texture, ResourceState resourceState)
+    public static unsafe void Transition(this ref readonly ComputeContext context, ReadWriteTexture3D<float> texture, ResourceState resourceState)
     {
         default(ArgumentNullException).ThrowIfNull(texture);
 
@@ -753,7 +753,7 @@ public static class ComputeContextExtensions
     /// <param name="context">The <see cref="ComputeContext"/> to use to transition the resource.</param>
     /// <param name="texture">The input <see cref="ReadWriteTexture3D{T}"/> instance to transition.</param>
     /// <param name="resourceState">The state to transition the input resource to.</param>
-    public static unsafe void Transition(this in ComputeContext context, ReadWriteTexture3D<Float2> texture, ResourceState resourceState)
+    public static unsafe void Transition(this ref readonly ComputeContext context, ReadWriteTexture3D<Float2> texture, ResourceState resourceState)
     {
         default(ArgumentNullException).ThrowIfNull(texture);
 
@@ -770,7 +770,7 @@ public static class ComputeContextExtensions
     /// <param name="context">The <see cref="ComputeContext"/> to use to transition the resource.</param>
     /// <param name="texture">The input <see cref="ReadWriteTexture3D{T}"/> instance to transition.</param>
     /// <param name="resourceState">The state to transition the input resource to.</param>
-    public static unsafe void Transition(this in ComputeContext context, ReadWriteTexture3D<Float3> texture, ResourceState resourceState)
+    public static unsafe void Transition(this ref readonly ComputeContext context, ReadWriteTexture3D<Float3> texture, ResourceState resourceState)
     {
         default(ArgumentNullException).ThrowIfNull(texture);
 
@@ -787,7 +787,7 @@ public static class ComputeContextExtensions
     /// <param name="context">The <see cref="ComputeContext"/> to use to transition the resource.</param>
     /// <param name="texture">The input <see cref="ReadWriteTexture3D{T}"/> instance to transition.</param>
     /// <param name="resourceState">The state to transition the input resource to.</param>
-    public static unsafe void Transition(this in ComputeContext context, ReadWriteTexture3D<Float4> texture, ResourceState resourceState)
+    public static unsafe void Transition(this ref readonly ComputeContext context, ReadWriteTexture3D<Float4> texture, ResourceState resourceState)
     {
         default(ArgumentNullException).ThrowIfNull(texture);
 
@@ -806,7 +806,7 @@ public static class ComputeContextExtensions
     /// <param name="context">The <see cref="ComputeContext"/> to use to transition the resource.</param>
     /// <param name="texture">The input <see cref="ReadWriteTexture3D{T,TPixel}"/> instance to transition.</param>
     /// <param name="resourceState">The state to transition the input resource to.</param>
-    public static unsafe void Transition<T, TPixel>(this in ComputeContext context, ReadWriteTexture3D<T, TPixel> texture, ResourceState resourceState)
+    public static unsafe void Transition<T, TPixel>(this ref readonly ComputeContext context, ReadWriteTexture3D<T, TPixel> texture, ResourceState resourceState)
         where T : unmanaged, IPixel<T, TPixel>
         where TPixel : unmanaged
     {

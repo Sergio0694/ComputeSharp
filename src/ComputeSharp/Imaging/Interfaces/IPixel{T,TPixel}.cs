@@ -16,8 +16,8 @@ public interface IPixel<T, TPixel>
     /// <returns>The <typeparamref name="TPixel"/> representation for the current value.</returns>
     /// <remarks>
     /// This method is primarily meant to be used to support
-    /// <see cref="ComputeContextExtensions.Fill{TPixel}(in ComputeContext, IReadWriteNormalizedTexture2D{TPixel}, TPixel)"/>
-    /// and <see cref="ComputeContextExtensions.Fill{TPixel}(in ComputeContext, IReadWriteNormalizedTexture3D{TPixel}, TPixel)"/>.
+    /// <see cref="ComputeContextExtensions.Fill{TPixel}(ref readonly ComputeContext, IReadWriteNormalizedTexture2D{TPixel}, TPixel)"/>
+    /// and <see cref="ComputeContextExtensions.Fill{TPixel}(ref readonly ComputeContext, IReadWriteNormalizedTexture3D{TPixel}, TPixel)"/>.
     /// </remarks>
     TPixel ToPixel();
 }

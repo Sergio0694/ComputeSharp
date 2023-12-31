@@ -62,9 +62,9 @@ internal static class ITypeSymbolExtensions
     /// </summary>
     /// <param name="symbol">The input <see cref="ITypeSymbol"/> instance.</param>
     /// <param name="builder">The target <see cref="ImmutableArrayBuilder{T}"/> instance.</param>
-    public static void AppendFullyQualifiedMetadataName(this ITypeSymbol symbol, in ImmutableArrayBuilder<char> builder)
+    public static void AppendFullyQualifiedMetadataName(this ITypeSymbol symbol, ref readonly ImmutableArrayBuilder<char> builder)
     {
-        static void BuildFrom(ISymbol? symbol, in ImmutableArrayBuilder<char> builder)
+        static void BuildFrom(ISymbol? symbol, ref readonly ImmutableArrayBuilder<char> builder)
         {
             switch (symbol)
             {
