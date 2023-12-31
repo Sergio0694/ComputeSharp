@@ -16,7 +16,7 @@ public static class ReadWriteTexture1DExtensions
     /// <para>The returned instance can be used in a shader to enable texture sampling.</para>
     /// <para>
     /// This is an advanced API that can only be used after the current instance has been transitioned to be in a readonly state. To do so,
-    /// use <see cref="ComputeContextExtensions.Transition(in ComputeContext, ReadWriteTexture1D{float}, ResourceState)"/>,
+    /// use <see cref="ComputeContextExtensions.Transition(ref readonly ComputeContext, ReadWriteTexture1D{float}, ResourceState)"/>,
     /// and specify <see cref="ResourceState.ReadOnly"/>. After that, this method can be used to get a readonly wrapper for
     /// the current texture to use in a shader. This instance should not be cached or reused, but just passed directly to a shader
     /// being dispatched through that same <see cref="ComputeContext"/>, as it will not work if the texture changes state later on.
@@ -42,7 +42,7 @@ public static class ReadWriteTexture1DExtensions
     /// <para>The returned instance can be used in a shader to enable texture sampling.</para>
     /// <para>
     /// This is an advanced API that can only be used after the current instance has been transitioned to be in a readonly state. To do so,
-    /// use <see cref="ComputeContextExtensions.Transition(in ComputeContext, ReadWriteTexture1D{Float2}, ResourceState)"/>,
+    /// use <see cref="ComputeContextExtensions.Transition(ref readonly ComputeContext, ReadWriteTexture1D{Float2}, ResourceState)"/>,
     /// and specify <see cref="ResourceState.ReadOnly"/>. After that, this method can be used to get a readonly wrapper for
     /// the current texture to use in a shader. This instance should not be cached or reused, but just passed directly to a shader
     /// being dispatched through that same <see cref="ComputeContext"/>, as it will not work if the texture changes state later on.
@@ -68,7 +68,7 @@ public static class ReadWriteTexture1DExtensions
     /// <para>The returned instance can be used in a shader to enable texture sampling.</para>
     /// <para>
     /// This is an advanced API that can only be used after the current instance has been transitioned to be in a readonly state. To do so,
-    /// use <see cref="ComputeContextExtensions.Transition(in ComputeContext, ReadWriteTexture1D{Float3}, ResourceState)"/>,
+    /// use <see cref="ComputeContextExtensions.Transition(ref readonly ComputeContext, ReadWriteTexture1D{Float3}, ResourceState)"/>,
     /// and specify <see cref="ResourceState.ReadOnly"/>. After that, this method can be used to get a readonly wrapper for
     /// the current texture to use in a shader. This instance should not be cached or reused, but just passed directly to a shader
     /// being dispatched through that same <see cref="ComputeContext"/>, as it will not work if the texture changes state later on.
@@ -94,7 +94,7 @@ public static class ReadWriteTexture1DExtensions
     /// <para>The returned instance can be used in a shader to enable texture sampling.</para>
     /// <para>
     /// This is an advanced API that can only be used after the current instance has been transitioned to be in a readonly state. To do so,
-    /// use <see cref="ComputeContextExtensions.Transition(in ComputeContext, ReadWriteTexture1D{Float4}, ResourceState)"/>,
+    /// use <see cref="ComputeContextExtensions.Transition(ref readonly ComputeContext, ReadWriteTexture1D{Float4}, ResourceState)"/>,
     /// and specify <see cref="ResourceState.ReadOnly"/>. After that, this method can be used to get a readonly wrapper for
     /// the current texture to use in a shader. This instance should not be cached or reused, but just passed directly to a shader
     /// being dispatched through that same <see cref="ComputeContext"/>, as it will not work if the texture changes state later on.
@@ -122,7 +122,7 @@ public static class ReadWriteTexture1DExtensions
     /// <para>The returned instance can be used in a shader to enable texture sampling.</para>
     /// <para>
     /// This is an advanced API that can only be used after the current instance has been transitioned to be in a readonly state. To do so,
-    /// use <see cref="ComputeContextExtensions.Transition{T, TPixel}(in ComputeContext, ReadWriteTexture1D{T, TPixel}, ResourceState)"/>,
+    /// use <see cref="ComputeContextExtensions.Transition{T, TPixel}(ref readonly ComputeContext, ReadWriteTexture1D{T, TPixel}, ResourceState)"/>,
     /// and specify <see cref="ResourceState.ReadOnly"/>. After that, this method can be used to get a readonly wrapper for
     /// the current texture to use in a shader. This instance should not be cached or reused, but just passed directly to a shader
     /// being dispatched through that same <see cref="ComputeContext"/>, as it will not work if the texture changes state later on.

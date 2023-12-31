@@ -18,7 +18,7 @@ public static class ComputeContextExtensions
     /// <param name="color">The color to use for the event (the alpha channel will be ignored).</param>
     /// <param name="message">The message to use for the event.</param>
     [Conditional("USE_PIX")]
-    public static unsafe void BeginEvent(this in ComputeContext context, Color color, string message)
+    public static unsafe void BeginEvent(this ref readonly ComputeContext context, Color color, string message)
     {
         ref CommandList commandList = ref context.GetCommandList(pipelineState: null);
 
@@ -35,7 +35,7 @@ public static class ComputeContextExtensions
     /// <param name="index">The index to identify the group this event belongs to (PIX will choose a color to represent all entries in the group).</param>
     /// <param name="message">The message to use for the event.</param>
     [Conditional("USE_PIX")]
-    public static unsafe void BeginEvent(this in ComputeContext context, byte index, string message)
+    public static unsafe void BeginEvent(this ref readonly ComputeContext context, byte index, string message)
     {
         ref CommandList commandList = ref context.GetCommandList(pipelineState: null);
 
@@ -50,7 +50,7 @@ public static class ComputeContextExtensions
     /// <param name="context">The <see cref="ComputeContext"/> to use to start the PIX event.</param>
     /// <param name="message">The message to use for the event.</param>
     [Conditional("USE_PIX")]
-    public static unsafe void BeginEvent(this in ComputeContext context, string message)
+    public static unsafe void BeginEvent(this ref readonly ComputeContext context, string message)
     {
         ref CommandList commandList = ref context.GetCommandList(pipelineState: null);
 
@@ -76,7 +76,7 @@ public static class ComputeContextExtensions
     /// </para>
     /// </remarks>
     [Conditional("USE_PIX")]
-    public static unsafe void BeginEventUnsafe(this in ComputeContext context, Color color, ReadOnlySpan<byte> message)
+    public static unsafe void BeginEventUnsafe(this ref readonly ComputeContext context, Color color, ReadOnlySpan<byte> message)
     {
         ref CommandList commandList = ref context.GetCommandList(pipelineState: null);
 
@@ -105,7 +105,7 @@ public static class ComputeContextExtensions
     /// </para>
     /// </remarks>
     [Conditional("USE_PIX")]
-    public static unsafe void BeginEventUnsafe(this in ComputeContext context, byte index, ReadOnlySpan<byte> message)
+    public static unsafe void BeginEventUnsafe(this ref readonly ComputeContext context, byte index, ReadOnlySpan<byte> message)
     {
         ref CommandList commandList = ref context.GetCommandList(pipelineState: null);
 
@@ -132,7 +132,7 @@ public static class ComputeContextExtensions
     /// </para>
     /// </remarks>
     [Conditional("USE_PIX")]
-    public static unsafe void BeginEventUnsafe(this in ComputeContext context, ReadOnlySpan<byte> message)
+    public static unsafe void BeginEventUnsafe(this ref readonly ComputeContext context, ReadOnlySpan<byte> message)
     {
         ref CommandList commandList = ref context.GetCommandList(pipelineState: null);
 
@@ -144,7 +144,7 @@ public static class ComputeContextExtensions
     /// </summary>
     /// <param name="context">The <see cref="ComputeContext"/> to use to end the PIX event.</param>
     [Conditional("USE_PIX")]
-    public static unsafe void EndEvent(this in ComputeContext context)
+    public static unsafe void EndEvent(this ref readonly ComputeContext context)
     {
         ref CommandList commandList = ref context.GetCommandList(pipelineState: null);
 
@@ -158,7 +158,7 @@ public static class ComputeContextExtensions
     /// <param name="color">The color to use for the log (the alpha channel will be ignored).</param>
     /// <param name="message">The message to use for the marker.</param>
     [Conditional("USE_PIX")]
-    public static unsafe void Log(this in ComputeContext context, Color color, string message)
+    public static unsafe void Log(this ref readonly ComputeContext context, Color color, string message)
     {
         ref CommandList commandList = ref context.GetCommandList(pipelineState: null);
 
@@ -175,7 +175,7 @@ public static class ComputeContextExtensions
     /// <param name="index">The index to identify the group this log belongs to (PIX will choose a color to represent all entries in the group).</param>
     /// <param name="message">The message to use for the marker.</param>
     [Conditional("USE_PIX")]
-    public static unsafe void Log(this in ComputeContext context, byte index, string message)
+    public static unsafe void Log(this ref readonly ComputeContext context, byte index, string message)
     {
         ref CommandList commandList = ref context.GetCommandList(pipelineState: null);
 
@@ -190,7 +190,7 @@ public static class ComputeContextExtensions
     /// <param name="context">The <see cref="ComputeContext"/> to use to insert the PIX marker.</param>
     /// <param name="message">The message to use for the marker.</param>
     [Conditional("USE_PIX")]
-    public static unsafe void Log(this in ComputeContext context, string message)
+    public static unsafe void Log(this ref readonly ComputeContext context, string message)
     {
         ref CommandList commandList = ref context.GetCommandList(pipelineState: null);
 
@@ -216,7 +216,7 @@ public static class ComputeContextExtensions
     /// </para>
     /// </remarks>
     [Conditional("USE_PIX")]
-    public static unsafe void LogUnsafe(this in ComputeContext context, Color color, ReadOnlySpan<byte> message)
+    public static unsafe void LogUnsafe(this ref readonly ComputeContext context, Color color, ReadOnlySpan<byte> message)
     {
         ref CommandList commandList = ref context.GetCommandList(pipelineState: null);
 
@@ -245,7 +245,7 @@ public static class ComputeContextExtensions
     /// </para>
     /// </remarks>
     [Conditional("USE_PIX")]
-    public static unsafe void LogUnsafe(this in ComputeContext context, byte index, ReadOnlySpan<byte> message)
+    public static unsafe void LogUnsafe(this ref readonly ComputeContext context, byte index, ReadOnlySpan<byte> message)
     {
         ref CommandList commandList = ref context.GetCommandList(pipelineState: null);
 
@@ -272,7 +272,7 @@ public static class ComputeContextExtensions
     /// </para>
     /// </remarks>
     [Conditional("USE_PIX")]
-    public static unsafe void LogUnsafe(this in ComputeContext context, ReadOnlySpan<byte> message)
+    public static unsafe void LogUnsafe(this ref readonly ComputeContext context, ReadOnlySpan<byte> message)
     {
         ref CommandList commandList = ref context.GetCommandList(pipelineState: null);
 
