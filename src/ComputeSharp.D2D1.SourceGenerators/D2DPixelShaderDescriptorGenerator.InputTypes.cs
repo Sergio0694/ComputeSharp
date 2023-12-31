@@ -48,7 +48,11 @@ partial class D2DPixelShaderDescriptorGenerator
 
             foreach (AttributeData attributeData in structDeclarationSymbol.GetAttributes())
             {
-                switch (attributeData.AttributeClass?.GetFullyQualifiedMetadataName())
+                using ImmutableArrayBuilder<char> builder = new();
+
+                attributeData.AttributeClass?.AppendFullyQualifiedMetadataName(in builder);
+
+                switch (builder.WrittenSpan)
                 {
                     case "ComputeSharp.D2D1.D2DInputCountAttribute":
                         rawInputCount = (int)attributeData.ConstructorArguments[0].Value!;
