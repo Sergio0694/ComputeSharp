@@ -610,4 +610,37 @@ public class Test_Analyzers
 
         await CSharpAnalyzerWithLanguageVersionTest<InvalidD2DResourceTextureIndexAttributeUseAnalyzer>.VerifyAnalyzerAsync(source);
     }
+
+    [TestMethod]
+    public async Task InvalidPackMatrixColumnMajorOption_AssemblyLevel_WithColumnMajor_Warns()
+    {
+        const string source = """
+            using ComputeSharp.D2D1;
+
+            [assembly: {|CMPSD2D0044:D2DCompileOptions(D2D1CompileOptions.PackMatrixColumnMajor)|}]
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<InvalidAssemblyLevelCompileOptionsAnalyzer>.VerifyAnalyzerAsync(source);
+    }
+
+    [TestMethod]
+    public async Task InvalidPackMatrixColumnMajorOption_ShaderType_WithColumnMajor_Warns()
+    {
+        const string source = """
+            using ComputeSharp;
+            using ComputeSharp.D2D1;
+
+            [D2DInputCount(0)]
+            [{|CMPSD2D0044:D2DCompileOptions(D2D1CompileOptions.PackMatrixColumnMajor)|}]
+            internal partial struct MyType : ID2D1PixelShader
+            {
+                public Float4 Execute()
+                {
+                    return 0;
+                }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<InvalidShaderTypeCompileOptionsAnalyzer>.VerifyAnalyzerAsync(source);
+    }
 }
