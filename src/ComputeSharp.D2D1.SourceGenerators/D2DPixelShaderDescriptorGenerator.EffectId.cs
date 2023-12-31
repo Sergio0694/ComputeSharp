@@ -97,30 +97,20 @@ partial class D2DPixelShaderDescriptorGenerator
                 int maxEncodedByteCount = Math.Max(maxTypeNameByteCount, maxAssemblyNameByteCount);
 
                 byte[] bufferUtf8 = ArrayPool<byte>.Shared.Rent(maxEncodedByteCount);
-                int typeNameBytesWritten;
-                int assemblyNameBytesWritten;
 
                 // UTF8 encode the fully qualified name first
-                fixed (char* pCharBuffer = charBuffer.WrittenSpan)
-                fixed (byte* pBufferUtf8 = bufferUtf8)
-                {
-                    typeNameBytesWritten = Encoding.UTF8.GetBytes(pCharBuffer, charBuffer.Count, pBufferUtf8, bufferUtf8.Length);
-                }
+                int typeNameBytesWritten = Encoding.UTF8.GetBytes(charBuffer.WrittenSpan, bufferUtf8);
 
                 // Append the UTF8 fully qualified name to the MD5 hash
                 incrementalHash.AppendData(bufferUtf8, 0, typeNameBytesWritten);
 
                 // UTF8 encode the assembly name as well
-                fixed (char* pAssemblyName = assemblyName)
-                fixed (byte* pBufferUtf8 = bufferUtf8)
-                {
-                    assemblyNameBytesWritten = Encoding.UTF8.GetBytes(pAssemblyName, assemblyName.Length, pBufferUtf8, bufferUtf8.Length);
-                }
+                int assemblyNameBytesWritten = Encoding.UTF8.GetBytes(assemblyName.AsSpan(), bufferUtf8);
 
                 // Append the UTF8 assembly name to the MD5 hash
                 incrementalHash.AppendData(bufferUtf8, 0, assemblyNameBytesWritten);
 
-                // The state is not fully in the incremental hash, we can return the array
+                // The state is now fully in the incremental hash, we can return the array
                 ArrayPool<byte>.Shared.Return(bufferUtf8);
 
                 // Get the resulting MD5 hash (128 bits)
