@@ -9,7 +9,7 @@ namespace ComputeSharp.D2D1.Tests.SourceGenerators;
 public class Test_Analyzers
 {
     [TestMethod]
-    public async Task MissingComputeShaderDescriptor_ComputeShader()
+    public async Task MissingD2DPixelShaderDescriptor_ComputeShader()
     {
         const string source = """
             using ComputeSharp;
@@ -734,5 +734,163 @@ public class Test_Analyzers
             """;
 
         await CSharpAnalyzerWithLanguageVersionTest<ExceededPixelShaderDispatchDataSizeAnalyzer>.VerifyAnalyzerAsync(source);
+    }
+
+    [TestMethod]
+    public async Task OutOfRangeInputDescriptionIndex_Warns()
+    {
+        const string source = """
+            using ComputeSharp.D2D1;
+            using float4 = ComputeSharp.Float4;
+
+            [D2DInputCount(0)]
+            [D2DInputDescription(0, D2D1Filter.MinMagMipPoint)]
+            internal readonly partial struct {|CMPSD2D0042:MyType|} : ID2D1PixelShader
+            {
+                public float4 Execute()
+                {
+                    return 0;
+                }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<InvalidD2DInputDescriptionAttributeUseAnalyzer>.VerifyAnalyzerAsync(source);
+    }
+
+    [TestMethod]
+    public async Task OutOfRangeInputDescriptionIndex_WithMissingD2DInputCount_DoesNotWarn()
+    {
+        const string source = """
+            using ComputeSharp.D2D1;
+            using float4 = ComputeSharp.Float4;
+
+            [D2DInputDescription(0, D2D1Filter.MinMagMipPoint)]
+            internal readonly partial struct MyType : ID2D1PixelShader
+            {
+                public float4 Execute()
+                {
+                    return 0;
+                }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<InvalidD2DInputDescriptionAttributeUseAnalyzer>.VerifyAnalyzerAsync(source);
+    }
+
+    [TestMethod]
+    public async Task OutOfRangeInputDescriptionIndex_WithInvalidD2DInputCount_DoesNotWarn()
+    {
+        const string source = """
+            using ComputeSharp.D2D1;
+            using float4 = ComputeSharp.Float4;
+
+            [D2DInputCount(37)]
+            [D2DInputDescription(0, D2D1Filter.MinMagMipPoint)]
+            internal readonly partial struct MyType : ID2D1PixelShader
+            {
+                public float4 Execute()
+                {
+                    return 0;
+                }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<InvalidD2DInputDescriptionAttributeUseAnalyzer>.VerifyAnalyzerAsync(source);
+    }
+
+    [TestMethod]
+    public async Task RepeatedD2DInputDescriptionIndices_Warns()
+    {
+        const string source = """
+            using ComputeSharp.D2D1;
+            using float4 = ComputeSharp.Float4;
+
+            [D2DInputCount(4)]
+            [D2DInputDescription(0, D2D1Filter.MinMagMipPoint)]
+            [D2DInputDescription(2, D2D1Filter.MinMagMipPoint)]
+            [D2DInputDescription(0, D2D1Filter.MinMagMipPoint)]
+            internal readonly partial struct {|CMPSD2D0043:MyType|} : ID2D1PixelShader
+            {
+                public float4 Execute()
+                {
+                    return 0;
+                }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<InvalidD2DInputDescriptionAttributeUseAnalyzer>.VerifyAnalyzerAsync(source);
+    }
+
+    [TestMethod]
+    public async Task RepeatedD2DInputDescriptionIndices_WithMissingD2DInputCount_DoesNotWarn()
+    {
+        const string source = """
+            using ComputeSharp.D2D1;
+            using float4 = ComputeSharp.Float4;
+            
+            [D2DInputDescription(0, D2D1Filter.MinMagMipPoint)]
+            [D2DInputDescription(2, D2D1Filter.MinMagMipPoint)]
+            [D2DInputDescription(0, D2D1Filter.MinMagMipPoint)]
+            internal readonly partial struct MyType : ID2D1PixelShader
+            {
+                public float4 Execute()
+                {
+                    return 0;
+                }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<InvalidD2DInputDescriptionAttributeUseAnalyzer>.VerifyAnalyzerAsync(source);
+    }
+
+    [TestMethod]
+    public async Task RepeatedD2DInputDescriptionIndices_WithInvalidD2DInputCount_DoesNotWarn()
+    {
+        const string source = """
+            using ComputeSharp.D2D1;
+            using float4 = ComputeSharp.Float4;
+
+            [D2DInputCount(37)]
+            [D2DInputDescription(0, D2D1Filter.MinMagMipPoint)]
+            [D2DInputDescription(2, D2D1Filter.MinMagMipPoint)]
+            [D2DInputDescription(0, D2D1Filter.MinMagMipPoint)]
+            internal readonly partial struct MyType : ID2D1PixelShader
+            {
+                public float4 Execute()
+                {
+                    return 0;
+                }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<InvalidD2DInputDescriptionAttributeUseAnalyzer>.VerifyAnalyzerAsync(source);
+    }
+
+    [TestMethod]
+    public async Task InvalidInputDescriptions_MultipleErrors_WarnsOncePerDiagnosticId()
+    {
+        const string source = """
+            using ComputeSharp.D2D1;
+            using float4 = ComputeSharp.Float4;
+
+            [D2DInputCount(2)]
+            [D2DInputDescription(0, D2D1Filter.MinMagMipPoint)]
+            [D2DInputDescription(2, D2D1Filter.MinMagMipPoint)]
+            [D2DInputDescription(0, D2D1Filter.MinMagMipPoint)]
+            [D2DInputDescription(1, D2D1Filter.MinMagMipPoint)]
+            [D2DInputDescription(1, D2D1Filter.MinMagMipPoint)]
+            [D2DInputDescription(33, D2D1Filter.MinMagMipPoint)]
+            [D2DInputDescription(34, D2D1Filter.MinMagMipPoint)]
+            [D2DInputDescription(-4, D2D1Filter.MinMagMipPoint)]
+            internal readonly partial struct {|CMPSD2D0042:{|CMPSD2D0043:MyType|}|} : ID2D1PixelShader
+            {
+                public float4 Execute()
+                {
+                    return 0;
+                }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<InvalidD2DInputDescriptionAttributeUseAnalyzer>.VerifyAnalyzerAsync(source);
     }
 }
