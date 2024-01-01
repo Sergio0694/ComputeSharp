@@ -431,17 +431,17 @@ partial class DiagnosticDescriptors
     /// <summary>
     /// Gets a <see cref="DiagnosticDescriptor"/> for a shader with a root signature that is too large.
     /// <para>
-    /// Format: <c>"The D2D1 shader of type {0} has exceeded the maximum allowed size for captured values"</c>.
+    /// Format: <c>"The D2D1 shader of type {0} has exceeded the maximum allowed size for captured values (the maximum size is 64KB, and the actual constant buffer size was {1} bytes)"</c>.
     /// </para>
     /// </summary>
-    public static readonly DiagnosticDescriptor ShaderDispatchDataSizeExceeded = new(
+    public static readonly DiagnosticDescriptor ExceededDispatchDataSize = new(
         id: "CMPSD2D0032",
         title: "Shader dispatch data size exceeded",
-        messageFormat: "The D2D1 shader of type {0} has exceeded the maximum allowed size for captured values",
+        messageFormat: "The D2D1 shader of type {0} has exceeded the maximum allowed size for captured values (the maximum size is 64KB, and the actual constant buffer size was {1} bytes)",
         category: "ComputeSharp.D2D1.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
-        description: "The D2D1 shader of type {0} has exceeded the maximum allowed size for captured values.",
+        description: "The D2D1 shader of type {0} has exceeded the maximum allowed size for captured values (the maximum size for constant buffers is 64KB).",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 
     /// <summary>
