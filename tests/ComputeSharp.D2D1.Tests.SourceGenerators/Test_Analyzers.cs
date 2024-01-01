@@ -643,4 +643,96 @@ public class Test_Analyzers
 
         await CSharpAnalyzerWithLanguageVersionTest<InvalidShaderTypeCompileOptionsAnalyzer>.VerifyAnalyzerAsync(source);
     }
+
+    [TestMethod]
+    public async Task ExceededDispatchDataSize_ConstantBufferTooLarge_Warns()
+    {
+        const string source = """
+            using ComputeSharp.D2D1;
+            using float1x3 = ComputeSharp.Float1x3;
+            using float2x2 = ComputeSharp.Float2x2;
+            using float3x2 = ComputeSharp.Float3x2;
+            using float4x3 = ComputeSharp.Float4x3;
+            using float4x4 = ComputeSharp.Float4x4;
+            using float2 = ComputeSharp.Float2;
+            using float3 = ComputeSharp.Float3;
+            using float4 = ComputeSharp.Float4;
+
+            public struct Data0
+            {
+                public float4x4 m0;
+                public float4 v0;
+                public float4 v1;
+                public float s0;
+                public float s1;
+                public float s2;
+                public float s3;
+            }
+
+            public struct Data1
+            {
+                public Data0 d0;
+                public Data0 d1;
+                public Data0 d2;
+                public Data0 d3;
+                public Data0 d4;
+                public float3x2 m0;
+                public float2x2 m1;
+                public float3 v0;
+                public float s0;
+                public float s1;
+            }
+
+            public struct Data2
+            {
+                public Data1 d0;
+                public Data1 d1;
+                public Data1 d2;
+                public Data1 d3;
+                public float2x2 m0;
+                public float1x3 m1;
+                public float3 v0;
+                public float4 v1;
+                public float2 v2;
+                public float s0;
+            }
+
+            public struct Data3
+            {
+                public Data1 d0;
+                public Data1 d1;
+                public Data1 d2;
+                public Data1 d3;
+                public Data2 d4;
+                public Data2 d5;
+                public Data2 d6;
+                public Data2 d7;
+                public Data2 d8;
+                public Data2 d9;
+                public float3 v0;
+            }
+
+            public struct Data4
+            {
+                public Data3 d0;
+                public Data3 d1;
+                public Data3 d2;
+                public Data3 d3;
+                public float4x3 m0;
+                public float s0;
+            }
+
+
+            [D2DInputCount(0)]
+            internal readonly partial struct {|CMPSD2D0032:MyType|}(Data4 data4) : ID2D1PixelShader
+            {
+                public float4 Execute()
+                {
+                    return data4.s0;
+                }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<ExceededPixelShaderDispatchDataSizeAnalyzer>.VerifyAnalyzerAsync(source);
+    }
 }
