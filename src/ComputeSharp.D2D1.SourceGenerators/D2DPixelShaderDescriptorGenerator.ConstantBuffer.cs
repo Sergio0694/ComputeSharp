@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Immutable;
 using ComputeSharp.D2D1.SourceGenerators.Models;
 using ComputeSharp.SourceGeneration.Extensions;
@@ -6,7 +5,6 @@ using ComputeSharp.SourceGeneration.Helpers;
 using ComputeSharp.SourceGeneration.Models;
 using ComputeSharp.SourceGeneration.SyntaxProcessors;
 using Microsoft.CodeAnalysis;
-using static ComputeSharp.SourceGeneration.Diagnostics.DiagnosticDescriptors;
 
 namespace ComputeSharp.D2D1.SourceGenerators;
 
@@ -19,13 +17,11 @@ partial class D2DPixelShaderDescriptorGenerator
     private static class ConstantBuffer
     {
         /// <inheritdoc cref="ConstantBufferSyntaxProcessor.GetInfo"/>
-        /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
         /// <param name="compilation"><inheritdoc cref="ConstantBufferSyntaxProcessor.GetInfo" path="/param[@name='compilation']/node()"/></param>
         /// <param name="structDeclarationSymbol"><inheritdoc cref="ConstantBufferSyntaxProcessor.GetInfo" path="/param[@name='structDeclarationSymbol']/node()"/></param>
         /// <param name="constantBufferSizeInBytes"><inheritdoc cref="ConstantBufferSyntaxProcessor.GetInfo" path="/param[@name='constantBufferSizeInBytes']/node()"/></param>
         /// <param name="fields"><inheritdoc cref="ConstantBufferSyntaxProcessor.GetInfo" path="/param[@name='fields']/node()"/></param>
         public static void GetInfo(
-            ImmutableArrayBuilder<DiagnosticInfo> diagnostics,
             Compilation compilation,
             ITypeSymbol structDeclarationSymbol,
             out int constantBufferSizeInBytes,
@@ -38,16 +34,6 @@ partial class D2DPixelShaderDescriptorGenerator
                 structDeclarationSymbol,
                 ref constantBufferSizeInBytes,
                 out fields);
-
-            // The maximum size for a constant buffer is 64KB
-            const int D3D11_REQ_CONSTANT_BUFFER_ELEMENT_COUNT = 4096;
-            const int MaximumConstantBufferSize = D3D11_REQ_CONSTANT_BUFFER_ELEMENT_COUNT * 4 * sizeof(float);
-
-            // Emit a diagnostic if the shader constant buffer is too large
-            if (constantBufferSizeInBytes > MaximumConstantBufferSize)
-            {
-                diagnostics.Add(ShaderDispatchDataSizeExceeded, structDeclarationSymbol, structDeclarationSymbol);
-            }
         }
 
         /// <summary>

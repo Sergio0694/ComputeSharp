@@ -88,7 +88,6 @@ public sealed partial class D2DPixelShaderDescriptorGenerator : IIncrementalGene
 
                     // Constant buffer info
                     ConstantBuffer.GetInfo(
-                        diagnostics,
                         context.SemanticModel.Compilation,
                         typeSymbol,
                         out int constantBufferSizeInBytes,

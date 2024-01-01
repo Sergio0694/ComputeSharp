@@ -1,7 +1,7 @@
 <Project>
   <Import Project="..\build\Directory.Build.props" />
 
-    <!-- Centralized packaging metadata for published projects -->
+  <!-- Centralized packaging metadata for published projects -->
   <PropertyGroup Condition="$(IsPackagedProject)">
 
     <!-- Package descriptions-->
