@@ -106,6 +106,63 @@ internal static partial class ConstantBufferSyntaxProcessor
         fields = fieldBuilder.ToImmutable();
     }
 
+    /// <inheritdoc cref="GetInfo(Compilation, ITypeSymbol, ref int, out ImmutableArray{FieldInfo})"/>
+    public static void GetInfo(
+       Compilation compilation,
+       ITypeSymbol structDeclarationSymbol,
+       ref int constantBufferSizeInBytes)
+    {
+        // Like with the GetHlslKnownTypeFieldInfo overload below, this method is a minimal, optimized
+        // version of the GetInfo overload above, only meant to be used by the analyzer to compute the
+        // constant buffer size in bytes, and nothing else. See comments above for the code below.
+        static void GetInfo(
+            Compilation compilation,
+            ITypeSymbol currentTypeSymbol,
+            int fieldDepth,
+            ref int constantBufferSizeInBytes)
+        {
+            bool isFirstField = true;
+
+            foreach (ISymbol memberSymbol in currentTypeSymbol.GetMembers())
+            {
+                // Only process fields of a valid shape/type (same as the previous method).
+                // We don't need the additional checks here for accessibility or the field
+                // being valid, since those would already get separate warnings.
+                if (memberSymbol is not IFieldSymbol { Type: INamedTypeSymbol { IsStatic: false }, IsConst: false, IsStatic: false, IsFixedSizeBuffer: false } fieldSymbol)
+                {
+                    continue;
+                }
+
+                string typeName = fieldSymbol.Type.GetFullyQualifiedMetadataName();
+
+                // Pad items (same as method above)
+                if (isFirstField && fieldDepth > 0)
+                {
+                    constantBufferSizeInBytes = AlignmentHelper.Pad(constantBufferSizeInBytes, 16);
+
+                    isFirstField = false;
+                }
+
+                // Quickly inspect the shader fields and update the rolling buffer size
+                if (HlslKnownTypes.IsKnownHlslType(typeName))
+                {
+                    GetHlslKnownTypeFieldInfo(typeName, ref constantBufferSizeInBytes);
+                }
+                else if (fieldSymbol.Type.IsUnmanagedType)
+                {
+                    GetInfo(compilation, fieldSymbol.Type, fieldDepth + 1, ref constantBufferSizeInBytes);
+                }
+            }
+        }
+
+        // Traverse all shader fields and simply track the buffer size
+        GetInfo(
+            compilation,
+            structDeclarationSymbol,
+            fieldDepth: 0,
+            ref constantBufferSizeInBytes);
+    }
+
     /// <summary>
     /// Tries to get the field name and the accessor name for a given field.
     /// </summary>
@@ -149,6 +206,7 @@ internal static partial class ConstantBufferSyntaxProcessor
     /// <param name="fieldPath">The current path of the field with respect to the shader instance.</param>
     /// <param name="typeName">The type name currently being read.</param>
     /// <param name="rawDataOffset">The current offset within the loaded data buffer.</param>
+    /// <returns>The <see cref="FieldInfo"/> for the inspected shader field.</returns>
     private static FieldInfo GetHlslKnownTypeFieldInfo(
         ImmutableArray<FieldPathPart> fieldPath,
         string typeName,
@@ -196,6 +254,32 @@ internal static partial class ConstantBufferSyntaxProcessor
             rawDataOffset = startingRawDataOffset + fieldSize;
 
             return new FieldInfo.Primitive(fieldPath, typeName, startingRawDataOffset);
+        }
+    }
+
+    /// <inheritdoc cref="GetHlslKnownTypeFieldInfo(ImmutableArray{FieldPathPart}, string, ref int)"/>
+    private static void GetHlslKnownTypeFieldInfo(string typeName, ref int rawDataOffset)
+    {
+        // Note: this method is a minimal, optimized version of the overload above, simply computing
+        // the field offset and nothing else. See comments there for the code below. There are no
+        // changes done here other than removing all redundant code to compute additional field info.
+        (int fieldSize, int fieldPack) = HlslKnownSizes.GetTypeInfo(typeName);
+
+        if (HlslKnownTypes.IsNonLinearMatrixType(typeName, out _, out int rows, out int columns))
+        {
+            for (int j = 0; j < rows; j++)
+            {
+                rawDataOffset = AlignmentHelper.Pad(rawDataOffset, 16) + (fieldPack * columns);
+            }
+        }
+        else
+        {
+            int startingRawDataOffset = AlignmentHelper.AlignToBoundary(
+                AlignmentHelper.Pad(rawDataOffset, fieldPack),
+                fieldSize,
+                16);
+
+            rawDataOffset = startingRawDataOffset + fieldSize;
         }
     }
 }

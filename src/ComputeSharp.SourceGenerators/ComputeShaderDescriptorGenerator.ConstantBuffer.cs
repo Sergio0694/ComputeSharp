@@ -7,6 +7,8 @@ using ComputeSharp.SourceGeneration.SyntaxProcessors;
 using ComputeSharp.SourceGenerators.Models;
 using Microsoft.CodeAnalysis;
 
+#pragma warning disable CS0419
+
 namespace ComputeSharp.SourceGenerators;
 
 /// <inheritdoc/>
