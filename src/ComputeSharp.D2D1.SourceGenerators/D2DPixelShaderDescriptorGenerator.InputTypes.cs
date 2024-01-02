@@ -1,10 +1,9 @@
 using System;
 using System.Collections.Immutable;
+using System.Runtime.CompilerServices;
 using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Helpers;
-using ComputeSharp.SourceGeneration.Models;
 using Microsoft.CodeAnalysis;
-using static ComputeSharp.SourceGeneration.Diagnostics.DiagnosticDescriptors;
 
 namespace ComputeSharp.D2D1.SourceGenerators;
 
@@ -19,26 +18,18 @@ partial class D2DPixelShaderDescriptorGenerator
         /// <summary>
         /// Extracts the input info for the current shader.
         /// </summary>
-        /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
         /// <param name="structDeclarationSymbol">The input <see cref="INamedTypeSymbol"/> instance to process.</param>
         /// <param name="inputCount">The number of shader inputs to declare.</param>
         /// <param name="inputSimpleIndices">The indicess of the simple shader inputs.</param>
         /// <param name="inputComplexIndices">The indices of the complex shader inputs.</param>
         /// <param name="combinedInputTypes">The combined and serialized input types for each available input.</param>
         public static void GetInfo(
-            ImmutableArrayBuilder<DiagnosticInfo> diagnostics,
             INamedTypeSymbol structDeclarationSymbol,
             out int inputCount,
             out ImmutableArray<int> inputSimpleIndices,
             out ImmutableArray<int> inputComplexIndices,
             out ImmutableArray<uint> combinedInputTypes)
         {
-            // We need a separate local here so we can keep the original value to apply
-            // diagnostics to, but without returning invalid values to the caller which
-            // might cause generator errors (eg. -1 would cause other code to just throw).
-            int rawInputCount = 0;
-            bool isInputCountPresent = false;
-
             // Note: this logic is shared with InvalidD2DResourceTextureIndexAttributeUseAnalyzer.
             // If any changes are made here, they should be reflected in that analyzer as well.
             inputCount = 0;
@@ -55,9 +46,11 @@ partial class D2DPixelShaderDescriptorGenerator
                 switch (builder.WrittenSpan)
                 {
                     case "ComputeSharp.D2D1.D2DInputCountAttribute":
-                        rawInputCount = (int)attributeData.ConstructorArguments[0].Value!;
-                        inputCount = Math.Max(rawInputCount, 0);
-                        isInputCountPresent = true;
+
+                        // We ignore negative values here to avoid the rest of the generator crashing due
+                        // to out of bound exceptions or other issues. The analyzer will detect this and
+                        // emit a diagnostic if that's the case, so it is safe to ignore that from here.
+                        inputCount = Math.Max((int)attributeData.ConstructorArguments[0].Value!, 0);
                         break;
                     case "ComputeSharp.D2D1.D2DInputSimpleAttribute":
                         inputSimpleIndicesBuilder.Add((int)attributeData.ConstructorArguments[0].Value!);
@@ -72,107 +65,29 @@ partial class D2DPixelShaderDescriptorGenerator
 
             inputSimpleIndices = inputSimpleIndicesBuilder.ToImmutable();
             inputComplexIndices = inputComplexIndicesBuilder.ToImmutable();
-            combinedInputTypes = ImmutableArray<uint>.Empty;
 
-            // Ensure that the input count is present
-            if (!isInputCountPresent)
-            {
-                diagnostics.Add(MissingD2DInputCountAttribute, structDeclarationSymbol, structDeclarationSymbol);
+            uint[] inputTypes = new uint[inputCount];
 
-                return;
-            }
+            // The D2D_INPUT<N>_SIMPLE define is optional, and if omitted, the corresponding input
+            // will automatically be of complex type. For the same reason, D2D_INPUT<N>_COMPLEX is
+            // also essentially redundant. So we can do the following to compute the input types:
+            //   - Create an array with as many inputs as the declared number of inputs
+            //   - Fill it with 1 (ie. D2D1PixelShaderInputType.Complex), as that's the default
+            //   - Traverse the declared simple inputs once, and update their corresponding values
+            inputTypes.AsSpan().Fill(1);
 
-            // Validate the input count
-            if (rawInputCount is not (>= 0 and <= 8))
-            {
-                diagnostics.Add(InvalidD2DInputCount, structDeclarationSymbol, structDeclarationSymbol);
-
-                return;
-            }
-
-            // All simple indices must be in range
             foreach (int index in inputSimpleIndicesBuilder.WrittenSpan)
             {
-                if ((uint)index >= rawInputCount)
+                // Simply ignore any out of range indices here, to avoid throwing an exception.
+                // The analyzer will detect all of these cases and correctly issue a diagnostic.
+                if ((uint)index < inputCount)
                 {
-                    diagnostics.Add(OutOfRangeInputIndex, structDeclarationSymbol, structDeclarationSymbol);
-
-                    return;
+                    inputTypes[index] = 0;
                 }
             }
 
-            // All complex indices must be in range as well
-            foreach (int index in inputComplexIndicesBuilder.WrittenSpan)
-            {
-                if ((uint)index >= rawInputCount)
-                {
-                    diagnostics.Add(OutOfRangeInputIndex, structDeclarationSymbol, structDeclarationSymbol);
-
-                    return;
-                }
-            }
-
-            Span<bool> selectedSimpleInputIndices = stackalloc bool[8];
-            Span<bool> selectedComplexInputIndices = stackalloc bool[8];
-
-            selectedSimpleInputIndices.Clear();
-            selectedComplexInputIndices.Clear();
-
-            // All simple indices must be unique
-            foreach (int index in inputSimpleIndicesBuilder.WrittenSpan)
-            {
-                ref bool isInputIndexUsed = ref selectedSimpleInputIndices[index];
-
-                if (isInputIndexUsed)
-                {
-                    diagnostics.Add(RepeatedD2DInputSimpleIndices, structDeclarationSymbol, structDeclarationSymbol);
-
-                    return;
-                }
-
-                isInputIndexUsed = true;
-            }
-
-            // All complex indices must be unique as well
-            foreach (int index in inputComplexIndicesBuilder.WrittenSpan)
-            {
-                ref bool isInputIndexUsed = ref selectedComplexInputIndices[index];
-
-                if (isInputIndexUsed)
-                {
-                    diagnostics.Add(RepeatedD2DInputComplexIndices, structDeclarationSymbol, structDeclarationSymbol);
-
-                    return;
-                }
-
-                isInputIndexUsed = true;
-            }
-
-            // Simple and complex indices can't have indices in common
-            for (int i = 0; i < rawInputCount; i++)
-            {
-                if (selectedSimpleInputIndices[i] && selectedComplexInputIndices[i])
-                {
-                    diagnostics.Add(InvalidSimpleAndComplexIndicesCombination, structDeclarationSymbol, structDeclarationSymbol);
-
-                    return;
-                }
-            }
-
-            // Build the combined input types list now that inputs have been validated
-            using ImmutableArrayBuilder<uint> combinedBuilder = new();
-
-            for (int i = 0; i < inputCount; i++)
-            {
-                // The D2D_INPUT<N>_SIMPLE define is optional, and if omitted, the corresponding input
-                // will automatically be of complex type. So we just need to check whether the i-th
-                // input is present in the set of explicitly simple inputs. These values will map to
-                // values from D2D1PixelShaderInputType, which has Simple and Complex as members.
-                // So, simple inputs map to 0, and complex inputs map to 1.
-                combinedBuilder.Add(selectedSimpleInputIndices[i] ? 0u : 1u);
-            }
-
-            combinedInputTypes = combinedBuilder.ToImmutable();
+            // We own the array, so we can just reinterpret it here
+            combinedInputTypes = Unsafe.As<uint[], ImmutableArray<uint>>(ref inputTypes);
         }
     }
 }

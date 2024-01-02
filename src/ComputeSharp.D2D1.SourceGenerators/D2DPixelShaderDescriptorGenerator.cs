@@ -97,7 +97,6 @@ public sealed partial class D2DPixelShaderDescriptorGenerator : IIncrementalGene
 
                     // Get the input info for InputTypes
                     InputTypes.GetInfo(
-                        diagnostics,
                         typeSymbol,
                         out int inputCount,
                         out ImmutableArray<int> inputSimpleIndices,
