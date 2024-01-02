@@ -84,8 +84,6 @@ public sealed partial class D2DPixelShaderDescriptorGenerator : IIncrementalGene
 
                     token.ThrowIfCancellationRequested();
 
-                    using ImmutableArrayBuilder<DiagnosticInfo> diagnostics = new();
-
                     // Constant buffer info
                     ConstantBuffer.GetInfo(
                         context.SemanticModel.Compilation,
@@ -112,18 +110,6 @@ public sealed partial class D2DPixelShaderDescriptorGenerator : IIncrementalGene
 
                     token.ThrowIfCancellationRequested();
 
-                    // Get HLSL source for HlslSource
-                    string hlslSource = HlslSource.GetHlslSource(
-                        diagnostics,
-                        context.SemanticModel.Compilation,
-                        typeSymbol,
-                        inputCount,
-                        inputSimpleIndices,
-                        inputComplexIndices,
-                        token);
-
-                    token.ThrowIfCancellationRequested();
-
                     // Get the info for the output buffer properties
                     OutputBuffer.GetInfo(typeSymbol, out D2D1BufferPrecision bufferPrecision, out D2D1ChannelDepth channelDepth);
 
@@ -147,6 +133,20 @@ public sealed partial class D2DPixelShaderDescriptorGenerator : IIncrementalGene
                     D2D1CompileOptions? requestedCompileOptions = HlslBytecode.GetRequestedCompileOptions(typeSymbol);
                     D2D1ShaderProfile effectiveShaderProfile = HlslBytecode.GetEffectiveShaderProfile(requestedShaderProfile, out bool isCompilationEnabled);
                     D2D1CompileOptions effectiveCompileOptions = HlslBytecode.GetEffectiveCompileOptions(requestedCompileOptions, isLinkingSupported);
+
+                    token.ThrowIfCancellationRequested();
+
+                    using ImmutableArrayBuilder<DiagnosticInfo> diagnostics = new();
+
+                    // Get HLSL source for HlslSource
+                    string hlslSource = HlslSource.GetHlslSource(
+                        diagnostics,
+                        context.SemanticModel.Compilation,
+                        typeSymbol,
+                        inputCount,
+                        inputSimpleIndices,
+                        inputComplexIndices,
+                        token);
 
                     token.ThrowIfCancellationRequested();
 
