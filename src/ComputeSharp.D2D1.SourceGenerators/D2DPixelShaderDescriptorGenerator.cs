@@ -84,8 +84,6 @@ public sealed partial class D2DPixelShaderDescriptorGenerator : IIncrementalGene
 
                     token.ThrowIfCancellationRequested();
 
-                    using ImmutableArrayBuilder<DiagnosticInfo> diagnostics = new();
-
                     // Constant buffer info
                     ConstantBuffer.GetInfo(
                         context.SemanticModel.Compilation,
@@ -97,7 +95,6 @@ public sealed partial class D2DPixelShaderDescriptorGenerator : IIncrementalGene
 
                     // Get the input info for InputTypes
                     InputTypes.GetInfo(
-                        diagnostics,
                         typeSymbol,
                         out int inputCount,
                         out ImmutableArray<int> inputSimpleIndices,
@@ -110,18 +107,6 @@ public sealed partial class D2DPixelShaderDescriptorGenerator : IIncrementalGene
                     ResourceTextureDescriptions.GetInfo(
                         typeSymbol,
                         out ImmutableArray<ResourceTextureDescription> resourceTextureDescriptions);
-
-                    token.ThrowIfCancellationRequested();
-
-                    // Get HLSL source for HlslSource
-                    string hlslSource = HlslSource.GetHlslSource(
-                        diagnostics,
-                        context.SemanticModel.Compilation,
-                        typeSymbol,
-                        inputCount,
-                        inputSimpleIndices,
-                        inputComplexIndices,
-                        token);
 
                     token.ThrowIfCancellationRequested();
 
@@ -148,6 +133,20 @@ public sealed partial class D2DPixelShaderDescriptorGenerator : IIncrementalGene
                     D2D1CompileOptions? requestedCompileOptions = HlslBytecode.GetRequestedCompileOptions(typeSymbol);
                     D2D1ShaderProfile effectiveShaderProfile = HlslBytecode.GetEffectiveShaderProfile(requestedShaderProfile, out bool isCompilationEnabled);
                     D2D1CompileOptions effectiveCompileOptions = HlslBytecode.GetEffectiveCompileOptions(requestedCompileOptions, isLinkingSupported);
+
+                    token.ThrowIfCancellationRequested();
+
+                    using ImmutableArrayBuilder<DiagnosticInfo> diagnostics = new();
+
+                    // Get HLSL source for HlslSource
+                    string hlslSource = HlslSource.GetHlslSource(
+                        diagnostics,
+                        context.SemanticModel.Compilation,
+                        typeSymbol,
+                        inputCount,
+                        inputSimpleIndices,
+                        inputComplexIndices,
+                        token);
 
                     token.ThrowIfCancellationRequested();
 

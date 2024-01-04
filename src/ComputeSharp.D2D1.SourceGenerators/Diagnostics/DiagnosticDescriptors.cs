@@ -479,17 +479,17 @@ partial class DiagnosticDescriptors
     /// <summary>
     /// Gets a <see cref="DiagnosticDescriptor"/> for a invalid D2D input count value.
     /// <para>
-    /// Format: <c>"The D2D1 shader of type {0} is using an incorrect value for [D2DInputCount] (the number of inputs must be in the [0, 8] range)"</c>.
+    /// Format: <c>"The D2D1 shader of type {0} is using an incorrect value for [D2DInputCount] (the number of inputs must be in the [0, 8] range, but it was {1})"</c>.
     /// </para>
     /// </summary>
     public static readonly DiagnosticDescriptor InvalidD2DInputCount = new(
         id: "CMPSD2D0035",
         title: "Invalid D2D1 shader input count",
-        messageFormat: "The D2D1 shader of type {0} is using an incorrect value for [D2DInputCount] (the number of inputs must be in the [0, 8] range)",
+        messageFormat: "The D2D1 shader of type {0} is using an incorrect value for [D2DInputCount] (the number of inputs must be in the [0, 8] range, but it was {1})",
         category: "ComputeSharp.D2D1.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
-        description: "A D2D1 shader must have a number of inputs in the [1, 8] range.",
+        description: "A D2D1 shader must have a number of inputs in the [0, 8] range.",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 
     /// <summary>

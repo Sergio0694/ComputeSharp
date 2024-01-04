@@ -893,4 +893,229 @@ public class Test_Analyzers
 
         await CSharpAnalyzerWithLanguageVersionTest<InvalidD2DInputDescriptionAttributeUseAnalyzer>.VerifyAnalyzerAsync(source);
     }
+
+    [TestMethod]
+    public async Task MissingD2DInputCountAttribute_Warns()
+    {
+        const string source = """
+            using ComputeSharp.D2D1;
+            using float4 = ComputeSharp.Float4;
+
+            internal readonly partial struct {|CMPSD2D0058:MyType|} : ID2D1PixelShader
+            {
+                public float4 Execute()
+                {
+                    return 0;
+                }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<InvalidShaderTypeInputsAnalyzer>.VerifyAnalyzerAsync(source);
+    }
+
+    [TestMethod]
+    [DataRow(-1)]
+    [DataRow(9)]
+    [DataRow(int.MaxValue)]
+    public async Task InvalidD2DInputCount_Warns(int inputCount)
+    {
+        string source = $$"""
+            using ComputeSharp.D2D1;
+            using float4 = ComputeSharp.Float4;
+
+            [D2DInputCount({{inputCount}})]
+            internal readonly partial struct {|CMPSD2D0035:MyType|} : ID2D1PixelShader
+            {
+                public float4 Execute()
+                {
+                    return 0;
+                }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<InvalidShaderTypeInputsAnalyzer>.VerifyAnalyzerAsync(source);
+    }
+
+    [TestMethod]
+    [DataRow("Simple")]
+    [DataRow("Complex")]
+    public async Task OutOfRangeInputIndex_NoInputs_Warns(string inputType)
+    {
+        string source = $$"""
+            using ComputeSharp.D2D1;
+            using float4 = ComputeSharp.Float4;
+
+            [D2DInputCount(0)]
+            [D2DInput{{inputType}}(0)]
+            internal readonly partial struct {|CMPSD2D0039:MyType|} : ID2D1PixelShader
+            {
+                public float4 Execute()
+                {
+                    return 0;
+                }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<InvalidShaderTypeInputsAnalyzer>.VerifyAnalyzerAsync(source);
+    }
+
+    [TestMethod]
+    [DataRow(-1)]
+    [DataRow(6)]
+    [DataRow(int.MaxValue)]
+    public async Task OutOfRangeInputIndex_OutOfRange_Warns(int inputIndex)
+    {
+        string source = $$"""
+            using ComputeSharp.D2D1;
+            using float4 = ComputeSharp.Float4;
+
+            [D2DInputCount(6)]
+            [D2DInputSimple({{inputIndex}})]
+            internal readonly partial struct {|CMPSD2D0039:MyType|} : ID2D1PixelShader
+            {
+                public float4 Execute()
+                {
+                    return 0;
+                }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<InvalidShaderTypeInputsAnalyzer>.VerifyAnalyzerAsync(source);
+    }
+
+    [TestMethod]
+    [DataRow(-1)]
+    [DataRow(6)]
+    [DataRow(int.MaxValue)]
+    public async Task OutOfRangeInputIndex_OutOfRange_BothInputTypes_WarnsOnce(int inputIndex)
+    {
+        const string source = """
+            using ComputeSharp.D2D1;
+            using float4 = ComputeSharp.Float4;
+
+            [D2DInputCount(6)]
+            [D2DInputSimple(0)]
+            [D2DInputSimple(1)]
+            [D2DInputSimple(6)]
+            [D2DInputSimple(8)]
+            [D2DInputComplex(-2)]
+            [D2DInputComplex(4)]
+            [D2DInputComplex(9)]
+            internal readonly partial struct {|CMPSD2D0039:MyType|} : ID2D1PixelShader
+            {
+                public float4 Execute()
+                {
+                    return 0;
+                }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<InvalidShaderTypeInputsAnalyzer>.VerifyAnalyzerAsync(source);
+    }
+
+    [TestMethod]
+    public async Task RepeatedD2DInputSimpleIndices_Warns()
+    {
+        const string source = """
+            using ComputeSharp.D2D1;
+            using float4 = ComputeSharp.Float4;
+
+            [D2DInputCount(4)]
+            [D2DInputSimple(0)]
+            [D2DInputSimple(1)]
+            [D2DInputSimple(1)]
+            [D2DInputSimple(3)]
+            internal readonly partial struct {|CMPSD2D0036:MyType|} : ID2D1PixelShader
+            {
+                public float4 Execute()
+                {
+                    return 0;
+                }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<InvalidShaderTypeInputsAnalyzer>.VerifyAnalyzerAsync(source);
+    }
+
+    [TestMethod]
+    public async Task RepeatedD2DInputComplexIndices_Warns()
+    {
+        const string source = """
+            using ComputeSharp.D2D1;
+            using float4 = ComputeSharp.Float4;
+
+            [D2DInputCount(4)]
+            [D2DInputComplex(0)]
+            [D2DInputComplex(1)]
+            [D2DInputComplex(1)]
+            [D2DInputComplex(3)]
+            internal readonly partial struct {|CMPSD2D0037:MyType|} : ID2D1PixelShader
+            {
+                public float4 Execute()
+                {
+                    return 0;
+                }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<InvalidShaderTypeInputsAnalyzer>.VerifyAnalyzerAsync(source);
+    }
+
+    [TestMethod]
+    public async Task InvalidSimpleAndComplexIndicesCombination_Warns()
+    {
+        const string source = """
+            using ComputeSharp.D2D1;
+            using float4 = ComputeSharp.Float4;
+
+            [D2DInputCount(6)]
+            [D2DInputSimple(0)]
+            [D2DInputSimple(2)]
+            [D2DInputSimple(3)]
+            [D2DInputComplex(1)]
+            [D2DInputComplex(2)]
+            [D2DInputComplex(5)]
+            internal readonly partial struct {|CMPSD2D0038:MyType|} : ID2D1PixelShader
+            {
+                public float4 Execute()
+                {
+                    return 0;
+                }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<InvalidShaderTypeInputsAnalyzer>.VerifyAnalyzerAsync(source);
+    }
+
+    [TestMethod]
+    public async Task InvalidInputTypes_MultipleErrors_WarnsOncePerDiagnosticId()
+    {
+        const string source = """
+            using ComputeSharp.D2D1;
+            using float4 = ComputeSharp.Float4;
+
+            [D2DInputCount(17)]
+            [D2DInputSimple(0)]
+            [D2DInputSimple(1)]
+            [D2DInputSimple(3)]
+            [D2DInputSimple(3)]
+            [D2DInputSimple(-1)]
+            [D2DInputSimple(32)]
+            [D2DInputComplex(4)]
+            [D2DInputComplex(5)]
+            [D2DInputComplex(5)]
+            [D2DInputComplex(-100)]
+            [D2DInputComplex(99)]
+            [D2DInputComplex(1)]
+            internal readonly partial struct {|CMPSD2D0035:{|CMPSD2D0039:{|CMPSD2D0036:{|CMPSD2D0037:{|CMPSD2D0038:MyType|}|}|}|}|} : ID2D1PixelShader
+            {
+                public float4 Execute()
+                {
+                    return 0;
+                }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<InvalidShaderTypeInputsAnalyzer>.VerifyAnalyzerAsync(source);
+    }
 }
