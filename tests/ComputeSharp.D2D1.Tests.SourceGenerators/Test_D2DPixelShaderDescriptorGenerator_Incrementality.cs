@@ -107,6 +107,7 @@ public class Test_D2DPixelShaderDescriptorGenerator_Incrementality
             using ComputeSharp;
             using ComputeSharp.D2D1;
             using float4 = global::ComputeSharp.Float4;
+            using double4 = global::ComputeSharp.Double4;
 
             [D2DInputCount(1)]
             [D2DShaderProfile(D2D1ShaderProfile.PixelShader50)]
@@ -124,6 +125,7 @@ public class Test_D2DPixelShaderDescriptorGenerator_Incrementality
             using ComputeSharp;
             using ComputeSharp.D2D1;
             using float4 = global::ComputeSharp.Float4;
+            using double4 = global::ComputeSharp.Double4;
 
             [D2DInputCount(1)]
             [D2DRequiresDoublePrecisionSupport]
@@ -144,7 +146,57 @@ public class Test_D2DPixelShaderDescriptorGenerator_Incrementality
             executeReason: IncrementalStepRunReason.Modified,
             diagnosticsReason: IncrementalStepRunReason.Modified,
             outputReason: IncrementalStepRunReason.Unchanged,
-            diagnosticsSourceReason: IncrementalStepRunReason.Modified,
+            diagnosticsSourceReason: IncrementalStepRunReason.Removed,
+            sourceReason: IncrementalStepRunReason.Cached);
+    }
+
+    [TestMethod]
+    public void RemovedRequiresDoublePrecisionSupport_DoesNotModifyOutputAndProducesDiagnostics()
+    {
+        const string source = """
+            using ComputeSharp;
+            using ComputeSharp.D2D1;
+            using float4 = global::ComputeSharp.Float4;
+            using double4 = global::ComputeSharp.Double4;
+
+            [D2DInputCount(1)]
+            [D2DRequiresDoublePrecisionSupport]
+            [D2DShaderProfile(D2D1ShaderProfile.PixelShader50)]
+            [D2DGeneratedPixelShaderDescriptor]
+            internal readonly partial struct MyShader(double factor) : ID2D1PixelShader
+            {
+                public float4 Execute()
+                {
+                    return (float4)((double4)D2D.GetInput(0) * factor);
+                }
+            }
+            """;
+
+        const string updatedSource = """
+            using ComputeSharp;
+            using ComputeSharp.D2D1;
+            using float4 = global::ComputeSharp.Float4;
+            using double4 = global::ComputeSharp.Double4;
+
+            [D2DInputCount(1)]
+            [D2DShaderProfile(D2D1ShaderProfile.PixelShader50)]
+            [D2DGeneratedPixelShaderDescriptor]
+            internal readonly partial struct MyShader(double factor) : ID2D1PixelShader
+            {
+                public float4 Execute()
+                {
+                    return (float4)((double4)D2D.GetInput(0) * factor);
+                }
+            }
+            """;
+
+        CSharpGeneratorTest<D2DPixelShaderDescriptorGenerator>.VerifyIncrementalSteps(
+            source,
+            updatedSource,
+            executeReason: IncrementalStepRunReason.Modified,
+            diagnosticsReason: IncrementalStepRunReason.Modified,
+            outputReason: IncrementalStepRunReason.Unchanged,
+            diagnosticsSourceReason: IncrementalStepRunReason.New,
             sourceReason: IncrementalStepRunReason.Cached);
     }
 }
