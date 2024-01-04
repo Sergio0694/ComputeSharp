@@ -134,6 +134,9 @@ public sealed class InvalidShaderTypeInputsAnalyzer : DiagnosticAnalyzer
                 selectedSimpleInputIndices.Clear();
                 selectedComplexInputIndices.Clear();
 
+                bool hasReportedRepeatedD2DinputSimpleIndex = false;
+                bool hasReportedRepeatedD2DinputComplexIndex = false;
+
                 // All simple indices must be unique
                 foreach (int index in inputSimpleIndices.WrittenSpan)
                 {
@@ -146,14 +149,18 @@ public sealed class InvalidShaderTypeInputsAnalyzer : DiagnosticAnalyzer
 
                     ref bool isInputIndexUsed = ref selectedSimpleInputIndices[index];
 
-                    if (isInputIndexUsed)
+                    // If we detect a repeated index, we emit the diagnostic (only at most once), but
+                    // then we also continue processing all remaining items. This is done to make sure
+                    // that all used indices are correctly marked, so that the detection of invalid
+                    // combinations at the end of the analyzer doesn't risk having false negatives.
+                    if (isInputIndexUsed && !hasReportedRepeatedD2DinputSimpleIndex)
                     {
                         context.ReportDiagnostic(Diagnostic.Create(
                             RepeatedD2DInputSimpleIndices,
                             typeSymbol.Locations.First(),
                             typeSymbol));
 
-                        break;
+                        hasReportedRepeatedD2DinputSimpleIndex = true;
                     }
 
                     isInputIndexUsed = true;
@@ -169,14 +176,14 @@ public sealed class InvalidShaderTypeInputsAnalyzer : DiagnosticAnalyzer
 
                     ref bool isInputIndexUsed = ref selectedComplexInputIndices[index];
 
-                    if (isInputIndexUsed)
+                    if (isInputIndexUsed && !hasReportedRepeatedD2DinputComplexIndex)
                     {
                         context.ReportDiagnostic(Diagnostic.Create(
                             RepeatedD2DInputComplexIndices,
                             typeSymbol.Locations.First(),
                             typeSymbol));
 
-                        break;
+                        hasReportedRepeatedD2DinputComplexIndex = true;
                     }
 
                     isInputIndexUsed = true;
