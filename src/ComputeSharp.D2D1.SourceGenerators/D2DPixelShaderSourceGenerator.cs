@@ -1,6 +1,7 @@
 using System.Collections.Immutable;
 using System.Linq;
 using ComputeSharp.D2D1.SourceGenerators.Models;
+using ComputeSharp.SourceGeneration.Constants;
 using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Helpers;
 using ComputeSharp.SourceGeneration.Models;
@@ -77,10 +78,21 @@ public sealed partial class D2DPixelShaderSourceGenerator : IIncrementalGenerato
                         HlslInfoKey: hlslInfoKey,
                         HlslInfo: hlslInfo,
                         Diagnostcs: diagnostics.ToImmutable());
-                });
+                })
+            .WithTrackingName(WellKnownTrackingNames.Execute);
 
-        IncrementalValuesProvider<EquatableArray<DiagnosticInfo>> diagnosticInfo = methodInfo.Select(static (item, _) => item.Diagnostcs);
-        IncrementalValuesProvider<D2D1PixelShaderSourceInfo> outputInfo = methodInfo.Select(static (item, _) => item with { Diagnostcs = default });
+        // Get the diagnostic incremental collection with filtering (same as in the D2D1 generator)
+        IncrementalValuesProvider<EquatableArray<DiagnosticInfo>> diagnosticInfo =
+            methodInfo
+            .Select(static (item, _) => item.Diagnostcs)
+            .WithTrackingName(WellKnownTrackingNames.Diagnostics)
+            .Where(static item => !item.IsEmpty);
+
+        // Also get the comparison-friendly incremental collection for the output (same as above)
+        IncrementalValuesProvider<D2D1PixelShaderSourceInfo> outputInfo =
+            methodInfo
+            .Select(static (item, _) => item with { Diagnostcs = default })
+            .WithTrackingName(WellKnownTrackingNames.Output);
 
         // Output the diagnostics, if any
         context.ReportDiagnostics(diagnosticInfo);
