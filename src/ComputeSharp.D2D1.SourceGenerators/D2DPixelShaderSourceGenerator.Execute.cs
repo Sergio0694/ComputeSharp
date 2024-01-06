@@ -83,10 +83,9 @@ partial class D2DPixelShaderSourceGenerator
         /// <summary>
         /// Extracts the compile options for the current shader.
         /// </summary>
-        /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
         /// <param name="methodSymbol">The input <see cref="IMethodSymbol"/> instance to process.</param>
         /// <returns>The compile options to use to compile the shader, if present.</returns>
-        public static D2D1CompileOptions GetCompileOptions(ImmutableArrayBuilder<DiagnosticInfo> diagnostics, IMethodSymbol methodSymbol)
+        public static D2D1CompileOptions GetCompileOptions(IMethodSymbol methodSymbol)
         {
             if (methodSymbol.TryGetAttributeWithFullyQualifiedMetadataName("ComputeSharp.D2D1.D2DCompileOptionsAttribute", out AttributeData? attributeData))
             {
@@ -97,12 +96,6 @@ partial class D2DPixelShaderSourceGenerator
             {
                 return (D2D1CompileOptions)attributeData.ConstructorArguments[0].Value!;
             }
-
-            diagnostics.Add(
-                MissingCompileOptionsForD2DPixelShaderSource,
-                methodSymbol,
-                methodSymbol.Name,
-                methodSymbol.ContainingType);
 
             return D2D1CompileOptions.Default;
         }

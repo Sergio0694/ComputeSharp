@@ -42,7 +42,7 @@ public sealed partial class D2DPixelShaderSourceGenerator : IIncrementalGenerato
                     string methodName = methodSymbol.Name;
                     string? invalidReturnType = Execute.GetInvalidReturnType(methodSymbol);
                     string hlslSource = Execute.GetHlslSource(diagnostics, methodSymbol);
-                    D2D1CompileOptions compileOptions = Execute.GetCompileOptions(diagnostics, methodSymbol);
+                    D2D1CompileOptions compileOptions = Execute.GetCompileOptions(methodSymbol);
 
                     // For the shader profile, reuse the same logic as in D2D1PixelShaderDescriptorGenerator
                     D2D1ShaderProfile? requestedShaderProfile = Execute.GetShaderProfile(methodSymbol);
