@@ -63,10 +63,9 @@ partial class D2DPixelShaderSourceGenerator
         /// <summary>
         /// Extracts the shader profile for a target method, if present.
         /// </summary>
-        /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
         /// <param name="methodSymbol">The input <see cref="IMethodSymbol"/> instance to process.</param>
         /// <returns>The shader profile to use to compile the shader, if present.</returns>
-        public static D2D1ShaderProfile GetShaderProfile(ImmutableArrayBuilder<DiagnosticInfo> diagnostics, IMethodSymbol methodSymbol)
+        public static D2D1ShaderProfile? GetShaderProfile(IMethodSymbol methodSymbol)
         {
             if (methodSymbol.TryGetAttributeWithFullyQualifiedMetadataName("ComputeSharp.D2D1.D2DShaderProfileAttribute", out AttributeData? attributeData))
             {
@@ -78,13 +77,7 @@ partial class D2DPixelShaderSourceGenerator
                 return (D2D1ShaderProfile)attributeData.ConstructorArguments[0].Value!;
             }
 
-            diagnostics.Add(
-                MissingShaderProfileForD2DPixelShaderSource,
-                methodSymbol,
-                methodSymbol.Name,
-                methodSymbol.ContainingType);
-
-            return D2D1ShaderProfile.PixelShader50;
+            return null;
         }
 
         /// <summary>

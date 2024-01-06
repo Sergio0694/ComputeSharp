@@ -42,16 +42,19 @@ public sealed partial class D2DPixelShaderSourceGenerator : IIncrementalGenerato
                     string methodName = methodSymbol.Name;
                     string? invalidReturnType = Execute.GetInvalidReturnType(methodSymbol);
                     string hlslSource = Execute.GetHlslSource(diagnostics, methodSymbol);
-                    D2D1ShaderProfile shaderProfile = Execute.GetShaderProfile(diagnostics, methodSymbol);
                     D2D1CompileOptions compileOptions = Execute.GetCompileOptions(diagnostics, methodSymbol);
-                    bool isCompilationEnabled = diagnostics.Count == 0;
+
+                    // For the shader profile, reuse the same logic as in D2D1PixelShaderDescriptorGenerator
+                    D2D1ShaderProfile? requestedShaderProfile = Execute.GetShaderProfile(methodSymbol);
+                    D2D1ShaderProfile effectiveShaderProfile = requestedShaderProfile ?? D2D1ShaderProfile.PixelShader50;
+                    bool isCompilationEnabled = requestedShaderProfile is not null;
 
                     token.ThrowIfCancellationRequested();
 
                     // Prepare the key to cache the bytecode (just like the main D2D1 generator)
                     HlslBytecodeInfoKey hlslInfoKey = new(
                         hlslSource,
-                        shaderProfile,
+                        effectiveShaderProfile,
                         compileOptions,
                         isCompilationEnabled);
 
