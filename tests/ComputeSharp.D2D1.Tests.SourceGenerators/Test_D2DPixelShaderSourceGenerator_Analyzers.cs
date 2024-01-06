@@ -71,4 +71,91 @@ public class Test_D2DPixelShaderSourceGenerator_Analyzers
 
         await CSharpAnalyzerWithLanguageVersionTest<InvalidD2DPixelShaderSourceMethodReturnTypeAnalyzer>.VerifyAnalyzerAsync(source);
     }
+
+    [TestMethod]
+    public async Task MissingShaderProfileForD2DPixelShaderSource_ShaderProfileOnMethod_DoesNotWarn()
+    {
+        const string source = """"
+            using System;
+            using ComputeSharp.D2D1;
+
+            public partial class MyClass
+            {
+                [D2DPixelShaderSource("""
+                    #define D2D_INPUT_COUNT 0
+
+                    #include "d2d1effecthelpers.hlsli"
+
+                    D2D_PS_ENTRY(Execute)
+                    {
+                        return 0;
+                    }
+                    """)]
+                [D2DShaderProfile(D2D1ShaderProfile.PixelShader50)]
+                public static partial ReadOnlySpan<byte> InvertEffect();
+
+                public static partial ReadOnlySpan<byte> InvertEffect() => default;
+            }
+            """";
+
+        await CSharpAnalyzerWithLanguageVersionTest<MissingD2DShaderProfileOnD2DPixelShaderSourceMethodAnalyzer>.VerifyAnalyzerAsync(source);
+    }
+
+    [TestMethod]
+    public async Task MissingShaderProfileForD2DPixelShaderSource_ShaderProfileOnAssembly_DoesNotWarn()
+    {
+        const string source = """"
+            using System;
+            using ComputeSharp.D2D1;
+
+            [assembly: D2DShaderProfile(D2D1ShaderProfile.PixelShader50)]
+
+            public partial class MyClass
+            {
+                [D2DPixelShaderSource("""
+                    #define D2D_INPUT_COUNT 0
+
+                    #include "d2d1effecthelpers.hlsli"
+
+                    D2D_PS_ENTRY(Execute)
+                    {
+                        return 0;
+                    }
+                    """)]
+                public static partial ReadOnlySpan<byte> InvertEffect();
+
+                public static partial ReadOnlySpan<byte> InvertEffect() => default;
+            }
+            """";
+
+        await CSharpAnalyzerWithLanguageVersionTest<MissingD2DShaderProfileOnD2DPixelShaderSourceMethodAnalyzer>.VerifyAnalyzerAsync(source);
+    }
+
+    [TestMethod]
+    public async Task MissingShaderProfileForD2DPixelShaderSource_MissingShaderProfile_Warns()
+    {
+        const string source = """"
+            using System;
+            using ComputeSharp.D2D1;
+
+            public partial class MyClass
+            {
+                [D2DPixelShaderSource("""
+                    #define D2D_INPUT_COUNT 0
+
+                    #include "d2d1effecthelpers.hlsli"
+
+                    D2D_PS_ENTRY(Execute)
+                    {
+                        return 0;
+                    }
+                    """)]
+                public static partial ReadOnlySpan<byte> {|CMPSD2D0055:InvertEffect|}();
+
+                public static partial ReadOnlySpan<byte> InvertEffect() => default;
+            }
+            """";
+
+        await CSharpAnalyzerWithLanguageVersionTest<MissingD2DShaderProfileOnD2DPixelShaderSourceMethodAnalyzer>.VerifyAnalyzerAsync(source);
+    }
 }

@@ -21,7 +21,7 @@ namespace ComputeSharp.D2D1;
 ///         float3 rgb = saturate(1.0 - color.rgb);
 ///         return float4(rgb, 1);
 ///     }
-///     """")]
+///     """)]
 /// static partial ReadOnlySpan&lt;byte&gt; GetBytecode();
 /// </code>
 /// </para>
