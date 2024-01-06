@@ -245,4 +245,23 @@ public class Test_D2DPixelShaderSourceGenerator_Analyzers
 
         await CSharpAnalyzerWithLanguageVersionTest<MissingD2DCompileOptionsOnD2DPixelShaderSourceMethodAnalyzer>.VerifyAnalyzerAsync(source);
     }
+
+    [TestMethod]
+    public async Task InvalidD2DPixelShaderSource_NullArgument_Warns()
+    {
+        const string source = """
+            using System;
+            using ComputeSharp.D2D1;
+
+            public partial class MyClass
+            {
+                [D2DPixelShaderSource(null)]
+                public static partial ReadOnlySpan<byte> {|CMPSD2D0052:InvertEffect|}();
+
+                public static partial ReadOnlySpan<byte> InvertEffect() => default;
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<InvalidD2DPixelShaderSourceAttributeUseAnalyzer>.VerifyAnalyzerAsync(source);
+    }
 }
