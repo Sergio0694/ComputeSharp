@@ -6,7 +6,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace ComputeSharp.D2D1.Tests.SourceGenerators;
 
 [TestClass]
-public class Test_Analyzers
+public class Test_D2DPixelShaderDescriptorGenerator_Analyzers
 {
     [TestMethod]
     public async Task MissingD2DPixelShaderDescriptor_ComputeShader()
