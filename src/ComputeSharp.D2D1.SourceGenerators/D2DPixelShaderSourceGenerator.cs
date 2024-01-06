@@ -40,7 +40,7 @@ public sealed partial class D2DPixelShaderSourceGenerator : IIncrementalGenerato
                     // Get the remaining info for the current shader
                     ImmutableArray<ushort> modifiers = methodDeclaration.Modifiers.Select(token => (ushort)token.Kind()).ToImmutableArray();
                     string methodName = methodSymbol.Name;
-                    string? invalidReturnType = Execute.GetInvalidReturnType(diagnostics, methodSymbol);
+                    string? invalidReturnType = Execute.GetInvalidReturnType(methodSymbol);
                     string hlslSource = Execute.GetHlslSource(diagnostics, methodSymbol);
                     D2D1ShaderProfile shaderProfile = Execute.GetShaderProfile(diagnostics, methodSymbol);
                     D2D1CompileOptions compileOptions = Execute.GetCompileOptions(diagnostics, methodSymbol);

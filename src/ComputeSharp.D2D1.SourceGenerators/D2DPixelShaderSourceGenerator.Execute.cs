@@ -20,10 +20,9 @@ partial class D2DPixelShaderSourceGenerator
         /// <summary>
         /// Validates that the return type of the annotated method is valid and returns the type name.
         /// </summary>
-        /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
         /// <param name="methodSymbol">The input <see cref="IMethodSymbol"/> instance to process.</param>
-        /// <returns>The HLSL source to compile, if present.</returns>
-        public static string? GetInvalidReturnType(ImmutableArrayBuilder<DiagnosticInfo> diagnostics, IMethodSymbol methodSymbol)
+        /// <returns>The fully qualified type name, if invalid.</returns>
+        public static string? GetInvalidReturnType(IMethodSymbol methodSymbol)
         {
             if (methodSymbol.ReturnType is not INamedTypeSymbol
                 {
@@ -33,13 +32,6 @@ partial class D2DPixelShaderSourceGenerator
                     TypeArguments: [{ SpecialType: SpecialType.System_Byte }]
                 })
             {
-                diagnostics.Add(
-                    InvalidD2DPixelShaderSourceMethodReturnType,
-                    methodSymbol,
-                    methodSymbol.Name,
-                    methodSymbol.ContainingType,
-                    methodSymbol.ReturnType);
-
                 return methodSymbol.ReturnType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
             }
 
