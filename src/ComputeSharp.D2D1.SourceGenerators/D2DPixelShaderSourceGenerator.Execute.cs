@@ -1,4 +1,3 @@
-using System;
 using ComputeSharp.D2D1.SourceGenerators.Models;
 using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Helpers;
@@ -39,25 +38,19 @@ partial class D2DPixelShaderSourceGenerator
         }
 
         /// <summary>
-        /// Extracts the HLSL source from a method with the <see cref="D2DPixelShaderSourceAttribute"/> annotation.
+        /// Extracts the HLSL source from an annotated method.
         /// </summary>
-        /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
         /// <param name="methodSymbol">The input <see cref="IMethodSymbol"/> instance to process.</param>
         /// <returns>The HLSL source to compile, if present.</returns>
-        public static string GetHlslSource(ImmutableArrayBuilder<DiagnosticInfo> diagnostics, IMethodSymbol methodSymbol)
+        public static string? GetHlslSource(IMethodSymbol methodSymbol)
         {
-            _ = methodSymbol.TryGetAttributeWithFullyQualifiedMetadataName("ComputeSharp.D2D1.D2DPixelShaderSourceAttribute", out AttributeData? attributeData);
-
-            if (!attributeData!.TryGetConstructorArgument(0, out string? hlslSource))
+            if (methodSymbol.TryGetAttributeWithFullyQualifiedMetadataName("ComputeSharp.D2D1.D2DPixelShaderSourceAttribute", out AttributeData? attributeData) &&
+                attributeData!.TryGetConstructorArgument(0, out string? hlslSource))
             {
-                diagnostics.Add(
-                    InvalidD2DPixelShaderSource,
-                    methodSymbol,
-                    methodSymbol.Name,
-                    methodSymbol.ContainingType);
+                return hlslSource;
             }
 
-            return hlslSource ?? "";
+            return null;
         }
 
         /// <summary>
