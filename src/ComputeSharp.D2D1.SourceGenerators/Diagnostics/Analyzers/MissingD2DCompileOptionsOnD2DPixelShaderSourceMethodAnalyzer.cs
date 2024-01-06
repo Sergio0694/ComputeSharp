@@ -39,6 +39,12 @@ public sealed class MissingD2DCompileOptionsOnD2DPixelShaderSourceMethodAnalyzer
                     return;
                 }
 
+                // Ignore methods without [D2DPixelShaderSource]
+                if (!methodSymbol.HasAttributeWithType(d2DPixelShaderSourceAttributeSymbol))
+                {
+                    return;
+                }
+
                 // Emit a diagnostic if there is no compile options available at any level
                 if (!methodSymbol.HasAttributeWithType(d2DCompileOptionsAttributeSymbol) &&
                     !methodSymbol.ContainingAssembly.HasAttributeWithType(d2DCompileOptionsAttributeSymbol))

@@ -1,5 +1,6 @@
 using System.Collections.Immutable;
 using System.Linq;
+using ComputeSharp.SourceGeneration.Extensions;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using static ComputeSharp.SourceGeneration.Diagnostics.DiagnosticDescriptors;
@@ -38,6 +39,12 @@ public sealed class InvalidD2DPixelShaderSourceMethodReturnTypeAnalyzer : Diagno
             {
                 // Only partial definition methods are possible targets
                 if (context.Symbol is not IMethodSymbol { IsPartialDefinition: true } methodSymbol)
+                {
+                    return;
+                }
+
+                // Ignore methods without [D2DPixelShaderSource]
+                if (!methodSymbol.HasAttributeWithType(d2DPixelShaderSourceAttributeSymbol))
                 {
                     return;
                 }

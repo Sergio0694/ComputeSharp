@@ -39,6 +39,12 @@ public sealed class MissingD2DShaderProfileOnD2DPixelShaderSourceMethodAnalyzer 
                     return;
                 }
 
+                // Ignore methods without [D2DPixelShaderSource]
+                if (!methodSymbol.HasAttributeWithType(d2DPixelShaderSourceAttributeSymbol))
+                {
+                    return;
+                }
+
                 // Emit a diagnostic if there is no shader profile available at any level
                 if (!methodSymbol.HasAttributeWithType(d2DShaderProfileAttributeSymbol) &&
                     !methodSymbol.ContainingAssembly.HasAttributeWithType(d2DShaderProfileAttributeSymbol))
