@@ -35,8 +35,6 @@ public sealed partial class D2DPixelShaderSourceGenerator : IIncrementalGenerato
                     MethodDeclarationSyntax methodDeclaration = (MethodDeclarationSyntax)context.TargetNode;
                     IMethodSymbol methodSymbol = (IMethodSymbol)context.TargetSymbol;
 
-                    using ImmutableArrayBuilder<DiagnosticInfo> diagnostics = new();
-
                     // Get the remaining info for the current shader
                     ImmutableArray<ushort> modifiers = methodDeclaration.Modifiers.Select(token => (ushort)token.Kind()).ToImmutableArray();
                     string methodName = methodSymbol.Name;
@@ -65,8 +63,8 @@ public sealed partial class D2DPixelShaderSourceGenerator : IIncrementalGenerato
 
                     token.ThrowIfCancellationRequested();
 
-                    // Append any diagnostic for the shader compilation
-                    Execute.GetInfoDiagnostics(methodSymbol, hlslInfo, diagnostics);
+                    // Get any diagnostics for the shader compilation
+                    ImmutableArray<DiagnosticInfo> diagnostics = Execute.GetInfoDiagnostics(methodSymbol, hlslInfo);
 
                     token.ThrowIfCancellationRequested();
 
@@ -82,7 +80,7 @@ public sealed partial class D2DPixelShaderSourceGenerator : IIncrementalGenerato
                         InvalidReturnType: invalidReturnType,
                         HlslInfoKey: hlslInfoKey,
                         HlslInfo: hlslInfo,
-                        Diagnostcs: diagnostics.ToImmutable());
+                        Diagnostcs: diagnostics);
                 })
             .WithTrackingName(WellKnownTrackingNames.Execute);
 

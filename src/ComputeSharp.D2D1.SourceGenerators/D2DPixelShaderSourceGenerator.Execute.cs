@@ -1,3 +1,4 @@
+using System.Collections.Immutable;
 using ComputeSharp.D2D1.SourceGenerators.Models;
 using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Helpers;
@@ -98,38 +99,34 @@ partial class D2DPixelShaderSourceGenerator
         /// </summary>
         /// <param name="methodSymbol">The input <see cref="IMethodSymbol"/> instance to process.</param>
         /// <param name="info">The source <see cref="HlslBytecodeInfo"/> instance.</param>
-        /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
-        public static void GetInfoDiagnostics(
-            IMethodSymbol methodSymbol,
-            HlslBytecodeInfo info,
-            ImmutableArrayBuilder<DiagnosticInfo> diagnostics)
+        /// <returns>The collection of produced <see cref="DiagnosticInfo"/> instances.</returns>
+        public static ImmutableArray<DiagnosticInfo> GetInfoDiagnostics(IMethodSymbol methodSymbol, HlslBytecodeInfo info)
         {
-            DiagnosticInfo? diagnostic = null;
-
             if (info is HlslBytecodeInfo.Win32Error win32Error)
             {
-                diagnostic = DiagnosticInfo.Create(
+                DiagnosticInfo diagnostic = DiagnosticInfo.Create(
                     D2DPixelShaderSourceCompilationFailedWithWin32Exception,
                     methodSymbol,
                     methodSymbol,
                     methodSymbol.ContainingType,
                     win32Error.HResult,
                     win32Error.Message);
+
+                return ImmutableArray.Create(diagnostic);
             }
             else if (info is HlslBytecodeInfo.CompilerError fxcError)
             {
-                diagnostic = DiagnosticInfo.Create(
+                DiagnosticInfo diagnostic = DiagnosticInfo.Create(
                     D2DPixelShaderSourceCompilationFailedWithFxcCompilationException,
                     methodSymbol,
                     methodSymbol,
                     methodSymbol.ContainingType,
                     fxcError.Message);
+
+                return ImmutableArray.Create(diagnostic);
             }
 
-            if (diagnostic is not null)
-            {
-                diagnostics.Add(diagnostic);
-            }
+            return ImmutableArray<DiagnosticInfo>.Empty;
         }
 
         /// <summary>
