@@ -98,11 +98,9 @@ public sealed partial class ComputeShaderDescriptorGenerator : IIncrementalGener
 
                     // Get the resources info
                     Resources.GetInfo(
-                        diagnostics,
                         context.SemanticModel.Compilation,
                         typeSymbol,
                         isImplicitTextureUsed,
-                        constantBufferSizeInBytes,
                         out ImmutableArray<ResourceInfo> resourceInfo,
                         out ImmutableArray<ResourceDescriptor> resourceDescriptors);
 

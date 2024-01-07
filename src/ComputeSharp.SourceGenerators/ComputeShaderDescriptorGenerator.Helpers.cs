@@ -10,9 +10,9 @@ partial class ComputeShaderDescriptorGenerator
     /// </summary>
     /// <param name="typeSymbol">The input <see cref="INamedTypeSymbol"/> instance to check.</param>
     /// <param name="compilation">The <see cref="Compilation"/> instance currently in use.</param>
-    /// <param name="result">Whether <paramref name="typeSymbol"/> is a "pixel shader like" type.</param>
+    /// <param name="isPixelShaderLike">Whether <paramref name="typeSymbol"/> is a "pixel shader like" type.</param>
     /// <returns>Whether <paramref name="typeSymbol"/> is a compute shader type at all.</returns>
-    private static bool TryGetIsPixelShaderLike(INamedTypeSymbol typeSymbol, Compilation compilation, out bool result)
+    private static bool TryGetIsPixelShaderLike(INamedTypeSymbol typeSymbol, Compilation compilation, out bool isPixelShaderLike)
     {
         INamedTypeSymbol computeShaderSymbol = compilation.GetTypeByMetadataName("ComputeSharp.IComputeShader")!;
         INamedTypeSymbol pixelShaderSymbol = compilation.GetTypeByMetadataName("ComputeSharp.IComputeShader`1")!;
@@ -21,19 +21,19 @@ partial class ComputeShaderDescriptorGenerator
         {
             if (SymbolEqualityComparer.Default.Equals(interfaceSymbol, computeShaderSymbol))
             {
-                result = false;
+                isPixelShaderLike = false;
 
                 return true;
             }
             else if (SymbolEqualityComparer.Default.Equals(interfaceSymbol.ConstructedFrom, pixelShaderSymbol))
             {
-                result = true;
+                isPixelShaderLike = true;
 
                 return true;
             }
         }
 
-        result = false;
+        isPixelShaderLike = false;
 
         return false;
     }

@@ -560,17 +560,17 @@ partial class DiagnosticDescriptors
     /// <summary>
     /// Gets a <see cref="DiagnosticDescriptor"/> for a shader with a root signature that is too large.
     /// <para>
-    /// Format: <c>"The compute shader of type {0} has exceeded the maximum allowed size for captured values and resources"</c>.
+    /// Format: <c>"The compute shader of type {0} has exceeded the maximum allowed size for captured values and resources (the maximum size for the root signature is 64 DWORD constants, but the actual size was {1})"</c>.
     /// </para>
     /// </summary>
     public static readonly DiagnosticDescriptor ShaderDispatchDataSizeExceeded = new(
         id: "CMPS0041",
         title: "Shader dispatch data size exceeded",
-        messageFormat: "The compute shader of type {0} has exceeded the maximum allowed size for captured values and resources",
+        messageFormat: "The compute shader of type {0} has exceeded the maximum allowed size for captured values and resources (the maximum size for the root signature is 64 DWORD constants, but the actual size was {1})",
         category: "ComputeSharp.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
-        description: "The compute shader of type {0} has exceeded the maximum allowed size for captured values and resources.",
+        description: "The compute shader of type {0} has exceeded the maximum allowed size for captured values and resources (the maximum size for the root signature is 64 DWORD constants).",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 
     /// <summary>
