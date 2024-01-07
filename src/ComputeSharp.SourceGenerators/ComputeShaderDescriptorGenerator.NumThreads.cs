@@ -1,9 +1,5 @@
-using System;
 using ComputeSharp.SourceGeneration.Extensions;
-using ComputeSharp.SourceGeneration.Helpers;
-using ComputeSharp.SourceGeneration.Models;
 using Microsoft.CodeAnalysis;
-using static ComputeSharp.SourceGeneration.Diagnostics.DiagnosticDescriptors;
 
 namespace ComputeSharp.SourceGenerators;
 
@@ -18,14 +14,12 @@ partial class ComputeShaderDescriptorGenerator
         /// <summary>
         /// Gets the thread ids values for a given shader type, if available.
         /// </summary>
-        /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
         /// <param name="structDeclarationSymbol">The input <see cref="INamedTypeSymbol"/> instance to process.</param>
         /// <param name="threadsX">The thread ids value for the X axis.</param>
         /// <param name="threadsY">The thread ids value for the Y axis.</param>
         /// <param name="threadsZ">The thread ids value for the Z axis.</param>
         /// <param name="isCompilationEnabled">Whether compilation should be attempted for the current info.</param>
         public static void GetInfo(
-            ImmutableArrayBuilder<DiagnosticInfo> diagnostics,
             INamedTypeSymbol structDeclarationSymbol,
             out int threadsX,
             out int threadsY,
@@ -35,8 +29,6 @@ partial class ComputeShaderDescriptorGenerator
             // Try to get the attribute that controls shader precompilation (this is always required)
             if (!structDeclarationSymbol.TryGetAttributeWithFullyQualifiedMetadataName("ComputeSharp.ThreadGroupSizeAttribute", out AttributeData? attribute))
             {
-                diagnostics.Add(MissingThreadGroupSizeAttribute, structDeclarationSymbol, structDeclarationSymbol);
-
                 threadsX = threadsY = threadsZ = 0;
                 isCompilationEnabled = false;
 
@@ -44,11 +36,9 @@ partial class ComputeShaderDescriptorGenerator
             }
 
             // Check for a dispatch axis argument first
-            if (attribute.ConstructorArguments.Length == 1)
+            if (attribute.ConstructorArguments is [{ Value: var defaultSize }])
             {
-                int defaultSize = (int)attribute.ConstructorArguments[0].Value!;
-
-                (threadsX, threadsY, threadsZ) = (DefaultThreadGroupSizes)defaultSize switch
+                (threadsX, threadsY, threadsZ) = (DefaultThreadGroupSizes?)(defaultSize as int?) switch
                 {
                     DefaultThreadGroupSizes.X => (64, 1, 1),
                     DefaultThreadGroupSizes.Y => (1, 64, 1),
@@ -60,31 +50,15 @@ partial class ComputeShaderDescriptorGenerator
                     _ => (0, 0, 0)
                 };
 
-                // Validate the dispatch axis argument
-                if ((threadsX, threadsY, threadsZ) is (0, 0, 0))
-                {
-                    diagnostics.Add(InvalidThreadGroupSizeAttributeDefaultThreadGroupSizes, structDeclarationSymbol, structDeclarationSymbol);
-
-                    threadsX = threadsY = threadsZ = 0;
-                    isCompilationEnabled = false;
-
-                    return;
-                }
-
-                isCompilationEnabled = true;
+                // Only enable compilation if we have valid thread group size values
+                isCompilationEnabled = (threadsX, threadsY, threadsZ) is not (0, 0, 0);
             }
-            else if (
-                attribute.ConstructorArguments.Length != 3 ||
-                attribute.ConstructorArguments[0].Value is not int explicitThreadsX ||
-                attribute.ConstructorArguments[1].Value is not int explicitThreadsY ||
-                attribute.ConstructorArguments[2].Value is not int explicitThreadsZ ||
-                explicitThreadsX is < 1 or > 1024 ||
-                explicitThreadsY is < 1 or > 1024 ||
-                explicitThreadsZ is < 1 or > 64)
+            else if (attribute.ConstructorArguments is not [{ Value: int explicitThreadsX }, { Value: int explicitThreadsY }, { Value: int explicitThreadsZ }] ||
+                     explicitThreadsX is < 1 or > 1024 ||
+                     explicitThreadsY is < 1 or > 1024 ||
+                     explicitThreadsZ is < 1 or > 64)
             {
-                // Failed to validate the thread number arguments
-                diagnostics.Add(InvalidThreadGroupSizeAttributeValues, structDeclarationSymbol, structDeclarationSymbol);
-
+                // Also disable compilation if we have no valid explicit sizes
                 threadsX = threadsY = threadsZ = 0;
                 isCompilationEnabled = false;
 
@@ -92,6 +66,7 @@ partial class ComputeShaderDescriptorGenerator
             }
             else
             {
+                // Enable compilation and track the explicit thread group sizes
                 threadsX = explicitThreadsX;
                 threadsY = explicitThreadsY;
                 threadsZ = explicitThreadsZ;

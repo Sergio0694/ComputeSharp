@@ -592,13 +592,13 @@ partial class DiagnosticDescriptors
     /// <summary>
     /// Gets a <see cref="DiagnosticDescriptor"/> for invalid thread group sizes.
     /// <para>
-    /// Format: <c>"The shader of type {0} is annotated with invalid [ThreadGroupSize] values"</c>.
+    /// Format: <c>"The [ThreadGroupSize] attribute on shader type {0} is using invalid thread group size values"</c>.
     /// </para>
     /// </summary>
     public static readonly DiagnosticDescriptor InvalidThreadGroupSizeAttributeValues = new(
         id: "CMPS0044",
         title: "Invalid values for [ThreadGroupSize] attribute",
-        messageFormat: "The shader of type {0} is annotated with invalid [ThreadGroupSize] values",
+        messageFormat: "The [ThreadGroupSize] attribute on shader type {0} is using invalid thread group size values",
         category: "ComputeSharp.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
@@ -656,13 +656,13 @@ partial class DiagnosticDescriptors
     /// <summary>
     /// Gets a <see cref="DiagnosticDescriptor"/> for shaders shader with an invalid DefaultThreadGroupSizes value.
     /// <para>
-    /// Format: <c>"The shader of type {0} is using an invalid DefaultThreadGroupSizes value in its [ThreadGroupSize] attribute"</c>.
+    /// Format: <c>"The [ThreadGroupSize] attribute on shader type {0} is using an invalid DefaultThreadGroupSizes value"</c>.
     /// </para>
     /// </summary>
     public static readonly DiagnosticDescriptor InvalidThreadGroupSizeAttributeDefaultThreadGroupSizes = new(
         id: "CMPS0048",
         title: "Invalid DefaultThreadGroupSizes value for [ThreadGroupSize] use",
-        messageFormat: "The shader of type {0} is using an invalid DefaultThreadGroupSizes value in its [ThreadGroupSize] attribute",
+        messageFormat: "The [ThreadGroupSize] attribute on shader type {0} is using an invalid DefaultThreadGroupSizes value",
         category: "ComputeSharp.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,

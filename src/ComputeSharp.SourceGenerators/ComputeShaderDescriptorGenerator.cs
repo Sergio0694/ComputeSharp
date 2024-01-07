@@ -73,7 +73,6 @@ public sealed partial class ComputeShaderDescriptorGenerator : IIncrementalGener
 
                     // Thread group size info
                     NumThreads.GetInfo(
-                        diagnostics,
                         typeSymbol,
                         out int threadsX,
                         out int threadsY,
