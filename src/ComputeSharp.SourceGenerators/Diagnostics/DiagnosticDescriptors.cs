@@ -560,17 +560,17 @@ partial class DiagnosticDescriptors
     /// <summary>
     /// Gets a <see cref="DiagnosticDescriptor"/> for a shader with a root signature that is too large.
     /// <para>
-    /// Format: <c>"The compute shader of type {0} has exceeded the maximum allowed size for captured values and resources"</c>.
+    /// Format: <c>"The compute shader of type {0} has exceeded the maximum allowed size for captured values and resources (the maximum size for the root signature is 64 DWORD constants, but the actual size was {1})"</c>.
     /// </para>
     /// </summary>
     public static readonly DiagnosticDescriptor ShaderDispatchDataSizeExceeded = new(
         id: "CMPS0041",
         title: "Shader dispatch data size exceeded",
-        messageFormat: "The compute shader of type {0} has exceeded the maximum allowed size for captured values and resources",
+        messageFormat: "The compute shader of type {0} has exceeded the maximum allowed size for captured values and resources (the maximum size for the root signature is 64 DWORD constants, but the actual size was {1})",
         category: "ComputeSharp.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
-        description: "The compute shader of type {0} has exceeded the maximum allowed size for captured values and resources.",
+        description: "The compute shader of type {0} has exceeded the maximum allowed size for captured values and resources (the maximum size for the root signature is 64 DWORD constants).",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 
     /// <summary>
@@ -592,13 +592,13 @@ partial class DiagnosticDescriptors
     /// <summary>
     /// Gets a <see cref="DiagnosticDescriptor"/> for invalid thread group sizes.
     /// <para>
-    /// Format: <c>"The shader of type {0} is annotated with invalid [ThreadGroupSize] values"</c>.
+    /// Format: <c>"The [ThreadGroupSize] attribute on shader type {0} is using invalid thread group size values"</c>.
     /// </para>
     /// </summary>
     public static readonly DiagnosticDescriptor InvalidThreadGroupSizeAttributeValues = new(
         id: "CMPS0044",
         title: "Invalid values for [ThreadGroupSize] attribute",
-        messageFormat: "The shader of type {0} is annotated with invalid [ThreadGroupSize] values",
+        messageFormat: "The [ThreadGroupSize] attribute on shader type {0} is using invalid thread group size values",
         category: "ComputeSharp.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
@@ -656,13 +656,13 @@ partial class DiagnosticDescriptors
     /// <summary>
     /// Gets a <see cref="DiagnosticDescriptor"/> for shaders shader with an invalid DefaultThreadGroupSizes value.
     /// <para>
-    /// Format: <c>"The shader of type {0} is using an invalid DefaultThreadGroupSizes value in its [ThreadGroupSize] attribute"</c>.
+    /// Format: <c>"The [ThreadGroupSize] attribute on shader type {0} is using an invalid DefaultThreadGroupSizes value"</c>.
     /// </para>
     /// </summary>
     public static readonly DiagnosticDescriptor InvalidThreadGroupSizeAttributeDefaultThreadGroupSizes = new(
         id: "CMPS0048",
         title: "Invalid DefaultThreadGroupSizes value for [ThreadGroupSize] use",
-        messageFormat: "The shader of type {0} is using an invalid DefaultThreadGroupSizes value in its [ThreadGroupSize] attribute",
+        messageFormat: "The [ThreadGroupSize] attribute on shader type {0} is using an invalid DefaultThreadGroupSizes value",
         category: "ComputeSharp.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,

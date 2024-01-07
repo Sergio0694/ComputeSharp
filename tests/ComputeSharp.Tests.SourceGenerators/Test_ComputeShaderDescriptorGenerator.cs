@@ -863,10 +863,12 @@ public class Test_ComputeShaderDescriptorGenerator
     /// <returns>The task for the operation.</returns>
     private static async Task VerifyGeneratedDiagnosticsAsync(string source, (string Filename, string Source) result)
     {
+        await CSharpAnalyzerWithLanguageVersionTest<ExcedeedComputeShaderDispatchDataSizeAnalyzer>.VerifyAnalyzerAsync(source);
         await CSharpAnalyzerWithLanguageVersionTest<InvalidComputeContextCopyAnalyzer>.VerifyAnalyzerAsync(source);
         await CSharpAnalyzerWithLanguageVersionTest<InvalidGeneratedComputeShaderDescriptorAttributeTargetAnalyzer>.VerifyAnalyzerAsync(source);
         await CSharpAnalyzerWithLanguageVersionTest<InvalidGloballyCoherentFieldDeclarationAnalyzer>.VerifyAnalyzerAsync(source);
         await CSharpAnalyzerWithLanguageVersionTest<InvalidGroupSharedFieldDeclarationAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerWithLanguageVersionTest<InvalidThreadGroupSizeAttributeUseAnalyzer>.VerifyAnalyzerAsync(source);
         await CSharpAnalyzerWithLanguageVersionTest<MissingAllowUnsafeBlocksCompilationOptionAnalyzer>.VerifyAnalyzerAsync(source);
         await CSharpAnalyzerWithLanguageVersionTest<MissingComputeShaderDescriptorOnComputeShaderAnalyzer>.VerifyAnalyzerAsync(source);
         await CSharpAnalyzerWithLanguageVersionTest<MultipleComputeShaderInterfacesOnShaderTypeAnalyzer>.VerifyAnalyzerAsync(source);
