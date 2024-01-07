@@ -722,7 +722,6 @@ public class Test_D2DPixelShaderDescriptorGenerator_Analyzers
                 public float s0;
             }
 
-
             [D2DInputCount(0)]
             internal readonly partial struct {|CMPSD2D0032:MyType|}(Data4 data4) : ID2D1PixelShader
             {

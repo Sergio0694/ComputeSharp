@@ -1080,34 +1080,6 @@ public class Test_ComputeShaderDescriptorGenerator_Diagnostics
     }
 
     [TestMethod]
-    public void ShaderDispatchDataSizeExceeded()
-    {
-        const string source = """
-            using ComputeSharp;
-            using double4x4 = ComputeSharp.Double4x4;
-            using float4 = ComputeSharp.Float4;
-
-            namespace MyFancyApp.Sample;
-            
-            [GeneratedComputeShaderDescriptor]
-            public partial struct MyShader : IComputeShader
-            {
-                public readonly ReadWriteBuffer<float> buffer;
-                public readonly double4x4 a;
-                public readonly double4x4 b;
-                public readonly int c;
-                public readonly float4 d;
-
-                public void Execute()
-                {
-                }
-            }
-            """;
-
-        CSharpGeneratorTest<ComputeShaderDescriptorGenerator>.VerifyDiagnostics(source, "CMPS0041");
-    }
-
-    [TestMethod]
     public void InvalidMethodCall()
     {
         const string source = """

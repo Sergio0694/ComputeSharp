@@ -545,4 +545,160 @@ public class Test_ComputeShaderDescriptorGenerator_Analyzers
 
         await CSharpAnalyzerWithLanguageVersionTest<InvalidThreadGroupSizeAttributeUseAnalyzer>.VerifyAnalyzerAsync(source);
     }
+
+    [TestMethod]
+    public async Task ExceededDispatchDataSize_ConstantBufferTooLarge_WithNestedTypes_Warns()
+    {
+        const string source = """
+            using ComputeSharp;
+            using float1x3 = ComputeSharp.Float1x3;
+            using float2x2 = ComputeSharp.Float2x2;
+            using float3x2 = ComputeSharp.Float3x2;
+            using float4x4 = ComputeSharp.Float4x4;
+            using float2 = ComputeSharp.Float2;
+            using float3 = ComputeSharp.Float3;
+            using float4 = ComputeSharp.Float4;
+
+            public struct Data0
+            {
+                public float4x4 m0;
+                public float4 v0;
+                public float4 v1;
+                public float s0;
+                public float s1;
+                public float s2;
+                public float s3;
+            }
+
+            public struct Data1
+            {
+                public Data0 d0;
+                public Data0 d1;
+                public Data0 d2;
+                public Data0 d3;
+                public Data0 d4;
+                public float3x2 m0;
+                public float2x2 m1;
+                public float3 v0;
+                public float s0;
+                public float s1;
+            }
+
+            public struct Data2
+            {
+                public Data1 d0;
+                public Data1 d1;
+                public Data1 d2;
+                public Data1 d3;
+                public float2x2 m0;
+                public float1x3 m1;
+                public float3 v0;
+                public float4 v1;
+                public float2 v2;
+                public float s0;
+            }
+
+            internal partial struct {|CMPS0041:MyType|}(Data2 data2) : IComputeShader
+            {
+                ReadWriteBuffer<float> result;
+
+                public void Execute()
+                {
+                    result[ThreadIds.X] = data2.s0;
+                }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<ExcedeedComputeShaderDispatchDataSizeAnalyzer>.VerifyAnalyzerAsync(source);
+    }
+
+    [TestMethod]
+    public async Task ExceededDispatchDataSize_ConstantBufferTooLarge_WithDoubles_Warns()
+    {
+        const string source = """
+            using ComputeSharp;
+            using double4x4 = ComputeSharp.Double4x4;
+            using float4 = ComputeSharp.Float4;
+
+            internal partial struct {|CMPS0041:MyType|} : IComputeShader
+            {
+                public readonly ReadWriteBuffer<float> buffer;
+                public readonly double4x4 a;
+                public readonly double4x4 b;
+                public readonly int c;
+                public readonly float4 d;
+
+                public void Execute()
+                {
+                }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<ExcedeedComputeShaderDispatchDataSizeAnalyzer>.VerifyAnalyzerAsync(source);
+    }
+
+    [TestMethod]
+    public async Task ExceededDispatchDataSize_ConstantBufferTooLarge_WithManyResources_Warns()
+    {
+        const string source = """
+            using ComputeSharp;
+            using float4x4 = ComputeSharp.Float4x4;
+            using float4 = ComputeSharp.Float4;
+
+            public struct Data0
+            {
+                public float4x4 m0;
+                public float4 v0;
+                public float4 v1;
+                public float4 v2;
+                public float s0;
+                public float s1;
+                public float s2;
+                public float s3;
+            }
+
+            internal partial struct {|CMPS0041:MyType|}(Data0 data0) : IComputeShader
+            {
+                ReadWriteBuffer<float> result0;
+                ReadWriteBuffer<float> result1;
+                ReadWriteBuffer<float> result2;
+                ReadWriteBuffer<float> result3;
+                ReadWriteBuffer<float> result4;
+                ReadWriteBuffer<float> result5;
+                ReadWriteBuffer<float> result6;
+                ReadWriteBuffer<float> result7;
+                ReadWriteBuffer<float> result8;
+                ReadWriteBuffer<float> result9;
+                ReadWriteBuffer<float> result10;
+                ReadWriteBuffer<float> result11;
+                ReadWriteBuffer<float> result12;
+                ReadWriteBuffer<float> result13;
+                ReadWriteBuffer<float> result14;
+                ReadWriteBuffer<float> result15;
+                ReadWriteBuffer<float> result16;
+                ReadWriteBuffer<float> result17;
+                ReadWriteBuffer<float> result18;
+                ReadWriteBuffer<float> result19;
+                ReadWriteBuffer<float> result20;
+                ReadWriteBuffer<float> result21;
+                ReadWriteBuffer<float> result22;
+                ReadWriteBuffer<float> result23;
+                ReadWriteBuffer<float> result24;
+                ReadWriteBuffer<float> result25;
+                ReadWriteBuffer<float> result26;
+                ReadWriteBuffer<float> result27;
+                ReadWriteBuffer<float> result28;
+                ReadWriteBuffer<float> result29;
+                ReadWriteBuffer<float> result30;
+                ReadWriteBuffer<float> result31;
+
+                public void Execute()
+                {
+                    result0[ThreadIds.X] = data0.s0;
+                }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<ExcedeedComputeShaderDispatchDataSizeAnalyzer>.VerifyAnalyzerAsync(source);
+    }
 }
