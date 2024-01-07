@@ -35,23 +35,26 @@ public sealed partial class D2DPixelShaderSourceGenerator : IIncrementalGenerato
                     MethodDeclarationSyntax methodDeclaration = (MethodDeclarationSyntax)context.TargetNode;
                     IMethodSymbol methodSymbol = (IMethodSymbol)context.TargetSymbol;
 
-                    using ImmutableArrayBuilder<DiagnosticInfo> diagnostics = new();
-
                     // Get the remaining info for the current shader
                     ImmutableArray<ushort> modifiers = methodDeclaration.Modifiers.Select(token => (ushort)token.Kind()).ToImmutableArray();
                     string methodName = methodSymbol.Name;
-                    string? invalidReturnType = Execute.GetInvalidReturnType(diagnostics, methodSymbol);
-                    string hlslSource = Execute.GetHlslSource(diagnostics, methodSymbol);
-                    D2D1ShaderProfile shaderProfile = Execute.GetShaderProfile(diagnostics, methodSymbol);
-                    D2D1CompileOptions compileOptions = Execute.GetCompileOptions(diagnostics, methodSymbol);
-                    bool isCompilationEnabled = diagnostics.Count == 0;
+                    string? invalidReturnType = Execute.GetInvalidReturnType(methodSymbol);
+                    string? requestedHlslSource = Execute.GetHlslSource(methodSymbol);
+                    string effectiveHlslSource = requestedHlslSource ?? "";
+                    D2D1CompileOptions compileOptions = Execute.GetCompileOptions(methodSymbol);
+
+                    // For the shader profile, reuse the same logic as in D2D1PixelShaderDescriptorGenerator.
+                    // The only difference is that in this case, we also skip if the source is null.
+                    D2D1ShaderProfile? requestedShaderProfile = Execute.GetShaderProfile(methodSymbol);
+                    D2D1ShaderProfile effectiveShaderProfile = requestedShaderProfile ?? D2D1ShaderProfile.PixelShader50;
+                    bool isCompilationEnabled = requestedHlslSource is not null && requestedShaderProfile is not null;
 
                     token.ThrowIfCancellationRequested();
 
                     // Prepare the key to cache the bytecode (just like the main D2D1 generator)
                     HlslBytecodeInfoKey hlslInfoKey = new(
-                        hlslSource,
-                        shaderProfile,
+                        effectiveHlslSource,
+                        effectiveShaderProfile,
                         compileOptions,
                         isCompilationEnabled);
 
@@ -60,8 +63,8 @@ public sealed partial class D2DPixelShaderSourceGenerator : IIncrementalGenerato
 
                     token.ThrowIfCancellationRequested();
 
-                    // Append any diagnostic for the shader compilation
-                    Execute.GetInfoDiagnostics(methodSymbol, hlslInfo, diagnostics);
+                    // Get any diagnostics for the shader compilation
+                    ImmutableArray<DiagnosticInfo> diagnostics = Execute.GetInfoDiagnostics(methodSymbol, hlslInfo);
 
                     token.ThrowIfCancellationRequested();
 
@@ -77,7 +80,7 @@ public sealed partial class D2DPixelShaderSourceGenerator : IIncrementalGenerato
                         InvalidReturnType: invalidReturnType,
                         HlslInfoKey: hlslInfoKey,
                         HlslInfo: hlslInfo,
-                        Diagnostcs: diagnostics.ToImmutable());
+                        Diagnostcs: diagnostics);
                 })
             .WithTrackingName(WellKnownTrackingNames.Execute);
 

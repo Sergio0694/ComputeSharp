@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.CodeAnalysis;
 
 namespace ComputeSharp.SourceGeneration.Extensions;
@@ -31,9 +32,9 @@ internal static class AttributeDataExtensions
     /// <param name="index">The index of the argument to try to retrieve.</param>
     /// <param name="result">The resulting argument, if it was found.</param>
     /// <returns>Whether or not an argument of type <typeparamref name="T"/> at position <paramref name="index"/> was found.</returns>
-    public static bool TryGetConstructorArgument<T>(this AttributeData attributeData, int index, out T? result)
+    public static bool TryGetConstructorArgument<T>(this AttributeData attributeData, int index, [NotNullWhen(true)] out T? result)
     {
-        if (attributeData.ConstructorArguments.Length >= index + 1 &&
+        if (attributeData.ConstructorArguments.Length > index &&
             attributeData.ConstructorArguments[index].Value is T argument)
         {
             result = argument;
