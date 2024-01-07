@@ -109,7 +109,7 @@ public sealed partial class ComputeShaderDescriptorGenerator : IIncrementalGener
                     token.ThrowIfCancellationRequested();
 
                     // Get the compile options as well
-                    CompileOptions compileOptions = HlslBytecode.GetCompileOptions(diagnostics, typeSymbol);
+                    CompileOptions compileOptions = HlslBytecode.GetCompileOptions(typeSymbol);
 
                     token.ThrowIfCancellationRequested();
 

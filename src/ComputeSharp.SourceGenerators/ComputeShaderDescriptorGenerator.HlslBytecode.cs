@@ -1,6 +1,4 @@
 using ComputeSharp.SourceGeneration.Extensions;
-using ComputeSharp.SourceGeneration.Helpers;
-using ComputeSharp.SourceGeneration.Models;
 using Microsoft.CodeAnalysis;
 
 namespace ComputeSharp.SourceGenerators;
@@ -16,10 +14,9 @@ partial class ComputeShaderDescriptorGenerator
         /// <summary>
         /// Extracts the compile options for the current shader.
         /// </summary>
-        /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
         /// <param name="structDeclarationSymbol">The input <see cref="INamedTypeSymbol"/> instance to process.</param>
         /// <returns>The requested compile options to use to compile the shader, if present.</returns>
-        public static CompileOptions GetCompileOptions(ImmutableArrayBuilder<DiagnosticInfo> diagnostics, INamedTypeSymbol structDeclarationSymbol)
+        public static CompileOptions GetCompileOptions(INamedTypeSymbol structDeclarationSymbol)
         {
             // If a [CompileOptions] annotation is present, return the explicit options
             if (structDeclarationSymbol.TryGetAttributeWithFullyQualifiedMetadataName("ComputeSharp.CompileOptionsAttribute", out AttributeData? attributeData) ||
