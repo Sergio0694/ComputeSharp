@@ -59,8 +59,6 @@ public sealed partial class ComputeShaderDescriptorGenerator : IIncrementalGener
                         return default;
                     }
 
-                    using ImmutableArrayBuilder<DiagnosticInfo> diagnostics = new();
-
                     // Get the fields info
                     ConstantBuffer.GetInfo(
                         context.SemanticModel.Compilation,
@@ -81,6 +79,13 @@ public sealed partial class ComputeShaderDescriptorGenerator : IIncrementalGener
 
                     token.ThrowIfCancellationRequested();
 
+                    // Get the compile options as well
+                    CompileOptions compileOptions = HlslBytecode.GetCompileOptions(typeSymbol);
+
+                    token.ThrowIfCancellationRequested();
+
+                    using ImmutableArrayBuilder<DiagnosticInfo> diagnostics = new();
+
                     // Transpiled HLSL source info
                     HlslSource.GetInfo(
                         diagnostics,
@@ -96,18 +101,13 @@ public sealed partial class ComputeShaderDescriptorGenerator : IIncrementalGener
 
                     token.ThrowIfCancellationRequested();
 
-                    // Get the resources info
+                    // Get the resources info (we must do this after crawling the HLSL source)
                     Resources.GetInfo(
                         context.SemanticModel.Compilation,
                         typeSymbol,
                         isImplicitTextureUsed,
                         out ImmutableArray<ResourceInfo> resourceInfo,
                         out ImmutableArray<ResourceDescriptor> resourceDescriptors);
-
-                    token.ThrowIfCancellationRequested();
-
-                    // Get the compile options as well
-                    CompileOptions compileOptions = HlslBytecode.GetCompileOptions(typeSymbol);
 
                     token.ThrowIfCancellationRequested();
 
