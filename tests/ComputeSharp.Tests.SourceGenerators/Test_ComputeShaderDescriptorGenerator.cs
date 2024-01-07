@@ -867,6 +867,7 @@ public class Test_ComputeShaderDescriptorGenerator
         await CSharpAnalyzerWithLanguageVersionTest<InvalidGeneratedComputeShaderDescriptorAttributeTargetAnalyzer>.VerifyAnalyzerAsync(source);
         await CSharpAnalyzerWithLanguageVersionTest<InvalidGloballyCoherentFieldDeclarationAnalyzer>.VerifyAnalyzerAsync(source);
         await CSharpAnalyzerWithLanguageVersionTest<InvalidGroupSharedFieldDeclarationAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerWithLanguageVersionTest<InvalidThreadGroupSizeAttributeUseAnalyzer>.VerifyAnalyzerAsync(source);
         await CSharpAnalyzerWithLanguageVersionTest<MissingAllowUnsafeBlocksCompilationOptionAnalyzer>.VerifyAnalyzerAsync(source);
         await CSharpAnalyzerWithLanguageVersionTest<MissingComputeShaderDescriptorOnComputeShaderAnalyzer>.VerifyAnalyzerAsync(source);
         await CSharpAnalyzerWithLanguageVersionTest<MultipleComputeShaderInterfacesOnShaderTypeAnalyzer>.VerifyAnalyzerAsync(source);

@@ -6,7 +6,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace ComputeSharp.Tests.SourceGenerators;
 
 [TestClass]
-public class Test_Analyzers
+public class Test_ComputeShaderDescriptorGenerator_Analyzers
 {
     [TestMethod]
     public async Task MissingComputeShaderDescriptor_ComputeShader()
@@ -412,5 +412,137 @@ public class Test_Analyzers
             """;
 
         await CSharpAnalyzerWithLanguageVersionTest<MultipleComputeShaderInterfacesOnShaderTypeAnalyzer>.VerifyAnalyzerAsync(source);
+    }
+
+    [TestMethod]
+    public async Task MissingThreadGroupSizeAttribute_MissingAttribute_Warns()
+    {
+        const string source = """
+            using ComputeSharp;
+
+            internal partial struct {|CMPS0047:MyType|} : IComputeShader
+            {
+                public void Execute()
+                {
+                }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<InvalidThreadGroupSizeAttributeUseAnalyzer>.VerifyAnalyzerAsync(source);
+    }
+
+    [TestMethod]
+    public async Task MissingThreadGroupSizeAttribute_AttributePresent_DoesNotWarn()
+    {
+        const string source = """
+            using ComputeSharp;
+
+            [ThreadGroupSize(8, 8, 8)]
+            internal partial struct MyType : IComputeShader
+            {
+                public void Execute()
+                {
+                }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<InvalidThreadGroupSizeAttributeUseAnalyzer>.VerifyAnalyzerAsync(source);
+    }
+
+    [TestMethod]
+    public async Task InvalidThreadGroupSizeAttributeDefaultThreadGroupSizes_Default_Warns()
+    {
+        const string source = """
+            using ComputeSharp;
+
+            [{|CMPS0048:ThreadGroupSize(default(DefaultThreadGroupSizes))|}]
+            internal partial struct MyType : IComputeShader
+            {
+                public void Execute()
+                {
+                }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<InvalidThreadGroupSizeAttributeUseAnalyzer>.VerifyAnalyzerAsync(source);
+    }
+
+    [TestMethod]
+    public async Task InvalidThreadGroupSizeAttributeDefaultThreadGroupSizes_OutOfRange_Warns()
+    {
+        const string source = """
+            using ComputeSharp;
+
+            [{|CMPS0048:ThreadGroupSize((DefaultThreadGroupSizes)1234)|}]
+            internal partial struct MyType : IComputeShader
+            {
+                public void Execute()
+                {
+                }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<InvalidThreadGroupSizeAttributeUseAnalyzer>.VerifyAnalyzerAsync(source);
+    }
+
+    [TestMethod]
+    public async Task InvalidThreadGroupSizeAttributeDefaultThreadGroupSizes_Valid_DoesNotWarn()
+    {
+        const string source = """
+            using ComputeSharp;
+
+            [ThreadGroupSize(DefaultThreadGroupSizes.XY)]
+            internal partial struct MyType : IComputeShader
+            {
+                public void Execute()
+                {
+                }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<InvalidThreadGroupSizeAttributeUseAnalyzer>.VerifyAnalyzerAsync(source);
+    }
+
+    [TestMethod]
+    [DataRow(-1, 1, 1)]
+    [DataRow(1, -1, 1)]
+    [DataRow(1, 1, -1)]
+    [DataRow(1050, 1, 1)]
+    [DataRow(1, 1050, 1)]
+    [DataRow(1, 1, 70)]
+    [DataRow(0, 123456, -12)]
+    public async Task InvalidThreadGroupSizeAttributeValues_OutOfRange_Warns(int threadsX, int threadsY, int threadsZ)
+    {
+        string source = $$"""
+            using ComputeSharp;
+
+            [{|CMPS0044:ThreadGroupSize({{threadsX}}, {{threadsY}}, {{threadsZ}})|}]
+            internal partial struct MyType : IComputeShader
+            {
+                public void Execute()
+                {
+                }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<InvalidThreadGroupSizeAttributeUseAnalyzer>.VerifyAnalyzerAsync(source);
+    }
+
+    [TestMethod]
+    public async Task InvalidThreadGroupSizeAttributeValues_Valid_DoesNotWarn()
+    {
+        const string source = """
+            using ComputeSharp;
+
+            [ThreadGroupSize(8, 8, 8)]
+            internal partial struct MyType : IComputeShader
+            {
+                public void Execute()
+                {
+                }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<InvalidThreadGroupSizeAttributeUseAnalyzer>.VerifyAnalyzerAsync(source);
     }
 }
