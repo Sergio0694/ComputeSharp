@@ -36,11 +36,11 @@
     -->
     <Otherwise>
       <PropertyGroup>
-        <WinPixEventRuntimeVersion>winpixeventruntime.1.0.230302001</WinPixEventRuntimeVersion>
+        <WinPixEventRuntimeVersion>winpixeventruntime.1.0.231030001</WinPixEventRuntimeVersion>
 
         <!--
           This ignores the following warning:
-          "NU5100: the assembly 'winpixeventruntime.1.0.230302001\x64\WinPixEventRuntime.dll' is not inside the 'lib' folder and hence it won't
+          "NU5100: the assembly 'winpixeventruntime.1.0.231030001\x64\WinPixEventRuntime.dll' is not inside the 'lib' folder and hence it won't
           be added as a reference when the package is installed into a project. Move it into the 'lib' folder if it needs to be referenced."
           This is by design: we're copying the PIX assemblies into a separate folder and then unpacking them from the bundled .targets file.
         -->

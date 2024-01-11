@@ -7,7 +7,7 @@
     <PropertyGroup>
 
       <!-- PIX version (this needs to be kept in sync with the one in the .csproj) -->
-      <ComputeSharpPixWinPixEventRuntimeVersion>winpixeventruntime.1.0.230302001</ComputeSharpPixWinPixEventRuntimeVersion>
+      <ComputeSharpPixWinPixEventRuntimeVersion>winpixeventruntime.1.0.231030001</ComputeSharpPixWinPixEventRuntimeVersion>
 
       <!-- Detect whether the target project is UWP-->
       <ComputeSharpPixShouldUnpackUapPixNativeLibraries>false</ComputeSharpPixShouldUnpackUapPixNativeLibraries>
