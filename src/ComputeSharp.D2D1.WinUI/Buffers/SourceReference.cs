@@ -41,7 +41,7 @@ namespace ComputeSharp.D2D1.WinUI.Buffers;
 internal unsafe struct SourceReference : IDisposable
 {
     /// <summary>
-    /// The <see cref="ID2D1Image"/> produced by calling <see cref="ICanvasImageInterop.Interface.GetD2DImage"/>
+    /// The <see cref="ID2D1Image"/> produced by calling <see cref="ICanvasImageInterop.GetD2DImage"/>
     /// on the input managed wrapper used as source for the effect (ie. <see cref="graphicsEffectSourceWrapper"/>).
     /// </summary>
     private ComPtr<ID2D1Image> d2D1ImageSource;

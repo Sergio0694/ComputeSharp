@@ -3,7 +3,7 @@ using System;
 namespace ABI.Microsoft.Graphics.Canvas;
 
 /// <summary>
-/// Options for fine-tuning the behavior of <see cref="ICanvasImageInterop.Interface.GetD2DImage"/>.
+/// Options for fine-tuning the behavior of <see cref="ICanvasImageInterop.GetD2DImage"/>.
 /// </summary>
 [Flags]
 internal enum WIN2D_GET_D2D_IMAGE_FLAGS : uint
