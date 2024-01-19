@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using ABI.Microsoft.Graphics.Canvas;
 using Microsoft.Graphics.Canvas;
 
 namespace ComputeSharp.D2D1.WinUI;
@@ -9,7 +8,7 @@ namespace ComputeSharp.D2D1.WinUI;
 /// <summary>
 /// A base type to implement packaged and easy to use <see cref="ICanvasImage"/>-based effects that can be used with Win2D.
 /// </summary>
-public abstract partial class CanvasEffect : ICanvasImage, ICanvasImageInterop.Interface
+public abstract partial class CanvasEffect : ICanvasImage, ICanvasImageInterop
 {
     /// <summary>
     /// The mapping of registered transform nodes for the current effect graph.

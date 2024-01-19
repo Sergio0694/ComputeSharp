@@ -3,7 +3,7 @@ using System;
 namespace ABI.Microsoft.Graphics.Canvas;
 
 /// <summary>
-/// Options for fine-tuning the behavior of <see cref="ICanvasImageInterop.Interface.GetDevice"/>.
+/// Options for fine-tuning the behavior of <see cref="ICanvasImageInterop.GetDevice"/>.
 /// </summary>
 [Flags]
 internal enum WIN2D_GET_DEVICE_ASSOCIATION_TYPE : uint
