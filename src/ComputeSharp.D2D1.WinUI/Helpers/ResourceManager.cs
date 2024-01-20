@@ -9,6 +9,7 @@ using WinRT;
 namespace ComputeSharp.D2D1.WinUI.Helpers;
 
 using CanvasDevice = Microsoft.Graphics.Canvas.CanvasDevice;
+using ICanvasEffectFactoryNative = Microsoft.Graphics.Canvas.ICanvasEffectFactoryNative;
 using IInspectable = Win32.IInspectable;
 
 /// <summary>
@@ -86,13 +87,13 @@ internal static unsafe class ResourceManager
     /// </summary>
     /// <param name="effectId">The id of the effects to register a factory for.</param>
     /// <param name="factory">The input factory to create wrappers of native effects.</param>
-    public static void RegisterEffectFactory(Guid effectId, ICanvasEffectFactoryNative.Interface factory)
+    public static void RegisterEffectFactory(Guid effectId, ICanvasEffectFactoryNative factory)
     {
         using ComPtr<ICanvasFactoryNative> canvasFactoryNative = default;
 
         GetActivationFactory(canvasFactoryNative.GetAddressOf());
 
-        using ComPtr<ICanvasEffectFactoryNative> canvasEffectFactoryNative = default;
+        using ComPtr<ABI.Microsoft.Graphics.Canvas.ICanvasEffectFactoryNative> canvasEffectFactoryNative = default;
 
         RcwMarshaller.GetNativeInterface(factory, canvasEffectFactoryNative.GetAddressOf()).Assert();
 
