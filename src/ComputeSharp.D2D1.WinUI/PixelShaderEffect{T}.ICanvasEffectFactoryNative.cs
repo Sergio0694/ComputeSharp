@@ -5,6 +5,7 @@ using ComputeSharp.D2D1.Extensions;
 using ComputeSharp.D2D1.WinUI.Extensions;
 using ComputeSharp.D2D1.WinUI.Helpers;
 using ComputeSharp.Win32;
+using ICanvasEffectFactoryNative = Microsoft.Graphics.Canvas.ICanvasEffectFactoryNative;
 
 namespace ComputeSharp.D2D1.WinUI;
 
@@ -74,10 +75,10 @@ unsafe partial class PixelShaderEffect<T>
     /// <summary>
     /// A managed implementation of <see cref="ICanvasEffectFactoryNative"/> for <see cref="PixelShaderEffect{T}"/>.
     /// </summary>
-    private sealed class EffectFactory : ICanvasEffectFactoryNative.Interface
+    private sealed class EffectFactory : ICanvasEffectFactoryNative
     {
         /// <inheritdoc/>
-        int ICanvasEffectFactoryNative.Interface.CreateWrapper(ICanvasDevice* device, ID2D1Effect* resource, float dpi, IInspectable** wrapper)
+        int ICanvasEffectFactoryNative.CreateWrapper(ICanvasDevice* device, ID2D1Effect* resource, float dpi, IInspectable** wrapper)
         {
             PixelShaderEffect<T> @this;
 
