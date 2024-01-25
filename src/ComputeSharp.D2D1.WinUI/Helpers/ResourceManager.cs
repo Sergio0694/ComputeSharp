@@ -107,12 +107,14 @@ internal static unsafe class ResourceManager
     /// <param name="factoryNative">A pointer to the resulting activation factory.</param>
     private static void GetActivationFactory(ICanvasFactoryNative** factoryNative)
     {
-        // On WinUI 3, the types are not guaranteed to be registered for activation. Additionally,
-        // for concistency with other types, we just use the built-in T.As<I>() method, which will
+        const string ActivatableClassId = "Microsoft.Graphics.Canvas.CanvasDevice";
+
+        // On WinUI 3, the types are not guaranteed to be registered for activation. Additionally, for
+        // concistency with other types, we just use the built-in ActivationFactory type, which will
         // automatically handle fallback logic to resolve types to activate if they're not registered.
         // For instance, this will ensure the following call will work fine in unpackaged apps.
-        ICanvasFactoryNative.Interface canvasDeviceActivationFactory = CanvasDevice.As<ICanvasFactoryNative.Interface>();
+        using IObjectReference canvasDeviceActivationFactory = ActivationFactory.Get(ActivatableClassId, *ICanvasFactoryNative.IID);
 
-        *factoryNative = (ICanvasFactoryNative*)MarshalInterface<ICanvasFactoryNative.Interface>.FromManaged(canvasDeviceActivationFactory);
+        *factoryNative = (ICanvasFactoryNative*)canvasDeviceActivationFactory.GetRef();
     }
 }
