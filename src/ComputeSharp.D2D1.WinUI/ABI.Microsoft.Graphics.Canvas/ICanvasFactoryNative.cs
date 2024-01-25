@@ -2,11 +2,8 @@ using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using ComputeSharp.Win32;
-using WinRT;
-using WinRT.Interop;
-using IInspectable = ComputeSharp.Win32.IInspectable;
 
-#pragma warning disable CS0649, IDE1006
+#pragma warning disable CS0649, IDE0055, IDE1006
 
 namespace ABI.Microsoft.Graphics.Canvas;
 
@@ -15,8 +12,32 @@ namespace ABI.Microsoft.Graphics.Canvas;
 /// </summary>
 [NativeTypeName("class ICanvasFactoryNative : public IInspectable")]
 [NativeInheritance("IInspectable")]
-internal unsafe struct ICanvasFactoryNative
+internal unsafe struct ICanvasFactoryNative : IComObject
 {
+    /// <inheritdoc/>
+    public static Guid* IID
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get
+        {
+            ReadOnlySpan<byte> data =
+            [
+                0x0D, 0x44, 0x5C, 0x69,
+                0xB3, 0x04,
+                0xDD, 0x4E,
+                0xBF, 0xD9,
+                0x63,
+                0xE5,
+                0x1E,
+                0x9F,
+                0x72,
+                0x02
+            ];
+
+            return (Guid*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(data));
+        }
+    }
+
     public void** lpVtbl;
 
     /// <inheritdoc cref="IUnknown.QueryInterface"/>
@@ -143,26 +164,5 @@ internal unsafe struct ICanvasFactoryNative
         return ((delegate* unmanaged[MemberFunction]<ICanvasFactoryNative*, Guid*, int>)this.lpVtbl[10])(
             (ICanvasFactoryNative*)Unsafe.AsPointer(ref this),
             effectId);
-    }
-
-    /// <summary>
-    /// The managed interface for <see cref="ICanvasFactoryNative"/>.
-    /// </summary>
-    [Guid("695C440D-04B3-4EDD-BFD9-63E51E9F7202")]
-    [WindowsRuntimeType]
-    [WindowsRuntimeHelperType(typeof(Interface))]
-    public interface Interface
-    {
-        /// <summary>
-        /// The vtable type for <see cref="Interface"/>.
-        /// </summary>
-        [Guid("695C440D-04B3-4EDD-BFD9-63E51E9F7202")]
-        public readonly struct Vftbl
-        {
-            /// <summary>
-            /// Allows CsWinRT to retrieve a pointer to the projection vtable (the name is hardcoded by convention).
-            /// </summary>
-            public static readonly IntPtr AbiToProjectionVftablePtr = IUnknownVftbl.AbiToProjectionVftblPtr;
-        }
     }
 }
