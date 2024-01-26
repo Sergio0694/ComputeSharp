@@ -117,15 +117,11 @@ internal sealed class Win32Application
             using ComPtr<ICanvasFactoryNative> canvasFactoryNative = default;
 
             // Get the activation factory for CanvasDevice
-            using (ComPtr<IUnknown> canvasFactoryNativeUnknown = default)
+            using (IObjectReference canvasDeviceActivationFactory = ActivationFactory.Get(
+                typeName: "Microsoft.Graphics.Canvas.CanvasDevice",
+                iid: Windows.__uuidof<ICanvasFactoryNative>()))
             {
-                ICanvasFactoryNative.Interface canvasDeviceActivationFactory = CanvasDevice.As<ICanvasFactoryNative.Interface>();
-
-                canvasFactoryNativeUnknown.Attach((IUnknown*)MarshalInterface<ICanvasFactoryNative.Interface>.FromManaged(canvasDeviceActivationFactory));
-
-                hresult = canvasFactoryNativeUnknown.CopyTo(canvasFactoryNative.GetAddressOf());
-
-                ExceptionHelpers.ThrowExceptionForHR(hresult);
+                canvasFactoryNative.Attach((ICanvasFactoryNative*)canvasDeviceActivationFactory.GetRef());
             }
 
             // Create a Win2D wrapper for the swapchain
