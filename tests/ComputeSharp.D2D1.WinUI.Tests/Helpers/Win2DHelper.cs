@@ -4,7 +4,6 @@ using Microsoft.Graphics.Canvas;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 using WinRT;
-using WinRT.Interop;
 
 namespace ComputeSharp.D2D1.WinUI.Tests.Helpers;
 
@@ -21,20 +20,15 @@ internal static class Win2DHelper
     /// <returns>The resulting managed wrapper for <paramref name="d2D1Image"/>.</returns>
     public static unsafe object GetOrCreate(ID2D1Image* d2D1Image, CanvasDevice? canvasDevice = null)
     {
-        using ComPtr<IUnknown> activationFactoryUnknown = default;
-
-        ICanvasFactoryNative activationFactory = CanvasDevice.As<ICanvasFactoryNative>();
-
-        activationFactoryUnknown.Attach((IUnknown*)MarshalInterface<ICanvasFactoryNative>.FromManaged(activationFactory));
-
         using ComPtr<IUnknown> canvasFactoryNativeUnknown = default;
 
-        Guid uuidOfCanvasFactoryNativeUnknown = new("695C440D-04B3-4EDD-BFD9-63E51E9F7202");
-
-        //Get the ICanvasFactoryNative object
-        int hresult = activationFactoryUnknown.CopyTo(&uuidOfCanvasFactoryNativeUnknown, (void**)canvasFactoryNativeUnknown.GetAddressOf());
-
-        Marshal.ThrowExceptionForHR(hresult);
+        // Get the ICanvasFactoryNative object
+        using (IObjectReference canvasDeviceActivationFactory = ActivationFactory.Get(
+            typeName: "Microsoft.Graphics.Canvas.CanvasDevice",
+            iid: new Guid("695C440D-04B3-4EDD-BFD9-63E51E9F7202")))
+        {
+            canvasFactoryNativeUnknown.Attach((IUnknown*)canvasDeviceActivationFactory.GetRef());
+        }
 
         using ComPtr<IUnknown> canvasDeviceUnknown = default;
 
@@ -42,6 +36,8 @@ internal static class Win2DHelper
         {
             canvasDeviceUnknown.Attach((IUnknown*)MarshalInspectable<CanvasDevice>.FromManaged(canvasDevice));
         }
+
+        int hresult;
 
         using ComPtr<IUnknown> canvasDeviceInterfaceUnknown = default;
 
@@ -51,6 +47,8 @@ internal static class Win2DHelper
 
             // Get the ICanvasDevice object (as an IUnknown* as well)
             hresult = canvasDeviceUnknown.CopyTo(&uuidOfCanvasDeviceInterface, (void**)canvasDeviceInterfaceUnknown.GetAddressOf());
+
+            Marshal.ThrowExceptionForHR(hresult);
         }
 
         using ComPtr<IUnknown> wrapperUnknown = default;
@@ -114,26 +112,5 @@ internal static class Win2DHelper
             d2D1Image);
 
         Marshal.ThrowExceptionForHR(hresult);
-    }
-
-    /// <summary>
-    /// The managed interface for <see cref="ICanvasFactoryNative"/>.
-    /// </summary>
-    [Guid("695C440D-04B3-4EDD-BFD9-63E51E9F7202")]
-    [WindowsRuntimeType]
-    [WindowsRuntimeHelperType(typeof(ICanvasFactoryNative))]
-    public interface ICanvasFactoryNative
-    {
-        /// <summary>
-        /// The vtable type for <see cref="ICanvasFactoryNative"/>.
-        /// </summary>
-        [Guid("695C440D-04B3-4EDD-BFD9-63E51E9F7202")]
-        public readonly struct Vftbl
-        {
-            /// <summary>
-            /// Allows CsWinRT to retrieve a pointer to the projection vtable (the name is hardcoded by convention).
-            /// </summary>
-            public static readonly IntPtr AbiToProjectionVftablePtr = IUnknownVftbl.AbiToProjectionVftblPtr;
-        }
     }
 }
