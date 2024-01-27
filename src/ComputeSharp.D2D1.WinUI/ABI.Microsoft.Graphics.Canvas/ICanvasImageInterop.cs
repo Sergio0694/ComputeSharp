@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using ComputeSharp.Win32;
@@ -105,8 +106,14 @@ namespace ABI.Microsoft.Graphics.Canvas
     /// <summary>
     /// The ABI methods for <see cref="ICanvasImageInterop"/>.
     /// </summary>
+    /// <remarks>
+    /// This type has public accessibility to allow the AOT generator in CsWinRT to reference
+    /// the <see cref="IID"/> and <see cref="AbiToProjectionVftablePtr"/> properties to make
+    /// marshalling of CCW types AOT-safe. It is not meant to be used directly by developers.
+    /// </remarks>
     [Guid("E042D1F7-F9AD-4479-A713-67627EA31863")]
-    internal static unsafe class ICanvasImageInteropMethods
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static unsafe class ICanvasImageInteropMethods
     {
         /// <inheritdoc cref="ICanvasImageInterop.IID"/>
         public static Guid IID => *ICanvasImageInterop.IID;
