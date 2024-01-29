@@ -39,11 +39,6 @@
     <OptimizationPreference>Speed</OptimizationPreference>
   </PropertyGroup>
 
-  <!-- Also include the .rd.xml file to fix some NativeAOT issues with CsWinRT -->
-  <ItemGroup Condition="'$(COMPUTESHARP_SWAPCHAIN_D2D1_PUBLISH_AOT)' == 'true'">
-    <RdXmlFile Include="Properties\Default.rd.xml" />
-  </ItemGroup>
-
   <ItemGroup>
     <PackageReference Include="TerraFX.Interop.Windows" Version="10.0.22621.5" />
   </ItemGroup>
