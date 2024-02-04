@@ -31,7 +31,8 @@ internal static unsafe class RcwMarshaller
     /// <param name="managedObject">The input RCW instance to unwrap.</param>
     /// <param name="nativeObject">A pointer to the resulting native object to retrieve.</param>
     /// <remarks>This method should only be called with <typeparamref name="T"/> being a concrete projected type.</remarks>
-    public static void GetNativeObject<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.NonPublicConstructors)] T>(T managedObject, IInspectable** nativeObject)
+    [SuppressMessage("Trimming", "IL2091", Justification = "Private reflection on constructors is only needed when using 'FromAbi' to create RCWs.")]
+    public static void GetNativeObject<T>(T managedObject, IInspectable** nativeObject)
         where T : class
     {
         *nativeObject = (IInspectable*)MarshalInspectable<T>.FromManaged(managedObject);
