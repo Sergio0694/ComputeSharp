@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics.CodeAnalysis;
 using ABI.Microsoft.Graphics.Canvas;
 using ComputeSharp.D2D1.Extensions;
 using ComputeSharp.Win32;
@@ -52,7 +51,7 @@ internal static unsafe class ResourceManager
     /// </summary>
     /// <param name="resource">The input native resource to register a wrapper for.</param>
     /// <param name="wrapper">The wrapper to register for <paramref name="resource"/>.</param>
-    public static void RegisterWrapper<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.NonPublicConstructors)] T>(IUnknown* resource, T wrapper)
+    public static void RegisterWrapper<T>(IUnknown* resource, T wrapper)
         where T : class
     {
         using ComPtr<ICanvasFactoryNative> canvasFactoryNative = default;
