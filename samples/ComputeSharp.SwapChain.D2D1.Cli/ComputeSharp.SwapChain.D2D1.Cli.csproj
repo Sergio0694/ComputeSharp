@@ -12,6 +12,12 @@
 
   <PropertyGroup>
 
+    <!--
+      Generate a .pdb file to avoid IIDOptimizer build errors.
+      See: https://github.com/microsoft/CsWinRT/issues/1478.
+    -->
+    <DebugType>full</DebugType>
+
     <!-- Suppress warnings for using directives inside namespaces (needed to avoid some WinRT conflicts) -->
     <NoWarn>$(NoWarn);IDE0065</NoWarn>
 
@@ -44,6 +50,12 @@
 
   <ItemGroup>
     <PackageReference Include="TerraFX.Interop.Windows" Version="10.0.22621.6" />
+
+    <!--
+      Reference CsWinRT locally for the source generators (see comments in ComputeSharp.D2D1.WinUI).
+      Note that this is an executable and not a library, so we must drop the 'PrivateAssets' here.
+      -->
+    <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.0.6" />
   </ItemGroup>
 
   <!-- Note: using SetPlatform="Platform=AnyCPU" for the analyzers to avoid issues (see https://github.com/dotnet/roslyn/issues/70148) -->
