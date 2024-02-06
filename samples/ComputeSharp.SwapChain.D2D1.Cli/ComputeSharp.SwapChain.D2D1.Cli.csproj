@@ -8,6 +8,11 @@
     <RuntimeIdentifiers>win-x64;win-arm64</RuntimeIdentifiers>
     <AssemblyName>computesharp.d2d1.cli</AssemblyName>
     <ApplicationIcon>..\..\assets\icon.ico</ApplicationIcon>
+    <WindowsSdkPackageVersion>10.0.22621.30-preview.aot9.ni-release-svc-prod3</WindowsSdkPackageVersion>
+    <CsWinRTEnableDynamicObjectsSupport>false</CsWinRTEnableDynamicObjectsSupport>
+    <CsWinRTUseExceptionResourceKeys>true</CsWinRTUseExceptionResourceKeys>
+    <CsWinRTEnableDefaultCustomTypeMappings>false</CsWinRTEnableDefaultCustomTypeMappings>
+    <TrimmerSingleWarn>false</TrimmerSingleWarn>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -20,12 +25,6 @@
 
     <!-- Suppress warnings for using directives inside namespaces (needed to avoid some WinRT conflicts) -->
     <NoWarn>$(NoWarn);IDE0065</NoWarn>
-
-    <!-- Workaround for WinRT.TypeExtensions.GetAuthoringMetadataType(Type) trim warning (see https://github.com/microsoft/CsWinRT/issues/1319) -->
-    <NoWarn>$(NoWarn);IL2104;IL2026</NoWarn>
-
-    <!-- Workaround for WinRT.Runtime and System.Linq.Expressions producing trim warnings -->
-    <NoWarn>$(NoWarn);IL3053</NoWarn>
   </PropertyGroup>
 
   <!-- Options for R2R publishing -->
@@ -42,7 +41,10 @@
     <UseSystemResourceKeys>true</UseSystemResourceKeys>
     <InvariantGlobalization>true</InvariantGlobalization>
     <StackTraceSupport>false</StackTraceSupport>
-    <OptimizationPreference>Speed</OptimizationPreference>
+    <OptimizationPreference>Size</OptimizationPreference>
+    <IlcGenerateMstatFile>true</IlcGenerateMstatFile>
+    <IlcGenerateDgmlFile>true</IlcGenerateDgmlFile>
+    <IlcFoldIdenticalMethodBodies>true</IlcFoldIdenticalMethodBodies>
   </PropertyGroup>
 
   <ItemGroup>
@@ -52,7 +54,7 @@
       Reference CsWinRT locally for the source generators (see comments in ComputeSharp.D2D1.WinUI).
       Note that this is an executable and not a library, so we must drop the 'PrivateAssets' here.
       -->
-    <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.0.6" />
+    <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.0.5-prerelease.240202.23" />
   </ItemGroup>
 
   <!-- Note: using SetPlatform="Platform=AnyCPU" for the analyzers to avoid issues (see https://github.com/dotnet/roslyn/issues/70148) -->

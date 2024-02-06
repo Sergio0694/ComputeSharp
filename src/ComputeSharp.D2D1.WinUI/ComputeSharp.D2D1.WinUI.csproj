@@ -4,6 +4,7 @@
     <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
     <Platforms>x64;ARM64</Platforms>
     <RuntimeIdentifiers>win-x64;win-arm64</RuntimeIdentifiers>
+    <WindowsSdkPackageVersion>10.0.22621.30-preview.aot9.ni-release-svc-prod3</WindowsSdkPackageVersion>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -32,13 +33,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Graphics.Win2D" Version="1.1.1" />
+    <PackageReference Include="Microsoft.Graphics.Win2D" Version="1.1.1-1.1.1-local2" />
 
     <!--
       We need the CsWinRT reference for the generator to kick in and generate all necessary supporting code
       to make the exposed types AOT compatible. Since we only need the generator, we can mark this as private.
     -->
-    <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.0.6" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.0.5-prerelease.240202.23" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>
