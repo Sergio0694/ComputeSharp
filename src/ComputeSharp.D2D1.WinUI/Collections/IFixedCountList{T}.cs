@@ -7,7 +7,7 @@ namespace ComputeSharp.D2D1.WinUI.Collections;
 /// An interface for a list with a fixed collection.
 /// </summary>
 /// <typeparam name="T">The type of elements in the list.</typeparam>
-interface IFixedCountList<T>
+internal interface IFixedCountList<T>
 {
     /// <summary>
     /// Gets the collection of valid indices for the current effect.
