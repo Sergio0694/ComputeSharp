@@ -79,10 +79,7 @@ public readonly struct Luid : IEquatable<Luid>, ISpanFormattable
     /// <param name="b">The second <see cref="Luid"/> value to compare.</param>
     /// <returns>Whether <paramref name="a"/> and <paramref name="b"/> are the same.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool operator ==(Luid a, Luid b)
-    {
-        return a.Equals(b);
-    }
+    public static bool operator ==(Luid a, Luid b) => a.Equals(b);
 
     /// <summary>
     /// Check whether two <see cref="Luid"/> values are different.
@@ -91,8 +88,5 @@ public readonly struct Luid : IEquatable<Luid>, ISpanFormattable
     /// <param name="b">The second <see cref="Luid"/> value to compare.</param>
     /// <returns>Whether <paramref name="a"/> and <paramref name="b"/> are different.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool operator !=(Luid a, Luid b)
-    {
-        return !a.Equals(b);
-    }
+    public static bool operator !=(Luid a, Luid b) => !a.Equals(b);
 }

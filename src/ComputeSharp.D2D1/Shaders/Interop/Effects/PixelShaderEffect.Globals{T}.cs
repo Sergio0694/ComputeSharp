@@ -26,21 +26,13 @@ internal unsafe partial struct PixelShaderEffect
     /// <summary>
     /// A base type with global values for pixel shader effects.
     /// </summary>
-    public abstract class Globals
+    /// <param name="effectFactory">The <see cref="FactoryDelegate"/> wrapper for the shader factory.</param>
+    public abstract class Globals(FactoryDelegate effectFactory)
     {
         /// <summary>
         /// Gets the <see cref="FactoryDelegate"/> wrapper for the shader factory.
         /// </summary>
-        private readonly FactoryDelegate effectFactory;
-
-        /// <summary>
-        /// Creates a new <see cref="Globals"/> instance with the specified parameters.
-        /// </summary>
-        /// <param name="effectFactory">The <see cref="FactoryDelegate"/> wrapper for the shader factory.</param>
-        protected Globals(FactoryDelegate effectFactory)
-        {
-            this.effectFactory = effectFactory;
-        }
+        private readonly FactoryDelegate effectFactory = effectFactory;
 
         /// <inheritdoc cref="ID2D1PixelShaderDescriptor{T}.EffectId"/>
         public abstract ref readonly Guid EffectId { get; }
