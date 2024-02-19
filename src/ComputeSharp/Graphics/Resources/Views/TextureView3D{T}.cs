@@ -418,10 +418,7 @@ public readonly unsafe ref struct TextureView3D<T>
     /// <param name="left">The first <see cref="TextureView3D{T}"/> instance to compare.</param>
     /// <param name="right">The second <see cref="TextureView3D{T}"/> instance to compare.</param>
     /// <returns>Whether or not <paramref name="left"/> and <paramref name="right"/> are equal.</returns>
-    public static bool operator ==(TextureView3D<T> left, TextureView3D<T> right)
-    {
-        return left.pointer == right.pointer;
-    }
+    public static bool operator ==(TextureView3D<T> left, TextureView3D<T> right) => left.pointer == right.pointer;
 
     /// <summary>
     /// Checks whether two <see cref="TextureView3D{T}"/> instances are not equal.
@@ -429,8 +426,5 @@ public readonly unsafe ref struct TextureView3D<T>
     /// <param name="left">The first <see cref="TextureView3D{T}"/> instance to compare.</param>
     /// <param name="right">The second <see cref="TextureView3D{T}"/> instance to compare.</param>
     /// <returns>Whether or not <paramref name="left"/> and <paramref name="right"/> are not equal.</returns>
-    public static bool operator !=(TextureView3D<T> left, TextureView3D<T> right)
-    {
-        return !(left == right);
-    }
+    public static bool operator !=(TextureView3D<T> left, TextureView3D<T> right) => !(left == right);
 }

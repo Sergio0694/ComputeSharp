@@ -20,7 +20,19 @@ namespace ComputeSharp.SourceGeneration.SyntaxRewriters;
 /// A base <see cref="CSharpSyntaxRewriter"/> type that processes C# source to convert to HLSL compliant code.
 /// This class contains only the shared logic for all derived HLSL source rewriters.
 /// </summary>
-internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
+/// <param name="semanticModel">The <see cref="Microsoft.CodeAnalysis.SemanticModel"/> instance for the target syntax tree.</param>
+/// <param name="discoveredTypes">The set of discovered custom types.</param>
+/// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
+/// <param name="staticFieldDefinitions">The collection of discovered static field definitions.</param>
+/// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
+/// <param name="token">The <see cref="System.Threading.CancellationToken"/> value for the current operation.</param>
+internal abstract partial class HlslSourceRewriter(
+    SemanticModelProvider semanticModel,
+    ICollection<INamedTypeSymbol> discoveredTypes,
+    IDictionary<IFieldSymbol, string> constantDefinitions,
+    IDictionary<IFieldSymbol, HlslStaticField> staticFieldDefinitions,
+    ImmutableArrayBuilder<DiagnosticInfo> diagnostics,
+    CancellationToken token) : CSharpSyntaxRewriter
 {
     /// <summary>
     /// An array with the <c>'.'</c> and <c>'E'</c> characters.
@@ -28,59 +40,34 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
     private static readonly char[] FloatLiteralSpecialCharacters = ['.', 'E'];
 
     /// <summary>
-    /// Creates a new <see cref="HlslSourceRewriter"/> instance with the specified parameters.
-    /// </summary>
-    /// <param name="semanticModel">The <see cref="Microsoft.CodeAnalysis.SemanticModel"/> instance for the target syntax tree.</param>
-    /// <param name="discoveredTypes">The set of discovered custom types.</param>
-    /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
-    /// <param name="staticFieldDefinitions">The collection of discovered static field definitions.</param>
-    /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
-    /// <param name="token">The <see cref="System.Threading.CancellationToken"/> value for the current operation.</param>
-    protected HlslSourceRewriter(
-        SemanticModelProvider semanticModel,
-        ICollection<INamedTypeSymbol> discoveredTypes,
-        IDictionary<IFieldSymbol, string> constantDefinitions,
-        IDictionary<IFieldSymbol, HlslStaticField> staticFieldDefinitions,
-        ImmutableArrayBuilder<DiagnosticInfo> diagnostics,
-        CancellationToken token)
-    {
-        SemanticModel = semanticModel;
-        DiscoveredTypes = discoveredTypes;
-        ConstantDefinitions = constantDefinitions;
-        StaticFieldDefinitions = staticFieldDefinitions;
-        Diagnostics = diagnostics;
-        CancellationToken = token;
-    }
-
-    /// <summary>
     /// Gets the <see cref="SemanticModelProvider"/> instance with semantic info on the target syntax tree.
     /// </summary>
-    protected SemanticModelProvider SemanticModel { get; }
+    protected SemanticModelProvider SemanticModel { get; } = semanticModel;
 
     /// <summary>
     /// Gets the collection of discovered custom types.
     /// </summary>
-    protected ICollection<INamedTypeSymbol> DiscoveredTypes { get; }
+    protected ICollection<INamedTypeSymbol> DiscoveredTypes { get; } = discoveredTypes;
 
     /// <summary>
     /// Gets the collection of discovered constant definitions.
     /// </summary>
-    protected IDictionary<IFieldSymbol, string> ConstantDefinitions { get; }
+    protected IDictionary<IFieldSymbol, string> ConstantDefinitions { get; } = constantDefinitions;
 
     /// <summary>
     /// Gets the collection of discovered static field definitions.
     /// </summary>
-    protected IDictionary<IFieldSymbol, HlslStaticField> StaticFieldDefinitions { get; }
+    protected IDictionary<IFieldSymbol, HlslStaticField> StaticFieldDefinitions { get; } = staticFieldDefinitions;
 
     /// <summary>
     /// Gets the collection of produced <see cref="DiagnosticInfo"/> instances.
     /// </summary>
-    protected ImmutableArrayBuilder<DiagnosticInfo> Diagnostics { get; }
+    protected ImmutableArrayBuilder<DiagnosticInfo> Diagnostics { get; } = diagnostics;
 
     /// <summary>
     /// Gets the <see cref="System.Threading.CancellationToken"/> value for the current operation.
     /// </summary>
-    protected CancellationToken CancellationToken { get; }
+    protected CancellationToken CancellationToken { get; } = token;
 
     /// <inheritdoc/>
     public sealed override SyntaxNode VisitCastExpression(CastExpressionSyntax node)

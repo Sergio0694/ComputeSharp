@@ -190,19 +190,13 @@ internal readonly struct EquatableArray<T>(ImmutableArray<T> array) : IEquatable
     /// Implicitly converts an <see cref="ImmutableArray{T}"/> to <see cref="EquatableArray{T}"/>.
     /// </summary>
     /// <returns>An <see cref="EquatableArray{T}"/> instance from a given <see cref="ImmutableArray{T}"/>.</returns>
-    public static implicit operator EquatableArray<T>(ImmutableArray<T> array)
-    {
-        return FromImmutableArray(array);
-    }
+    public static implicit operator EquatableArray<T>(ImmutableArray<T> array) => FromImmutableArray(array);
 
     /// <summary>
     /// Implicitly converts an <see cref="EquatableArray{T}"/> to <see cref="ImmutableArray{T}"/>.
     /// </summary>
     /// <returns>An <see cref="ImmutableArray{T}"/> instance from a given <see cref="EquatableArray{T}"/>.</returns>
-    public static implicit operator ImmutableArray<T>(EquatableArray<T> array)
-    {
-        return array.AsImmutableArray();
-    }
+    public static implicit operator ImmutableArray<T>(EquatableArray<T> array) => array.AsImmutableArray();
 
     /// <summary>
     /// Checks whether two <see cref="EquatableArray{T}"/> values are the same.
@@ -210,10 +204,7 @@ internal readonly struct EquatableArray<T>(ImmutableArray<T> array) : IEquatable
     /// <param name="left">The first <see cref="EquatableArray{T}"/> value.</param>
     /// <param name="right">The second <see cref="EquatableArray{T}"/> value.</param>
     /// <returns>Whether <paramref name="left"/> and <paramref name="right"/> are equal.</returns>
-    public static bool operator ==(EquatableArray<T> left, EquatableArray<T> right)
-    {
-        return left.Equals(right);
-    }
+    public static bool operator ==(EquatableArray<T> left, EquatableArray<T> right) => left.Equals(right);
 
     /// <summary>
     /// Checks whether two <see cref="EquatableArray{T}"/> values are not the same.
@@ -221,8 +212,5 @@ internal readonly struct EquatableArray<T>(ImmutableArray<T> array) : IEquatable
     /// <param name="left">The first <see cref="EquatableArray{T}"/> value.</param>
     /// <param name="right">The second <see cref="EquatableArray{T}"/> value.</param>
     /// <returns>Whether <paramref name="left"/> and <paramref name="right"/> are not equal.</returns>
-    public static bool operator !=(EquatableArray<T> left, EquatableArray<T> right)
-    {
-        return !left.Equals(right);
-    }
+    public static bool operator !=(EquatableArray<T> left, EquatableArray<T> right) => !left.Equals(right);
 }

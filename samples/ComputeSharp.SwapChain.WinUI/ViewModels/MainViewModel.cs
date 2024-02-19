@@ -84,8 +84,8 @@ public sealed partial class MainViewModel : ObservableObject
     /// <summary>
     /// Gets the collection of available compute shader.
     /// </summary>
-    public IReadOnlyList<ShaderRunnerViewModel> ComputeShaderOptions { get; } = new ShaderRunnerViewModel[]
-    {
+    public IReadOnlyList<ShaderRunnerViewModel> ComputeShaderOptions { get; } =
+    [
         new(
             nameof(ColorfulInfinity),
             new ShaderRunner<ColorfulInfinity>(static time => new((float)time.TotalSeconds)),
@@ -123,7 +123,7 @@ public sealed partial class MainViewModel : ObservableObject
             nameof(TerracedHills),
             new ShaderRunner<TerracedHills>(static time => new((float)time.TotalSeconds)),
             new PixelShaderEffect.For<SwapChain.Shaders.D2D1.TerracedHills>(static (time, width, height) => new((float)time.TotalSeconds, new int2(width, height)))),
-    };
+    ];
 
     /// <summary>
     /// Checks whether the resolution scale can currently be expliclty set.

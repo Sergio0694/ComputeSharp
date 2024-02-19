@@ -18,7 +18,7 @@ internal struct ImmutableHashSetBuilder<T> : IDisposable
     /// <summary>
     /// The shared <see cref="ObjectPool{T}"/> instance to share <see cref="HashSet{T}"/> objects.
     /// </summary>
-    private static readonly ObjectPool<HashSet<T>> SharedObjectPool = new(static () => new HashSet<T>());
+    private static readonly ObjectPool<HashSet<T>> SharedObjectPool = new(static () => []);
 
     /// <summary>
     /// The rented <see cref="HashSet{T}"/> instance to use.
