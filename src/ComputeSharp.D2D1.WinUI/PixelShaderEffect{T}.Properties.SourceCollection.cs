@@ -16,7 +16,8 @@ partial class PixelShaderEffect<T>
     /// <summary>
     /// Represents the collection of <see cref="IGraphicsEffectSource"/> sources in a <see cref="PixelShaderEffect{T}"/> instance.
     /// </summary>
-    public sealed class SourceCollection : IList<IGraphicsEffectSource?>, IReadOnlyList<IGraphicsEffectSource?>, IList, IFixedCountList<IGraphicsEffectSource?>
+    /// <remarks><inheritdoc cref="EffectFactory" path="/remarks/node()"/></remarks>
+    public sealed partial class SourceCollection : IList<IGraphicsEffectSource?>, IReadOnlyList<IGraphicsEffectSource?>, IList, IFixedCountList<IGraphicsEffectSource?>
     {
         /// <summary>
         /// The collection of valid resource texture indices for the current effect.

@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics.CodeAnalysis;
 using ABI.Microsoft.Graphics.Canvas;
 using ComputeSharp.D2D1.Extensions;
 using ComputeSharp.Win32;
@@ -9,6 +8,7 @@ using WinRT;
 namespace ComputeSharp.D2D1.WinUI.Helpers;
 
 using CanvasDevice = Microsoft.Graphics.Canvas.CanvasDevice;
+using ICanvasEffectFactoryNative = Microsoft.Graphics.Canvas.ICanvasEffectFactoryNative;
 using IInspectable = Win32.IInspectable;
 
 /// <summary>
@@ -51,7 +51,7 @@ internal static unsafe class ResourceManager
     /// </summary>
     /// <param name="resource">The input native resource to register a wrapper for.</param>
     /// <param name="wrapper">The wrapper to register for <paramref name="resource"/>.</param>
-    public static void RegisterWrapper<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.NonPublicConstructors | DynamicallyAccessedMemberTypes.Interfaces)] T>(IUnknown* resource, T wrapper)
+    public static void RegisterWrapper<T>(IUnknown* resource, T wrapper)
         where T : class
     {
         using ComPtr<ICanvasFactoryNative> canvasFactoryNative = default;
@@ -86,13 +86,13 @@ internal static unsafe class ResourceManager
     /// </summary>
     /// <param name="effectId">The id of the effects to register a factory for.</param>
     /// <param name="factory">The input factory to create wrappers of native effects.</param>
-    public static void RegisterEffectFactory(Guid effectId, ICanvasEffectFactoryNative.Interface factory)
+    public static void RegisterEffectFactory(Guid effectId, ICanvasEffectFactoryNative factory)
     {
         using ComPtr<ICanvasFactoryNative> canvasFactoryNative = default;
 
         GetActivationFactory(canvasFactoryNative.GetAddressOf());
 
-        using ComPtr<ICanvasEffectFactoryNative> canvasEffectFactoryNative = default;
+        using ComPtr<ABI.Microsoft.Graphics.Canvas.ICanvasEffectFactoryNative> canvasEffectFactoryNative = default;
 
         RcwMarshaller.GetNativeInterface(factory, canvasEffectFactoryNative.GetAddressOf()).Assert();
 
@@ -106,12 +106,14 @@ internal static unsafe class ResourceManager
     /// <param name="factoryNative">A pointer to the resulting activation factory.</param>
     private static void GetActivationFactory(ICanvasFactoryNative** factoryNative)
     {
-        // On WinUI 3, the types are not guaranteed to be registered for activation. Additionally,
-        // for concistency with other types, we just use the built-in T.As<I>() method, which will
+        const string ActivatableClassId = "Microsoft.Graphics.Canvas.CanvasDevice";
+
+        // On WinUI 3, the types are not guaranteed to be registered for activation. Additionally, for
+        // concistency with other types, we just use the built-in ActivationFactory type, which will
         // automatically handle fallback logic to resolve types to activate if they're not registered.
         // For instance, this will ensure the following call will work fine in unpackaged apps.
-        ICanvasFactoryNative.Interface canvasDeviceActivationFactory = CanvasDevice.As<ICanvasFactoryNative.Interface>();
+        using IObjectReference canvasDeviceActivationFactory = ActivationFactory.Get(ActivatableClassId, *ICanvasFactoryNative.IID);
 
-        *factoryNative = (ICanvasFactoryNative*)MarshalInterface<ICanvasFactoryNative.Interface>.FromManaged(canvasDeviceActivationFactory);
+        *factoryNative = (ICanvasFactoryNative*)canvasDeviceActivationFactory.GetRef();
     }
 }

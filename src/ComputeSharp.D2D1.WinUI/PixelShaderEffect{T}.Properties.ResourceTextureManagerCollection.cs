@@ -18,7 +18,8 @@ partial class PixelShaderEffect<T>
     /// <summary>
     /// Represents the collection of <see cref="D2D1ResourceTextureManager"/> objects in a <see cref="PixelShaderEffect{T}"/> instance.
     /// </summary>
-    public sealed class ResourceTextureManagerCollection : IList<D2D1ResourceTextureManager?>, IReadOnlyList<D2D1ResourceTextureManager?>, IList, IFixedCountList<D2D1ResourceTextureManager?>
+    /// <remarks><inheritdoc cref="EffectFactory" path="/remarks/node()"/></remarks>
+    public sealed partial class ResourceTextureManagerCollection : IList<D2D1ResourceTextureManager?>, IReadOnlyList<D2D1ResourceTextureManager?>, IList, IFixedCountList<D2D1ResourceTextureManager?>
     {
         /// <summary>
         /// The bitmask of valid indices for resource texture managers in the current shader type.

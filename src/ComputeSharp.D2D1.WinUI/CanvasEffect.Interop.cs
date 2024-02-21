@@ -7,6 +7,7 @@ using ComputeSharp.D2D1.WinUI.Helpers;
 using ComputeSharp.Win32;
 using Microsoft.Graphics.Canvas;
 using Windows.Foundation;
+using ICanvasImageInterop = Microsoft.Graphics.Canvas.ICanvasImageInterop;
 using ICanvasResourceCreator = Microsoft.Graphics.Canvas.ICanvasResourceCreator;
 
 namespace ComputeSharp.D2D1.WinUI;
@@ -27,9 +28,9 @@ partial class CanvasEffect
     }
 
     /// <inheritdoc/>
-    unsafe int ICanvasImageInterop.Interface.GetDevice(ICanvasDevice** device, WIN2D_GET_DEVICE_ASSOCIATION_TYPE* type)
+    unsafe int ICanvasImageInterop.GetDevice(ICanvasDevice** device, WIN2D_GET_DEVICE_ASSOCIATION_TYPE* type)
     {
-        using ComPtr<ICanvasImageInterop> canvasImageInterop = default;
+        using ComPtr<global::ABI.Microsoft.Graphics.Canvas.ICanvasImageInterop> canvasImageInterop = default;
 
         RcwMarshaller.GetNativeInterface(GetCanvasImage(), canvasImageInterop.GetAddressOf()).Assert();
 
@@ -37,7 +38,7 @@ partial class CanvasEffect
     }
 
     /// <inheritdoc/>
-    unsafe int ICanvasImageInterop.Interface.GetD2DImage(
+    unsafe int ICanvasImageInterop.GetD2DImage(
         ICanvasDevice* device,
         ID2D1DeviceContext* deviceContext,
         WIN2D_GET_D2D_IMAGE_FLAGS flags,
@@ -45,7 +46,7 @@ partial class CanvasEffect
         float* realizeDpi,
         ID2D1Image** ppImage)
     {
-        using ComPtr<ICanvasImageInterop> canvasImageInterop = default;
+        using ComPtr<global::ABI.Microsoft.Graphics.Canvas.ICanvasImageInterop> canvasImageInterop = default;
 
         RcwMarshaller.GetNativeInterface(GetCanvasImage(), canvasImageInterop.GetAddressOf()).Assert();
 

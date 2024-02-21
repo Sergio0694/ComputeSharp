@@ -5,11 +5,12 @@ using ComputeSharp.D2D1.Extensions;
 using ComputeSharp.D2D1.WinUI.Extensions;
 using ComputeSharp.D2D1.WinUI.Helpers;
 using ComputeSharp.Win32;
+using ICanvasEffectFactoryNative = Microsoft.Graphics.Canvas.ICanvasEffectFactoryNative;
 
 namespace ComputeSharp.D2D1.WinUI;
 
 /// <inheritdoc/>
-unsafe partial class PixelShaderEffect<T>
+partial class PixelShaderEffect<T>
 {
     /// <summary>
     /// A manager type to handle the effect factory registration logic for <see cref="ICanvasEffectFactoryNative"/>.
@@ -74,10 +75,14 @@ unsafe partial class PixelShaderEffect<T>
     /// <summary>
     /// A managed implementation of <see cref="ICanvasEffectFactoryNative"/> for <see cref="PixelShaderEffect{T}"/>.
     /// </summary>
-    private sealed class EffectFactory : ICanvasEffectFactoryNative.Interface
+    /// <remarks>
+    /// This type is partial even though there are no other explicit partial type declarations in the project, so the CsWinRT
+    /// generator can generate one using <see cref="WinRT.WinRTExposedTypeAttribute"/> and the precomputed vtable entries.
+    /// </remarks>
+    internal sealed unsafe partial class EffectFactory : ICanvasEffectFactoryNative
     {
         /// <inheritdoc/>
-        int ICanvasEffectFactoryNative.Interface.CreateWrapper(ICanvasDevice* device, ID2D1Effect* resource, float dpi, IInspectable** wrapper)
+        int ICanvasEffectFactoryNative.CreateWrapper(ICanvasDevice* device, ID2D1Effect* resource, float dpi, IInspectable** wrapper)
         {
             PixelShaderEffect<T> @this;
 

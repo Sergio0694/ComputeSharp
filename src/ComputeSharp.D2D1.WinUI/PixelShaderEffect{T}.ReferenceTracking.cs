@@ -43,7 +43,7 @@ partial class PixelShaderEffect<T>
     {
         // When the effect is disposed, we also unregister it from the resource manager cache. This
         // is analogous to what is done when manually unrealizing the effect (eg. when using a new
-        // device. Without this call, the resource manager would keep registered effects alive for
+        // device). Without this call, the resource manager would keep registered effects alive for
         // the entire process duration, even if their original wrappers are gone (ie. collected).
         if (this.d2D1Effect.Get() is not null)
         {
