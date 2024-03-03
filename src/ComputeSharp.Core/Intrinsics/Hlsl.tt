@@ -22,6 +22,8 @@ foreach (var intrinsic in Intrinsics)
 
         var summary = Regex.Replace(intrinsic.Summary, @"{keyword=(\w+)}", m => $"<see langword=\"{m.Groups[1].Value}\"/>");
 
+        summary = Regex.Replace(summary, @"{param=(\w+)}", m => $"<paramref name=\"{m.Groups[1].Value}\"/>");
+
         WriteLine("/// <summary>");
         WriteLine($"/// {summary}");
         WriteLine("/// </summary>");
