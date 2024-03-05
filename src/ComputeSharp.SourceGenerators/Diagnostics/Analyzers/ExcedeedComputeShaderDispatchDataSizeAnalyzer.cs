@@ -17,7 +17,7 @@ namespace ComputeSharp.SourceGenerators;
 public sealed class ExcedeedComputeShaderDispatchDataSizeAnalyzer : DiagnosticAnalyzer
 {
     /// <inheritdoc/>
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = ImmutableArray.Create(ShaderDispatchDataSizeExceeded);
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = [ShaderDispatchDataSizeExceeded];
 
     /// <inheritdoc/>
     public override void Initialize(AnalysisContext context)

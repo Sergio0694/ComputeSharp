@@ -14,7 +14,7 @@ namespace ComputeSharp.SourceGenerators;
 public sealed class MissingComputeShaderDescriptorOnComputeShaderAnalyzer : DiagnosticAnalyzer
 {
     /// <inheritdoc/>
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = ImmutableArray.Create(MissingComputeShaderDescriptorOnComputeShaderType);
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = [MissingComputeShaderDescriptorOnComputeShaderType];
 
     /// <inheritdoc/>
     public override void Initialize(AnalysisContext context)

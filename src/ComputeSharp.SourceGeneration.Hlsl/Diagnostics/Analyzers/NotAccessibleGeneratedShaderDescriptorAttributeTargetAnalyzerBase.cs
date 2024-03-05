@@ -15,7 +15,7 @@ public abstract class NotAccessibleGeneratedShaderDescriptorAttributeTargetAnaly
     string generatedShaderDescriptorFullyQualifiedTypeName) : DiagnosticAnalyzer
 {
     /// <inheritdoc/>
-    public sealed override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = ImmutableArray.Create(diagnosticDescriptor);
+    public sealed override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = [diagnosticDescriptor];
 
     /// <inheritdoc/>
     public sealed override void Initialize(AnalysisContext context)

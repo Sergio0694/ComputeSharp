@@ -14,7 +14,7 @@ namespace ComputeSharp.D2D1.SourceGenerators;
 public sealed class InvalidEffectIdValueAnalyzer : DiagnosticAnalyzer
 {
     /// <inheritdoc/>
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = ImmutableArray.Create(InvalidD2DEffectIdAttributeValue);
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = [InvalidD2DEffectIdAttributeValue];
 
     /// <inheritdoc/>
     public override void Initialize(AnalysisContext context)

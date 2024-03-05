@@ -50,7 +50,7 @@ public abstract class MissingAttributeCodeFixer : CodeFixProvider
         this.attributeFullyQualifiedMetadataName = attributeFullyQualifiedMetadataName;
         this.leadingAttributeFullyQualifiedMetadataNames = leadingAttributeFullyQualifiedMetadataNames;
 
-        FixableDiagnosticIds = ImmutableArray.Create(diagnosticId);
+        FixableDiagnosticIds = [diagnosticId];
     }
 
     /// <inheritdoc/>

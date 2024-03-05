@@ -14,7 +14,7 @@ namespace ComputeSharp.D2D1.SourceGenerators;
 public sealed class InvalidD2DResourceTextureIndexAttributeLocationAnalyzer : DiagnosticAnalyzer
 {
     /// <inheritdoc/>
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = ImmutableArray.Create(InvalidD2DResourceTextureIndexAttributeLocation);
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = [InvalidD2DResourceTextureIndexAttributeLocation];
 
     /// <inheritdoc/>
     public override void Initialize(AnalysisContext context)

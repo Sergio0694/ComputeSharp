@@ -13,7 +13,7 @@ namespace ComputeSharp.D2D1.SourceGenerators;
 public sealed class InvalidD2DGeneratedPixelShaderDescriptorAttributeTargetAnalyzer : DiagnosticAnalyzer
 {
     /// <inheritdoc/>
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = ImmutableArray.Create(InvalidD2DGeneratedPixelShaderDescriptorAttributeTarget);
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = [InvalidD2DGeneratedPixelShaderDescriptorAttributeTarget];
 
     /// <inheritdoc/>
     public override void Initialize(AnalysisContext context)

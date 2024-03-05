@@ -16,13 +16,15 @@ namespace ComputeSharp.D2D1.SourceGenerators;
 public sealed class InvalidShaderTypeInputsAnalyzer : DiagnosticAnalyzer
 {
     /// <inheritdoc/>
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = ImmutableArray.Create(
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } =
+    [
         MissingD2DInputCountAttribute,
         InvalidD2DInputCount,
         OutOfRangeInputIndex,
         RepeatedD2DInputSimpleIndices,
         RepeatedD2DInputComplexIndices,
-        InvalidSimpleAndComplexIndicesCombination);
+        InvalidSimpleAndComplexIndicesCombination,
+    ];
 
     /// <inheritdoc/>
     public override void Initialize(AnalysisContext context)

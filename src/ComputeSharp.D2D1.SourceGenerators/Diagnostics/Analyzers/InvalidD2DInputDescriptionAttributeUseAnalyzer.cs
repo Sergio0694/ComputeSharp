@@ -16,9 +16,7 @@ namespace ComputeSharp.D2D1.SourceGenerators;
 public sealed class InvalidD2DInputDescriptionAttributeUseAnalyzer : DiagnosticAnalyzer
 {
     /// <inheritdoc/>
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = ImmutableArray.Create(
-        OutOfRangeInputDescriptionIndex,
-        RepeatedD2DInputDescriptionIndices);
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = [OutOfRangeInputDescriptionIndex, RepeatedD2DInputDescriptionIndices];
 
     /// <inheritdoc/>
     public override void Initialize(AnalysisContext context)
