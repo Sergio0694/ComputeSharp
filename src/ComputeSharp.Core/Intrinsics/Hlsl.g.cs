@@ -7759,6 +7759,286 @@ partial class Hlsl
     public static Float4x4 Exp2(Float4x4 x) => default;
 
     /// <summary>
+    /// Flips the surface-normal (if needed) to face in a direction opposite to <paramref name="i"/>, returns the result in <paramref name="n"/>.
+    /// </summary>
+    /// <param name="n">The resulting floating-point surface-normal vector.</param>
+    /// <param name="i">A floating-point, incident vector that points from the view position to the shading position.</param>
+    /// <param name="ng">A floating-point surface-normal vector.</param>
+    /// <returns>A floating-point, surface normal vector that is facing the view direction.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-faceforward"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("faceforward")]
+    public static float FaceForward(float n, float i, float ng) => default;
+
+    /// <summary>
+    /// Flips the surface-normal (if needed) to face in a direction opposite to <paramref name="i"/>, returns the result in <paramref name="n"/>.
+    /// </summary>
+    /// <param name="n">The resulting floating-point surface-normal vector.</param>
+    /// <param name="i">A floating-point, incident vector that points from the view position to the shading position.</param>
+    /// <param name="ng">A floating-point surface-normal vector.</param>
+    /// <returns>A floating-point, surface normal vector that is facing the view direction.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-faceforward"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("faceforward")]
+    public static Float2 FaceForward(Float2 n, Float2 i, Float2 ng) => default;
+
+    /// <summary>
+    /// Flips the surface-normal (if needed) to face in a direction opposite to <paramref name="i"/>, returns the result in <paramref name="n"/>.
+    /// </summary>
+    /// <param name="n">The resulting floating-point surface-normal vector.</param>
+    /// <param name="i">A floating-point, incident vector that points from the view position to the shading position.</param>
+    /// <param name="ng">A floating-point surface-normal vector.</param>
+    /// <returns>A floating-point, surface normal vector that is facing the view direction.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-faceforward"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("faceforward")]
+    public static Float3 FaceForward(Float3 n, Float3 i, Float3 ng) => default;
+
+    /// <summary>
+    /// Flips the surface-normal (if needed) to face in a direction opposite to <paramref name="i"/>, returns the result in <paramref name="n"/>.
+    /// </summary>
+    /// <param name="n">The resulting floating-point surface-normal vector.</param>
+    /// <param name="i">A floating-point, incident vector that points from the view position to the shading position.</param>
+    /// <param name="ng">A floating-point surface-normal vector.</param>
+    /// <returns>A floating-point, surface normal vector that is facing the view direction.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-faceforward"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("faceforward")]
+    public static Float4 FaceForward(Float4 n, Float4 i, Float4 ng) => default;
+
+    /// <summary>
+    /// Flips the surface-normal (if needed) to face in a direction opposite to <paramref name="i"/>, returns the result in <paramref name="n"/>.
+    /// </summary>
+    /// <param name="n">The resulting floating-point surface-normal vector.</param>
+    /// <param name="i">A floating-point, incident vector that points from the view position to the shading position.</param>
+    /// <param name="ng">A floating-point surface-normal vector.</param>
+    /// <returns>A floating-point, surface normal vector that is facing the view direction.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-faceforward"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("faceforward")]
+    public static Float1x1 FaceForward(Float1x1 n, Float1x1 i, Float1x1 ng) => default;
+
+    /// <summary>
+    /// Flips the surface-normal (if needed) to face in a direction opposite to <paramref name="i"/>, returns the result in <paramref name="n"/>.
+    /// </summary>
+    /// <param name="n">The resulting floating-point surface-normal vector.</param>
+    /// <param name="i">A floating-point, incident vector that points from the view position to the shading position.</param>
+    /// <param name="ng">A floating-point surface-normal vector.</param>
+    /// <returns>A floating-point, surface normal vector that is facing the view direction.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-faceforward"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("faceforward")]
+    public static Float1x2 FaceForward(Float1x2 n, Float1x2 i, Float1x2 ng) => default;
+
+    /// <summary>
+    /// Flips the surface-normal (if needed) to face in a direction opposite to <paramref name="i"/>, returns the result in <paramref name="n"/>.
+    /// </summary>
+    /// <param name="n">The resulting floating-point surface-normal vector.</param>
+    /// <param name="i">A floating-point, incident vector that points from the view position to the shading position.</param>
+    /// <param name="ng">A floating-point surface-normal vector.</param>
+    /// <returns>A floating-point, surface normal vector that is facing the view direction.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-faceforward"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("faceforward")]
+    public static Float1x3 FaceForward(Float1x3 n, Float1x3 i, Float1x3 ng) => default;
+
+    /// <summary>
+    /// Flips the surface-normal (if needed) to face in a direction opposite to <paramref name="i"/>, returns the result in <paramref name="n"/>.
+    /// </summary>
+    /// <param name="n">The resulting floating-point surface-normal vector.</param>
+    /// <param name="i">A floating-point, incident vector that points from the view position to the shading position.</param>
+    /// <param name="ng">A floating-point surface-normal vector.</param>
+    /// <returns>A floating-point, surface normal vector that is facing the view direction.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-faceforward"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("faceforward")]
+    public static Float1x4 FaceForward(Float1x4 n, Float1x4 i, Float1x4 ng) => default;
+
+    /// <summary>
+    /// Flips the surface-normal (if needed) to face in a direction opposite to <paramref name="i"/>, returns the result in <paramref name="n"/>.
+    /// </summary>
+    /// <param name="n">The resulting floating-point surface-normal vector.</param>
+    /// <param name="i">A floating-point, incident vector that points from the view position to the shading position.</param>
+    /// <param name="ng">A floating-point surface-normal vector.</param>
+    /// <returns>A floating-point, surface normal vector that is facing the view direction.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-faceforward"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("faceforward")]
+    public static Float2x1 FaceForward(Float2x1 n, Float2x1 i, Float2x1 ng) => default;
+
+    /// <summary>
+    /// Flips the surface-normal (if needed) to face in a direction opposite to <paramref name="i"/>, returns the result in <paramref name="n"/>.
+    /// </summary>
+    /// <param name="n">The resulting floating-point surface-normal vector.</param>
+    /// <param name="i">A floating-point, incident vector that points from the view position to the shading position.</param>
+    /// <param name="ng">A floating-point surface-normal vector.</param>
+    /// <returns>A floating-point, surface normal vector that is facing the view direction.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-faceforward"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("faceforward")]
+    public static Float2x2 FaceForward(Float2x2 n, Float2x2 i, Float2x2 ng) => default;
+
+    /// <summary>
+    /// Flips the surface-normal (if needed) to face in a direction opposite to <paramref name="i"/>, returns the result in <paramref name="n"/>.
+    /// </summary>
+    /// <param name="n">The resulting floating-point surface-normal vector.</param>
+    /// <param name="i">A floating-point, incident vector that points from the view position to the shading position.</param>
+    /// <param name="ng">A floating-point surface-normal vector.</param>
+    /// <returns>A floating-point, surface normal vector that is facing the view direction.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-faceforward"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("faceforward")]
+    public static Float2x3 FaceForward(Float2x3 n, Float2x3 i, Float2x3 ng) => default;
+
+    /// <summary>
+    /// Flips the surface-normal (if needed) to face in a direction opposite to <paramref name="i"/>, returns the result in <paramref name="n"/>.
+    /// </summary>
+    /// <param name="n">The resulting floating-point surface-normal vector.</param>
+    /// <param name="i">A floating-point, incident vector that points from the view position to the shading position.</param>
+    /// <param name="ng">A floating-point surface-normal vector.</param>
+    /// <returns>A floating-point, surface normal vector that is facing the view direction.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-faceforward"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("faceforward")]
+    public static Float2x4 FaceForward(Float2x4 n, Float2x4 i, Float2x4 ng) => default;
+
+    /// <summary>
+    /// Flips the surface-normal (if needed) to face in a direction opposite to <paramref name="i"/>, returns the result in <paramref name="n"/>.
+    /// </summary>
+    /// <param name="n">The resulting floating-point surface-normal vector.</param>
+    /// <param name="i">A floating-point, incident vector that points from the view position to the shading position.</param>
+    /// <param name="ng">A floating-point surface-normal vector.</param>
+    /// <returns>A floating-point, surface normal vector that is facing the view direction.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-faceforward"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("faceforward")]
+    public static Float3x1 FaceForward(Float3x1 n, Float3x1 i, Float3x1 ng) => default;
+
+    /// <summary>
+    /// Flips the surface-normal (if needed) to face in a direction opposite to <paramref name="i"/>, returns the result in <paramref name="n"/>.
+    /// </summary>
+    /// <param name="n">The resulting floating-point surface-normal vector.</param>
+    /// <param name="i">A floating-point, incident vector that points from the view position to the shading position.</param>
+    /// <param name="ng">A floating-point surface-normal vector.</param>
+    /// <returns>A floating-point, surface normal vector that is facing the view direction.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-faceforward"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("faceforward")]
+    public static Float3x2 FaceForward(Float3x2 n, Float3x2 i, Float3x2 ng) => default;
+
+    /// <summary>
+    /// Flips the surface-normal (if needed) to face in a direction opposite to <paramref name="i"/>, returns the result in <paramref name="n"/>.
+    /// </summary>
+    /// <param name="n">The resulting floating-point surface-normal vector.</param>
+    /// <param name="i">A floating-point, incident vector that points from the view position to the shading position.</param>
+    /// <param name="ng">A floating-point surface-normal vector.</param>
+    /// <returns>A floating-point, surface normal vector that is facing the view direction.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-faceforward"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("faceforward")]
+    public static Float3x3 FaceForward(Float3x3 n, Float3x3 i, Float3x3 ng) => default;
+
+    /// <summary>
+    /// Flips the surface-normal (if needed) to face in a direction opposite to <paramref name="i"/>, returns the result in <paramref name="n"/>.
+    /// </summary>
+    /// <param name="n">The resulting floating-point surface-normal vector.</param>
+    /// <param name="i">A floating-point, incident vector that points from the view position to the shading position.</param>
+    /// <param name="ng">A floating-point surface-normal vector.</param>
+    /// <returns>A floating-point, surface normal vector that is facing the view direction.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-faceforward"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("faceforward")]
+    public static Float3x4 FaceForward(Float3x4 n, Float3x4 i, Float3x4 ng) => default;
+
+    /// <summary>
+    /// Flips the surface-normal (if needed) to face in a direction opposite to <paramref name="i"/>, returns the result in <paramref name="n"/>.
+    /// </summary>
+    /// <param name="n">The resulting floating-point surface-normal vector.</param>
+    /// <param name="i">A floating-point, incident vector that points from the view position to the shading position.</param>
+    /// <param name="ng">A floating-point surface-normal vector.</param>
+    /// <returns>A floating-point, surface normal vector that is facing the view direction.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-faceforward"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("faceforward")]
+    public static Float4x1 FaceForward(Float4x1 n, Float4x1 i, Float4x1 ng) => default;
+
+    /// <summary>
+    /// Flips the surface-normal (if needed) to face in a direction opposite to <paramref name="i"/>, returns the result in <paramref name="n"/>.
+    /// </summary>
+    /// <param name="n">The resulting floating-point surface-normal vector.</param>
+    /// <param name="i">A floating-point, incident vector that points from the view position to the shading position.</param>
+    /// <param name="ng">A floating-point surface-normal vector.</param>
+    /// <returns>A floating-point, surface normal vector that is facing the view direction.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-faceforward"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("faceforward")]
+    public static Float4x2 FaceForward(Float4x2 n, Float4x2 i, Float4x2 ng) => default;
+
+    /// <summary>
+    /// Flips the surface-normal (if needed) to face in a direction opposite to <paramref name="i"/>, returns the result in <paramref name="n"/>.
+    /// </summary>
+    /// <param name="n">The resulting floating-point surface-normal vector.</param>
+    /// <param name="i">A floating-point, incident vector that points from the view position to the shading position.</param>
+    /// <param name="ng">A floating-point surface-normal vector.</param>
+    /// <returns>A floating-point, surface normal vector that is facing the view direction.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-faceforward"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("faceforward")]
+    public static Float4x3 FaceForward(Float4x3 n, Float4x3 i, Float4x3 ng) => default;
+
+    /// <summary>
+    /// Flips the surface-normal (if needed) to face in a direction opposite to <paramref name="i"/>, returns the result in <paramref name="n"/>.
+    /// </summary>
+    /// <param name="n">The resulting floating-point surface-normal vector.</param>
+    /// <param name="i">A floating-point, incident vector that points from the view position to the shading position.</param>
+    /// <param name="ng">A floating-point surface-normal vector.</param>
+    /// <returns>A floating-point, surface normal vector that is facing the view direction.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-faceforward"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("faceforward")]
+    public static Float4x4 FaceForward(Float4x4 n, Float4x4 i, Float4x4 ng) => default;
+
+    /// <summary>
     /// Gets the location of the first set bit starting from the highest order bit and working downward, per component.
     /// </summary>
     /// <param name="value">The input value.</param>

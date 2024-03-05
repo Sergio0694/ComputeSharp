@@ -892,7 +892,7 @@ public partial class ShaderRewriterTests
     [AllDevices]
     public void MiscHlslIntrinsics(Device device)
     {
-        float[] data1 = [1, 2, 0.4f, 3.14f, 2.4f, 0.8f, 0, 0];
+        float[] data1 = [1, 2, 0.4f, 3.14f, 2.4f, 0.8f, 1.5f, -0.8f, 2.4f, 0.5f, 0.6f, -0.9f, 0, 0, 0, 0];
         int[] data2 = [111, 222, 333, 2, 4, 8, 63, 42, 77, 0, 0, 0];
 
         using ReadWriteBuffer<float> buffer1 = device.Get().AllocateReadWriteBuffer(data1);
@@ -904,7 +904,7 @@ public partial class ShaderRewriterTests
         int[] results2 = buffer2.ToArray();
 
         CollectionAssert.AreEqual(
-            expected: new[] { 1, 2, 0.4f, 3.14f, 2.4f, 0.8f, 2.8f, 7.08f },
+            expected: new[] { 1, 2, 0.4f, 3.14f, 2.4f, 0.8f, 1.5f, -0.8f, 2.4f, 0.5f, 0.6f, -0.9f, 2.8f, 7.08f, -1.5f, 0.8f },
             actual: results1,
             comparer: Comparer<float>.Create(static (x, y) => Math.Abs(x - y) < 0.000001f ? 0 : x.CompareTo(y)));
 
@@ -929,15 +929,21 @@ public partial class ShaderRewriterTests
             int3 i1 = new(buffer2[0], buffer2[1], buffer2[2]);
             int3 i2 = new(buffer2[3], buffer2[4], buffer2[5]);
             int3 i3 = new(buffer2[6], buffer2[7], buffer2[8]);
+            float2 f4 = new(buffer1[6], buffer1[7]);
+            float2 f5 = new(buffer1[8], buffer1[9]);
+            float2 f6 = new(buffer1[10], buffer1[11]);
 
             float2 r1 = Hlsl.Mad(f1, f2, f3);
             int3 r2 = Hlsl.Mad(i1, i2, i3);
+            float2 r3 = Hlsl.FaceForward(f4, f5, f6);
 
-            buffer1[6] = r1.X;
-            buffer1[7] = r1.Y;
+            buffer1[12] = r1.X;
+            buffer1[13] = r1.Y;
             buffer2[9] = r2.X;
             buffer2[10] = r2.Y;
             buffer2[11] = r2.Z;
+            buffer1[14] = r3.X;
+            buffer1[15] = r3.Y;
         }
     }
 
