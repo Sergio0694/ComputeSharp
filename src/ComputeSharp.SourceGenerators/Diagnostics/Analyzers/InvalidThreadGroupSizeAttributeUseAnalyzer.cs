@@ -14,10 +14,12 @@ namespace ComputeSharp.SourceGenerators;
 public sealed class InvalidThreadGroupSizeAttributeUseAnalyzer : DiagnosticAnalyzer
 {
     /// <inheritdoc/>
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = ImmutableArray.Create(
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } =
+    [
         MissingThreadGroupSizeAttribute,
         InvalidThreadGroupSizeAttributeDefaultThreadGroupSizes,
-        InvalidThreadGroupSizeAttributeValues);
+        InvalidThreadGroupSizeAttributeValues,
+    ];
 
     /// <inheritdoc/>
     public override void Initialize(AnalysisContext context)

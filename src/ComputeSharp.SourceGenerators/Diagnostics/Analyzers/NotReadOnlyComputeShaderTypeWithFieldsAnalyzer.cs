@@ -1,4 +1,3 @@
-using System.Collections.Immutable;
 using ComputeSharp.SourceGeneration.Diagnostics;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
@@ -14,7 +13,7 @@ public sealed class NotReadOnlyComputeShaderTypeWithFieldsAnalyzer : NotReadOnly
     /// Creates a new <see cref="NotReadOnlyComputeShaderTypeWithFieldsAnalyzer"/> instance.
     /// </summary>
     public NotReadOnlyComputeShaderTypeWithFieldsAnalyzer()
-        : base(NotReadOnlyShaderType, ImmutableArray.Create("ComputeSharp.IComputeShader", "ComputeSharp.IComputeShader`1"))
+        : base(NotReadOnlyShaderType, ["ComputeSharp.IComputeShader", "ComputeSharp.IComputeShader`1"])
     {
     }
 }

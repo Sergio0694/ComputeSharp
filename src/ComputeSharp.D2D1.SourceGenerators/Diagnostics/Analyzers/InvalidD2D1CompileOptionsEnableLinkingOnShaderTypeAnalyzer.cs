@@ -13,7 +13,7 @@ namespace ComputeSharp.D2D1.SourceGenerators;
 public sealed class InvalidD2D1CompileOptionsEnableLinkingOnShaderTypeAnalyzer : DiagnosticAnalyzer
 {
     /// <inheritdoc/>
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = ImmutableArray.Create(InvalidD2D1CompileOptionsEnableLinkingOnShaderType);
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = [InvalidD2D1CompileOptionsEnableLinkingOnShaderType];
 
     /// <inheritdoc/>
     public override void Initialize(AnalysisContext context)

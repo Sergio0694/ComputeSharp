@@ -14,10 +14,7 @@ namespace ComputeSharp.D2D1.SourceGenerators;
 public sealed class D2DEnableRuntimeCompilationOnTypeAnalyzer : DiagnosticAnalyzer
 {
     /// <inheritdoc/>
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = ImmutableArray.Create(
-        D2DRuntimeCompilationDisabled,
-        D2DRuntimeCompilationAlreadyEnabled,
-        D2DRuntimeCompilationOnTypeNotNecessary);
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = [D2DRuntimeCompilationDisabled, D2DRuntimeCompilationAlreadyEnabled, D2DRuntimeCompilationOnTypeNotNecessary];
 
     /// <inheritdoc/>
     public override void Initialize(AnalysisContext context)

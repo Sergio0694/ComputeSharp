@@ -14,7 +14,7 @@ namespace ComputeSharp.D2D1.SourceGenerators;
 public sealed class MissingD2DShaderProfileOnD2DPixelShaderSourceMethodAnalyzer : DiagnosticAnalyzer
 {
     /// <inheritdoc/>
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = ImmutableArray.Create(MissingShaderProfileForD2DPixelShaderSource);
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = [MissingShaderProfileForD2DPixelShaderSource];
 
     /// <inheritdoc/>
     public override void Initialize(AnalysisContext context)

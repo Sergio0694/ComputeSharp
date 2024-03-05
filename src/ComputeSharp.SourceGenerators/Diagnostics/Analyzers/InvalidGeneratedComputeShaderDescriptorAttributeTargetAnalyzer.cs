@@ -13,7 +13,7 @@ namespace ComputeSharp.SourceGenerators;
 public sealed class InvalidGeneratedComputeShaderDescriptorAttributeTargetAnalyzer : DiagnosticAnalyzer
 {
     /// <inheritdoc/>
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = ImmutableArray.Create(InvalidGeneratedComputeShaderDescriptorAttributeTarget);
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = [InvalidGeneratedComputeShaderDescriptorAttributeTarget];
 
     /// <inheritdoc/>
     public override void Initialize(AnalysisContext context)

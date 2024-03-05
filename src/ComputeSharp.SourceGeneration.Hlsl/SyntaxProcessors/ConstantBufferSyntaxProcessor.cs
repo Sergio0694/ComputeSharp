@@ -99,7 +99,7 @@ internal static partial class ConstantBufferSyntaxProcessor
         GetInfo(
             compilation,
             structDeclarationSymbol,
-            ImmutableArray<FieldPathPart>.Empty,
+            [],
             ref constantBufferSizeInBytes,
             fieldBuilder);
 

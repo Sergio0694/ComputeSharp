@@ -14,7 +14,7 @@ namespace ComputeSharp.SourceGenerators;
 public sealed class MultipleComputeShaderInterfacesOnShaderTypeAnalyzer : DiagnosticAnalyzer
 {
     /// <inheritdoc/>
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = ImmutableArray.Create(MultipleShaderTypesImplemented);
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = [MultipleShaderTypesImplemented];
 
     /// <inheritdoc/>
     public override void Initialize(AnalysisContext context)

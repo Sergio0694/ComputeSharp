@@ -112,7 +112,7 @@ partial class D2DPixelShaderSourceGenerator
                     win32Error.HResult,
                     win32Error.Message);
 
-                return ImmutableArray.Create(diagnostic);
+                return [diagnostic];
             }
             else if (info is HlslBytecodeInfo.CompilerError fxcError)
             {
@@ -123,10 +123,10 @@ partial class D2DPixelShaderSourceGenerator
                     methodSymbol.ContainingType,
                     fxcError.Message);
 
-                return ImmutableArray.Create(diagnostic);
+                return [diagnostic];
             }
 
-            return ImmutableArray<DiagnosticInfo>.Empty;
+            return [];
         }
 
         /// <summary>

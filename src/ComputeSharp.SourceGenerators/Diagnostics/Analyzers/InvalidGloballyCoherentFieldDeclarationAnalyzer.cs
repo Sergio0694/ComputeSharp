@@ -13,7 +13,7 @@ namespace ComputeSharp.SourceGenerators;
 public sealed class InvalidGloballyCoherentFieldDeclarationAnalyzer : DiagnosticAnalyzer
 {
     /// <inheritdoc/>
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = ImmutableArray.Create(InvalidGloballyCoherentFieldDeclaration);
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = [InvalidGloballyCoherentFieldDeclaration];
 
     /// <inheritdoc/>
     public override void Initialize(AnalysisContext context)

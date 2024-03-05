@@ -1,4 +1,3 @@
-using System.Collections.Immutable;
 using ComputeSharp.SourceGeneration.Diagnostics;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
@@ -14,7 +13,7 @@ public sealed class NotReadOnlyPixelShaderTypeWithFieldsAnalyzer : NotReadOnlySh
     /// Creates a new <see cref="NotReadOnlyPixelShaderTypeWithFieldsAnalyzer"/> instance.
     /// </summary>
     public NotReadOnlyPixelShaderTypeWithFieldsAnalyzer()
-        : base(NotReadOnlyShaderType, ImmutableArray.Create("ComputeSharp.D2D1.ID2D1PixelShader"))
+        : base(NotReadOnlyShaderType, ["ComputeSharp.D2D1.ID2D1PixelShader"])
     {
     }
 }

@@ -31,7 +31,7 @@ namespace ComputeSharp.D2D1.SourceGenerators;
 public sealed class D2D1ResourceTextureUninitializedFieldDiagnosticSuppressor : DiagnosticSuppressor
 {
     /// <inheritdoc/>
-    public override ImmutableArray<SuppressionDescriptor> SupportedSuppressions => ImmutableArray.Create(UninitializedD2D1ResourceTextureField);
+    public override ImmutableArray<SuppressionDescriptor> SupportedSuppressions => [UninitializedD2D1ResourceTextureField];
 
     /// <inheritdoc/>
     public override void ReportSuppressions(SuppressionAnalysisContext context)

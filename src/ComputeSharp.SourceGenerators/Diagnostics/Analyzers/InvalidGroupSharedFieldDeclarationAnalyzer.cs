@@ -13,7 +13,7 @@ namespace ComputeSharp.SourceGenerators;
 public sealed class InvalidGroupSharedFieldDeclarationAnalyzer : DiagnosticAnalyzer
 {
     /// <inheritdoc/>
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = ImmutableArray.Create(InvalidGroupSharedFieldDeclaration);
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = [InvalidGroupSharedFieldDeclaration];
 
     /// <inheritdoc/>
     public override void Initialize(AnalysisContext context)
