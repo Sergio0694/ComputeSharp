@@ -30,13 +30,13 @@ jobs:
     runs-on: windows-2022
     steps:
     - name: Git checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
     - name: Add msbuild to PATH
-      uses: microsoft/setup-msbuild@v1.1
+      uses: microsoft/setup-msbuild@v2
     - name: Build
       run: msbuild /restore -t:build /p:Configuration=${{matrix.configuration}} /p:Platform=${{matrix.platform}} /bl
     - name: Upload MSBuild binary log
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: msbuild_log_${{matrix.configuration}}_${{matrix.platform}}
         path: msbuild.binlog
@@ -51,9 +51,9 @@ jobs:
     runs-on: windows-2022
     steps:
     - name: Git checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
     - name: Add msbuild to PATH
-      uses: microsoft/setup-msbuild@v1.1
+      uses: microsoft/setup-msbuild@v2
     - name: Build ComputeSharp.Core package
       run: dotnet pack src\ComputeSharp.Core\ComputeSharp.Core.csproj -c Release
     - name: Build ComputeSharp package
@@ -73,7 +73,7 @@ jobs:
     
       # Upload the packages to the pipeline artifacts
     - name: Upload package artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: nuget_packages
         path: artifacts\*.nupkg
@@ -90,7 +90,7 @@ jobs:
       CI_RUNNER_DOTNET_TEST_PLATFORM: x64
     steps:
     - name: Git checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
       # DirectX 12 unit tests
     - name: Run ComputeSharp.Tests
@@ -134,7 +134,7 @@ jobs:
       CI_RUNNER_DOTNET_TEST_PLATFORM: x64
     steps:
     - name: Git checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
       # D3D12MA tests (main ComputeSharp tests, as well as the device lost ones)
     - name: Run ComputeSharp.Tests
@@ -152,9 +152,9 @@ jobs:
     runs-on: windows-2022
     steps:
     - name: Git checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
     - name: Add msbuild to PATH
-      uses: microsoft/setup-msbuild@v1.1
+      uses: microsoft/setup-msbuild@v2
     
       # Build the D2D1 WinAppSDK unit tests
     - name: Build ComputeSharp.D2D1.WinUI.Tests
@@ -173,7 +173,7 @@ jobs:
     runs-on: windows-2022
     steps:
     - name: Git checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
     - name: Build and run ComputeSharp.Sample
       run: >
         dotnet build samples\ComputeSharp.Sample\ComputeSharp.Sample.csproj -c Release -r win-x64 --no-self-contained -p:Platform=x64 -v n;
@@ -198,9 +198,9 @@ jobs:
       CI_RUNNER_SAMPLES_INTEGRATION_TESTS: true
     steps:
     - name: Git checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
     - name: Add msbuild to PATH
-      uses: microsoft/setup-msbuild@v1.1
+      uses: microsoft/setup-msbuild@v2
       
       # Publish the NativeAOT CLI sample (optimized for speed)
     - name: Publish ComputeSharp.SwapChain.Cli with NativeAOT (speed)
@@ -228,7 +228,7 @@ jobs:
       # Upload the binary (to track binary size trends)
     - if: matrix.platform == 'x64'
       name: Upload NativeAOT CLI sample (speed)
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: computesharp.cli.opt-speed.exe
         path: samples\ComputeSharp.SwapChain.Cli\bin\Release\net8.0\win-x64\publish\computesharp.cli.exe
@@ -260,7 +260,7 @@ jobs:
       # Upload the binary again (with a different name)
     - if: matrix.platform == 'x64'
       name: Upload NativeAOT CLI sample (size)
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: computesharp.cli.opt-size.exe
         path: samples\ComputeSharp.SwapChain.Cli\bin\Release\net8.0\win-x64\publish\computesharp.cli.exe
@@ -324,11 +324,11 @@ jobs:
     runs-on: windows-2022
     steps:
     - name: Git checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
     - name: Create local NuGet feed
       run: mkdir artifacts
     - name: Download package artifacts
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: nuget_packages
         path: artifacts
@@ -368,7 +368,7 @@ jobs:
     runs-on: windows-2022
     if: ${{github.event_name == 'push'}}
     steps:
-    - uses: actions/download-artifact@v3
+    - uses: actions/download-artifact@v4
       with:
         name: nuget_packages
         path: artifacts
@@ -382,11 +382,11 @@ jobs:
     runs-on: windows-2022
     if: ${{github.event_name == 'push'}}
     steps:
-    - uses: actions/download-artifact@v3
+    - uses: actions/download-artifact@v4
       with:
         name: nuget_packages
         path: artifacts
-    - uses: actions/setup-dotnet@v3
+    - uses: actions/setup-dotnet@v4
       with:
         source-url: "https://sergio0694.pkgs.visualstudio.com/ComputeSharp/_packaging/ComputeSharp/nuget/v3/index.json"
       env:
