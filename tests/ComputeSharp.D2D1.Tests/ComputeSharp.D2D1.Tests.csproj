@@ -8,11 +8,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AutoConstructor" Version="5.2.1" PrivateAssets="all" />
+    <PackageReference Include="AutoConstructor" Version="5.3.0" PrivateAssets="all" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
-    <PackageReference Include="MSTest.TestAdapter" Version="3.2.2" />
-    <PackageReference Include="MSTest.TestFramework" Version="3.2.2" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="3.1.3" />
+    <PackageReference Include="MSTest.TestAdapter" Version="3.3.1" />
+    <PackageReference Include="MSTest.TestFramework" Version="3.3.1" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="3.1.4" />
     <PackageReference Include="TerraFX.Interop.Windows" Version="10.0.22621.6" />
   </ItemGroup>
 
