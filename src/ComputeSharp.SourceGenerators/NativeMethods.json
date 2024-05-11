@@ -6,5 +6,8 @@
     "preserveSigMethods": [
       "*"
     ]
+  },
+  "friendlyOverloads": {
+    "enabled": false
   }
 }
