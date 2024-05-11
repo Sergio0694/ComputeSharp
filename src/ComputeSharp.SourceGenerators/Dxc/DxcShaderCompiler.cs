@@ -42,15 +42,23 @@ internal sealed unsafe class DxcShaderCompiler
         using ComPtr<IDxcCompiler3> dxcCompiler = default;
         using ComPtr<IDxcUtils> dxcUtils = default;
 
-        DirectX.DxcCreateInstance(
-            DirectX.CLSID_DxcCompiler,
-            IDxcCompiler3.IID_Guid,
-            out *(void**)dxcCompiler.GetAddressOf()).Assert();
+        fixed (Guid* pDxcCompiler = &DirectX.CLSID_DxcCompiler)
+        fixed (Guid* pDxcCompiler3 = &IDxcCompiler3.IID_Guid)
+        {
+            DirectX.DxcCreateInstance(
+                pDxcCompiler,
+                pDxcCompiler3,
+                (void**)dxcCompiler.GetAddressOf()).Assert();
+        }
 
-        DirectX.DxcCreateInstance(
-            DirectX.CLSID_DxcLibrary,
-            IDxcUtils.IID_Guid,
-            out *(void**)dxcUtils.GetAddressOf()).Assert();
+        fixed (Guid* pDxcLibrary = &DirectX.CLSID_DxcLibrary)
+        fixed (Guid* pDxcUtils = &IDxcUtils.IID_Guid)
+        {
+            DirectX.DxcCreateInstance(
+                pDxcLibrary,
+                pDxcUtils,
+                (void**)dxcUtils.GetAddressOf()).Assert();
+        }
 
         this.dxcCompiler3 = new ComPtr<IDxcCompiler3>(dxcCompiler.Get());
         this.dxcUtils = new ComPtr<IDxcUtils>(dxcUtils.Get());

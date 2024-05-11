@@ -78,7 +78,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.9.2" PrivateAssets="all" Pack="false" />
-    <PackageReference Include="Microsoft.Windows.CsWin32" Version="0.3.49-beta" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.Windows.CsWin32" Version="0.3.106" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>
