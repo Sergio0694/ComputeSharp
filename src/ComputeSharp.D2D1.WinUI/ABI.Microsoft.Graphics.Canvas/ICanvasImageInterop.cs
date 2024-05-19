@@ -111,7 +111,6 @@ namespace ABI.Microsoft.Graphics.Canvas
     /// the <see cref="IID"/> and <see cref="AbiToProjectionVftablePtr"/> properties to make
     /// marshalling of CCW types AOT-safe. It is not meant to be used directly by developers.
     /// </remarks>
-    [Guid("E042D1F7-F9AD-4479-A713-67627EA31863")]
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static unsafe class ICanvasImageInteropMethods
     {
@@ -152,7 +151,6 @@ namespace Microsoft.Graphics.Canvas
         /// <summary>
         /// The vtable type for <see cref="ICanvasImageInterop"/>.
         /// </summary>
-        [Guid("E042D1F7-F9AD-4479-A713-67627EA31863")]
         public struct Vftbl
         {
             /// <summary>
