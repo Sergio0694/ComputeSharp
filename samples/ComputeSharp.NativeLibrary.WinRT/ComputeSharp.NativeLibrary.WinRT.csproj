@@ -4,6 +4,8 @@
     <Platforms>x64;ARM64</Platforms>
     <RuntimeIdentifiers>win-x64;win-arm64</RuntimeIdentifiers>
     <CsWinRTComponent>true</CsWinRTComponent>
+    <WindowsSdkPackageVersion>10.0.22621.30-preview.aot18.ni-release-svc-prod3</WindowsSdkPackageVersion>
+    <NoWarn>$(NoWarn);NU1603</NoWarn>
   </PropertyGroup>
 
   <!-- NativeAOT configuration (same as in ComputeSharp.NativeLibrary, see notes there) -->
@@ -20,7 +22,7 @@
   </PropertyGroup>
   
   <ItemGroup>
-    <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.0.4" />
+    <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.1.0-prerelease-ci.240514.21" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>
