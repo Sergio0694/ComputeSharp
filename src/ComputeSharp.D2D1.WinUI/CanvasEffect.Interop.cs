@@ -65,21 +65,21 @@ partial class CanvasEffect
             default(ObjectDisposedException).ThrowIf(this.isDisposed, this);
 
             // Build the effect graph (the output node might not have been set yet)
-            if (this.invalidationType == InvalidationType.Creation)
+            if (this.invalidationType == CanvasEffectInvalidationType.Creation)
             {
                 DisposeEffectGraph();
-                BuildEffectGraph(new EffectGraph(this));
+                BuildEffectGraph(new CanvasEffectGraph(this));
 
                 // We successfully got past the effect graph creation, so update the current
                 // invalidation state. This ensures that even if the configuration failed, the
                 // next time the effect is drawn again the graph won't be created again too.
-                this.invalidationType = InvalidationType.Update;
+                this.invalidationType = CanvasEffectInvalidationType.Update;
             }
 
             // Configure the effect graph, if the effect is invalidated
-            if (this.invalidationType == InvalidationType.Update)
+            if (this.invalidationType == CanvasEffectInvalidationType.Update)
             {
-                ConfigureEffectGraph(new EffectGraph(this));
+                ConfigureEffectGraph(new CanvasEffectGraph(this));
 
                 // The effect graph is now ready to go: no further work will be done before drawing
                 // unless it is explicitly invalidated again, using either creation or update mode.
