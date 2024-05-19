@@ -97,7 +97,6 @@ namespace ABI.Microsoft.Graphics.Canvas
     /// <summary>
     /// The ABI methods for <see cref="ICanvasEffectFactoryNative"/>.
     /// </summary>
-    [Guid("E042D1F7-F9AD-4479-A713-67627EA31863")]
     internal static unsafe class ICanvasEffectFactoryNativeMethods
     {
         /// <inheritdoc cref="ICanvasEffectFactoryNative.IID"/>
@@ -127,7 +126,6 @@ namespace Microsoft.Graphics.Canvas
         /// <summary>
         /// The vtable type for <see cref="ICanvasEffectFactoryNative"/>.
         /// </summary>
-        [Guid("29BA1A1F-1CFE-44C3-984D-426D61B51427")]
         public struct Vftbl
         {
             /// <summary>
