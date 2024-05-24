@@ -168,6 +168,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeSharp.NativeLibrary"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputeSharp.NativeLibrary.WinRT", "samples\ComputeSharp.NativeLibrary.WinRT\ComputeSharp.NativeLibrary.WinRT.csproj", "{551EF4FB-F34F-412A-B3E6-E345797560ED}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputeSharp.D2D1.WinUI.SourceGenerators", "src\ComputeSharp.D2D1.WinUI.SourceGenerators\ComputeSharp.D2D1.WinUI.SourceGenerators.csproj", "{FEBEC83A-FE70-4D4B-9B00-76DB31E75F17}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -464,6 +466,14 @@ Global
 		{551EF4FB-F34F-412A-B3E6-E345797560ED}.Release|ARM64.Build.0 = Release|ARM64
 		{551EF4FB-F34F-412A-B3E6-E345797560ED}.Release|x64.ActiveCfg = Release|x64
 		{551EF4FB-F34F-412A-B3E6-E345797560ED}.Release|x64.Build.0 = Release|x64
+		{FEBEC83A-FE70-4D4B-9B00-76DB31E75F17}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{FEBEC83A-FE70-4D4B-9B00-76DB31E75F17}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{FEBEC83A-FE70-4D4B-9B00-76DB31E75F17}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{FEBEC83A-FE70-4D4B-9B00-76DB31E75F17}.Debug|x64.Build.0 = Debug|Any CPU
+		{FEBEC83A-FE70-4D4B-9B00-76DB31E75F17}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{FEBEC83A-FE70-4D4B-9B00-76DB31E75F17}.Release|ARM64.Build.0 = Release|Any CPU
+		{FEBEC83A-FE70-4D4B-9B00-76DB31E75F17}.Release|x64.ActiveCfg = Release|Any CPU
+		{FEBEC83A-FE70-4D4B-9B00-76DB31E75F17}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
