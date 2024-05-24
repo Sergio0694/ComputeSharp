@@ -178,6 +178,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeSharp.D2D1.Uwp", "sr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeSharp.SwapChain.D2D1.Uwp", "samples\ComputeSharp.SwapChain.D2D1.Uwp\ComputeSharp.SwapChain.D2D1.Uwp.csproj", "{9FBE070E-A210-4CEF-9F04-61C2B269C600}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputeSharp.D2D1.WinUI.SourceGenerators", "src\ComputeSharp.D2D1.WinUI.SourceGenerators\ComputeSharp.D2D1.WinUI.SourceGenerators.csproj", "{FEBEC83A-FE70-4D4B-9B00-76DB31E75F17}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -502,6 +504,14 @@ Global
 		{9FBE070E-A210-4CEF-9F04-61C2B269C600}.Release|x64.ActiveCfg = Release|x64
 		{9FBE070E-A210-4CEF-9F04-61C2B269C600}.Release|x64.Build.0 = Release|x64
 		{9FBE070E-A210-4CEF-9F04-61C2B269C600}.Release|x64.Deploy.0 = Release|x64
+		{FEBEC83A-FE70-4D4B-9B00-76DB31E75F17}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{FEBEC83A-FE70-4D4B-9B00-76DB31E75F17}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{FEBEC83A-FE70-4D4B-9B00-76DB31E75F17}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{FEBEC83A-FE70-4D4B-9B00-76DB31E75F17}.Debug|x64.Build.0 = Debug|Any CPU
+		{FEBEC83A-FE70-4D4B-9B00-76DB31E75F17}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{FEBEC83A-FE70-4D4B-9B00-76DB31E75F17}.Release|ARM64.Build.0 = Release|Any CPU
+		{FEBEC83A-FE70-4D4B-9B00-76DB31E75F17}.Release|x64.ActiveCfg = Release|Any CPU
+		{FEBEC83A-FE70-4D4B-9B00-76DB31E75F17}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
