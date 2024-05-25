@@ -11,4 +11,7 @@
     <AdditionalFiles Include="AnalyzerReleases.Shipped.md" />
     <AdditionalFiles Include="AnalyzerReleases.Unshipped.md" />
   </ItemGroup>
+
+  <!-- Shared project with common helpers -->
+  <Import Project="..\ComputeSharp.SourceGeneration\ComputeSharp.SourceGeneration.projitems" Label="Shared" />
 </Project>
