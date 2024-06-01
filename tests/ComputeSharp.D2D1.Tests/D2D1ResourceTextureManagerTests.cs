@@ -736,7 +736,7 @@ public partial class D2D1ResourceTextureManagerTests
         byte[] texture = new byte[width * height];
 
         D2D1ResourceTextureManager resourceTextureManager = new(
-            extents: [(uint)width, (uint)height],
+            extents: [width, height],
             bufferPrecision: D2D1BufferPrecision.UInt8Normalized,
             channelDepth: D2D1ChannelDepth.One,
             filter: D2D1Filter.MinMagMipPoint,
