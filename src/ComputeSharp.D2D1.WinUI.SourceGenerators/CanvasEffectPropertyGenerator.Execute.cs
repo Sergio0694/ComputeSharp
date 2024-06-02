@@ -1,5 +1,7 @@
 using System.Threading;
+using ComputeSharp.D2D1.WinUI.SourceGenerators.Models;
 using ComputeSharp.SourceGeneration.Extensions;
+using ComputeSharp.SourceGeneration.Helpers;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -68,6 +70,99 @@ partial class CanvasEffectPropertyGenerator
             }
 
             return false;
+        }
+
+        public static void WritePropertyDeclarations(EquatableArray<CanvasEffectPropertyInfo> properties, IndentedTextWriter writer)
+        {
+            // First, generate all partial property implementations at the top of the partial type declaration
+            foreach (CanvasEffectPropertyInfo propertyInfo in properties)
+            {
+                writer.WriteLine(skipIfPresent: true);
+                writer.WriteLine("/// <inheritdoc/>");
+                writer.WriteGeneratedAttributes(GeneratorName);
+                writer.WriteLine($$"""                    
+                    public partial {{propertyInfo.TypeNameWithNullabilityAnnotations}} {{propertyInfo.PropertyName}}
+                    {
+                        get => field;
+                        set
+                        {
+                            if (global::System.Collections.Generic.EqualityComparer<{{propertyInfo.TypeNameWithNullabilityAnnotations}}>.Default.Equals(field, value))
+                            {
+                                return;
+                            }
+                
+                            int oldValue = field;
+                    
+                            On{{propertyInfo.PropertyName}}Changing(value);
+                            On{{propertyInfo.PropertyName}}Changing(oldValue, value);
+                
+                            field = value;
+                
+                            On{{propertyInfo.PropertyName}}Changed(value);
+                            On{{propertyInfo.PropertyName}}Changed(oldValue, value);
+                    
+                            InvalidateEffectGraph(default);
+                        }
+                    }
+                    """, isMultiline: true);
+            }
+
+            foreach (CanvasEffectPropertyInfo propertyInfo in properties)
+            {
+                // On<PROPERTY_NAME>Changing, only with new value
+                writer.WriteLine();
+                writer.WriteLine($"""
+                    /// <summary>Executes the logic for when <see cref="{propertyInfo.PropertyName}"/> is changing.</summary>
+                    /// <param name="value">The new property value being set.</param>
+                    /// <remarks>This method is invoked right before the value of <see cref="{propertyInfo.PropertyName}"/> is changed.</remarks>
+                    """, isMultiline: true);
+                writer.WriteGeneratedAttributes(GeneratorName, includeNonUserCodeAttributes: false);
+                writer.WriteLine($"partial void On{propertyInfo.PropertyName}Changing({propertyInfo.TypeNameWithNullabilityAnnotations} newValue);");
+
+                // Prepare the nullable type for the previous property value. This is needed because if the type is a reference
+                // type, the previous value might be null even if the property type is not nullable, as the first invocation would
+                // happen when the property is first set to some value that is not null (but the backing field would still be so).
+                // As a cheap way to check whether we need to add nullable, we can simply check whether the type name with nullability
+                // annotations ends with a '?'. If it doesn't and the type is a reference type, we add it. Otherwise, we keep it.
+                string oldValueTypeNameAsNullable = propertyInfo.IsReferenceTypeOrUnconstraindTypeParameter switch
+                {
+                    true when !propertyInfo.TypeNameWithNullabilityAnnotations.EndsWith("?")
+                        => $"{propertyInfo.TypeNameWithNullabilityAnnotations}?",
+                    _ => propertyInfo.TypeNameWithNullabilityAnnotations
+                };
+
+                // On<PROPERTY_NAME>Changing, with both values
+                writer.WriteLine();
+                writer.WriteLine($"""
+                    /// <summary>Executes the logic for when <see cref="{propertyInfo.PropertyName}"/> is changing.</summary>
+                    /// <param name="oldValue">The previous property value that is being replaced.</param>
+                    /// <param name="newValue">The new property value being set.</param>
+                    /// <remarks>This method is invoked right before the value of <see cref="{propertyInfo.PropertyName}"/> is changed.</remarks>
+                    """, isMultiline: true);
+                writer.WriteGeneratedAttributes(GeneratorName, includeNonUserCodeAttributes: false);
+                writer.WriteLine($"partial void On{propertyInfo.PropertyName}Changing({oldValueTypeNameAsNullable} oldValue, {propertyInfo.TypeNameWithNullabilityAnnotations} newValue);");
+
+                // On<PROPERTY_NAME>Changed, only with new value
+                writer.WriteLine();
+                writer.WriteLine($"""
+                    /// <summary>Executes the logic for when <see cref="{propertyInfo.PropertyName}"/> has just changed.</summary>
+                    /// <param name="value">The new property value that has been set.</param>
+                    /// <remarks>This method is invoked right after the value of <see cref="{propertyInfo.PropertyName}"/> is changed.</remarks>
+                    """, isMultiline: true);
+                writer.WriteGeneratedAttributes(GeneratorName, includeNonUserCodeAttributes: false);
+                writer.WriteLine($"partial void On{propertyInfo.PropertyName}Changed({propertyInfo.TypeNameWithNullabilityAnnotations} newValue);");
+
+                // On<PROPERTY_NAME>Changed, with both values
+                writer.WriteLine();
+                writer.WriteLine($"""
+                    /// <summary>Executes the logic for when <see cref="{propertyInfo.PropertyName}"/> has just changed.</summary>
+                    /// <param name="oldValue">The previous property value that has been replaced.</param>
+                    /// <param name="newValue">The new property value that has been set.</param>
+                    /// <remarks>This method is invoked right after the value of <see cref="{propertyInfo.PropertyName}"/> is changed.</remarks>
+                    """, isMultiline: true);
+                writer.WriteGeneratedAttributes(GeneratorName, includeNonUserCodeAttributes: false);
+                writer.WriteLine($"partial void On{propertyInfo.PropertyName}Changed({oldValueTypeNameAsNullable} oldValue, {propertyInfo.TypeNameWithNullabilityAnnotations} newValue);");
+            }
         }
     }
 }
