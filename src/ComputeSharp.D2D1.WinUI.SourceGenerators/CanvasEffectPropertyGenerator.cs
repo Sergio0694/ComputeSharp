@@ -39,9 +39,19 @@ public sealed partial class CanvasEffectPropertyGenerator : IIncrementalGenerato
                         return default;
                     }
 
+                    token.ThrowIfCancellationRequested();
+
                     string typeNameWithNullabilityAnnotations = propertySymbol.Type.GetFullyQualifiedNameWithNullabilityAnnotations();
+
+                    token.ThrowIfCancellationRequested();
+
                     bool isOldPropertyValueDirectlyReferenced = Execute.IsOldPropertyValueDirectlyReferenced(propertySymbol);
+
+                    token.ThrowIfCancellationRequested();
+
                     CanvasEffectInvalidationType invalidationType = Execute.GetCanvasEffectInvalidationType(context.Attributes[0]);
+
+                    token.ThrowIfCancellationRequested();
 
                     // We're using IsValueType here and not IsReferenceType to also cover unconstrained type parameter cases.
                     // This will cover both reference types as well T when the constraints are not struct or unmanaged.
