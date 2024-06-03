@@ -42,6 +42,23 @@ partial class CanvasEffectPropertyGenerator
         }
 
         /// <summary>
+        /// Gets the invalidation type to use for the generated effect property.
+        /// </summary>
+        /// <param name="attributeData">The <see cref="AttributeData"/> instance for the processed attribute.</param>
+        /// <returns>The resulting <see cref="CanvasEffectInvalidationType"/> to use for the generated property.</returns>
+        public static CanvasEffectInvalidationType GetCanvasEffectInvalidationType(AttributeData attributeData)
+        {
+            if (attributeData.ConstructorArguments is [{ Kind: TypedConstantKind.Enum, Value: byte enumValue }])
+            {
+                return (CanvasEffectInvalidationType)enumValue;
+            }
+
+            // No constructor parameter, or an invalid one. In this case we either just use the default
+            // invalidation mode, or let the analyzer emit a diagnostic to let the user know.
+            return CanvasEffectInvalidationType.Update;
+        }
+
+        /// <summary>
         /// Checks whether the generated code has to directly reference the old property value.
         /// </summary>
         /// <param name="propertySymbol">The input <see cref="IPropertySymbol"/> instance to process.</param>
@@ -101,7 +118,7 @@ partial class CanvasEffectPropertyGenerator
                             On{{propertyInfo.PropertyName}}Changed(value);
                             On{{propertyInfo.PropertyName}}Changed(oldValue, value);
                     
-                            InvalidateEffectGraph(default);
+                            InvalidateEffectGraph(global::ComputeSharp.D2D1.WinUI.CanvasEffectInvalidationType.{{propertyInfo.InvalidationType}});
                         }
                     }
                     """, isMultiline: true);

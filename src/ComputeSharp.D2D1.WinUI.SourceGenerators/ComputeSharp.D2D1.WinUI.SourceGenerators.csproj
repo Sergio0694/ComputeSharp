@@ -1,6 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <DefineConstants>$(DefineConstants);D2D1_UWINUI_SOURCE_GENERATOR</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup>
+
+    <!-- Ignore warnings for unresolved XML cref attributes (for imported types, same as in the D3D12 generator) -->
+    <NoWarn>$(NoWarn);CS1574</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
@@ -10,6 +17,11 @@
   <ItemGroup>
     <AdditionalFiles Include="AnalyzerReleases.Shipped.md" />
     <AdditionalFiles Include="AnalyzerReleases.Unshipped.md" />
+  </ItemGroup>
+
+  <!-- ComputeSharp.D2D1.WinUI APIs -->
+  <ItemGroup>
+    <Compile Include="..\ComputeSharp.D2D1.UI\CanvasEffectInvalidationType.cs" Link="ComputeSharp.D2D1.WinUI\CanvasEffectInvalidationType.cs" />
   </ItemGroup>
 
   <!-- Shared project with common helpers -->
