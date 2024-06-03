@@ -45,10 +45,6 @@ public sealed partial class CanvasEffectPropertyGenerator : IIncrementalGenerato
 
                     token.ThrowIfCancellationRequested();
 
-                    bool isOldPropertyValueDirectlyReferenced = Execute.IsOldPropertyValueDirectlyReferenced(propertySymbol);
-
-                    token.ThrowIfCancellationRequested();
-
                     CanvasEffectInvalidationType invalidationType = Execute.GetCanvasEffectInvalidationType(context.Attributes[0]);
 
                     token.ThrowIfCancellationRequested();
@@ -67,7 +63,6 @@ public sealed partial class CanvasEffectPropertyGenerator : IIncrementalGenerato
                         Hierarchy: hierarchyInfo,
                         PropertyName: propertySymbol.Name,
                         TypeNameWithNullabilityAnnotations: typeNameWithNullabilityAnnotations,
-                        IsOldPropertyValueDirectlyReferenced: isOldPropertyValueDirectlyReferenced,
                         IsReferenceTypeOrUnconstraindTypeParameter: isReferenceTypeOrUnconstraindTypeParameter,
                         InvalidationType: invalidationType);
                 })
