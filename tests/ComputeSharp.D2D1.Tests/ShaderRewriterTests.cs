@@ -1,4 +1,5 @@
 using ComputeSharp.D2D1.Interop;
+using ComputeSharp.D2D1.Tests.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 #pragma warning disable CA1822
@@ -177,6 +178,34 @@ public partial class ShaderRewriterTests
                 mask4_r_or.Y ? 1 : 0,
                 mask2x3_r_and.M11 ? 1 : 0,
                 mask2x3_r_or.M11 ? 1 : 0);
+        }
+    }
+
+    // See https://github.com/Sergio0694/ComputeSharp/issues/780
+    [TestMethod]
+    public void ProblematicFloatLiteralValue_IsRewrittenCorrectly()
+    {
+        D2D1TestRunner.RunAndCompareShader(
+            new ProblematicFloatLiteralValueShader(131072.65f),
+            32,
+            32,
+            "Green32x32.png");
+    }
+
+    [D2DInputCount(0)]
+    [D2DShaderProfile(D2D1ShaderProfile.PixelShader50)]
+    [D2DOutputBuffer(D2D1BufferPrecision.Float32)]
+    [D2DGeneratedPixelShaderDescriptor]
+    internal readonly partial struct ProblematicFloatLiteralValueShader(float x) : ID2D1PixelShader
+    {
+        public float4 Execute()
+        {
+            if (x != 131072.65f)
+            {
+                return 0;
+            }
+
+            return new float4(0.0f, 1.0f, 0.0f, 1.0f);
         }
     }
 }
