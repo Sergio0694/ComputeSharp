@@ -82,7 +82,7 @@ public partial class ShaderRewriterTests
             D2D_PS_ENTRY(Execute)
             {
                 bool4 mask4 = bool4(true, false, true, true);
-                float4 float4_1 = float4(1, 2, 3.14, 4);
+                float4 float4_1 = float4(1, 2, asfloat(1078523331U), 4);
                 float4 float4_2 = float4(5, 6, 7, 8);
                 float4 float4_r = (mask4 ? float4_1 : float4_2);
                 bool1x3 mask1x3 = bool1x3((bool)true, (bool)true, (bool)false);
@@ -93,7 +93,7 @@ public partial class ShaderRewriterTests
                 uint2x4 uint2x4_1 = uint2x4((uint)1, (uint)2, (uint)3, (uint)4, (uint)5, (uint)6, (uint)7, (uint)8);
                 uint2x4 uint2x4_2 = uint2x4((uint)111, (uint)222, (uint)333, (uint)444, (uint)555, (uint)666, (uint)777, (uint)888);
                 uint2x4 uint2x4_r = (mask2x4 ? uint2x4_1 : uint2x4_2);
-                float2x2 f2x2_r = mul((float2x4)uint2x4_r, float4x2((float2)float4_r.xy, (float2)float4_r.zw, (float2)float2(int1x3_r._m00, int1x3_r._m01), (float2)float2(int1x3_r._m02, 1.0)));
+                float2x2 f2x2_r = mul((float2x4)uint2x4_r, float4x2((float2)float4_r.xy, (float2)float4_r.zw, (float2)float2(int1x3_r._m00, int1x3_r._m01), (float2)float2(int1x3_r._m02, asfloat(1065353216U))));
                 return float4(f2x2_r._m00, f2x2_r._m01, f2x2_r._m10, f2x2_r._m11);
             }
             """, shaderInfo.HlslSource);
