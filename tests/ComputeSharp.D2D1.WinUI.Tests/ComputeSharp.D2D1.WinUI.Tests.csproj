@@ -42,7 +42,7 @@
       <Link>Assets\Shaders\ProteanClouds.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\ComputeSharp.Tests\Assets\TerracedHills.png">
+    <Content Include="..\ComputeSharp.D2D1.Tests\Assets\TerracedHills.png">
       <Link>Assets\Shaders\TerracedHills.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

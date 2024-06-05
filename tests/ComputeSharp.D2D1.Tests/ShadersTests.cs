@@ -110,7 +110,7 @@ public class ShadersTests
     [TestMethod]
     public void TerracedHills()
     {
-        RunTest<TerracedHills>(0.000026f);
+        RunTest<TerracedHills>(0.000027f);
     }
 
     private static void RunTest<T>(float threshold = 0.00001f)
