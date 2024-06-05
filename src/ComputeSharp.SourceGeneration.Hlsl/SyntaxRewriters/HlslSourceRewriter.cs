@@ -196,7 +196,7 @@ internal abstract partial class HlslSourceRewriter(
     }
 
     /// <inheritdoc/>
-    public sealed override SyntaxNode? VisitLiteralExpression(LiteralExpressionSyntax node)
+    public sealed unsafe override SyntaxNode? VisitLiteralExpression(LiteralExpressionSyntax node)
     {
         CancellationToken.ThrowIfCancellationRequested();
 
@@ -219,6 +219,7 @@ internal abstract partial class HlslSourceRewriter(
             // in HLSL, we can remove the suffix entirely. As for 64 bit values, we simply use the 'L' suffix.
             if (type.SpecialType == SpecialType.System_Single)
             {
+#if D3D12_SOURCE_GENERATOR
                 string literal = updatedNode.Token.ValueText;
 
                 // If the numeric literal is neither a decimal nor an exponential, add the ".0" suffix
@@ -228,6 +229,25 @@ internal abstract partial class HlslSourceRewriter(
                 }
 
                 return updatedNode.WithToken(Literal(literal, 0f));
+#else
+                // When compiling for D2D, we need to emit 'asfloat' expressions to work around an FXC
+                // bug that can cause it to sometimes emit incorrect values for float literals. For
+                // additional context, see: https://github.com/Sergio0694/ComputeSharp/issues/780.
+                //
+                // This code rewrites expressions as follows:
+                // C#:   3.14f
+                // HLSL: asfloat(1078523331)
+                float literalValue = (float)operation.ConstantValue.Value!;
+                uint literalValueAsUInt = *(uint*)&literalValue;
+
+                return
+                    InvocationExpression(IdentifierName("asfloat"))
+                    .AddArgumentListArguments(
+                        Argument(
+                            LiteralExpression(
+                                SyntaxKind.NumericLiteralExpression,
+                                Literal(literalValueAsUInt))));
+#endif
             }
             else if (type.SpecialType == SpecialType.System_Double)
             {

@@ -42,7 +42,7 @@ public partial class D2D1ReflectionServicesTests
                 float4 input1 = D2DGetInput(1);
                 float4 input2 = D2DSampleInputAtPosition(2, xy + offset);
                 float value3 = __reserved__buffer[0];
-                float4 value4 = __reserved__texture.Sample(__sampler____reserved__texture, float2(0, 0.5));
+                float4 value4 = __reserved__texture.Sample(__sampler____reserved__texture, float2(0, asfloat(1056964608U)));
                 return input0 + input1 + input2 + value3 + value4;
             }
             """, shaderInfo.HlslSource);

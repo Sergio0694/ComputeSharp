@@ -186,8 +186,8 @@ public class Test_D2DPixelShaderDescriptorGenerator
                         {
                             int2 xy = (int2)D2DGetScenePosition().xy;
                             float2 uv = xy / (float2)dispatchSize;
-                            float3 col = 0.5 + (0.5 * cos(time + float3(uv, uv.x) + float3(0, 2, 4)));
-                            return float4(col, 1.0);
+                            float3 col = asfloat(1056964608U) + (asfloat(1056964608U) * cos(time + float3(uv, uv.x) + float3(0, 2, 4)));
+                            return float4(col, asfloat(1065353216U));
                         }
                         """;
 
@@ -482,8 +482,8 @@ public class Test_D2DPixelShaderDescriptorGenerator
                         {
                             int2 xy = (int2)D2DGetScenePosition().xy;
                             float2 uv = xy / (float2)dispatchSize;
-                            float3 col = 0.5 + (0.5 * cos(time + float3(uv, uv.x) + float3(0, 2, 4)));
-                            return float4(col, 1.0);
+                            float3 col = asfloat(1056964608U) + (asfloat(1056964608U) * cos(time + float3(uv, uv.x) + float3(0, 2, 4)));
+                            return float4(col, asfloat(1065353216U));
                         }
                         """;
 
@@ -830,8 +830,8 @@ public class Test_D2DPixelShaderDescriptorGenerator
                         {
                             int2 xy = (int2)D2DGetScenePosition().xy;
                             float2 uv = xy / (float2)dispatchSize;
-                            float3 col = 0.5 + (0.5 * cos(time + float3(uv, uv.x) + float3(0, 2, 4)));
-                            return float4(col, 1.0);
+                            float3 col = asfloat(1056964608U) + (asfloat(1056964608U) * cos(time + float3(uv, uv.x) + float3(0, 2, 4)));
+                            return float4(col, asfloat(1065353216U));
                         }
                         """;
 
@@ -1124,8 +1124,8 @@ public class Test_D2DPixelShaderDescriptorGenerator
                         {
                             int2 xy = (int2)D2DGetScenePosition().xy;
                             float2 uv = xy / (float2)dispatchSize;
-                            float3 col = 0.5 + (0.5 * cos(time + float3(uv, uv.x) + float3(0, 2, 4)));
-                            return float4(col, 1.0);
+                            float3 col = asfloat(1056964608U) + (asfloat(1056964608U) * cos(time + float3(uv, uv.x) + float3(0, 2, 4)));
+                            return float4(col, asfloat(1065353216U));
                         }
                         """;
 

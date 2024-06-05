@@ -68,7 +68,7 @@ public class ShadersTests
     [DataRow(WrapperType.CanvasEffect)]
     public async Task TerracedHills(WrapperType wrapperType)
     {
-        await RunTestAsync<TerracedHills>(wrapperType, 0.000026f);
+        await RunTestAsync<TerracedHills>(wrapperType, 0.000027f);
     }
 
     private static async Task RunTestAsync<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(WrapperType wrapperType, float threshold = 0.00001f)
