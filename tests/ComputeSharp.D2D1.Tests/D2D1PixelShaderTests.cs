@@ -417,13 +417,13 @@ namespace ComputeSharp.D2D1.Tests
             Assert.IsTrue(manager!.GetType().Name.Contains("HlslBytecodeMemoryManager"));
 
             // Matching compile options
-            bytecode = D2D1PixelShader.LoadBytecode<ShaderWithEmbeddedBytecode>(D2D1CompileOptions.Default | D2D1CompileOptions.EnableLinking);
+            bytecode = D2D1PixelShader.LoadBytecode<ShaderWithEmbeddedBytecode>(D2D1CompileOptions.Default);
 
             Assert.IsTrue(MemoryMarshal.TryGetMemoryManager(bytecode, out manager));
             Assert.IsTrue(manager!.GetType().Name.Contains("HlslBytecodeMemoryManager"));
 
             // Matching shader profile and compile options
-            bytecode = D2D1PixelShader.LoadBytecode<ShaderWithEmbeddedBytecode>(D2D1ShaderProfile.PixelShader40Level91, D2D1CompileOptions.Default | D2D1CompileOptions.EnableLinking);
+            bytecode = D2D1PixelShader.LoadBytecode<ShaderWithEmbeddedBytecode>(D2D1ShaderProfile.PixelShader40Level91, D2D1CompileOptions.Default);
 
             Assert.IsTrue(MemoryMarshal.TryGetMemoryManager(bytecode, out manager));
             Assert.IsTrue(manager!.GetType().Name.Contains("HlslBytecodeMemoryManager"));
@@ -598,7 +598,7 @@ namespace ComputeSharp.D2D1.Tests
         {
             ReadOnlyMemory<byte> hlslBytecode = D2D1PixelShader.LoadBytecode<ShaderWithSuppressedFxcWarning>(out _, out D2D1CompileOptions compileOptions);
 
-            Assert.AreEqual(D2D1CompileOptions.OptimizationLevel3 | D2D1CompileOptions.PackMatrixRowMajor, compileOptions);
+            Assert.AreEqual(D2D1CompileOptions.Default & ~D2D1CompileOptions.WarningsAreErrors, compileOptions);
             Assert.IsTrue(hlslBytecode.Length > 0);
         }
 
@@ -618,11 +618,11 @@ namespace ComputeSharp.D2D1.Tests
         [TestMethod]
         public void LoadBytecode_EnableLinkingIsAppliedCorrectly()
         {
-            ReadOnlyMemory<byte> hlslBytecode1 = D2D1PixelShader.LoadBytecode<ReferenceShaderWithDefaultCompileOptions>(out _, out D2D1CompileOptions compileOptions1);
-            ReadOnlyMemory<byte> hlslBytecode2 = D2D1PixelShader.LoadBytecode<ReferenceShaderWithEnableLinking>(out _, out D2D1CompileOptions compileOptions2);
+            ReadOnlyMemory<byte> hlslBytecode1 = D2D1PixelShader.LoadBytecode<ReferenceShaderWithDefaultCompileOptionsAndNotLinking>(out _, out D2D1CompileOptions compileOptions1);
+            ReadOnlyMemory<byte> hlslBytecode2 = D2D1PixelShader.LoadBytecode<ReferenceShaderWithDefaultCompileOptions>(out _, out D2D1CompileOptions compileOptions2);
 
-            Assert.AreEqual(D2D1CompileOptions.Default | D2D1CompileOptions.PackMatrixRowMajor, compileOptions1);
-            Assert.AreEqual(D2D1CompileOptions.Default | D2D1CompileOptions.EnableLinking | D2D1CompileOptions.PackMatrixRowMajor, compileOptions2);
+            Assert.AreEqual(D2D1CompileOptions.Default & ~D2D1CompileOptions.EnableLinking, compileOptions1);
+            Assert.AreEqual(D2D1CompileOptions.Default, compileOptions2);
 
             Assert.IsTrue(MemoryMarshal.TryGetMemoryManager(hlslBytecode1, out MemoryManager<byte>? manager1));
             Assert.IsTrue(manager1!.GetType().Name.Contains("HlslBytecodeMemoryManager"));
@@ -656,9 +656,9 @@ namespace ComputeSharp.D2D1.Tests
         [D2DInputCount(1)]
         [D2DInputSimple(0)]
         [D2DShaderProfile(D2D1ShaderProfile.PixelShader50)]
-        [D2DCompileOptions(D2D1CompileOptions.Default | D2D1CompileOptions.EnableLinking)]
+        [D2DCompileOptions(D2D1CompileOptions.Default & ~D2D1CompileOptions.EnableLinking)]
         [D2DGeneratedPixelShaderDescriptor]
-        public readonly partial struct ReferenceShaderWithEnableLinking : ID2D1PixelShader
+        public readonly partial struct ReferenceShaderWithDefaultCompileOptionsAndNotLinking : ID2D1PixelShader
         {
             public float4 Execute()
             {

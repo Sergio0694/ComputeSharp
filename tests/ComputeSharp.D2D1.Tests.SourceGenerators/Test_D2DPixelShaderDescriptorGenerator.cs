@@ -166,7 +166,7 @@ public class Test_D2DPixelShaderDescriptorGenerator
                     [global::System.CodeDom.Compiler.GeneratedCode("ComputeSharp.D2D1.D2DPixelShaderDescriptorGenerator", <ASSEMBLY_VERSION>)]
                     [global::System.Diagnostics.DebuggerNonUserCode]
                     [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
-                    static ComputeSharp.D2D1.D2D1CompileOptions global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<MyShader>.CompileOptions => global::ComputeSharp.D2D1.D2D1CompileOptions.Default | global::ComputeSharp.D2D1.D2D1CompileOptions.EnableLinking;
+                    static ComputeSharp.D2D1.D2D1CompileOptions global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<MyShader>.CompileOptions => global::ComputeSharp.D2D1.D2D1CompileOptions.Default;
 
                     /// <inheritdoc/>
                     [global::System.CodeDom.Compiler.GeneratedCode("ComputeSharp.D2D1.D2DPixelShaderDescriptorGenerator", <ASSEMBLY_VERSION>)]
@@ -466,7 +466,7 @@ public class Test_D2DPixelShaderDescriptorGenerator
                     [global::System.CodeDom.Compiler.GeneratedCode("ComputeSharp.D2D1.D2DPixelShaderDescriptorGenerator", <ASSEMBLY_VERSION>)]
                     [global::System.Diagnostics.DebuggerNonUserCode]
                     [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
-                    static ComputeSharp.D2D1.D2D1CompileOptions global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<MyShader>.CompileOptions => global::ComputeSharp.D2D1.D2D1CompileOptions.Default | global::ComputeSharp.D2D1.D2D1CompileOptions.EnableLinking;
+                    static ComputeSharp.D2D1.D2D1CompileOptions global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<MyShader>.CompileOptions => global::ComputeSharp.D2D1.D2D1CompileOptions.Default;
 
                     /// <inheritdoc/>
                     [global::System.CodeDom.Compiler.GeneratedCode("ComputeSharp.D2D1.D2DPixelShaderDescriptorGenerator", <ASSEMBLY_VERSION>)]
@@ -818,7 +818,7 @@ public class Test_D2DPixelShaderDescriptorGenerator
                     [global::System.CodeDom.Compiler.GeneratedCode("ComputeSharp.D2D1.D2DPixelShaderDescriptorGenerator", <ASSEMBLY_VERSION>)]
                     [global::System.Diagnostics.DebuggerNonUserCode]
                     [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
-                    static ComputeSharp.D2D1.D2D1CompileOptions global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<MyShader>.CompileOptions => global::ComputeSharp.D2D1.D2D1CompileOptions.Default | global::ComputeSharp.D2D1.D2D1CompileOptions.EnableLinking;
+                    static ComputeSharp.D2D1.D2D1CompileOptions global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<MyShader>.CompileOptions => global::ComputeSharp.D2D1.D2D1CompileOptions.Default;
 
                     /// <inheritdoc/>
                     [global::System.CodeDom.Compiler.GeneratedCode("ComputeSharp.D2D1.D2DPixelShaderDescriptorGenerator", <ASSEMBLY_VERSION>)]
@@ -1116,7 +1116,7 @@ public class Test_D2DPixelShaderDescriptorGenerator
                     [global::System.CodeDom.Compiler.GeneratedCode("ComputeSharp.D2D1.D2DPixelShaderDescriptorGenerator", <ASSEMBLY_VERSION>)]
                     [global::System.Diagnostics.DebuggerNonUserCode]
                     [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
-                    static ComputeSharp.D2D1.D2D1CompileOptions global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<MyShader>.CompileOptions => global::ComputeSharp.D2D1.D2D1CompileOptions.Default | global::ComputeSharp.D2D1.D2D1CompileOptions.EnableLinking;
+                    static ComputeSharp.D2D1.D2D1CompileOptions global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<MyShader>.CompileOptions => global::ComputeSharp.D2D1.D2D1CompileOptions.Default;
 
                     /// <inheritdoc/>
                     [global::System.CodeDom.Compiler.GeneratedCode("ComputeSharp.D2D1.D2DPixelShaderDescriptorGenerator", <ASSEMBLY_VERSION>)]
@@ -1694,7 +1694,7 @@ public class Test_D2DPixelShaderDescriptorGenerator
                     [global::System.CodeDom.Compiler.GeneratedCode("ComputeSharp.D2D1.D2DPixelShaderDescriptorGenerator", <ASSEMBLY_VERSION>)]
                     [global::System.Diagnostics.DebuggerNonUserCode]
                     [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
-                    static ComputeSharp.D2D1.D2D1CompileOptions global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<MyShader>.CompileOptions => global::ComputeSharp.D2D1.D2D1CompileOptions.Default | global::ComputeSharp.D2D1.D2D1CompileOptions.EnableLinking;
+                    static ComputeSharp.D2D1.D2D1CompileOptions global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<MyShader>.CompileOptions => global::ComputeSharp.D2D1.D2D1CompileOptions.Default;
 
                     /// <inheritdoc/>
                     [global::System.CodeDom.Compiler.GeneratedCode("ComputeSharp.D2D1.D2DPixelShaderDescriptorGenerator", <ASSEMBLY_VERSION>)]
