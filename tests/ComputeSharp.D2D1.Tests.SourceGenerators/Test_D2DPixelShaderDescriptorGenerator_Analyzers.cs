@@ -104,7 +104,7 @@ public class Test_D2DPixelShaderDescriptorGenerator_Analyzers
 
             namespace MyFancyApp.Sample;
 
-            internal partial struct {|CMPSD2D0070:MyShader|} : ID2D1PixelShader
+            internal partial struct {|CMPSD2D0069:MyShader|} : ID2D1PixelShader
             {
                 public float number;
 
@@ -206,7 +206,7 @@ public class Test_D2DPixelShaderDescriptorGenerator_Analyzers
 
             [D2DInputCount(0)]
             [D2DGeneratedPixelShaderDescriptor]
-            internal partial struct {|CMPSD2D0076:MyType|} : ID2D1PixelShader
+            internal partial struct {|CMPSD2D0075:MyType|} : ID2D1PixelShader
             {
                 public Float4 Execute()
                 {
@@ -273,7 +273,7 @@ public class Test_D2DPixelShaderDescriptorGenerator_Analyzers
             [assembly: D2DEnableRuntimeCompilation]
 
             [D2DInputCount(0)]
-            [{|CMPSD2D0077:D2DEnableRuntimeCompilation|}]
+            [{|CMPSD2D0076:D2DEnableRuntimeCompilation|}]
             [D2DGeneratedPixelShaderDescriptor]
             internal partial struct MyType : ID2D1PixelShader
             {
@@ -297,7 +297,7 @@ public class Test_D2DPixelShaderDescriptorGenerator_Analyzers
             [assembly: D2DShaderProfile(D2D1ShaderProfile.PixelShader50)]
 
             [D2DInputCount(0)]
-            [{|CMPSD2D0078:D2DEnableRuntimeCompilation|}]
+            [{|CMPSD2D0077:D2DEnableRuntimeCompilation|}]
             [D2DGeneratedPixelShaderDescriptor]
             internal partial struct MyType : ID2D1PixelShader
             {
@@ -320,7 +320,7 @@ public class Test_D2DPixelShaderDescriptorGenerator_Analyzers
 
             [D2DInputCount(0)]
             [D2DShaderProfile(D2D1ShaderProfile.PixelShader50)]
-            [{|CMPSD2D0078:D2DEnableRuntimeCompilation|}]
+            [{|CMPSD2D0077:D2DEnableRuntimeCompilation|}]
             [D2DGeneratedPixelShaderDescriptor]
             internal partial struct MyType : ID2D1PixelShader
             {
@@ -341,7 +341,7 @@ public class Test_D2DPixelShaderDescriptorGenerator_Analyzers
             using ComputeSharp.D2D1;
 
             [assembly: D2DShaderProfile(D2D1ShaderProfile.PixelShader50)]
-            [assembly: {|CMPSD2D0079:D2DEnableRuntimeCompilation|}]
+            [assembly: {|CMPSD2D0078:D2DEnableRuntimeCompilation|}]
             """;
 
         await CSharpAnalyzerWithLanguageVersionTest<D2DEnableRuntimeCompilationOnAssemblyAnalyzer>.VerifyAnalyzerAsync(source);
@@ -402,7 +402,7 @@ public class Test_D2DPixelShaderDescriptorGenerator_Analyzers
             using ComputeSharp.D2D1;
 
             [D2DInputCount(0)]
-            [{|CMPSD2D0082:D2DRequiresDoublePrecisionSupport|}]
+            [{|CMPSD2D0081:D2DRequiresDoublePrecisionSupport|}]
             [D2DGeneratedPixelShaderDescriptor]
             internal partial struct MyType : ID2D1PixelShader
             {
