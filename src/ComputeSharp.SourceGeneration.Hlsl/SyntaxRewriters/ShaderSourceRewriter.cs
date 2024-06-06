@@ -451,6 +451,14 @@ internal sealed partial class ShaderSourceRewriter(
                 if (!this.staticMethods.TryGetValue(key, out MethodDeclarationSyntax? methodSyntax))
                 {
                     INamedTypeSymbol resourceType = (INamedTypeSymbol)SemanticModel.For(node).GetTypeInfo(node.Expression, CancellationToken).Type!;
+
+                    // Explicitly ignore 'ConstantBuffer<T>.Length', as that is not valid in HLSL.
+                    // The type should just be reworked entirely at some point, but not today.
+                    if (resourceType.Name == "ConstantBuffer")
+                    {
+                        return updatedNode;
+                    }
+
                     string resourceName = HlslKnownTypes.GetMappedName(resourceType);
 
                     // Create a static method to get a specified dimension for a target resource type.

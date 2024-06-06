@@ -35,6 +35,10 @@ partial class HlslKnownProperties
     /// <inheritdoc/>
     private static partial Dictionary<string, (int Rank, int Axis)> BuildKnownSizeAccessors()
     {
+        // For 'Buffer`1', which is used by the '[RW]StructuredBuffer<T>' types in HLSL, the rank is
+        // 2 because 'GetDimensions' still has two parameters, even if the actual rank of the array
+        // is just 1. That is because the length is the first output, and the second is the stride.
+        // The latter will always be ignored by the generated code.
         return new()
         {
             ["ComputeSharp.Resources.Buffer`1.Length"] = (2, 0),
