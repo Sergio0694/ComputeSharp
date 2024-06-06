@@ -176,14 +176,22 @@ public enum D2D1CompileOptions
     EnableLinking = 1 << 31,
 
     /// <summary>
-    /// The default options for shaders compiled by ComputeSharp.D2D1. Specifically, this combination
-    /// of options is the one used by precompiled shaders (ie. when using <see cref="D2DShaderProfileAttribute"/>),
-    /// and when using <see cref="D2D1PixelShader.LoadBytecode{T}()"/> or any of the overloads.
+    /// The default options for shaders compiled by ComputeSharp.D2D1. Specifically, this combination of options
+    /// is the one used by precompiled shaders (ie. when using <see cref="D2DShaderProfileAttribute"/>), and when
+    /// using <see cref="D2D1PixelShader.LoadBytecode{T}()"/> or any of the overloads, if not manually set.
+    /// </summary>
+    Default = OptimizationLevel3 | WarningsAreErrors | PackMatrixRowMajor | EnableLinking,
+
+    /// <summary>
+    /// A combination of options to aggressively optimize for maximum speed.
     /// </summary>
     /// <remarks>
-    /// This option does not include <see cref="EnableLinking"/>, which is instead automatically enabled by shaders
-    /// compiled using any of the APIs mentioned above. When manually compiling shaders from source using the APIs
-    /// from <see cref="D2D1ShaderCompiler"/> instance, <see cref="EnableLinking"/> should be manually used when needed.
+    /// This combination includes <see cref="PartialPrecision"/>, which might slightly alter the shader outputs in some cases.
     /// </remarks>
-    Default = OptimizationLevel3 | WarningsAreErrors | PackMatrixRowMajor
+    OptimizeForSpeed = OptimizationLevel3 | WarningsAreErrors | PackMatrixRowMajor | EnableLinking | PartialPrecision,
+
+    /// <summary>
+    /// A combination of options to aggressively optimize for minimum size.
+    /// </summary>
+    OptimizeForSize = OptimizationLevel3 | WarningsAreErrors | PackMatrixRowMajor | StripReflectionData
 }
