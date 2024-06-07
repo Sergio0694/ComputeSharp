@@ -180,18 +180,16 @@ public enum D2D1CompileOptions
     /// is the one used by precompiled shaders (ie. when using <see cref="D2DShaderProfileAttribute"/>), and when
     /// using <see cref="D2D1PixelShader.LoadBytecode{T}()"/> or any of the overloads, if not manually set.
     /// </summary>
+    /// <remarks>
+    /// This combination is also meant to provide the maximum speed possible without potentially introducing visual artifacts or altering
+    /// the shader outputs in any way. For instance, <see cref="PartialPrecision"/> is not included, because it might affect all computations
+    /// inside the shader on some GPU devices, making issues hard to investigate. As such, it can be considered equivalent to "OptimizeForSpeed",
+    /// which is not available on <see cref="D2D1CompileOptions"/> specifically because it would be identical to this.
+    /// </remarks>
     Default = OptimizationLevel3 | WarningsAreErrors | PackMatrixRowMajor | EnableLinking,
 
     /// <summary>
-    /// A combination of options to aggressively optimize for maximum speed.
-    /// </summary>
-    /// <remarks>
-    /// This combination includes <see cref="PartialPrecision"/>, which might slightly alter the shader outputs in some cases.
-    /// </remarks>
-    OptimizeForSpeed = OptimizationLevel3 | WarningsAreErrors | PackMatrixRowMajor | EnableLinking | PartialPrecision,
-
-    /// <summary>
-    /// A combination of options to aggressively optimize for minimum size.
+    /// A combination of options to optimize for minimum size.
     /// </summary>
     OptimizeForSize = OptimizationLevel3 | WarningsAreErrors | PackMatrixRowMajor | StripReflectionData
 }
