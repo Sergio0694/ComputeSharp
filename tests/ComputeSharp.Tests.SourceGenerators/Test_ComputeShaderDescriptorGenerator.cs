@@ -423,6 +423,7 @@ public class Test_ComputeShaderDescriptorGenerator
 
                         buffer.__x = x;
                         buffer.__y = y;
+
                         loader.LoadConstantBuffer(new global::System.ReadOnlySpan<byte>(&buffer, sizeof(global::ComputeSharp.Generated.ConstantBuffer)));
                     }
 
