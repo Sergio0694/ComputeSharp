@@ -59,8 +59,20 @@ partial class D2DPixelShaderDescriptorGenerator
                 }
                 else
                 {
+                    // Because D2D (and possibly other consumers) will do a bitwise check on the constant buffer to check for changes,
+                    // it is important that the padding space between aligned elements in the generated constant buffer type are also
+                    // cleared, and not filled with random data (which might be the case if no special care is taken). We cannot just
+                    // rely on the default zero-ing performed by the JIT, because there is no guarantee that the padding space in types
+                    // representing unions will also be zero-ed. So instead we create an uninitialized instance and manually clear it
+                    // with 'NativeMemory.Clear' (which can also be unrolled by the JIT). This still maintains good performance, and
+                    // makes it possible for downstream consumers to further improve performance by implementing better caching strategies.
+                    writer.WriteLine("global::System.Runtime.CompilerServices.Unsafe.SkipInit(out global::ComputeSharp.D2D1.Generated.ConstantBuffer buffer);");
+                    writer.WriteLine();
+                    writer.WriteLine("global::System.Runtime.InteropServices.NativeMemory.Clear(&buffer, (uint)sizeof(global::ComputeSharp.D2D1.Generated.ConstantBuffer));");
+                    writer.WriteLine();
+
                     // Otherwise, pass a span into the marshalled native layout buffer
-                    writer.WriteLine("global::ComputeSharp.D2D1.Generated.ConstantBufferMarshaller.FromManaged(in shader, out global::ComputeSharp.D2D1.Generated.ConstantBuffer buffer);");
+                    writer.WriteLine("global::ComputeSharp.D2D1.Generated.ConstantBufferMarshaller.FromManaged(in shader, out buffer);");
                     writer.WriteLine();
                     writer.WriteLine("loader.LoadConstantBuffer(new global::System.ReadOnlySpan<byte>(&buffer, sizeof(global::ComputeSharp.D2D1.Generated.ConstantBuffer)));");
                 }

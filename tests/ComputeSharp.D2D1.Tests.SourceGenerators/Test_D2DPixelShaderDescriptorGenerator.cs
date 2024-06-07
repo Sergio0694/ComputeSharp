@@ -216,7 +216,11 @@ public class Test_D2DPixelShaderDescriptorGenerator
                     [global::System.Runtime.CompilerServices.SkipLocalsInit]
                     static unsafe void global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<MyShader>.LoadConstantBuffer<TLoader>(in MyShader shader, ref TLoader loader)
                     {
-                        global::ComputeSharp.D2D1.Generated.ConstantBufferMarshaller.FromManaged(in shader, out global::ComputeSharp.D2D1.Generated.ConstantBuffer buffer);
+                        global::System.Runtime.CompilerServices.Unsafe.SkipInit(out global::ComputeSharp.D2D1.Generated.ConstantBuffer buffer);
+
+                        global::System.Runtime.InteropServices.NativeMemory.Clear(&buffer, (uint)sizeof(global::ComputeSharp.D2D1.Generated.ConstantBuffer));
+
+                        global::ComputeSharp.D2D1.Generated.ConstantBufferMarshaller.FromManaged(in shader, out buffer);
 
                         loader.LoadConstantBuffer(new global::System.ReadOnlySpan<byte>(&buffer, sizeof(global::ComputeSharp.D2D1.Generated.ConstantBuffer)));
                     }
@@ -512,7 +516,11 @@ public class Test_D2DPixelShaderDescriptorGenerator
                     [global::System.Runtime.CompilerServices.SkipLocalsInit]
                     static unsafe void global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<MyShader>.LoadConstantBuffer<TLoader>(in MyShader shader, ref TLoader loader)
                     {
-                        global::ComputeSharp.D2D1.Generated.ConstantBufferMarshaller.FromManaged(in shader, out global::ComputeSharp.D2D1.Generated.ConstantBuffer buffer);
+                        global::System.Runtime.CompilerServices.Unsafe.SkipInit(out global::ComputeSharp.D2D1.Generated.ConstantBuffer buffer);
+
+                        global::System.Runtime.InteropServices.NativeMemory.Clear(&buffer, (uint)sizeof(global::ComputeSharp.D2D1.Generated.ConstantBuffer));
+
+                        global::ComputeSharp.D2D1.Generated.ConstantBufferMarshaller.FromManaged(in shader, out buffer);
 
                         loader.LoadConstantBuffer(new global::System.ReadOnlySpan<byte>(&buffer, sizeof(global::ComputeSharp.D2D1.Generated.ConstantBuffer)));
                     }
@@ -860,7 +868,11 @@ public class Test_D2DPixelShaderDescriptorGenerator
                     [global::System.Runtime.CompilerServices.SkipLocalsInit]
                     static unsafe void global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<MyShader>.LoadConstantBuffer<TLoader>(in MyShader shader, ref TLoader loader)
                     {
-                        global::ComputeSharp.D2D1.Generated.ConstantBufferMarshaller.FromManaged(in shader, out global::ComputeSharp.D2D1.Generated.ConstantBuffer buffer);
+                        global::System.Runtime.CompilerServices.Unsafe.SkipInit(out global::ComputeSharp.D2D1.Generated.ConstantBuffer buffer);
+
+                        global::System.Runtime.InteropServices.NativeMemory.Clear(&buffer, (uint)sizeof(global::ComputeSharp.D2D1.Generated.ConstantBuffer));
+
+                        global::ComputeSharp.D2D1.Generated.ConstantBufferMarshaller.FromManaged(in shader, out buffer);
 
                         loader.LoadConstantBuffer(new global::System.ReadOnlySpan<byte>(&buffer, sizeof(global::ComputeSharp.D2D1.Generated.ConstantBuffer)));
                     }
@@ -1154,7 +1166,11 @@ public class Test_D2DPixelShaderDescriptorGenerator
                     [global::System.Runtime.CompilerServices.SkipLocalsInit]
                     static unsafe void global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<MyShader>.LoadConstantBuffer<TLoader>(in MyShader shader, ref TLoader loader)
                     {
-                        global::ComputeSharp.D2D1.Generated.ConstantBufferMarshaller.FromManaged(in shader, out global::ComputeSharp.D2D1.Generated.ConstantBuffer buffer);
+                        global::System.Runtime.CompilerServices.Unsafe.SkipInit(out global::ComputeSharp.D2D1.Generated.ConstantBuffer buffer);
+
+                        global::System.Runtime.InteropServices.NativeMemory.Clear(&buffer, (uint)sizeof(global::ComputeSharp.D2D1.Generated.ConstantBuffer));
+
+                        global::ComputeSharp.D2D1.Generated.ConstantBufferMarshaller.FromManaged(in shader, out buffer);
 
                         loader.LoadConstantBuffer(new global::System.ReadOnlySpan<byte>(&buffer, sizeof(global::ComputeSharp.D2D1.Generated.ConstantBuffer)));
                     }
