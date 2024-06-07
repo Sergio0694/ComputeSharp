@@ -1261,5 +1261,72 @@ namespace ComputeSharp.D2D1.Tests
                 return Hlsl.BoolToFloat(this.value);
             }
         }
+
+        // See https://github.com/Sergio0694/ComputeSharp/issues/808
+        [TestMethod]
+        public void GetConstantBuffer_IsBitwiseEquatable()
+        {
+            GetShaderWithScalarVectorAndMatrixTypes(out ShaderWithScalarVectorAndMatrixTypes shader);
+
+            [MethodImpl(MethodImplOptions.NoInlining)]
+            static void DirtyStack()
+            {
+                Span<byte> span = stackalloc byte[4096];
+
+                Random.Shared.NextBytes(span);
+
+                Dummy(span);
+            }
+
+            [MethodImpl(MethodImplOptions.NoInlining)]
+            static void Dummy(ReadOnlySpan<byte> span)
+            {
+            }
+
+            DirtyStack();
+
+            ReadOnlyMemory<byte> memory = D2D1PixelShader.GetConstantBuffer(in shader);
+
+            ValidateShaderWithScalarVectorAndMatrixTypesConstantBuffer_WithPadding(memory.Span);
+        }
+
+        // Same as 'ValidateShaderWithScalarVectorAndMatrixTypesConstantBuffer', but also validates the padding
+        private unsafe void ValidateShaderWithScalarVectorAndMatrixTypesConstantBuffer_WithPadding(ReadOnlySpan<byte> span)
+        {
+            Assert.AreEqual(124, span.Length);
+
+            fixed (byte* buffer = span)
+            {
+                Assert.AreEqual(111, *(int*)&buffer[0]);
+                Assert.AreEqual(222, *(int*)&buffer[4]);
+                Assert.AreEqual(333, *(int*)&buffer[8]);
+                Assert.AreEqual(0, *(int*)&buffer[12]); // Padding
+                Assert.AreEqual(55, *(float*)&buffer[16]);
+                Assert.AreEqual(44, *(float*)&buffer[20]);
+                Assert.AreEqual(888, *(float*)&buffer[24]);
+                Assert.AreEqual(0, *(int*)&buffer[28]); // Padding
+                Assert.AreEqual(111, *(float*)&buffer[32]);
+                Assert.AreEqual(222, *(float*)&buffer[36]);
+                Assert.AreEqual(333, *(float*)&buffer[40]);
+                Assert.AreEqual(22, *(int*)&buffer[44]);
+                Assert.AreEqual(1, *(int*)&buffer[48]);
+                Assert.AreEqual(2, *(int*)&buffer[52]);
+                Assert.AreEqual(3, *(int*)&buffer[56]);
+                Assert.AreEqual(0, *(int*)&buffer[60]); // Padding
+                Assert.AreEqual(3.14, *(double*)&buffer[64]);
+                Assert.AreEqual(6.28, *(double*)&buffer[72]);
+                Assert.AreEqual(42, *(int*)&buffer[80]);
+                Assert.AreEqual(111, *(int*)&buffer[84]);
+                Assert.AreEqual(222, *(int*)&buffer[88]);
+                Assert.AreEqual(0, *(int*)&buffer[92]); // Padding
+                Assert.AreEqual(11, *(int*)&buffer[96]);
+                Assert.AreEqual(22, *(int*)&buffer[100]);
+                Assert.AreEqual(0, *(int*)&buffer[104]); // Padding
+                Assert.AreEqual(0, *(int*)&buffer[108]); // Padding
+                Assert.AreEqual(33, *(int*)&buffer[112]);
+                Assert.AreEqual(44, *(int*)&buffer[116]);
+                Assert.AreEqual(9999, *(int*)&buffer[120]);
+            }
+        }
     }
 }
