@@ -199,7 +199,7 @@ partial class ConstantBufferSyntaxProcessor
                     writer.WriteLine($"""/// <returns>The marshalled <see cref="{fullyQualifiedTypeName}"/> instance.</returns>""");
                     writer.WriteLine($"""[MethodImpl(MethodImplOptions.AggressiveInlining)]""");
                     writer.WriteLine($"""[SkipLocalsInit]""");
-                    writer.WriteLine($"public static {fullyQualifiedTypeName} ToManaged(in ConstantBuffer buffer)");
+                    writer.WriteLine($"public static {fullyQualifiedTypeName} ToManaged(ref readonly ConstantBuffer buffer)");
 
                     using (writer.WriteBlock())
                     {

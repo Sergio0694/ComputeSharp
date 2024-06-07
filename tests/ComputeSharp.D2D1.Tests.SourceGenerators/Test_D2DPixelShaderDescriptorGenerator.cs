@@ -281,7 +281,7 @@ public class Test_D2DPixelShaderDescriptorGenerator
                     /// <returns>The marshalled <see cref="global::MyNamespace.MyShader"/> instance.</returns>
                     [MethodImpl(MethodImplOptions.AggressiveInlining)]
                     [SkipLocalsInit]
-                    public static global::MyNamespace.MyShader ToManaged(in ConstantBuffer buffer)
+                    public static global::MyNamespace.MyShader ToManaged(ref readonly ConstantBuffer buffer)
                     {
                         Unsafe.SkipInit(out global::MyNamespace.MyShader shader);
 
@@ -583,7 +583,7 @@ public class Test_D2DPixelShaderDescriptorGenerator
                     /// <returns>The marshalled <see cref="global::MyNamespace.MyShader"/> instance.</returns>
                     [MethodImpl(MethodImplOptions.AggressiveInlining)]
                     [SkipLocalsInit]
-                    public static global::MyNamespace.MyShader ToManaged(in ConstantBuffer buffer)
+                    public static global::MyNamespace.MyShader ToManaged(ref readonly ConstantBuffer buffer)
                     {
                         Unsafe.SkipInit(out global::MyNamespace.MyShader shader);
 
@@ -933,7 +933,7 @@ public class Test_D2DPixelShaderDescriptorGenerator
                     /// <returns>The marshalled <see cref="global::MyNamespace.MyShader"/> instance.</returns>
                     [MethodImpl(MethodImplOptions.AggressiveInlining)]
                     [SkipLocalsInit]
-                    public static global::MyNamespace.MyShader ToManaged(in ConstantBuffer buffer)
+                    public static global::MyNamespace.MyShader ToManaged(ref readonly ConstantBuffer buffer)
                     {
                         Unsafe.SkipInit(out global::MyNamespace.MyShader shader);
 
@@ -1231,7 +1231,7 @@ public class Test_D2DPixelShaderDescriptorGenerator
                     /// <returns>The marshalled <see cref="global::MyNamespace.MyShader"/> instance.</returns>
                     [MethodImpl(MethodImplOptions.AggressiveInlining)]
                     [SkipLocalsInit]
-                    public static global::MyNamespace.MyShader ToManaged(in ConstantBuffer buffer)
+                    public static global::MyNamespace.MyShader ToManaged(ref readonly ConstantBuffer buffer)
                     {
                         Unsafe.SkipInit(out global::MyNamespace.MyShader shader);
 
