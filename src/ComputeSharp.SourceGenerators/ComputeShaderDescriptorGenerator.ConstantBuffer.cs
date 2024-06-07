@@ -82,7 +82,7 @@ partial class ComputeShaderDescriptorGenerator
                 writer.WriteLine("buffer.__x = x;");
                 writer.WriteLine("buffer.__y = y;");
                 writer.WriteLineIf(!info.IsPixelShaderLike, "buffer.__z = z;");
-                writer.WriteLineIf(!info.IsPixelShaderLike);
+                writer.WriteLine(skipIfPresent: true);
                 writer.WriteLine("loader.LoadConstantBuffer(new global::System.ReadOnlySpan<byte>(&buffer, sizeof(global::ComputeSharp.Generated.ConstantBuffer)));");
             }
         }
