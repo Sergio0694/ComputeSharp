@@ -7,13 +7,13 @@ using static ComputeSharp.SourceGeneration.Diagnostics.DiagnosticDescriptors;
 namespace ComputeSharp.D2D1.SourceGenerators;
 
 /// <summary>
-/// A diagnostic analyzer that generates an error whenever [D2DCompileOptions] is used on a shader type to request linking when not supported.
+/// A diagnostic analyzer that generates an error whenever [D2DPixelOptions] is used on a shader type to incorrectly request trivial sampling.
 /// </summary>
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
-public sealed class InvalidD2D1CompileOptionsEnableLinkingOnShaderTypeAnalyzer : DiagnosticAnalyzer
+public sealed class InvalidD2D1PixelOptionsTrivialSamplingOnShaderTypeAnalyzer : DiagnosticAnalyzer
 {
     /// <inheritdoc/>
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = [InvalidD2D1CompileOptionsEnableLinkingOnShaderType];
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = [InvalidD2D1PixelOptionsTrivialSamplingOnShaderType];
 
     /// <inheritdoc/>
     public override void Initialize(AnalysisContext context)
@@ -23,8 +23,8 @@ public sealed class InvalidD2D1CompileOptionsEnableLinkingOnShaderTypeAnalyzer :
 
         context.RegisterCompilationStartAction(static context =>
         {
-            // Get the [D2DCompileOptions], [D2DInputCount] and [D2DInputSimple] symbols
-            if (context.Compilation.GetTypeByMetadataName("ComputeSharp.D2D1.D2DCompileOptionsAttribute") is not { } d2DCompileOptionsAttributeSymbol ||
+            // Get the [D2DPixelOptions], [D2DInputCount] and [D2DInputSimple] symbols
+            if (context.Compilation.GetTypeByMetadataName("ComputeSharp.D2D1.D2DPixelOptionsAttribute") is not { } d2DPixelOptionsAttributeSymbol ||
                 context.Compilation.GetTypeByMetadataName("ComputeSharp.D2D1.D2DInputCountAttribute") is not { } d2DInputCountAttributeSymbol ||
                 context.Compilation.GetTypeByMetadataName("ComputeSharp.D2D1.D2DInputSimpleAttribute") is not { } d2DInputSimpleAttributeSymbol)
             {
@@ -39,9 +39,9 @@ public sealed class InvalidD2D1CompileOptionsEnableLinkingOnShaderTypeAnalyzer :
                     return;
                 }
 
-                // If the type is not using [D2DCompileOptions] with D2D1CompileOptions.EnableLinking, there's nothing to do
-                if (!typeSymbol.TryGetAttributeWithType(d2DCompileOptionsAttributeSymbol, out AttributeData? compileOptionsAttribute) ||
-                    !((D2D1CompileOptions)compileOptionsAttribute.ConstructorArguments[0].Value!).HasFlag(D2D1CompileOptions.EnableLinking))
+                // If the type is not using [D2DPixelOptions] with D2D1PixelOptions.TrivialSampling, there's nothing to do
+                if (!typeSymbol.TryGetAttributeWithType(d2DPixelOptionsAttributeSymbol, out AttributeData? pixelOptionsAttribute) ||
+                    !((D2D1PixelOptions)pixelOptionsAttribute.ConstructorArguments[0].Value!).HasFlag(D2D1PixelOptions.TrivialSampling))
                 {
                     return;
                 }
@@ -57,8 +57,8 @@ public sealed class InvalidD2D1CompileOptionsEnableLinkingOnShaderTypeAnalyzer :
                 if (!D2DPixelShaderDescriptorGenerator.HlslBytecode.IsSimpleInputShader(typeSymbol, d2DInputSimpleAttributeSymbol, inputCount))
                 {
                     context.ReportDiagnostic(Diagnostic.Create(
-                        InvalidD2D1CompileOptionsEnableLinkingOnShaderType,
-                        compileOptionsAttribute.GetLocation(),
+                        InvalidD2D1PixelOptionsTrivialSamplingOnShaderType,
+                        pixelOptionsAttribute.GetLocation(),
                         typeSymbol));
                 }
             }, SymbolKind.NamedType);

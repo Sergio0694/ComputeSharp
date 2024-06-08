@@ -1024,19 +1024,19 @@ partial class DiagnosticDescriptors
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 
     /// <summary>
-    /// Gets a <see cref="DiagnosticDescriptor"/> for an invalid use of <c>[D2DCompileOptions]</c> requesting to enable linking.
+    /// Gets a <see cref="DiagnosticDescriptor"/> for an invalid use of <c>[D2DPixelOptions]</c> indicating trivial sampling.
     /// <para>
-    /// Format: <c>"The D2D1 shader of type {0} cannot use D2D1CompileOptions.EnableLinking in its [D2DCompileOptions] attribute, as it doesn't support linking (only D2D1 shaders with no complex inputs can use this option)"</c>.
+    /// Format: <c>"The D2D1 shader of type {0} shouldn't use D2D1PixelOptions.TrivialSampling in its [D2DPixelOptions] attribute, as it has one or more complex inputs (either mark the inputs as simple, or remove the trivial sampling option)"</c>.
     /// </para>
     /// </summary>
-    public static readonly DiagnosticDescriptor InvalidD2D1CompileOptionsEnableLinkingOnShaderType = new(
+    public static readonly DiagnosticDescriptor InvalidD2D1PixelOptionsTrivialSamplingOnShaderType = new(
         id: "CMPSD2D0069",
-        title: "Invalid [D2DResourceTextureIndex] use",
-        messageFormat: """The D2D1 shader of type {0} cannot use D2D1CompileOptions.EnableLinking in its [D2DCompileOptions] attribute, as it doesn't support linking (only D2D1 shaders with no complex inputs can use this option)""",
+        title: "Invalid [D2DPixelOptions] use",
+        messageFormat: """The D2D1 shader of type {0} shouldn't use D2D1PixelOptions.TrivialSampling in its [D2DPixelOptions] attribute, as it has one or more complex inputs (either mark the inputs as simple, or remove the trivial sampling option)""",
         category: "ComputeSharp.D2D1.Shaders",
         defaultSeverity: DiagnosticSeverity.Warning,
         isEnabledByDefault: true,
-        description: "A D2D1 shader cannot use D2D1CompileOptions.EnableLinking in its [D2DCompileOptions] attribute if it doesn't support linking (only D2D1 shaders with no complex inputs can use this option).",
+        description: "A D2D1 shader shouldn't use D2D1PixelOptions.TrivialSampling in its [D2DPixelOptions] attribute if it has one or more complex inputs (because trivial sampling shaders can only sample pixels at the same scene coordinate as the output pixel, a shader using this option should only have simple inputs).",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 
     /// <summary>
