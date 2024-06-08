@@ -1117,4 +1117,69 @@ public class Test_D2DPixelShaderDescriptorGenerator_Analyzers
 
         await CSharpAnalyzerWithLanguageVersionTest<InvalidShaderTypeInputsAnalyzer>.VerifyAnalyzerAsync(source);
     }
+
+    [TestMethod]
+    public async Task TrivialSamplingWithComplexInput_Warns()
+    {
+        const string source = """
+            using ComputeSharp.D2D1;
+            using float4 = ComputeSharp.Float4;
+
+            [D2DInputCount(1)]
+            [{|CMPSD2D0069:D2DPixelOptions(D2D1PixelOptions.TrivialSampling)|}]
+            internal readonly partial struct MyType : ID2D1PixelShader
+            {
+                public float4 Execute()
+                {
+                    return 0;
+                }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<InvalidD2D1PixelOptionsTrivialSamplingOnShaderTypeAnalyzer>.VerifyAnalyzerAsync(source);
+    }
+
+    [TestMethod]
+    public async Task TrivialSamplingWithExplicitComplexInput_Warns()
+    {
+        const string source = """
+            using ComputeSharp.D2D1;
+            using float4 = ComputeSharp.Float4;
+
+            [D2DInputCount(1)]
+            [D2DInputComplex(1)]
+            [{|CMPSD2D0069:D2DPixelOptions(D2D1PixelOptions.TrivialSampling)|}]
+            internal readonly partial struct MyType : ID2D1PixelShader
+            {
+                public float4 Execute()
+                {
+                    return 0;
+                }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<InvalidD2D1PixelOptionsTrivialSamplingOnShaderTypeAnalyzer>.VerifyAnalyzerAsync(source);
+    }
+
+    [TestMethod]
+    public async Task TrivialSamplingWithLeftoverComplexInput_Warns()
+    {
+        const string source = """
+            using ComputeSharp.D2D1;
+            using float4 = ComputeSharp.Float4;
+
+            [D2DInputCount(2)]
+            [D2DInputSimple(1)]
+            [{|CMPSD2D0069:D2DPixelOptions(D2D1PixelOptions.TrivialSampling)|}]
+            internal readonly partial struct MyType : ID2D1PixelShader
+            {
+                public float4 Execute()
+                {
+                    return 0;
+                }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<InvalidD2D1PixelOptionsTrivialSamplingOnShaderTypeAnalyzer>.VerifyAnalyzerAsync(source);
+    }
 }
