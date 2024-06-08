@@ -176,14 +176,28 @@ public enum D2D1CompileOptions
     EnableLinking = 1 << 31,
 
     /// <summary>
-    /// The default options for shaders compiled by ComputeSharp.D2D1. Specifically, this combination
-    /// of options is the one used by precompiled shaders (ie. when using <see cref="D2DShaderProfileAttribute"/>),
-    /// and when using <see cref="D2D1PixelShader.LoadBytecode{T}()"/> or any of the overloads.
+    /// The default options for shaders compiled by ComputeSharp.D2D1. Specifically, this combination of options
+    /// is the one used by precompiled shaders (ie. when using <see cref="D2DShaderProfileAttribute"/>), and when
+    /// using <see cref="D2D1PixelShader.LoadBytecode{T}()"/> or any of the overloads, if not manually set.
     /// </summary>
     /// <remarks>
-    /// This option does not include <see cref="EnableLinking"/>, which is instead automatically enabled by shaders
-    /// compiled using any of the APIs mentioned above. When manually compiling shaders from source using the APIs
-    /// from <see cref="D2D1ShaderCompiler"/> instance, <see cref="EnableLinking"/> should be manually used when needed.
+    /// <para>
+    /// This combination is also meant to provide the maximum speed possible without potentially introducing visual artifacts or altering
+    /// the shader outputs in any way. For instance, <see cref="PartialPrecision"/> is not included, because it might affect all computations
+    /// inside the shader on some GPU devices, making issues hard to investigate. As such, it can be considered equivalent to "OptimizeForSpeed",
+    /// which is not available on <see cref="D2D1CompileOptions"/> specifically because it would be identical to this.
+    /// </para>
+    /// <para>
+    /// In order to ensure the best performance possible, this combination also includes <see cref="EnableLinking"/>. This will include an
+    /// export function for all shaders, to allow D2D to opportunistically link them for better performance whenever possible. Doing so
+    /// incurs a small binary size cost, as this option will also enable linking for shaders that D2D might never actually link. For most
+    /// scenarios, this cost is minimal and not noticeable. If size is critical, consider using <see cref="OptimizeForSize"/> instead.
+    /// </para>
     /// </remarks>
-    Default = OptimizationLevel3 | WarningsAreErrors | PackMatrixRowMajor
+    Default = OptimizationLevel3 | WarningsAreErrors | PackMatrixRowMajor | EnableLinking,
+
+    /// <summary>
+    /// A combination of options to optimize for minimum size.
+    /// </summary>
+    OptimizeForSize = OptimizationLevel3 | WarningsAreErrors | PackMatrixRowMajor | StripReflectionData
 }
