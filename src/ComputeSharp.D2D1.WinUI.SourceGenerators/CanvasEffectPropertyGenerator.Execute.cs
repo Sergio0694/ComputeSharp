@@ -42,6 +42,60 @@ partial class CanvasEffectPropertyGenerator
         }
 
         /// <summary>
+        /// Tries to get the accessibility of the property and accessors, if possible.
+        /// </summary>
+        /// <param name="node">The input <see cref="PropertyDeclarationSyntax"/> node.</param>
+        /// <param name="symbol">The input <see cref="IPropertySymbol"/> instance.</param>
+        /// <param name="declaredAccessibility">The accessibility of the property, if available.</param>
+        /// <param name="getterAccessibility">The accessibility of the <see langword="get"/> accessor, if available.</param>
+        /// <param name="setterAccessibility">The accessibility of the <see langword="set"/> accessor, if available.</param>
+        /// <returns>Whether the property was valid and the accessibilities could be retrieved.</returns>
+        public static bool TryGetAccessibilityModifiers(
+            PropertyDeclarationSyntax node,
+            IPropertySymbol symbol,
+            out Accessibility declaredAccessibility,
+            out Accessibility getterAccessibility,
+            out Accessibility setterAccessibility)
+        {
+            declaredAccessibility = Accessibility.NotApplicable;
+            getterAccessibility = Accessibility.NotApplicable;
+            setterAccessibility = Accessibility.NotApplicable;
+
+            // Ensure that we have a getter and a setter, and that the setter is not init-only
+            if (symbol is not { GetMethod: { } getMethod, SetMethod: { IsInitOnly: false } setMethod })
+            {
+                return false;
+            }
+
+            // Track the property accessibility if explicitly set
+            if (node.Modifiers.Count > 0)
+            {
+                declaredAccessibility = symbol.DeclaredAccessibility;
+            }
+
+            // Track the accessors accessibility, if explicitly set
+            foreach (AccessorDeclarationSyntax accessor in node.AccessorList?.Accessors ?? [])
+            {
+                if (accessor.Modifiers.Count == 0)
+                {
+                    continue;
+                }
+
+                switch (accessor.Kind())
+                {
+                    case SyntaxKind.GetAccessorDeclaration:
+                        getterAccessibility = getMethod.DeclaredAccessibility;
+                        break;
+                    case SyntaxKind.SetAccessorDeclaration:
+                        setterAccessibility = setMethod.DeclaredAccessibility;
+                        break;
+                }
+            }
+
+            return true;
+        }
+
+        /// <summary>
         /// Gets the invalidation type to use for the generated effect property.
         /// </summary>
         /// <param name="attributeData">The <see cref="AttributeData"/> instance for the processed attribute.</param>
@@ -60,24 +114,51 @@ partial class CanvasEffectPropertyGenerator
 
         public static void WritePropertyDeclarations(EquatableArray<CanvasEffectPropertyInfo> properties, IndentedTextWriter writer)
         {
+            // Helper to get the nullable type name for the initial property value
+            static string GetOldValueTypeNameAsNullable(CanvasEffectPropertyInfo propertyInfo)
+            {
+                // Prepare the nullable type for the previous property value. This is needed because if the type is a reference
+                // type, the previous value might be null even if the property type is not nullable, as the first invocation would
+                // happen when the property is first set to some value that is not null (but the backing field would still be so).
+                // As a cheap way to check whether we need to add nullable, we can simply check whether the type name with nullability
+                // annotations ends with a '?'. If it doesn't and the type is a reference type, we add it. Otherwise, we keep it.
+                return propertyInfo.IsReferenceTypeOrUnconstraindTypeParameter switch
+                {
+                    true when !propertyInfo.TypeNameWithNullabilityAnnotations.EndsWith("?")
+                        => $"{propertyInfo.TypeNameWithNullabilityAnnotations}?",
+                    _ => propertyInfo.TypeNameWithNullabilityAnnotations
+                };
+            }
+
+            // Helper to get the accessibility with a trailing space
+            static string GetExpressionWithTrailingSpace(Accessibility accessibility)
+            {
+                return accessibility.GetExpression() switch
+                {
+                    { Length: > 0 } expression => expression + " ",
+                    _ => ""
+                };
+            }
+
             // First, generate all partial property implementations at the top of the partial type declaration
             foreach (CanvasEffectPropertyInfo propertyInfo in properties)
             {
-                writer.WriteLine(skipIfPresent: true);
+                string oldValueTypeNameAsNullable = GetOldValueTypeNameAsNullable(propertyInfo);
+
                 writer.WriteLine("/// <inheritdoc/>");
                 writer.WriteGeneratedAttributes(GeneratorName);
                 writer.WriteLine($$"""                    
-                    public partial {{propertyInfo.TypeNameWithNullabilityAnnotations}} {{propertyInfo.PropertyName}}
+                    {{GetExpressionWithTrailingSpace(propertyInfo.DeclaredAccessibility)}}partial {{propertyInfo.TypeNameWithNullabilityAnnotations}} {{propertyInfo.PropertyName}}
                     {
-                        get => field;
-                        set
+                        {{GetExpressionWithTrailingSpace(propertyInfo.GetterAccessibility)}}get => field;
+                        {{GetExpressionWithTrailingSpace(propertyInfo.SetterAccessibility)}}set
                         {
-                            if (global::System.Collections.Generic.EqualityComparer<{{propertyInfo.TypeNameWithNullabilityAnnotations}}>.Default.Equals(field, value))
+                            if (global::System.Collections.Generic.EqualityComparer<{{oldValueTypeNameAsNullable}}>.Default.Equals(field, value))
                             {
                                 return;
                             }
                 
-                            int oldValue = field;
+                            {{oldValueTypeNameAsNullable}} oldValue = field;
                     
                             On{{propertyInfo.PropertyName}}Changing(value);
                             On{{propertyInfo.PropertyName}}Changing(oldValue, value);
@@ -91,12 +172,14 @@ partial class CanvasEffectPropertyGenerator
                         }
                     }
                     """, isMultiline: true);
+                writer.WriteLine();
             }
 
+            // Next, emit all partial method declarations at the bottom of the file
             foreach (CanvasEffectPropertyInfo propertyInfo in properties)
             {
                 // On<PROPERTY_NAME>Changing, only with new value
-                writer.WriteLine();
+                writer.WriteLine(skipIfPresent: true);
                 writer.WriteLine($"""
                     /// <summary>Executes the logic for when <see cref="{propertyInfo.PropertyName}"/> is changing.</summary>
                     /// <param name="value">The new property value being set.</param>
@@ -105,17 +188,7 @@ partial class CanvasEffectPropertyGenerator
                 writer.WriteGeneratedAttributes(GeneratorName, includeNonUserCodeAttributes: false);
                 writer.WriteLine($"partial void On{propertyInfo.PropertyName}Changing({propertyInfo.TypeNameWithNullabilityAnnotations} newValue);");
 
-                // Prepare the nullable type for the previous property value. This is needed because if the type is a reference
-                // type, the previous value might be null even if the property type is not nullable, as the first invocation would
-                // happen when the property is first set to some value that is not null (but the backing field would still be so).
-                // As a cheap way to check whether we need to add nullable, we can simply check whether the type name with nullability
-                // annotations ends with a '?'. If it doesn't and the type is a reference type, we add it. Otherwise, we keep it.
-                string oldValueTypeNameAsNullable = propertyInfo.IsReferenceTypeOrUnconstraindTypeParameter switch
-                {
-                    true when !propertyInfo.TypeNameWithNullabilityAnnotations.EndsWith("?")
-                        => $"{propertyInfo.TypeNameWithNullabilityAnnotations}?",
-                    _ => propertyInfo.TypeNameWithNullabilityAnnotations
-                };
+                string oldValueTypeNameAsNullable = GetOldValueTypeNameAsNullable(propertyInfo);
 
                 // On<PROPERTY_NAME>Changing, with both values
                 writer.WriteLine();

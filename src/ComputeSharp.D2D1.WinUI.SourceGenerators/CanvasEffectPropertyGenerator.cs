@@ -3,6 +3,7 @@ using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Helpers;
 using ComputeSharp.SourceGeneration.Models;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace ComputeSharp.D2D1.WinUI.SourceGenerators;
 
@@ -41,6 +42,19 @@ public sealed partial class CanvasEffectPropertyGenerator : IIncrementalGenerato
 
                     token.ThrowIfCancellationRequested();
 
+                    // Get the accessibility values, if the property is valid
+                    if (!Execute.TryGetAccessibilityModifiers(
+                        node: (PropertyDeclarationSyntax)context.TargetNode,
+                        symbol: propertySymbol,
+                        out Accessibility declaredAccessibility,
+                        out Accessibility getterAccessibility,
+                        out Accessibility setterAccessibility))
+                    {
+                        return default;
+                    }
+
+                    token.ThrowIfCancellationRequested();
+
                     string typeNameWithNullabilityAnnotations = propertySymbol.Type.GetFullyQualifiedNameWithNullabilityAnnotations();
 
                     token.ThrowIfCancellationRequested();
@@ -62,6 +76,9 @@ public sealed partial class CanvasEffectPropertyGenerator : IIncrementalGenerato
                     return new CanvasEffectPropertyInfo(
                         Hierarchy: hierarchyInfo,
                         PropertyName: propertySymbol.Name,
+                        DeclaredAccessibility: declaredAccessibility,
+                        GetterAccessibility: getterAccessibility,
+                        SetterAccessibility: setterAccessibility,
                         TypeNameWithNullabilityAnnotations: typeNameWithNullabilityAnnotations,
                         IsReferenceTypeOrUnconstraindTypeParameter: isReferenceTypeOrUnconstraindTypeParameter,
                         InvalidationType: invalidationType);
