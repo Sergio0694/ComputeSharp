@@ -25,18 +25,34 @@ public class Test_CanvasEffectPropertyGenerator_Analyzers
     }
 
     [TestMethod]
-    public async Task InvalidGeneratedCanvasEffectPropertyContainingTypeAnalyzer_CorrectBaseType_DoesNotWarn()
+    public async Task InvalidGeneratedCanvasEffectPropertyAccessorsAnalyzer_ReadOnlyProperty_Warns()
+    {
+        const string source = """
+            using ComputeSharp.D2D1.WinUI;
+
+            public class MyEffect
+            {
+                [{|CMPSD2DWINUI0002:GeneratedCanvasEffectProperty|}]
+                public int Number { get; }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<InvalidGeneratedCanvasEffectPropertyAccessorsAnalyzer>.VerifyAnalyzerAsync(source);
+    }
+
+    [TestMethod]
+    public async Task InvalidGeneratedCanvasEffectPropertyAccessorsAnalyzer_InitOnlyProperty_Warns()
     {
         const string source = """
             using ComputeSharp.D2D1.WinUI;
 
             public abstract class MyEffect : CanvasEffect
             {
-                [GeneratedCanvasEffectProperty]
-                public int Number { get; set; }
+                [{|CMPSD2DWINUI0002:GeneratedCanvasEffectProperty|}]
+                public int Number { get; init; }
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidGeneratedCanvasEffectPropertyContainingTypeAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerWithLanguageVersionTest<InvalidGeneratedCanvasEffectPropertyAccessorsAnalyzer>.VerifyAnalyzerAsync(source);
     }
 }
