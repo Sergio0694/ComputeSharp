@@ -357,7 +357,7 @@ public class Test_CanvasEffectPropertyGenerator
                 [GeneratedCanvasEffectProperty]
                 public int X { get; set; }
 
-                [GeneratedCanvasEffectProperty]
+                [GeneratedCanvasEffectProperty(CanvasEffectInvalidationType.Creation)]
                 public int Y { get; set; }
             }
             """;
@@ -423,7 +423,7 @@ public class Test_CanvasEffectPropertyGenerator
                             OnYChanged(value);
                             OnYChanged(oldValue, value);
 
-                            InvalidateEffectGraph(global::ComputeSharp.D2D1.WinUI.CanvasEffectInvalidationType.Update);
+                            InvalidateEffectGraph(global::ComputeSharp.D2D1.WinUI.CanvasEffectInvalidationType.Creation);
                         }
                     }
 
