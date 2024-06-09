@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows10.0.22621.0</TargetFramework>
+    <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
+    <Platforms>x64;ARM64</Platforms>
+    <RuntimeIdentifiers>win-x64;win-arm64</RuntimeIdentifiers>
+    <RestoreSources>
+      https://api.nuget.org/v3/index.json;
+      https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-tools/nuget/v3/index.json;
+    </RestoreSources>
+    <DefineConstants>$(DefineConstants);D2D1_WINUI_TESTS</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Basic.Reference.Assemblies.Net80" Version="1.7.2" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.10.0" />
+    <PackageReference Include="MSTest.TestAdapter" Version="3.4.3" />
+    <PackageReference Include="MSTest.TestFramework" Version="3.4.3" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Analyzer.Testing.MSTest" Version="1.1.2-beta1.23509.1" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.CodeFix.Testing" Version="1.1.2-beta1.23509.1" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.CodeFix.Testing.MSTest" Version="1.1.2-beta1.23509.1" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.9.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\ComputeSharp.Core\ComputeSharp.Core.csproj" Aliases="Core" />
+    <ProjectReference Include="..\..\src\ComputeSharp.D2D1\ComputeSharp.D2D1.csproj" Aliases="D2D1" />
+    <ProjectReference Include="..\..\src\ComputeSharp.D2D1.WinUI\ComputeSharp.D2D1.WinUI.csproj" Aliases="D2D1_WinUI" />
+    <ProjectReference Include="..\..\src\ComputeSharp.D2D1.WinUI.SourceGenerators\ComputeSharp.D2D1.WinUI.SourceGenerators.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\ComputeSharp.Tests.SourceGenerators\Helpers\CSharpAnalyzerWithLanguageVersionTest{TAnalyzer}.cs" Link="Helpers\CSharpAnalyzerWithLanguageVersionTest{TAnalyzer}.cs" />
+    <Compile Include="..\ComputeSharp.Tests.SourceGenerators\Helpers\CSharpGeneratorTest{TGenerator}.cs" Link="Helpers\CSharpGeneratorTest{TGenerator}.cs" />
+  </ItemGroup>
+</Project>
