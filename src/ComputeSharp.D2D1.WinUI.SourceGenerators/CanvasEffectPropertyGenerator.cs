@@ -1,4 +1,5 @@
 using ComputeSharp.D2D1.WinUI.SourceGenerators.Models;
+using ComputeSharp.SourceGeneration.Constants;
 using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Helpers;
 using ComputeSharp.SourceGeneration.Models;
@@ -83,12 +84,14 @@ public sealed partial class CanvasEffectPropertyGenerator : IIncrementalGenerato
                         IsReferenceTypeOrUnconstraindTypeParameter: isReferenceTypeOrUnconstraindTypeParameter,
                         InvalidationType: invalidationType);
                 })
+            .WithTrackingName(WellKnownTrackingNames.Execute)
             .Where(static item => item is not null)!;
 
         // Split and group by containing type
         IncrementalValuesProvider<(HierarchyInfo Hierarchy, EquatableArray<CanvasEffectPropertyInfo> Properties)> groupedPropertyInfo =
             propertyInfo
-            .GroupBy(keySelector: static item => item.Hierarchy, elementSelector: static item => item);
+            .GroupBy(keySelector: static item => item.Hierarchy, elementSelector: static item => item)
+            .WithTrackingName(WellKnownTrackingNames.Output);
 
         // Generate the source files, if any
         context.RegisterSourceOutput(groupedPropertyInfo, static (context, item) =>
