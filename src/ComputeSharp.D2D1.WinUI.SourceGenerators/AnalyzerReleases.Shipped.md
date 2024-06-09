@@ -7,3 +7,4 @@
 
 Rule ID | Category | Severity | Notes
 --------|----------|----------|-------
+CMPSD2DWINUI0001 | ComputeSharp.D2D1.WinUI.Effects | Error | [Documentation](https://github.com/Sergio0694/ComputeSharp)

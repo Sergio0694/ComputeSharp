@@ -68,6 +68,29 @@ internal static class ITypeSymbolExtensions
     }
 
     /// <summary>
+    /// Checks whether or not a given <see cref="ITypeSymbol"/> inherits from a specified type.
+    /// </summary>
+    /// <param name="typeSymbol">The target <see cref="ITypeSymbol"/> instance to check.</param>
+    /// <param name="baseTypeSymbol">The <see cref="ITypeSymbol"/> instane to check for inheritance from.</param>
+    /// <returns>Whether or not <paramref name="typeSymbol"/> inherits from <paramref name="baseTypeSymbol"/>.</returns>
+    public static bool InheritsFromType(this ITypeSymbol typeSymbol, ITypeSymbol baseTypeSymbol)
+    {
+        INamedTypeSymbol? currentBaseTypeSymbol = typeSymbol.BaseType;
+
+        while (currentBaseTypeSymbol is not null)
+        {
+            if (SymbolEqualityComparer.Default.Equals(currentBaseTypeSymbol, baseTypeSymbol))
+            {
+                return true;
+            }
+
+            currentBaseTypeSymbol = currentBaseTypeSymbol.BaseType;
+        }
+
+        return false;
+    }
+
+    /// <summary>
     /// Checks whether or not a given <see cref="ITypeSymbol"/> implements an interface of a specified type.
     /// </summary>
     /// <param name="typeSymbol">The target <see cref="ITypeSymbol"/> instance to check.</param>
