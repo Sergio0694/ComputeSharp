@@ -494,6 +494,7 @@ public class Test_CanvasEffectPropertyGenerator
     private static async Task VerifyGeneratedDiagnosticsAsync(string source, (string Filename, string Source) result)
     {
         await CSharpAnalyzerWithLanguageVersionTest<InvalidGeneratedCanvasEffectPropertyContainingTypeAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerWithLanguageVersionTest<InvalidGeneratedCanvasEffectPropertyAccessorsAnalyzer>.VerifyAnalyzerAsync(source);
 
         CSharpGeneratorTest<CanvasEffectPropertyGenerator>.VerifySources(source, result);
     }
