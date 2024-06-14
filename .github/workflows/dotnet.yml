@@ -314,7 +314,7 @@ jobs:
 
       # Publish the native library as a NativeAOT shared library
     - name: Publish ComputeSharp.NativeLibrary
-      run: dotnet publish samples\ComputeSharp.NativeLibrary\ComputeSharp.NativeLibrary.csproj -r win-${{matrix.platform}} /p:NativeLib=Shared -v n
+      run: dotnet publish samples\ComputeSharp.NativeLibrary\ComputeSharp.NativeLibrary.csproj -r win-${{matrix.platform}} -v n
 
   # Download the NuGet packages generated in the previous job and use them
   # to build and run the sample project referencing them. This is used as
