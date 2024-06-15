@@ -16,6 +16,13 @@
     <CsWinRTEnableICustomPropertyProviderSupport>false</CsWinRTEnableICustomPropertyProviderSupport>
     <CsWinRTEnableIReferenceSupport>false</CsWinRTEnableIReferenceSupport>
     <CsWinRTEnableIDynamicInterfaceCastableSupport>false</CsWinRTEnableIDynamicInterfaceCastableSupport>
+
+    <!--
+      WinRT component warning suppression due to a default MSVC warning:
+      "LNK4104: export of symbol 'DllCanUnloadNow' should be PRIVATE".
+      See: https://github.com/dotnet/runtime/issues/98047.
+    -->
+    <NoWarn>$(NoWarn);LNK4104</NoWarn>
   </PropertyGroup>
 
   <!-- NativeAOT configuration -->
