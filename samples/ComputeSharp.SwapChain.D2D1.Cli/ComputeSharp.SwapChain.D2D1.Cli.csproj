@@ -21,12 +21,16 @@
 
     <!-- Suppress warnings for using directives inside namespaces (needed to avoid some WinRT conflicts) -->
     <NoWarn>$(NoWarn);IDE0065</NoWarn>
-
-    <!-- Workaround for WinRT.TypeExtensions.GetAuthoringMetadataType(Type) trim warning (see https://github.com/microsoft/CsWinRT/issues/1319) -->
-    <NoWarn>$(NoWarn);IL2104;IL2026</NoWarn>
-
-    <!-- Workaround for WinRT.Runtime and System.Linq.Expressions producing trim warnings -->
-    <NoWarn>$(NoWarn);IL3053</NoWarn>
+  </PropertyGroup>
+  
+  <!-- CsWinRT size saving options (same as in ComputeSharp.NativeLibrary.WinRT) -->
+  <PropertyGroup>
+    <CsWinRTEnableDynamicObjectsSupport>false</CsWinRTEnableDynamicObjectsSupport>
+    <CsWinRTUseExceptionResourceKeys>true</CsWinRTUseExceptionResourceKeys>
+    <CsWinRTEnableDefaultCustomTypeMappings>false</CsWinRTEnableDefaultCustomTypeMappings>
+    <CsWinRTEnableICustomPropertyProviderSupport>false</CsWinRTEnableICustomPropertyProviderSupport>
+    <CsWinRTEnableIReferenceSupport>false</CsWinRTEnableIReferenceSupport>
+    <CsWinRTEnableIDynamicInterfaceCastableSupport>false</CsWinRTEnableIDynamicInterfaceCastableSupport>
   </PropertyGroup>
 
   <!-- Options for R2R publishing -->
