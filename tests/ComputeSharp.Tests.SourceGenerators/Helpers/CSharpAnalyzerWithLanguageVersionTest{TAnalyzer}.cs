@@ -24,6 +24,11 @@ internal sealed class CSharpAnalyzerWithLanguageVersionTest<TAnalyzer> : CSharpA
     where TAnalyzer : DiagnosticAnalyzer, new()
 {
     /// <summary>
+    /// Whether to enable unsafe blocks.
+    /// </summary>
+    private readonly bool allowUnsafeBlocks;
+
+    /// <summary>
     /// The C# language version to use to parse code.
     /// </summary>
     private readonly LanguageVersion languageVersion;
@@ -31,10 +36,18 @@ internal sealed class CSharpAnalyzerWithLanguageVersionTest<TAnalyzer> : CSharpA
     /// <summary>
     /// Creates a new <see cref="CSharpAnalyzerWithLanguageVersionTest{TAnalyzer}"/> instance with the specified paramaters.
     /// </summary>
+    /// <param name="allowUnsafeBlocks">Whether to enable unsafe blocks.</param>
     /// <param name="languageVersion">The C# language version to use to parse code.</param>
-    private CSharpAnalyzerWithLanguageVersionTest(LanguageVersion languageVersion)
+    private CSharpAnalyzerWithLanguageVersionTest(bool allowUnsafeBlocks, LanguageVersion languageVersion)
     {
+        this.allowUnsafeBlocks = allowUnsafeBlocks;
         this.languageVersion = languageVersion;
+    }
+
+    /// <inheritdoc/>
+    protected override CompilationOptions CreateCompilationOptions()
+    {
+        return new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary, allowUnsafe: this.allowUnsafeBlocks);
     }
 
     /// <inheritdoc/>
@@ -45,10 +58,14 @@ internal sealed class CSharpAnalyzerWithLanguageVersionTest<TAnalyzer> : CSharpA
 
     /// <inheritdoc cref="AnalyzerVerifier{TAnalyzer, TTest, TVerifier}.VerifyAnalyzerAsync"/>
     /// <param name="source">The source code to analyze.</param>
+    /// <param name="allowUnsafeBlocks">Whether to enable unsafe blocks.</param>
     /// <param name="languageVersion">The language version to use to run the test.</param>
-    public static Task VerifyAnalyzerAsync(string source, LanguageVersion languageVersion = LanguageVersion.CSharp12)
+    public static Task VerifyAnalyzerAsync(
+        string source,
+        bool allowUnsafeBlocks = true,
+        LanguageVersion languageVersion = LanguageVersion.CSharp12)
     {
-        CSharpAnalyzerWithLanguageVersionTest<TAnalyzer> test = new(languageVersion) { TestCode = source };
+        CSharpAnalyzerWithLanguageVersionTest<TAnalyzer> test = new(allowUnsafeBlocks, languageVersion) { TestCode = source };
 
         test.TestState.ReferenceAssemblies = ReferenceAssemblies.Net.Net80;
         test.TestState.AdditionalReferences.Add(MetadataReference.CreateFromFile(typeof(Core::ComputeSharp.Hlsl).Assembly.Location));
