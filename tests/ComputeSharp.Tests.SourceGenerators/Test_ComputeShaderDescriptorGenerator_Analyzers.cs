@@ -9,6 +9,27 @@ namespace ComputeSharp.Tests.SourceGenerators;
 public class Test_ComputeShaderDescriptorGenerator_Analyzers
 {
     [TestMethod]
+    public async Task AllowsUnsafeBlocksNotEnabled_Warns()
+    {
+        const string source = """
+            using ComputeSharp;
+
+            [ThreadGroupSize(DefaultThreadGroupSizes.X)]
+            [{|CMPS0052:GeneratedComputeShaderDescriptor|}]
+            internal readonly partial struct MyShader : IComputeShader
+            {
+                private readonly ReadWriteBuffer<float> buffer;
+
+                public void Execute()
+                {
+                }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<MissingAllowUnsafeBlocksCompilationOptionAnalyzer>.VerifyAnalyzerAsync(source, allowUnsafeBlocks: false);
+    }
+
+    [TestMethod]
     public async Task MissingComputeShaderDescriptor_ComputeShader()
     {
         const string source = """

@@ -9,7 +9,27 @@ namespace ComputeSharp.D2D1.Tests.SourceGenerators;
 public class Test_D2DPixelShaderDescriptorGenerator_Analyzers
 {
     [TestMethod]
-    public async Task MissingD2DPixelShaderDescriptor_ComputeShader()
+    public async Task AllowsUnsafeBlocksNotEnabled_Warns()
+    {
+        const string source = """
+            using ComputeSharp;
+            using ComputeSharp.D2D1;
+
+            [{|CMPSD2D0064:D2DGeneratedPixelShaderDescriptor|}]
+            internal partial struct MyShader : ID2D1PixelShader
+            {
+                public Float4 Execute()
+                {
+                    return 0;
+                }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<MissingAllowUnsafeBlocksCompilationOptionAnalyzer>.VerifyAnalyzerAsync(source, allowUnsafeBlocks: false);
+    }
+
+    [TestMethod]
+    public async Task MissingD2DPixelShaderDescriptor_Warns()
     {
         const string source = """
             using ComputeSharp;
@@ -28,7 +48,7 @@ public class Test_D2DPixelShaderDescriptorGenerator_Analyzers
     }
 
     [TestMethod]
-    public async Task MissingComputeShaderDescriptor_ManuallyImplemented_DoesNotWarn()
+    public async Task MissingD2DPixelShaderDescriptor_ManuallyImplemented_DoesNotWarn()
     {
         const string source = """
             using System;
