@@ -13,7 +13,7 @@ public sealed class MissingAllowUnsafeBlocksCompilationOptionAnalyzer : MissingA
     /// Creates a new <see cref="MissingAllowUnsafeBlocksCompilationOptionAnalyzer"/> instance.
     /// </summary>
     public MissingAllowUnsafeBlocksCompilationOptionAnalyzer()
-        : base(MissingAllowUnsafeBlocksOption)
+        : base(MissingAllowUnsafeBlocksOption, "ComputeSharp.GeneratedComputeShaderDescriptorAttribute")
     {
     }
 }
