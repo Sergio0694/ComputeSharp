@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using CommunityToolkit.HighPerformance;
 using ComputeSharp.Interop;
 using ComputeSharp.Tests.Attributes;
 using ComputeSharp.Tests.Extensions;
@@ -259,6 +260,140 @@ public partial class ShaderRewriterTests
             buffer[17] = e.Y ? 1 : 0;
             buffer[18] = e.Z ? 1 : 0;
             buffer[19] = e.W ? 1 : 0;
+        }
+    }
+
+    // See https://github.com/Sergio0694/ComputeSharp/issues/817
+    [CombinatorialTestMethod]
+    [AllDevices]
+    public void AmbiguousHlslOperators(Device device)
+    {
+        int[] data = new int[30];
+
+        new Random(42).NextBytes(data.AsSpan(0, 14).Cast<int, byte>());
+
+        using ReadWriteBuffer<int> buffer = device.Get().AllocateReadWriteBuffer(data);
+
+        device.Get().For(1, new AmbiguousHlslOperatorsShader(buffer));
+
+        int[] results = buffer.ToArray();
+
+        int2 a = new(data[0], data[1]);
+        uint2 b = new((uint)data[2], (uint)data[3]);
+        int2x3 c = new(data[4], data[5], data[6], data[7], data[8], data[9]);
+        uint2x2 d = new((uint)data[10], (uint)data[11], (uint)data[12], (uint)data[13]);
+
+        int2 a_shift_int = new(a.X << 2, a.Y << 2);
+        int2 a_shift_uint = new(a.X >> 2, a.Y >> 2);
+        int2 a_and_int = new(a.X & 1, a.Y & 1);
+        int2 a_and_uint = new(a.X & 4, a.Y & 4);
+        int2 a_or_int = new(a.X | 1, a.Y | 1);
+        int2 a_or_uint = new(a.X | 4, a.Y | 4);
+        int2 a_xor_int = new(a.X ^ 2, a.Y ^ 2);
+        int2 a_xor_uint = new(a.X ^ 5, a.Y ^ 5);
+
+        uint2 b_shift_int = new(b.X << 2, b.Y << 2);
+        uint2 b_shift_uint = new(b.X >> 2, b.Y >> 2);
+
+        int2x3 c_shift_int = new(c.M11 << 2, c.M12 << 2, c.M13 << 2, c.M21 << 2, c.M22 << 2, c.M23 << 2);
+        uint2x2 d_shift_int = new(d.M11 >> 2, d.M12 >> 2, d.M21 >> 2, d.M22 >> 2);
+
+        Assert.AreEqual(results[0], a_shift_int.X);
+        Assert.AreEqual(results[1], a_shift_int.Y);
+        Assert.AreEqual(results[2], a_shift_uint.X);
+        Assert.AreEqual(results[3], a_shift_uint.Y);
+        Assert.AreEqual(results[4], a_and_int.X);
+        Assert.AreEqual(results[5], a_and_int.Y);
+        Assert.AreEqual(results[6], a_and_uint.X);
+        Assert.AreEqual(results[7], a_and_uint.Y);
+        Assert.AreEqual(results[8], a_or_int.X);
+        Assert.AreEqual(results[9], a_or_int.Y);
+        Assert.AreEqual(results[10], a_or_uint.X);
+        Assert.AreEqual(results[11], a_or_uint.Y);
+        Assert.AreEqual(results[12], a_xor_int.X);
+        Assert.AreEqual(results[13], a_xor_int.Y);
+        Assert.AreEqual(results[14], a_xor_uint.X);
+        Assert.AreEqual(results[15], a_xor_uint.Y);
+
+        Assert.AreEqual(results[16], (int)b_shift_int.X);
+        Assert.AreEqual(results[17], (int)b_shift_int.Y);
+        Assert.AreEqual(results[18], (int)b_shift_uint.X);
+        Assert.AreEqual(results[19], (int)b_shift_uint.Y);
+
+        Assert.AreEqual(results[20], c_shift_int.M11);
+        Assert.AreEqual(results[21], c_shift_int.M12);
+        Assert.AreEqual(results[22], c_shift_int.M13);
+        Assert.AreEqual(results[23], c_shift_int.M21);
+        Assert.AreEqual(results[24], c_shift_int.M22);
+        Assert.AreEqual(results[25], c_shift_int.M23);
+
+        Assert.AreEqual(results[26], (int)d_shift_int.M11);
+        Assert.AreEqual(results[27], (int)d_shift_int.M12);
+        Assert.AreEqual(results[28], (int)d_shift_int.M21);
+        Assert.AreEqual(results[29], (int)d_shift_int.M22);
+    }
+
+    [AutoConstructor]
+    [ThreadGroupSize(DefaultThreadGroupSizes.X)]
+    [GeneratedComputeShaderDescriptor]
+    internal readonly partial struct AmbiguousHlslOperatorsShader : IComputeShader
+    {
+        public readonly ReadWriteBuffer<int> buffer;
+
+        public void Execute()
+        {
+            int2 a = new(buffer[0], buffer[1]);
+            uint2 b = new((uint)buffer[2], (uint)buffer[3]);
+            int2x3 c = new(buffer[4], buffer[5], buffer[6], buffer[7], buffer[8], buffer[9]);
+            uint2x2 d = new((uint)buffer[10], (uint)buffer[11], (uint)buffer[12], (uint)buffer[13]);
+
+            int2 a_shift_int = a << 2;
+            int2 a_shift_uint = a >> 2u;
+            int2 a_and_int = a & 1;
+            int2 a_and_uint = a & 4u;
+            int2 a_or_int = a | 1;
+            int2 a_or_uint = a | 4u;
+            int2 a_xor_int = a ^ 2;
+            int2 a_xor_uint = a ^ 5;
+
+            uint2 b_shift_int = b << 2;
+            uint2 b_shift_uint = b >> 2u;
+
+            int2x3 c_shift_int = c << 2;
+            uint2x2 d_shift_int = d >> 2;
+
+            buffer[0] = a_shift_int.X;
+            buffer[1] = a_shift_int.Y;
+            buffer[2] = a_shift_uint.X;
+            buffer[3] = a_shift_uint.Y;
+            buffer[4] = a_and_int.X;
+            buffer[5] = a_and_int.Y;
+            buffer[6] = a_and_uint.X;
+            buffer[7] = a_and_uint.Y;
+            buffer[8] = a_or_int.X;
+            buffer[9] = a_or_int.Y;
+            buffer[10] = a_or_uint.X;
+            buffer[11] = a_or_uint.Y;
+            buffer[12] = a_xor_int.X;
+            buffer[13] = a_xor_int.Y;
+            buffer[14] = a_xor_uint.X;
+            buffer[15] = a_xor_uint.Y;
+            buffer[16] = (int)b_shift_int.X;
+            buffer[17] = (int)b_shift_int.Y;
+            buffer[18] = (int)b_shift_uint.X;
+            buffer[19] = (int)b_shift_uint.Y;
+
+            buffer[20] = c_shift_int.M11;
+            buffer[21] = c_shift_int.M12;
+            buffer[22] = c_shift_int.M13;
+            buffer[23] = c_shift_int.M21;
+            buffer[24] = c_shift_int.M22;
+            buffer[25] = c_shift_int.M23;
+
+            buffer[26] = (int)d_shift_int.M11;
+            buffer[27] = (int)d_shift_int.M12;
+            buffer[28] = (int)d_shift_int.M21;
+            buffer[29] = (int)d_shift_int.M22;
         }
     }
 
