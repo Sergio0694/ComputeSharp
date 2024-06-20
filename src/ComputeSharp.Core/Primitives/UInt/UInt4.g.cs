@@ -5282,6 +5282,24 @@ public unsafe partial struct UInt4
     /// <param name="amount">The amount to shift each element right by.</param>
     /// <returns>The result of shifting <paramref name="xyzw"/> right by <paramref name="amount"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static UInt4 operator >>(UInt4 xyzw, int amount) => default;
+
+    /// <summary>
+    /// Shifts right a <see cref="UInt4"/> value.
+    /// </summary>
+    /// <param name="xyzw">The <see cref="UInt4"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="xyzw"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static UInt4 operator >>(UInt4 xyzw, uint amount) => default;
+
+    /// <summary>
+    /// Shifts right a <see cref="UInt4"/> value.
+    /// </summary>
+    /// <param name="xyzw">The <see cref="UInt4"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="xyzw"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt4 operator >>(UInt4 xyzw, Int4 amount) => default;
 
     /// <summary>
@@ -5292,6 +5310,24 @@ public unsafe partial struct UInt4
     /// <returns>The result of shifting <paramref name="xyzw"/> right by <paramref name="amount"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt4 operator >>(UInt4 xyzw, UInt4 amount) => default;
+
+    /// <summary>
+    /// Shifts left a <see cref="UInt4"/> value.
+    /// </summary>
+    /// <param name="xyzw">The <see cref="UInt4"/> value to shift left.</param>
+    /// <param name="amount">The amount to shift each element left by.</param>
+    /// <returns>The result of shifting <paramref name="xyzw"/> left by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static UInt4 operator <<(UInt4 xyzw, int amount) => default;
+
+    /// <summary>
+    /// Shifts left a <see cref="UInt4"/> value.
+    /// </summary>
+    /// <param name="xyzw">The <see cref="UInt4"/> value to shift left.</param>
+    /// <param name="amount">The amount to shift each element left by.</param>
+    /// <returns>The result of shifting <paramref name="xyzw"/> left by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static UInt4 operator <<(UInt4 xyzw, uint amount) => default;
 
     /// <summary>
     /// Shifts left a <see cref="UInt4"/> value.
@@ -5315,6 +5351,24 @@ public unsafe partial struct UInt4
     /// Bitwise ands a <see cref="UInt4"/> value.
     /// </summary>
     /// <param name="left">The <see cref="UInt4"/> value to bitwise and.</param>
+    /// <param name="right">The <see cref="int"/> value to combine.</param>
+    /// <returns>The result of performing the bitwise and between <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static UInt4 operator &(UInt4 left, int right) => default;
+
+    /// <summary>
+    /// Bitwise ands a <see cref="UInt4"/> value.
+    /// </summary>
+    /// <param name="left">The <see cref="UInt4"/> value to bitwise and.</param>
+    /// <param name="right">The <see cref="uint"/> value to combine.</param>
+    /// <returns>The result of performing the bitwise and between <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static UInt4 operator &(UInt4 left, uint right) => default;
+
+    /// <summary>
+    /// Bitwise ands a <see cref="UInt4"/> value.
+    /// </summary>
+    /// <param name="left">The <see cref="UInt4"/> value to bitwise and.</param>
     /// <param name="right">The <see cref="Int4"/> value to combine.</param>
     /// <returns>The result of performing the bitwise and between <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
@@ -5333,6 +5387,24 @@ public unsafe partial struct UInt4
     /// Bitwise ors a <see cref="UInt4"/> value.
     /// </summary>
     /// <param name="left">The <see cref="UInt4"/> value to bitwise or.</param>
+    /// <param name="right">The <see cref="int"/> value to combine.</param>
+    /// <returns>The result of performing the bitwise or between <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static UInt4 operator |(UInt4 left, int right) => default;
+
+    /// <summary>
+    /// Bitwise ors a <see cref="UInt4"/> value.
+    /// </summary>
+    /// <param name="left">The <see cref="UInt4"/> value to bitwise or.</param>
+    /// <param name="right">The <see cref="uint"/> value to combine.</param>
+    /// <returns>The result of performing the bitwise or between <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static UInt4 operator |(UInt4 left, uint right) => default;
+
+    /// <summary>
+    /// Bitwise ors a <see cref="UInt4"/> value.
+    /// </summary>
+    /// <param name="left">The <see cref="UInt4"/> value to bitwise or.</param>
     /// <param name="right">The <see cref="Int4"/> value to combine.</param>
     /// <returns>The result of performing the bitwise or between <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
@@ -5346,6 +5418,24 @@ public unsafe partial struct UInt4
     /// <returns>The result of performing the bitwise or between <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt4 operator |(UInt4 left, UInt4 right) => default;
+
+    /// <summary>
+    /// Bitwise xors a <see cref="UInt4"/> value.
+    /// </summary>
+    /// <param name="left">The <see cref="UInt4"/> value to bitwise xor.</param>
+    /// <param name="right">The <see cref="int"/> value to combine.</param>
+    /// <returns>The result of performing the bitwise xor between <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static UInt4 operator ^(UInt4 left, int right) => default;
+
+    /// <summary>
+    /// Bitwise xors a <see cref="UInt4"/> value.
+    /// </summary>
+    /// <param name="left">The <see cref="UInt4"/> value to bitwise xor.</param>
+    /// <param name="right">The <see cref="uint"/> value to combine.</param>
+    /// <returns>The result of performing the bitwise xor between <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static UInt4 operator ^(UInt4 left, uint right) => default;
 
     /// <summary>
     /// Bitwise xors a <see cref="UInt4"/> value.
