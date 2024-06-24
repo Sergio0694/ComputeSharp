@@ -238,6 +238,38 @@ internal static partial class HlslKnownTypes
     }
 
     /// <summary>
+    /// Checks whether a given type name represents a well known signed integer type.
+    /// </summary>
+    /// <param name="typeName">The type name to check.</param>
+    /// <returns>Whether <paramref name="typeName"/> represents a well known signed integer type.</returns>
+    public static bool IsKnownSignedIntegerType(string typeName)
+    {
+        return typeName is
+            "System.Int32" or
+            "ComputeSharp.Int2" or "ComputeSharp.Int3" or "ComputeSharp.Int4" or
+            "ComputeSharp.Int1x1" or "ComputeSharp.Int1x2" or "ComputeSharp.Int1x3" or "ComputeSharp.Int1x4" or
+            "ComputeSharp.Int2x1" or "ComputeSharp.Int2x2" or "ComputeSharp.Int2x3" or "ComputeSharp.Int2x4" or
+            "ComputeSharp.Int3x1" or "ComputeSharp.Int3x2" or "ComputeSharp.Int3x3" or "ComputeSharp.Int3x4" or
+            "ComputeSharp.Int4x1" or "ComputeSharp.Int4x2" or "ComputeSharp.Int4x3" or "ComputeSharp.Int4x4";
+    }
+
+    /// <summary>
+    /// Checks whether a given type name represents a well known unsigned integer type.
+    /// </summary>
+    /// <param name="typeName">The type name to check.</param>
+    /// <returns>Whether <paramref name="typeName"/> represents a well known known integer type.</returns>
+    public static bool IsKnownUnsignedIntegerType(string typeName)
+    {
+        return typeName is
+            "System.UInt32" or
+            "ComputeSharp.UInt2" or "ComputeSharp.UInt3" or "ComputeSharp.UInt4" or
+            "ComputeSharp.UInt1x1" or "ComputeSharp.UInt1x2" or "ComputeSharp.UInt1x3" or "ComputeSharp.UInt1x4" or
+            "ComputeSharp.UInt2x1" or "ComputeSharp.UInt2x2" or "ComputeSharp.UInt2x3" or "ComputeSharp.UInt2x4" or
+            "ComputeSharp.UInt3x1" or "ComputeSharp.UInt3x2" or "ComputeSharp.UInt3x3" or "ComputeSharp.UInt3x4" or
+            "ComputeSharp.UInt4x1" or "ComputeSharp.UInt4x2" or "ComputeSharp.UInt4x3" or "ComputeSharp.UInt4x4";
+    }
+
+    /// <summary>
     /// Gets the mapped HLSL-compatible type name for the input type symbol.
     /// </summary>
     /// <param name="typeSymbol">The input type to map.</param>

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using ComputeSharp.Core.Intrinsics.Attributes;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.Operations;
 
 namespace ComputeSharp.SourceGeneration.Mappings;
 
@@ -45,6 +47,16 @@ internal static partial class HlslKnownOperators
         }
 
         return knownOperators;
+    }
+
+    /// <summary>
+    /// Checks whether a given operator kind represents a candidate special intrinsic that can handle.
+    /// </summary>
+    /// <param name="operatorKind">The input operator kind to check.</param>
+    /// <returns>Whether <paramref name="operatorKind"/> is a candidate operator for a special intrinsic to rewrite.</returns>
+    public static bool IsCandidateOperator(BinaryOperatorKind operatorKind)
+    {
+        return operatorKind is BinaryOperatorKind.Multiply or BinaryOperatorKind.UnsignedRightShift;
     }
 
     /// <summary>
