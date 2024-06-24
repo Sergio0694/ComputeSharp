@@ -5312,6 +5312,42 @@ public unsafe partial struct UInt4
     public static UInt4 operator >>(UInt4 xyzw, UInt4 amount) => default;
 
     /// <summary>
+    /// Shifts right a <see cref="UInt4"/> value without considering sign.
+    /// </summary>
+    /// <param name="xyzw">The <see cref="UInt4"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="xyzw"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static UInt4 operator >>>(UInt4 xyzw, int amount) => default;
+
+    /// <summary>
+    /// Shifts right a <see cref="UInt4"/> value without considering sign.
+    /// </summary>
+    /// <param name="xyzw">The <see cref="UInt4"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="xyzw"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static UInt4 operator >>>(UInt4 xyzw, uint amount) => default;
+
+    /// <summary>
+    /// Shifts right a <see cref="UInt4"/> value without considering sign.
+    /// </summary>
+    /// <param name="xyzw">The <see cref="UInt4"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="xyzw"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static UInt4 operator >>>(UInt4 xyzw, Int4 amount) => default;
+
+    /// <summary>
+    /// Shifts right a <see cref="UInt4"/> value without considering sign.
+    /// </summary>
+    /// <param name="xyzw">The <see cref="UInt4"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="xyzw"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static UInt4 operator >>>(UInt4 xyzw, UInt4 amount) => default;
+
+    /// <summary>
     /// Shifts left a <see cref="UInt4"/> value.
     /// </summary>
     /// <param name="xyzw">The <see cref="UInt4"/> value to shift left.</param>

@@ -1975,6 +1975,42 @@ public unsafe partial struct UInt3
     public static UInt3 operator >>(UInt3 xyz, UInt3 amount) => default;
 
     /// <summary>
+    /// Shifts right a <see cref="UInt3"/> value without considering sign.
+    /// </summary>
+    /// <param name="xyz">The <see cref="UInt3"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="xyz"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static UInt3 operator >>>(UInt3 xyz, int amount) => default;
+
+    /// <summary>
+    /// Shifts right a <see cref="UInt3"/> value without considering sign.
+    /// </summary>
+    /// <param name="xyz">The <see cref="UInt3"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="xyz"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static UInt3 operator >>>(UInt3 xyz, uint amount) => default;
+
+    /// <summary>
+    /// Shifts right a <see cref="UInt3"/> value without considering sign.
+    /// </summary>
+    /// <param name="xyz">The <see cref="UInt3"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="xyz"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static UInt3 operator >>>(UInt3 xyz, Int3 amount) => default;
+
+    /// <summary>
+    /// Shifts right a <see cref="UInt3"/> value without considering sign.
+    /// </summary>
+    /// <param name="xyz">The <see cref="UInt3"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="xyz"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static UInt3 operator >>>(UInt3 xyz, UInt3 amount) => default;
+
+    /// <summary>
     /// Shifts left a <see cref="UInt3"/> value.
     /// </summary>
     /// <param name="xyz">The <see cref="UInt3"/> value to shift left.</param>

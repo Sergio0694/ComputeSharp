@@ -732,6 +732,42 @@ public unsafe partial struct Int2
     public static Int2 operator >>(Int2 xy, UInt2 amount) => default;
 
     /// <summary>
+    /// Shifts right a <see cref="Int2"/> value without considering sign.
+    /// </summary>
+    /// <param name="xy">The <see cref="Int2"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="xy"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int2 operator >>>(Int2 xy, int amount) => default;
+
+    /// <summary>
+    /// Shifts right a <see cref="Int2"/> value without considering sign.
+    /// </summary>
+    /// <param name="xy">The <see cref="Int2"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="xy"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int2 operator >>>(Int2 xy, uint amount) => default;
+
+    /// <summary>
+    /// Shifts right a <see cref="Int2"/> value without considering sign.
+    /// </summary>
+    /// <param name="xy">The <see cref="Int2"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="xy"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int2 operator >>>(Int2 xy, Int2 amount) => default;
+
+    /// <summary>
+    /// Shifts right a <see cref="Int2"/> value without considering sign.
+    /// </summary>
+    /// <param name="xy">The <see cref="Int2"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="xy"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int2 operator >>>(Int2 xy, UInt2 amount) => default;
+
+    /// <summary>
     /// Shifts left a <see cref="Int2"/> value.
     /// </summary>
     /// <param name="xy">The <see cref="Int2"/> value to shift left.</param>

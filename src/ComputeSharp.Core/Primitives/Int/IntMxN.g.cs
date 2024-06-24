@@ -263,6 +263,42 @@ public unsafe partial struct Int1x1
     public static Int1x1 operator >>(Int1x1 matrix, UInt1x1 amount) => default;
 
     /// <summary>
+    /// Shifts right a <see cref="Int1x1"/> value without considering sign.
+    /// </summary>
+    /// <param name="matrix">The <see cref="Int1x1"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="matrix"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int1x1 operator >>>(Int1x1 matrix, int amount) => default;
+
+    /// <summary>
+    /// Shifts right a <see cref="Int1x1"/> value without considering sign.
+    /// </summary>
+    /// <param name="matrix">The <see cref="Int1x1"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="matrix"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int1x1 operator >>>(Int1x1 matrix, uint amount) => default;
+
+    /// <summary>
+    /// Shifts right a <see cref="Int1x1"/> value without considering sign.
+    /// </summary>
+    /// <param name="matrix">The <see cref="Int1x1"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="matrix"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int1x1 operator >>>(Int1x1 matrix, Int1x1 amount) => default;
+
+    /// <summary>
+    /// Shifts right a <see cref="Int1x1"/> value without considering sign.
+    /// </summary>
+    /// <param name="matrix">The <see cref="Int1x1"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="matrix"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int1x1 operator >>>(Int1x1 matrix, UInt1x1 amount) => default;
+
+    /// <summary>
     /// Shifts left a <see cref="Int1x1"/> value.
     /// </summary>
     /// <param name="matrix">The <see cref="Int1x1"/> value to shift left.</param>
@@ -776,6 +812,42 @@ public unsafe partial struct Int1x2
     /// <returns>The result of shifting <paramref name="matrix"/> right by <paramref name="amount"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Int1x2 operator >>(Int1x2 matrix, UInt1x2 amount) => default;
+
+    /// <summary>
+    /// Shifts right a <see cref="Int1x2"/> value without considering sign.
+    /// </summary>
+    /// <param name="matrix">The <see cref="Int1x2"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="matrix"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int1x2 operator >>>(Int1x2 matrix, int amount) => default;
+
+    /// <summary>
+    /// Shifts right a <see cref="Int1x2"/> value without considering sign.
+    /// </summary>
+    /// <param name="matrix">The <see cref="Int1x2"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="matrix"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int1x2 operator >>>(Int1x2 matrix, uint amount) => default;
+
+    /// <summary>
+    /// Shifts right a <see cref="Int1x2"/> value without considering sign.
+    /// </summary>
+    /// <param name="matrix">The <see cref="Int1x2"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="matrix"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int1x2 operator >>>(Int1x2 matrix, Int1x2 amount) => default;
+
+    /// <summary>
+    /// Shifts right a <see cref="Int1x2"/> value without considering sign.
+    /// </summary>
+    /// <param name="matrix">The <see cref="Int1x2"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="matrix"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int1x2 operator >>>(Int1x2 matrix, UInt1x2 amount) => default;
 
     /// <summary>
     /// Shifts left a <see cref="Int1x2"/> value.
@@ -1309,6 +1381,42 @@ public unsafe partial struct Int1x3
     /// <returns>The result of shifting <paramref name="matrix"/> right by <paramref name="amount"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Int1x3 operator >>(Int1x3 matrix, UInt1x3 amount) => default;
+
+    /// <summary>
+    /// Shifts right a <see cref="Int1x3"/> value without considering sign.
+    /// </summary>
+    /// <param name="matrix">The <see cref="Int1x3"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="matrix"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int1x3 operator >>>(Int1x3 matrix, int amount) => default;
+
+    /// <summary>
+    /// Shifts right a <see cref="Int1x3"/> value without considering sign.
+    /// </summary>
+    /// <param name="matrix">The <see cref="Int1x3"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="matrix"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int1x3 operator >>>(Int1x3 matrix, uint amount) => default;
+
+    /// <summary>
+    /// Shifts right a <see cref="Int1x3"/> value without considering sign.
+    /// </summary>
+    /// <param name="matrix">The <see cref="Int1x3"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="matrix"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int1x3 operator >>>(Int1x3 matrix, Int1x3 amount) => default;
+
+    /// <summary>
+    /// Shifts right a <see cref="Int1x3"/> value without considering sign.
+    /// </summary>
+    /// <param name="matrix">The <see cref="Int1x3"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="matrix"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int1x3 operator >>>(Int1x3 matrix, UInt1x3 amount) => default;
 
     /// <summary>
     /// Shifts left a <see cref="Int1x3"/> value.
@@ -1856,6 +1964,42 @@ public unsafe partial struct Int1x4
     public static Int1x4 operator >>(Int1x4 matrix, UInt1x4 amount) => default;
 
     /// <summary>
+    /// Shifts right a <see cref="Int1x4"/> value without considering sign.
+    /// </summary>
+    /// <param name="matrix">The <see cref="Int1x4"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="matrix"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int1x4 operator >>>(Int1x4 matrix, int amount) => default;
+
+    /// <summary>
+    /// Shifts right a <see cref="Int1x4"/> value without considering sign.
+    /// </summary>
+    /// <param name="matrix">The <see cref="Int1x4"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="matrix"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int1x4 operator >>>(Int1x4 matrix, uint amount) => default;
+
+    /// <summary>
+    /// Shifts right a <see cref="Int1x4"/> value without considering sign.
+    /// </summary>
+    /// <param name="matrix">The <see cref="Int1x4"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="matrix"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int1x4 operator >>>(Int1x4 matrix, Int1x4 amount) => default;
+
+    /// <summary>
+    /// Shifts right a <see cref="Int1x4"/> value without considering sign.
+    /// </summary>
+    /// <param name="matrix">The <see cref="Int1x4"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="matrix"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int1x4 operator >>>(Int1x4 matrix, UInt1x4 amount) => default;
+
+    /// <summary>
     /// Shifts left a <see cref="Int1x4"/> value.
     /// </summary>
     /// <param name="matrix">The <see cref="Int1x4"/> value to shift left.</param>
@@ -2363,6 +2507,42 @@ public unsafe partial struct Int2x1
     public static Int2x1 operator >>(Int2x1 matrix, UInt2x1 amount) => default;
 
     /// <summary>
+    /// Shifts right a <see cref="Int2x1"/> value without considering sign.
+    /// </summary>
+    /// <param name="matrix">The <see cref="Int2x1"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="matrix"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int2x1 operator >>>(Int2x1 matrix, int amount) => default;
+
+    /// <summary>
+    /// Shifts right a <see cref="Int2x1"/> value without considering sign.
+    /// </summary>
+    /// <param name="matrix">The <see cref="Int2x1"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="matrix"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int2x1 operator >>>(Int2x1 matrix, uint amount) => default;
+
+    /// <summary>
+    /// Shifts right a <see cref="Int2x1"/> value without considering sign.
+    /// </summary>
+    /// <param name="matrix">The <see cref="Int2x1"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="matrix"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int2x1 operator >>>(Int2x1 matrix, Int2x1 amount) => default;
+
+    /// <summary>
+    /// Shifts right a <see cref="Int2x1"/> value without considering sign.
+    /// </summary>
+    /// <param name="matrix">The <see cref="Int2x1"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="matrix"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int2x1 operator >>>(Int2x1 matrix, UInt2x1 amount) => default;
+
+    /// <summary>
     /// Shifts left a <see cref="Int2x1"/> value.
     /// </summary>
     /// <param name="matrix">The <see cref="Int2x1"/> value to shift left.</param>
@@ -2835,6 +3015,42 @@ public unsafe partial struct Int2x2
     /// <returns>The result of shifting <paramref name="matrix"/> right by <paramref name="amount"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Int2x2 operator >>(Int2x2 matrix, UInt2x2 amount) => default;
+
+    /// <summary>
+    /// Shifts right a <see cref="Int2x2"/> value without considering sign.
+    /// </summary>
+    /// <param name="matrix">The <see cref="Int2x2"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="matrix"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int2x2 operator >>>(Int2x2 matrix, int amount) => default;
+
+    /// <summary>
+    /// Shifts right a <see cref="Int2x2"/> value without considering sign.
+    /// </summary>
+    /// <param name="matrix">The <see cref="Int2x2"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="matrix"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int2x2 operator >>>(Int2x2 matrix, uint amount) => default;
+
+    /// <summary>
+    /// Shifts right a <see cref="Int2x2"/> value without considering sign.
+    /// </summary>
+    /// <param name="matrix">The <see cref="Int2x2"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="matrix"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int2x2 operator >>>(Int2x2 matrix, Int2x2 amount) => default;
+
+    /// <summary>
+    /// Shifts right a <see cref="Int2x2"/> value without considering sign.
+    /// </summary>
+    /// <param name="matrix">The <see cref="Int2x2"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="matrix"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int2x2 operator >>>(Int2x2 matrix, UInt2x2 amount) => default;
 
     /// <summary>
     /// Shifts left a <see cref="Int2x2"/> value.
@@ -3413,6 +3629,42 @@ public unsafe partial struct Int2x3
     /// <returns>The result of shifting <paramref name="matrix"/> right by <paramref name="amount"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Int2x3 operator >>(Int2x3 matrix, UInt2x3 amount) => default;
+
+    /// <summary>
+    /// Shifts right a <see cref="Int2x3"/> value without considering sign.
+    /// </summary>
+    /// <param name="matrix">The <see cref="Int2x3"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="matrix"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int2x3 operator >>>(Int2x3 matrix, int amount) => default;
+
+    /// <summary>
+    /// Shifts right a <see cref="Int2x3"/> value without considering sign.
+    /// </summary>
+    /// <param name="matrix">The <see cref="Int2x3"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="matrix"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int2x3 operator >>>(Int2x3 matrix, uint amount) => default;
+
+    /// <summary>
+    /// Shifts right a <see cref="Int2x3"/> value without considering sign.
+    /// </summary>
+    /// <param name="matrix">The <see cref="Int2x3"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="matrix"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int2x3 operator >>>(Int2x3 matrix, Int2x3 amount) => default;
+
+    /// <summary>
+    /// Shifts right a <see cref="Int2x3"/> value without considering sign.
+    /// </summary>
+    /// <param name="matrix">The <see cref="Int2x3"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="matrix"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int2x3 operator >>>(Int2x3 matrix, UInt2x3 amount) => default;
 
     /// <summary>
     /// Shifts left a <see cref="Int2x3"/> value.
@@ -4019,6 +4271,42 @@ public unsafe partial struct Int2x4
     public static Int2x4 operator >>(Int2x4 matrix, UInt2x4 amount) => default;
 
     /// <summary>
+    /// Shifts right a <see cref="Int2x4"/> value without considering sign.
+    /// </summary>
+    /// <param name="matrix">The <see cref="Int2x4"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="matrix"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int2x4 operator >>>(Int2x4 matrix, int amount) => default;
+
+    /// <summary>
+    /// Shifts right a <see cref="Int2x4"/> value without considering sign.
+    /// </summary>
+    /// <param name="matrix">The <see cref="Int2x4"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="matrix"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int2x4 operator >>>(Int2x4 matrix, uint amount) => default;
+
+    /// <summary>
+    /// Shifts right a <see cref="Int2x4"/> value without considering sign.
+    /// </summary>
+    /// <param name="matrix">The <see cref="Int2x4"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="matrix"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int2x4 operator >>>(Int2x4 matrix, Int2x4 amount) => default;
+
+    /// <summary>
+    /// Shifts right a <see cref="Int2x4"/> value without considering sign.
+    /// </summary>
+    /// <param name="matrix">The <see cref="Int2x4"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="matrix"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int2x4 operator >>>(Int2x4 matrix, UInt2x4 amount) => default;
+
+    /// <summary>
     /// Shifts left a <see cref="Int2x4"/> value.
     /// </summary>
     /// <param name="matrix">The <see cref="Int2x4"/> value to shift left.</param>
@@ -4530,6 +4818,42 @@ public unsafe partial struct Int3x1
     /// <returns>The result of shifting <paramref name="matrix"/> right by <paramref name="amount"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Int3x1 operator >>(Int3x1 matrix, UInt3x1 amount) => default;
+
+    /// <summary>
+    /// Shifts right a <see cref="Int3x1"/> value without considering sign.
+    /// </summary>
+    /// <param name="matrix">The <see cref="Int3x1"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="matrix"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int3x1 operator >>>(Int3x1 matrix, int amount) => default;
+
+    /// <summary>
+    /// Shifts right a <see cref="Int3x1"/> value without considering sign.
+    /// </summary>
+    /// <param name="matrix">The <see cref="Int3x1"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="matrix"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int3x1 operator >>>(Int3x1 matrix, uint amount) => default;
+
+    /// <summary>
+    /// Shifts right a <see cref="Int3x1"/> value without considering sign.
+    /// </summary>
+    /// <param name="matrix">The <see cref="Int3x1"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="matrix"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int3x1 operator >>>(Int3x1 matrix, Int3x1 amount) => default;
+
+    /// <summary>
+    /// Shifts right a <see cref="Int3x1"/> value without considering sign.
+    /// </summary>
+    /// <param name="matrix">The <see cref="Int3x1"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="matrix"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int3x1 operator >>>(Int3x1 matrix, UInt3x1 amount) => default;
 
     /// <summary>
     /// Shifts left a <see cref="Int3x1"/> value.
@@ -5117,6 +5441,42 @@ public unsafe partial struct Int3x2
     public static Int3x2 operator >>(Int3x2 matrix, UInt3x2 amount) => default;
 
     /// <summary>
+    /// Shifts right a <see cref="Int3x2"/> value without considering sign.
+    /// </summary>
+    /// <param name="matrix">The <see cref="Int3x2"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="matrix"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int3x2 operator >>>(Int3x2 matrix, int amount) => default;
+
+    /// <summary>
+    /// Shifts right a <see cref="Int3x2"/> value without considering sign.
+    /// </summary>
+    /// <param name="matrix">The <see cref="Int3x2"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="matrix"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int3x2 operator >>>(Int3x2 matrix, uint amount) => default;
+
+    /// <summary>
+    /// Shifts right a <see cref="Int3x2"/> value without considering sign.
+    /// </summary>
+    /// <param name="matrix">The <see cref="Int3x2"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="matrix"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int3x2 operator >>>(Int3x2 matrix, Int3x2 amount) => default;
+
+    /// <summary>
+    /// Shifts right a <see cref="Int3x2"/> value without considering sign.
+    /// </summary>
+    /// <param name="matrix">The <see cref="Int3x2"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="matrix"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int3x2 operator >>>(Int3x2 matrix, UInt3x2 amount) => default;
+
+    /// <summary>
     /// Shifts left a <see cref="Int3x2"/> value.
     /// </summary>
     /// <param name="matrix">The <see cref="Int3x2"/> value to shift left.</param>
@@ -5649,6 +6009,42 @@ public unsafe partial struct Int3x3
     /// <returns>The result of shifting <paramref name="matrix"/> right by <paramref name="amount"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Int3x3 operator >>(Int3x3 matrix, UInt3x3 amount) => default;
+
+    /// <summary>
+    /// Shifts right a <see cref="Int3x3"/> value without considering sign.
+    /// </summary>
+    /// <param name="matrix">The <see cref="Int3x3"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="matrix"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int3x3 operator >>>(Int3x3 matrix, int amount) => default;
+
+    /// <summary>
+    /// Shifts right a <see cref="Int3x3"/> value without considering sign.
+    /// </summary>
+    /// <param name="matrix">The <see cref="Int3x3"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="matrix"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int3x3 operator >>>(Int3x3 matrix, uint amount) => default;
+
+    /// <summary>
+    /// Shifts right a <see cref="Int3x3"/> value without considering sign.
+    /// </summary>
+    /// <param name="matrix">The <see cref="Int3x3"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="matrix"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int3x3 operator >>>(Int3x3 matrix, Int3x3 amount) => default;
+
+    /// <summary>
+    /// Shifts right a <see cref="Int3x3"/> value without considering sign.
+    /// </summary>
+    /// <param name="matrix">The <see cref="Int3x3"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="matrix"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int3x3 operator >>>(Int3x3 matrix, UInt3x3 amount) => default;
 
     /// <summary>
     /// Shifts left a <see cref="Int3x3"/> value.
@@ -6308,6 +6704,42 @@ public unsafe partial struct Int3x4
     public static Int3x4 operator >>(Int3x4 matrix, UInt3x4 amount) => default;
 
     /// <summary>
+    /// Shifts right a <see cref="Int3x4"/> value without considering sign.
+    /// </summary>
+    /// <param name="matrix">The <see cref="Int3x4"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="matrix"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int3x4 operator >>>(Int3x4 matrix, int amount) => default;
+
+    /// <summary>
+    /// Shifts right a <see cref="Int3x4"/> value without considering sign.
+    /// </summary>
+    /// <param name="matrix">The <see cref="Int3x4"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="matrix"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int3x4 operator >>>(Int3x4 matrix, uint amount) => default;
+
+    /// <summary>
+    /// Shifts right a <see cref="Int3x4"/> value without considering sign.
+    /// </summary>
+    /// <param name="matrix">The <see cref="Int3x4"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="matrix"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int3x4 operator >>>(Int3x4 matrix, Int3x4 amount) => default;
+
+    /// <summary>
+    /// Shifts right a <see cref="Int3x4"/> value without considering sign.
+    /// </summary>
+    /// <param name="matrix">The <see cref="Int3x4"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="matrix"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int3x4 operator >>>(Int3x4 matrix, UInt3x4 amount) => default;
+
+    /// <summary>
     /// Shifts left a <see cref="Int3x4"/> value.
     /// </summary>
     /// <param name="matrix">The <see cref="Int3x4"/> value to shift left.</param>
@@ -6831,6 +7263,42 @@ public unsafe partial struct Int4x1
     /// <returns>The result of shifting <paramref name="matrix"/> right by <paramref name="amount"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Int4x1 operator >>(Int4x1 matrix, UInt4x1 amount) => default;
+
+    /// <summary>
+    /// Shifts right a <see cref="Int4x1"/> value without considering sign.
+    /// </summary>
+    /// <param name="matrix">The <see cref="Int4x1"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="matrix"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int4x1 operator >>>(Int4x1 matrix, int amount) => default;
+
+    /// <summary>
+    /// Shifts right a <see cref="Int4x1"/> value without considering sign.
+    /// </summary>
+    /// <param name="matrix">The <see cref="Int4x1"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="matrix"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int4x1 operator >>>(Int4x1 matrix, uint amount) => default;
+
+    /// <summary>
+    /// Shifts right a <see cref="Int4x1"/> value without considering sign.
+    /// </summary>
+    /// <param name="matrix">The <see cref="Int4x1"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="matrix"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int4x1 operator >>>(Int4x1 matrix, Int4x1 amount) => default;
+
+    /// <summary>
+    /// Shifts right a <see cref="Int4x1"/> value without considering sign.
+    /// </summary>
+    /// <param name="matrix">The <see cref="Int4x1"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="matrix"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int4x1 operator >>>(Int4x1 matrix, UInt4x1 amount) => default;
 
     /// <summary>
     /// Shifts left a <see cref="Int4x1"/> value.
@@ -7443,6 +7911,42 @@ public unsafe partial struct Int4x2
     /// <returns>The result of shifting <paramref name="matrix"/> right by <paramref name="amount"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Int4x2 operator >>(Int4x2 matrix, UInt4x2 amount) => default;
+
+    /// <summary>
+    /// Shifts right a <see cref="Int4x2"/> value without considering sign.
+    /// </summary>
+    /// <param name="matrix">The <see cref="Int4x2"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="matrix"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int4x2 operator >>>(Int4x2 matrix, int amount) => default;
+
+    /// <summary>
+    /// Shifts right a <see cref="Int4x2"/> value without considering sign.
+    /// </summary>
+    /// <param name="matrix">The <see cref="Int4x2"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="matrix"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int4x2 operator >>>(Int4x2 matrix, uint amount) => default;
+
+    /// <summary>
+    /// Shifts right a <see cref="Int4x2"/> value without considering sign.
+    /// </summary>
+    /// <param name="matrix">The <see cref="Int4x2"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="matrix"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int4x2 operator >>>(Int4x2 matrix, Int4x2 amount) => default;
+
+    /// <summary>
+    /// Shifts right a <see cref="Int4x2"/> value without considering sign.
+    /// </summary>
+    /// <param name="matrix">The <see cref="Int4x2"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="matrix"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int4x2 operator >>>(Int4x2 matrix, UInt4x2 amount) => default;
 
     /// <summary>
     /// Shifts left a <see cref="Int4x2"/> value.
@@ -8103,6 +8607,42 @@ public unsafe partial struct Int4x3
     public static Int4x3 operator >>(Int4x3 matrix, UInt4x3 amount) => default;
 
     /// <summary>
+    /// Shifts right a <see cref="Int4x3"/> value without considering sign.
+    /// </summary>
+    /// <param name="matrix">The <see cref="Int4x3"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="matrix"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int4x3 operator >>>(Int4x3 matrix, int amount) => default;
+
+    /// <summary>
+    /// Shifts right a <see cref="Int4x3"/> value without considering sign.
+    /// </summary>
+    /// <param name="matrix">The <see cref="Int4x3"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="matrix"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int4x3 operator >>>(Int4x3 matrix, uint amount) => default;
+
+    /// <summary>
+    /// Shifts right a <see cref="Int4x3"/> value without considering sign.
+    /// </summary>
+    /// <param name="matrix">The <see cref="Int4x3"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="matrix"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int4x3 operator >>>(Int4x3 matrix, Int4x3 amount) => default;
+
+    /// <summary>
+    /// Shifts right a <see cref="Int4x3"/> value without considering sign.
+    /// </summary>
+    /// <param name="matrix">The <see cref="Int4x3"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="matrix"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int4x3 operator >>>(Int4x3 matrix, UInt4x3 amount) => default;
+
+    /// <summary>
     /// Shifts left a <see cref="Int4x3"/> value.
     /// </summary>
     /// <param name="matrix">The <see cref="Int4x3"/> value to shift left.</param>
@@ -8727,6 +9267,42 @@ public unsafe partial struct Int4x4
     /// <returns>The result of shifting <paramref name="matrix"/> right by <paramref name="amount"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Int4x4 operator >>(Int4x4 matrix, UInt4x4 amount) => default;
+
+    /// <summary>
+    /// Shifts right a <see cref="Int4x4"/> value without considering sign.
+    /// </summary>
+    /// <param name="matrix">The <see cref="Int4x4"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="matrix"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int4x4 operator >>>(Int4x4 matrix, int amount) => default;
+
+    /// <summary>
+    /// Shifts right a <see cref="Int4x4"/> value without considering sign.
+    /// </summary>
+    /// <param name="matrix">The <see cref="Int4x4"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="matrix"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int4x4 operator >>>(Int4x4 matrix, uint amount) => default;
+
+    /// <summary>
+    /// Shifts right a <see cref="Int4x4"/> value without considering sign.
+    /// </summary>
+    /// <param name="matrix">The <see cref="Int4x4"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="matrix"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int4x4 operator >>>(Int4x4 matrix, Int4x4 amount) => default;
+
+    /// <summary>
+    /// Shifts right a <see cref="Int4x4"/> value without considering sign.
+    /// </summary>
+    /// <param name="matrix">The <see cref="Int4x4"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="matrix"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int4x4 operator >>>(Int4x4 matrix, UInt4x4 amount) => default;
 
     /// <summary>
     /// Shifts left a <see cref="Int4x4"/> value.

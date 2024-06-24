@@ -517,6 +517,42 @@ public unsafe partial struct <#=typeName#>
     public static <#=typeName#> operator >>(<#=typeName#> <#=argumentName#>, UInt<#=i#> amount) => default;
 
     /// <summary>
+    /// Shifts right a <see cref="<#=typeName#>"/> value without considering sign.
+    /// </summary>
+    /// <param name="<#=argumentName#>">The <see cref="<#=typeName#>"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="<#=argumentName#>"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static <#=typeName#> operator >>>(<#=typeName#> <#=argumentName#>, int amount) => default;
+
+    /// <summary>
+    /// Shifts right a <see cref="<#=typeName#>"/> value without considering sign.
+    /// </summary>
+    /// <param name="<#=argumentName#>">The <see cref="<#=typeName#>"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="<#=argumentName#>"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static <#=typeName#> operator >>>(<#=typeName#> <#=argumentName#>, uint amount) => default;
+
+    /// <summary>
+    /// Shifts right a <see cref="<#=typeName#>"/> value without considering sign.
+    /// </summary>
+    /// <param name="<#=argumentName#>">The <see cref="<#=typeName#>"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="<#=argumentName#>"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static <#=typeName#> operator >>>(<#=typeName#> <#=argumentName#>, Int<#=i#> amount) => default;
+
+    /// <summary>
+    /// Shifts right a <see cref="<#=typeName#>"/> value without considering sign.
+    /// </summary>
+    /// <param name="<#=argumentName#>">The <see cref="<#=typeName#>"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="<#=argumentName#>"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static <#=typeName#> operator >>>(<#=typeName#> <#=argumentName#>, UInt<#=i#> amount) => default;
+
+    /// <summary>
     /// Shifts left a <see cref="<#=typeName#>"/> value.
     /// </summary>
     /// <param name="<#=argumentName#>">The <see cref="<#=typeName#>"/> value to shift left.</param>
