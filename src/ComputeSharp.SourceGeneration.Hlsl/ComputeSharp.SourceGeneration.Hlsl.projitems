@@ -32,6 +32,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Models\TypeAliases.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SyntaxProcessors\HlslBytecodeSyntaxProcessor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SyntaxProcessors\ConstantBufferSyntaxProcessor.Generation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SyntaxProcessors\HlslOperatorsSyntaxProcessor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SyntaxProcessors\HlslSourceSyntaxProcessor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SyntaxProcessors\HlslDefinitionsSyntaxProcessor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SyntaxRewriters\HlslSourceRewriter.Tracking.cs" />

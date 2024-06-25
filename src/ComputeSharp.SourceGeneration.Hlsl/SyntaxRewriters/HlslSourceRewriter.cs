@@ -7,6 +7,7 @@ using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Helpers;
 using ComputeSharp.SourceGeneration.Mappings;
 using ComputeSharp.SourceGeneration.Models;
+using ComputeSharp.SourceGeneration.SyntaxProcessors;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -376,73 +377,14 @@ internal abstract partial class HlslSourceRewriter(
 
         BinaryExpressionSyntax updatedNode = (BinaryExpressionSyntax)base.VisitBinaryExpression(node)!;
 
-        // Process binary operations to see if the target operator method is an intrinsic
-        if (SemanticModel.For(node).GetOperation(node, CancellationToken) is not IBinaryOperation operation)
+        if (HlslOperatorsSyntaxProcessor.TryProcessCustomOperator(
+            originalNode: node,
+            updatedNode: updatedNode,
+            semanticModel: SemanticModel.For(node),
+            token: CancellationToken,
+            rewrittenNode: out ExpressionSyntax? rewrittenNode))
         {
-            return updatedNode;
-        }
-
-        // Pre-filter candidates based on the operation type, to minimize allocations
-        if (!HlslKnownOperators.IsCandidateOperator(operation.OperatorKind))
-        {
-            return updatedNode;
-        }
-
-        // First, try to handle unsigned right shift operators, which are a special case.
-        // This is because they require explicit rewriting, and not just a change in method name.
-        // We need to do this after pre-filtering, as this is also supported on 'int' and 'uint'.
-        if (operation.OperatorKind == BinaryOperatorKind.UnsignedRightShift)
-        {
-            string typeName = operation.LeftOperand.Type!.GetFullyQualifiedMetadataName();
-
-            // If the left operand is already unsigned, there's no rewriting to do other
-            // than just replacing '>>>' with '>>', since the former doesn't exist in HLSL.
-            if (HlslKnownTypes.IsKnownUnsignedIntegerType(typeName))
-            {
-                return BinaryExpression(SyntaxKind.RightShiftExpression, updatedNode.Left, updatedNode.Right);
-            }
-
-            // Rewrite the syntax tree as follows:
-            //
-            // x >>> y => (TYPE_X)((UNSIGNED_TYPE_X)x >> y)
-            if (HlslKnownTypes.IsKnownSignedIntegerType(typeName))
-            {
-                string typeNameOfLeftOperand = HlslKnownTypes.GetMappedName(typeName);
-                string unsignedTypeName = 'u' + typeNameOfLeftOperand;
-
-                return
-                    CastExpression(
-                        IdentifierName(typeNameOfLeftOperand),
-                        ParenthesizedExpression(
-                            BinaryExpression(
-                                SyntaxKind.RightShiftExpression,
-                                CastExpression(
-                                    IdentifierName(unsignedTypeName),
-                                    updatedNode.Left),
-                                updatedNode.Right)));
-            }
-
-            // All other cases are unsupported, so just return the original tree
-            return updatedNode;
-        }
-
-        // Also pre-filter just operators that are defined in ComputeSharp primitives
-        if (operation is not { OperatorMethod: { ContainingType.ContainingNamespace.Name: "ComputeSharp" } method })
-        {
-            return updatedNode;
-        }
-
-        // If the operator is indeed an HLSL overload, replace the expression with an invocation.
-        // That is, do the following transformation:
-        //
-        // x * y => <INTRINSIC>(x, y)
-        if (HlslKnownOperators.TryGetMappedName(method.GetFullyQualifiedMetadataName(), method.Parameters.Select(static p => p.Type.Name), out string? mapped))
-        {
-            return
-                InvocationExpression(IdentifierName(mapped!))
-                .AddArgumentListArguments(
-                    Argument(updatedNode.Left),
-                    Argument(updatedNode.Right));
+            return rewrittenNode;
         }
 
         return updatedNode;
