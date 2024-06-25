@@ -33,8 +33,21 @@ internal static class HlslOperatorsSyntaxProcessor
         CancellationToken token,
         [NotNullWhen(true)] out ExpressionSyntax? rewrittenNode)
     {
-        // Process binary operations to see if the target operator method is an intrinsic
-        if (semanticModel.GetOperation(originalNode, token) is not IBinaryOperation operation)
+        // Make sure we can correctly retrieve an operation first
+        if (semanticModel.GetOperation(originalNode, token) is not IOperation operation)
+        {
+            rewrittenNode = null;
+
+            return false;
+        }
+
+        // Next, try to get the operation info
+        if (!TryGetBinaryOperationInfo(
+            operation,
+            out BinaryOperatorKind operationKind,
+            out IOperation? leftOperation,
+            out IOperation? rightOperation,
+            out IMethodSymbol? operatorMethod))
         {
             rewrittenNode = null;
 
@@ -42,7 +55,7 @@ internal static class HlslOperatorsSyntaxProcessor
         }
 
         // Pre-filter candidates based on the operation type, to minimize allocations
-        if (!HlslKnownOperators.IsCandidateOperator(operation.OperatorKind))
+        if (!HlslKnownOperators.IsCandidateOperator(operationKind))
         {
             rewrittenNode = null;
 
@@ -55,15 +68,17 @@ internal static class HlslOperatorsSyntaxProcessor
         // First, try to handle unsigned right shift operators, which are a special case.
         // This is because they require explicit rewriting, and not just a change in method name.
         // We need to do this after pre-filtering, as this is also supported on 'int' and 'uint'.
-        if (operation.OperatorKind == BinaryOperatorKind.UnsignedRightShift)
+        if (operationKind == BinaryOperatorKind.UnsignedRightShift)
         {
-            string typeName = operation.LeftOperand.Type!.GetFullyQualifiedMetadataName();
+            string typeName = leftOperation.Type!.GetFullyQualifiedMetadataName();
 
             // If the left operand is already unsigned, there's no rewriting to do other
             // than just replacing '>>>' with '>>', since the former doesn't exist in HLSL.
             if (HlslKnownTypes.IsKnownUnsignedIntegerType(typeName))
             {
                 rewrittenNode = BinaryExpression(SyntaxKind.RightShiftExpression, leftNode, rightNode);
+
+                WrapRewrittenNodeIfNeeded(updatedNode, operation, ref rewrittenNode);
 
                 return true;
             }
@@ -85,6 +100,8 @@ internal static class HlslOperatorsSyntaxProcessor
                                 CastExpression(IdentifierName(unsignedTypeName), leftNode),
                                 rightNode)));
 
+                WrapRewrittenNodeIfNeeded(updatedNode, operation, ref rewrittenNode);
+
                 return true;
             }
 
@@ -95,7 +112,7 @@ internal static class HlslOperatorsSyntaxProcessor
         }
 
         // Also pre-filter just operators that are defined in ComputeSharp primitives
-        if (operation is not { OperatorMethod: { ContainingType.ContainingNamespace.Name: "ComputeSharp" } method })
+        if (operatorMethod is not { ContainingType.ContainingNamespace.Name: "ComputeSharp" })
         {
             rewrittenNode = null;
 
@@ -106,7 +123,10 @@ internal static class HlslOperatorsSyntaxProcessor
         // That is, do the following transformation:
         //
         // x * y => <INTRINSIC>(x, y)
-        if (HlslKnownOperators.TryGetMappedName(method.GetFullyQualifiedMetadataName(), method.Parameters.Select(static p => p.Type.Name), out string? mapped))
+        if (HlslKnownOperators.TryGetMappedName(
+            operatorMethod.GetFullyQualifiedMetadataName(),
+            operatorMethod.Parameters.Select(static p => p.Type.Name),
+            out string? mapped))
         {
             rewrittenNode =
                 InvocationExpression(IdentifierName(mapped!))
@@ -114,12 +134,56 @@ internal static class HlslOperatorsSyntaxProcessor
                     Argument(leftNode),
                     Argument(rightNode));
 
+            WrapRewrittenNodeIfNeeded(updatedNode, operation, ref rewrittenNode);
+
             return true;
         }
 
         rewrittenNode = null;
 
         return false;
+    }
+
+    /// <summary>
+    /// Tries to get the info for a given binary operation.
+    /// </summary>
+    /// <param name="operation">The input operation to extract info from.</param>
+    /// <param name="operationKind">The resulting kind for <paramref name="operation"/>.</param>
+    /// <param name="leftOrTargetOperation">The resulting left child operation, or the target.</param>
+    /// <param name="rightOperation">The resulting right child operation.</param>
+    /// <param name="targetMethod">The target method being invoked, if any.</param>
+    /// <returns>Whether the input operation is supported and info could be retrieved.</returns>
+    private static bool TryGetBinaryOperationInfo(
+        IOperation operation,
+        out BinaryOperatorKind operationKind,
+        [NotNullWhen(true)] out IOperation? leftOrTargetOperation,
+        [NotNullWhen(true)] out IOperation? rightOperation,
+        out IMethodSymbol? targetMethod)
+    {
+        switch (operation)
+        {
+            case IBinaryOperation binaryOperation:
+                operationKind = binaryOperation.OperatorKind;
+                leftOrTargetOperation = binaryOperation.LeftOperand;
+                rightOperation = binaryOperation.RightOperand;
+                targetMethod = binaryOperation.OperatorMethod;
+
+                return true;
+            case ICompoundAssignmentOperation assignmentOperation:
+                operationKind = assignmentOperation.OperatorKind;
+                leftOrTargetOperation = assignmentOperation.Target;
+                rightOperation = assignmentOperation.Value;
+                targetMethod = assignmentOperation.OperatorMethod;
+
+                return true;
+            default:
+                operationKind = BinaryOperatorKind.None;
+                leftOrTargetOperation = null;
+                rightOperation = null;
+                targetMethod = null;
+
+                return false;
+        }
     }
 
     /// <summary>
@@ -146,6 +210,33 @@ internal static class HlslOperatorsSyntaxProcessor
                 break;
             default:
                 throw new NotSupportedException("Invalid input expression node.");
+        }
+    }
+
+    /// <summary>
+    /// Wraps a rewritten node if needed, depending on the operation type.
+    /// </summary>
+    /// <param name="updatedNode">The updated node to propagate and potentially rewrite.</param>
+    /// <param name="operation">The input operation being processed.</param>
+    /// <param name="rewrittenNode">The rewritten node, to wrap if needed.</param>
+    /// <exception cref="NotSupportedException">Throw if the input operation isn't valid for the input expression node.</exception>
+    private static void WrapRewrittenNodeIfNeeded(
+        ExpressionSyntax updatedNode,
+        IOperation operation,
+        ref ExpressionSyntax rewrittenNode)
+    {
+        switch (operation)
+        {
+            case IBinaryOperation:
+                break;
+            case ICompoundAssignmentOperation when updatedNode is AssignmentExpressionSyntax assignmentNode:
+                rewrittenNode = AssignmentExpression(
+                    SyntaxKind.SimpleAssignmentExpression,
+                    assignmentNode.Left,
+                    rewrittenNode);
+                break;
+            default:
+                throw new NotSupportedException("Invalid input operation type.");
         }
     }
 }
