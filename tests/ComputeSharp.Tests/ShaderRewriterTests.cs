@@ -399,6 +399,163 @@ public partial class ShaderRewriterTests
 
     [CombinatorialTestMethod]
     [AllDevices]
+    public void UnsignedRightShiftOperators(Device device)
+    {
+        int[] data = new int[18];
+
+        new Random(42).NextBytes(data.AsSpan(0, 14).Cast<int, byte>());
+
+        using ReadWriteBuffer<int> buffer = device.Get().AllocateReadWriteBuffer(data);
+
+        device.Get().For(1, new UnsignedRightShiftOperatorsShader(buffer));
+
+        int[] results = buffer.ToArray();
+
+        int2 a = new(data[0], data[1]);
+        uint2 b = new((uint)data[2], (uint)data[3]);
+        int2 e = new(1, 2);
+
+        int2 a_shift_int = new(a.X >>> 2, a.Y >>> 2);
+
+        uint2 b_shift_int2 = new(b.X >>> e.X, b.Y >>> e.Y);
+
+        Assert.AreEqual(results[14], a_shift_int.X);
+        Assert.AreEqual(results[15], a_shift_int.Y);
+
+        Assert.AreEqual(results[16], (int)b_shift_int2.X);
+        Assert.AreEqual(results[17], (int)b_shift_int2.Y);
+
+        ShaderInfo info = ReflectionServices.GetShaderInfo<UnsignedRightShiftOperatorsShader>();
+
+        Assert.AreEqual(
+            """
+            #define __GroupSize__get_X 64
+            #define __GroupSize__get_Y 1
+            #define __GroupSize__get_Z 1
+
+            cbuffer _ : register(b0)
+            {
+                uint __x;
+                uint __y;
+                uint __z;
+            }
+
+            RWStructuredBuffer<int> __reserved__buffer : register(u0);
+
+            [NumThreads(__GroupSize__get_X, __GroupSize__get_Y, __GroupSize__get_Z)]
+            void Execute(uint3 ThreadIds : SV_DispatchThreadID)
+            {
+                if (ThreadIds.x < __x && ThreadIds.y < __y && ThreadIds.z < __z)
+                {
+                    int2 a = int2(__reserved__buffer[0], __reserved__buffer[1]);
+                    uint2 b = uint2((uint)__reserved__buffer[2], (uint)__reserved__buffer[3]);
+                    int2x3 c = int2x3((int)__reserved__buffer[4], (int)__reserved__buffer[5], (int)__reserved__buffer[6], (int)__reserved__buffer[7], (int)__reserved__buffer[8], (int)__reserved__buffer[9]);
+                    uint2x2 d = uint2x2((uint)(uint)__reserved__buffer[10], (uint)(uint)__reserved__buffer[11], (uint)(uint)__reserved__buffer[12], (uint)(uint)__reserved__buffer[13]);
+                    int2 e = int2(1, 2);
+                    uint2 f = uint2(2, 1);
+                    int2x3 g = int2x3((int)1, (int)2, (int)3, (int)4, (int)5, (int)6);
+                    uint2x2 h = uint2x2((uint)1, (uint)2, (uint)3, (uint)4);
+                    int2 a_shift_int = (int2)((uint2)a >> 2);
+                    int2 a_shift_uint = (int2)((uint2)a >> 2u);
+                    int2 a_shift_int2 = (int2)((uint2)a >> e);
+                    int2 a_shift_uint2 = (int2)((uint2)a >> f);
+                    int2 a_copy = a;
+                    a_copy = (int2)((uint2)a_copy >> 2);
+                    a_copy = (int2)((uint2)a_copy >> 1u);
+                    a_copy = (int2)((uint2)a_copy >> e);
+                    a_copy = (int2)((uint2)a_copy >> f);
+                    uint2 b_shift_int = b >> 2;
+                    uint2 b_shift_uint = b >> 2u;
+                    uint2 b_shift_int2 = b >> e;
+                    uint2 b_shift_uint2 = b >> f;
+                    uint2 b_copy = b;
+                    b_copy = b_copy >> 2;
+                    b_copy = b_copy >> 1u;
+                    b_copy = b_copy >> e;
+                    b_copy = b_copy >> f;
+                    int2x3 c_shift_int = (int2x3)((uint2x3)c >> g);
+                    int2x3 c_shift_uint = (int2x3)((uint2x3)c >> (uint2x3)g);
+                    c = (int2x3)((uint2x3)c >> 2);
+                    c = (int2x3)((uint2x3)c >> 1u);
+                    uint2x2 d_shift_int = d >> (int2x2)h;
+                    uint2x2 d_shift_uint = d >> h;
+                    d = d >> 1;
+                    d = d >> 2u;
+                    __reserved__buffer[14] = a_shift_int.x;
+                    __reserved__buffer[15] = a_shift_int.y;
+                    __reserved__buffer[16] = (int)b_shift_int2.x;
+                    __reserved__buffer[17] = (int)b_shift_int2.y;
+                }
+            }
+            """,
+            info.HlslSource);
+    }
+
+#pragma warning disable IDE0059
+    [AutoConstructor]
+    [ThreadGroupSize(DefaultThreadGroupSizes.X)]
+    [GeneratedComputeShaderDescriptor]
+    internal readonly partial struct UnsignedRightShiftOperatorsShader : IComputeShader
+    {
+        public readonly ReadWriteBuffer<int> buffer;
+
+        public void Execute()
+        {
+            int2 a = new(buffer[0], buffer[1]);
+            uint2 b = new((uint)buffer[2], (uint)buffer[3]);
+            int2x3 c = new(buffer[4], buffer[5], buffer[6], buffer[7], buffer[8], buffer[9]);
+            uint2x2 d = new((uint)buffer[10], (uint)buffer[11], (uint)buffer[12], (uint)buffer[13]);
+            int2 e = new(1, 2);
+            uint2 f = new(2, 1);
+            int2x3 g = new(1, 2, 3, 4, 5, 6);
+            uint2x2 h = new(1, 2, 3, 4);
+
+            int2 a_shift_int = a >>> 2;
+            int2 a_shift_uint = a >>> 2u;
+            int2 a_shift_int2 = a >>> e;
+            int2 a_shift_uint2 = a >>> f;
+
+            int2 a_copy = a;
+
+            a_copy >>>= 2;
+            a_copy >>>= 1u;
+            a_copy >>>= e;
+            a_copy >>>= f;
+
+            uint2 b_shift_int = b >>> 2;
+            uint2 b_shift_uint = b >>> 2u;
+            uint2 b_shift_int2 = b >>> e;
+            uint2 b_shift_uint2 = b >>> f;
+
+            uint2 b_copy = b;
+
+            b_copy >>>= 2;
+            b_copy >>>= 1u;
+            b_copy >>>= e;
+            b_copy >>>= f;
+
+            int2x3 c_shift_int = c >>> g;
+            int2x3 c_shift_uint = c >>> (uint2x3)g;
+
+            c >>>= 2;
+            c >>>= 1u;
+
+            uint2x2 d_shift_int = d >>> (int2x2)h;
+            uint2x2 d_shift_uint = d >>> h;
+
+            d >>>= 1;
+            d >>>= 2u;
+
+            buffer[14] = a_shift_int.X;
+            buffer[15] = a_shift_int.Y;
+            buffer[16] = (int)b_shift_int2.X;
+            buffer[17] = (int)b_shift_int2.Y;
+        }
+    }
+#pragma warning restore IDE0059
+
+    [CombinatorialTestMethod]
+    [AllDevices]
     public void ToBooleanConversionHlslIntrinsics(Device device)
     {
         float[] data1 = [3.14f, 0, 1.44f, 0, 0, 0.4445f];

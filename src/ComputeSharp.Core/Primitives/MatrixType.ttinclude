@@ -486,6 +486,42 @@ public unsafe partial struct <#=fullTypeName#>
     public static <#=fullTypeName#> operator >>(<#=fullTypeName#> matrix, UInt<#=rows#>x<#=columns#> amount) => default;
 
     /// <summary>
+    /// Shifts right a <see cref="<#=fullTypeName#>"/> value without considering sign.
+    /// </summary>
+    /// <param name="matrix">The <see cref="<#=fullTypeName#>"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="matrix"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static <#=fullTypeName#> operator >>>(<#=fullTypeName#> matrix, int amount) => default;
+
+    /// <summary>
+    /// Shifts right a <see cref="<#=fullTypeName#>"/> value without considering sign.
+    /// </summary>
+    /// <param name="matrix">The <see cref="<#=fullTypeName#>"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="matrix"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static <#=fullTypeName#> operator >>>(<#=fullTypeName#> matrix, uint amount) => default;
+
+    /// <summary>
+    /// Shifts right a <see cref="<#=fullTypeName#>"/> value without considering sign.
+    /// </summary>
+    /// <param name="matrix">The <see cref="<#=fullTypeName#>"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="matrix"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static <#=fullTypeName#> operator >>>(<#=fullTypeName#> matrix, Int<#=rows#>x<#=columns#> amount) => default;
+
+    /// <summary>
+    /// Shifts right a <see cref="<#=fullTypeName#>"/> value without considering sign.
+    /// </summary>
+    /// <param name="matrix">The <see cref="<#=fullTypeName#>"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="matrix"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static <#=fullTypeName#> operator >>>(<#=fullTypeName#> matrix, UInt<#=rows#>x<#=columns#> amount) => default;
+
+    /// <summary>
     /// Shifts left a <see cref="<#=fullTypeName#>"/> value.
     /// </summary>
     /// <param name="matrix">The <see cref="<#=fullTypeName#>"/> value to shift left.</param>

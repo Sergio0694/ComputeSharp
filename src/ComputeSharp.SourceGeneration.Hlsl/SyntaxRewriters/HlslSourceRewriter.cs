@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Threading;
 using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Helpers;
 using ComputeSharp.SourceGeneration.Mappings;
 using ComputeSharp.SourceGeneration.Models;
+using ComputeSharp.SourceGeneration.SyntaxProcessors;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -347,23 +347,14 @@ internal abstract partial class HlslSourceRewriter(
 
         AssignmentExpressionSyntax updatedNode = (AssignmentExpressionSyntax)base.VisitAssignmentExpression(node)!;
 
-        if (SemanticModel.For(node).GetOperation(node, CancellationToken) is ICompoundAssignmentOperation { OperatorMethod: { ContainingType.ContainingNamespace.Name: "ComputeSharp" } method })
+        if (HlslOperatorsSyntaxProcessor.TryProcessCustomOperator(
+            originalNode: node,
+            updatedNode: updatedNode,
+            semanticModel: SemanticModel.For(node),
+            token: CancellationToken,
+            rewrittenNode: out ExpressionSyntax? rewrittenNode))
         {
-            // If the compound assignment is using an HLSL operator, replace the expression with an invocation and assignment.
-            // That is, do the following transformation:
-            //
-            // x *= y => x = <INTRINSIC>(x, y)
-            if (HlslKnownOperators.TryGetMappedName(method.GetFullyQualifiedMetadataName(), method.Parameters.Select(static p => p.Type.Name), out string? mapped))
-            {
-                return
-                    AssignmentExpression(
-                        SyntaxKind.SimpleAssignmentExpression,
-                        updatedNode.Left,
-                        InvocationExpression(IdentifierName(mapped!))
-                        .AddArgumentListArguments(
-                            Argument(updatedNode.Left),
-                            Argument(updatedNode.Right)));
-            }
+            return rewrittenNode;
         }
 
         return updatedNode;
@@ -376,21 +367,14 @@ internal abstract partial class HlslSourceRewriter(
 
         BinaryExpressionSyntax updatedNode = (BinaryExpressionSyntax)base.VisitBinaryExpression(node)!;
 
-        // Process binary operations to see if the target operator method is an intrinsic
-        if (SemanticModel.For(node).GetOperation(node, CancellationToken) is IBinaryOperation { OperatorMethod: { ContainingType.ContainingNamespace.Name: "ComputeSharp" } method })
+        if (HlslOperatorsSyntaxProcessor.TryProcessCustomOperator(
+            originalNode: node,
+            updatedNode: updatedNode,
+            semanticModel: SemanticModel.For(node),
+            token: CancellationToken,
+            rewrittenNode: out ExpressionSyntax? rewrittenNode))
         {
-            // If the operator is indeed an HLSL overload, replace the expression with an invocation.
-            // That is, do the following transformation:
-            //
-            // x * y => <INTRINSIC>(x, y)
-            if (HlslKnownOperators.TryGetMappedName(method.GetFullyQualifiedMetadataName(), method.Parameters.Select(static p => p.Type.Name), out string? mapped))
-            {
-                return
-                    InvocationExpression(IdentifierName(mapped!))
-                    .AddArgumentListArguments(
-                        Argument(updatedNode.Left),
-                        Argument(updatedNode.Right));
-            }
+            return rewrittenNode;
         }
 
         return updatedNode;
