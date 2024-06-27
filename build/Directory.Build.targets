@@ -10,6 +10,17 @@
   -->
 
   <!--
+    For all WinAppSDK projects (both published, test and sample projects, that's why this property group is
+    defined here), we need to set the 'EnableMsixTooling' property. This does two main things: for XAML projects,
+    it enables the embedded resources.pri file generation, and it also enables building with 'dotnet msbuild'.
+    Without this property being set, Desktop MSBuild would be required to build all WinAppSDK projects.
+    This property must be set in a .targets file, or 'TargetFramework' might be null when evaluated.
+  -->
+  <PropertyGroup Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net8.0-windows'))">
+    <EnableMsixTooling>true</EnableMsixTooling>
+  </PropertyGroup>
+
+  <!--
     Manually set the version if null. This is copied from Microsoft.NET.DefaultAssemblyInfo.targets and is needed
     for cases where that target is not being automatically imported (which happens because MSBuild is used instead
     of dotnet build for some cases, due to the solution having some WinUI 3 projects). The lines setting the prefix
