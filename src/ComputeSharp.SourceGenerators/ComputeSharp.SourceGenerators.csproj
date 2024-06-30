@@ -73,7 +73,7 @@
     <EmbeddedResource Include="..\..\libs\arm64\dxil.dll" Link="ComputeSharp\Libraries\arm64\dxil.dll" />
   </ItemGroup>
 
-  <!-- Shared project with common helpers -->
+  <!-- Shared projects with common helpers -->
   <Import Project="..\ComputeSharp.SourceGeneration\ComputeSharp.SourceGeneration.projitems" Label="Shared" />
   <Import Project="..\ComputeSharp.SourceGeneration.Hlsl\ComputeSharp.SourceGeneration.Hlsl.projitems" Label="Shared" />
 

@@ -1,0 +1,55 @@
+<Project>
+
+  <!-- Get the analyzer from the ComputeSharp.D2D1.WinUI NuGet package -->
+  <Target Name="_ComputeSharpD2D1WinUIGatherAnalyzers">
+    <ItemGroup>
+      <_ComputeSharpD2D1WinUIAnalyzer Include="@(Analyzer)" Condition="'%(Analyzer.NuGetPackageId)' == 'ComputeSharp.D2D1.WinUI'" />
+    </ItemGroup>
+  </Target>
+
+  <!-- Remove the analyzer if using Roslyn < 4.9 (ComputeSharp.D2D1.WinUI's generators require Roslyn 4.9) -->
+  <Target Name="_ComputeSharpD2D1WinUIRemoveAnalyzersForRoslyn3"
+          Condition="'$(CSharpCoreTargetsPath)' != ''"
+          AfterTargets="ResolvePackageDependenciesForBuild;ResolveNuGetPackageAssets"
+          DependsOnTargets="_ComputeSharpD2D1WinUIGatherAnalyzers">
+
+    <!--
+      Use the CSharpCoreTargetsPath property to find the version of the compiler we are using. This is the same mechanism
+      MSBuild uses to find the compiler. We could check the assembly version for any compiler assembly (since they all have
+      the same version) but Microsoft.Build.Tasks.CodeAnalysis.dll is where MSBuild loads the compiler tasks from so if
+      someone is getting creative with msbuild tasks/targets this is the "most correct" assembly to check.
+    -->
+    <GetAssemblyIdentity AssemblyFiles="$([System.IO.Path]::Combine(`$([System.IO.Path]::GetDirectoryName($(CSharpCoreTargetsPath)))`,`Microsoft.Build.Tasks.CodeAnalysis.dll`))">
+      <Output TaskParameter="Assemblies" ItemName="ComputeSharpD2D1WinUICurrentCompilerAssemblyIdentity"/>
+    </GetAssemblyIdentity>
+
+    <PropertyGroup>
+
+      <!-- Transform the resulting item from GetAssemblyIdentity into a property representing its assembly version -->
+      <ComputeSharpD2D1WinUICurrentCompilerVersion>@(ComputeSharpD2D1WinUICurrentCompilerAssemblyIdentity->'%(Version)')</ComputeSharpD2D1WinUICurrentCompilerVersion>
+
+      <!-- The CurrentCompilerVersionIsNotNewEnough property can now be defined based on the Roslyn assembly version -->
+      <ComputeSharpD2D1WinUICurrentCompilerVersionIsNotNewEnough Condition="$([MSBuild]::VersionLessThan($(ComputeSharpD2D1WinUICurrentCompilerVersion), 4.9))">true</ComputeSharpD2D1WinUICurrentCompilerVersionIsNotNewEnough>
+    </PropertyGroup>
+
+    <!-- If the Roslyn version is < 4.9, disable the source generators -->
+    <ItemGroup Condition ="'$(ComputeSharpD2D1WinUICurrentCompilerVersionIsNotNewEnough)' == 'true'">
+      <Analyzer Remove="@(_ComputeSharpD2D1WinUIAnalyzer)"/>
+    </ItemGroup>
+
+    <!-- There is no need to emit a warning here, as this package is always a transitive dependency from ComputeSharp.D2D1, which does emit the warning -->
+  </Target>
+  
+  <!-- Remove the analyzer if Roslyn is missing -->
+  <Target Name="_ComputeSharpD2D1WinUIRemoveAnalyzersForRosynNotFound"
+          Condition="'$(CSharpCoreTargetsPath)' == ''"
+          AfterTargets="ResolvePackageDependenciesForBuild;ResolveNuGetPackageAssets"
+          DependsOnTargets="_ComputeSharpD2D1WinUIGatherAnalyzers">
+
+    <!-- If no Roslyn assembly could be found, just remove the analyzer without emitting a warning -->
+    <ItemGroup>
+      <Analyzer Remove="@(_ComputeSharpD2D1WinUIAnalyzer)"/>
+    </ItemGroup>
+  </Target>
+
+</Project>
