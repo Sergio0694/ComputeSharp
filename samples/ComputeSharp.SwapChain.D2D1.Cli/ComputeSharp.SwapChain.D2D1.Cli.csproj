@@ -3,6 +3,7 @@
     <OutputType Condition="'$(CI_RUNNER_SAMPLES_INTEGRATION_TESTS)' == 'true'">Exe</OutputType>
     <OutputType Condition="'$(CI_RUNNER_SAMPLES_INTEGRATION_TESTS)' != 'true'">WinExe</OutputType>
     <TargetFramework>net8.0-windows10.0.22621</TargetFramework>
+    <WindowsSdkPackageVersion>10.0.22621.35-preview</WindowsSdkPackageVersion>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <Platforms>x64;ARM64</Platforms>
     <RuntimeIdentifiers>win-x64;win-arm64</RuntimeIdentifiers>
@@ -12,14 +13,24 @@
 
   <PropertyGroup>
 
+    <!--
+      Generate a .pdb file to avoid IIDOptimizer build errors.
+      See: https://github.com/microsoft/CsWinRT/issues/1478.
+    -->
+    <DebugType>full</DebugType>
+
     <!-- Suppress warnings for using directives inside namespaces (needed to avoid some WinRT conflicts) -->
     <NoWarn>$(NoWarn);IDE0065</NoWarn>
-
-    <!-- Workaround for WinRT.TypeExtensions.GetAuthoringMetadataType(Type) trim warning (see https://github.com/microsoft/CsWinRT/issues/1319) -->
-    <NoWarn>$(NoWarn);IL2104;IL2026</NoWarn>
-
-    <!-- Workaround for WinRT.Runtime and System.Linq.Expressions producing trim warnings -->
-    <NoWarn>$(NoWarn);IL3053</NoWarn>
+  </PropertyGroup>
+  
+  <!-- CsWinRT size saving options (same as in ComputeSharp.NativeLibrary.WinRT) -->
+  <PropertyGroup>
+    <CsWinRTEnableDynamicObjectsSupport>false</CsWinRTEnableDynamicObjectsSupport>
+    <CsWinRTUseExceptionResourceKeys>true</CsWinRTUseExceptionResourceKeys>
+    <CsWinRTEnableDefaultCustomTypeMappings>false</CsWinRTEnableDefaultCustomTypeMappings>
+    <CsWinRTEnableICustomPropertyProviderSupport>false</CsWinRTEnableICustomPropertyProviderSupport>
+    <CsWinRTEnableIReferenceSupport>false</CsWinRTEnableIReferenceSupport>
+    <CsWinRTEnableIDynamicInterfaceCastableSupport>false</CsWinRTEnableIDynamicInterfaceCastableSupport>
   </PropertyGroup>
 
   <!-- Options for R2R publishing -->
@@ -42,13 +53,14 @@
     <OptimizationPreference>Speed</OptimizationPreference>
   </PropertyGroup>
 
-  <!-- Also include the .rd.xml file to fix some NativeAOT issues with CsWinRT -->
-  <ItemGroup Condition="'$(COMPUTESHARP_SWAPCHAIN_D2D1_PUBLISH_AOT)' == 'true'">
-    <RdXmlFile Include="Properties\Default.rd.xml" />
-  </ItemGroup>
-
   <ItemGroup>
     <PackageReference Include="TerraFX.Interop.Windows" Version="10.0.22621.6" />
+
+    <!--
+      Reference CsWinRT locally for the source generators (see comments in ComputeSharp.D2D1.WinUI).
+      Note that this is an executable and not a library, so we must drop the 'PrivateAssets' here.
+      -->
+    <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.1.0-prerelease.240602.1" />
   </ItemGroup>
 
   <!-- Note: using SetPlatform="Platform=AnyCPU" for the analyzers to avoid issues (see https://github.com/dotnet/roslyn/issues/70148) -->

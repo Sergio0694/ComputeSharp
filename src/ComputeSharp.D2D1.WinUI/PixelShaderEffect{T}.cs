@@ -1,4 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
 using ABI.Microsoft.Graphics.Canvas;
 using ComputeSharp.D2D1.Descriptors;
 using ComputeSharp.D2D1.Interop;
@@ -6,6 +5,7 @@ using ComputeSharp.Interop;
 using ComputeSharp.Win32;
 using Microsoft.Graphics.Canvas;
 using Microsoft.Graphics.Canvas.Effects;
+using ICanvasImageInterop = Microsoft.Graphics.Canvas.ICanvasImageInterop;
 
 namespace ComputeSharp.D2D1.WinUI;
 
@@ -13,7 +13,7 @@ namespace ComputeSharp.D2D1.WinUI;
 /// A custom <see cref="ICanvasEffect"/> implementation powered by a supplied shader type.
 /// </summary>
 /// <typeparam name="T">The type of shader to use to render frames.</typeparam>
-public sealed partial class PixelShaderEffect<T> : IReferenceTrackedObject, ICanvasEffect, ICanvasImageInterop.Interface
+public sealed partial class PixelShaderEffect<T> : IReferenceTrackedObject, ICanvasEffect, ICanvasImageInterop
     where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
 {
     /// <summary>
@@ -27,7 +27,7 @@ public sealed partial class PixelShaderEffect<T> : IReferenceTrackedObject, ICan
     private readonly object lockObject = new();
 
     /// <summary>
-    /// Flag to track whether a given call is recursively invoked by <see cref="ICanvasImageInterop.Interface.GetD2DImage"/>, to avoid graph cycles.
+    /// Flag to track whether a given call is recursively invoked by <see cref="ICanvasImageInterop.GetD2DImage"/>, to avoid graph cycles.
     /// </summary>
     private volatile int isInsideGetD2DImage;
 
@@ -69,14 +69,6 @@ public sealed partial class PixelShaderEffect<T> : IReferenceTrackedObject, ICan
     /// <summary>
     /// Creates a new <see cref="PixelShaderEffect{T}"/> instance.
     /// </summary>
-    // Workaround for trimming bug in custom COM/WinRT components with CsWinRT. Without manually preserving metadata for
-    // these types, using them will throw an InvalidCastException (see https://github.com/microsoft/CsWinRT/issues/1319).
-    [DynamicDependency(DynamicallyAccessedMemberTypes.All, typeof(ICanvasImageInterop.Interface))]
-    [DynamicDependency(DynamicallyAccessedMemberTypes.All, typeof(ICanvasImageInterop.Interface.Vftbl))]
-    [DynamicDependency(DynamicallyAccessedMemberTypes.All, typeof(ICanvasFactoryNative.Interface))]
-    [DynamicDependency(DynamicallyAccessedMemberTypes.All, typeof(ICanvasFactoryNative.Interface.Vftbl))]
-    [DynamicDependency(DynamicallyAccessedMemberTypes.All, typeof(ICanvasEffectFactoryNative.Interface))]
-    [DynamicDependency(DynamicallyAccessedMemberTypes.All, typeof(ICanvasEffectFactoryNative.Interface.Vftbl))]
     public PixelShaderEffect()
     {
         using ReferenceTracker.Lease _0 = ReferenceTracker.Create(this, out this.referenceTracker);
