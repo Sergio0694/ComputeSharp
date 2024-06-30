@@ -316,6 +316,13 @@ jobs:
     - name: Publish ComputeSharp.NativeLibrary
       run: dotnet publish samples\ComputeSharp.NativeLibrary\ComputeSharp.NativeLibrary.csproj -r win-${{matrix.platform}} -v n
 
+      # Publish the WinRT component with NativeAOT as well
+    - if: matrix.platform == 'x64'
+      name: Publish ComputeSharp.NativeLibrary.WinRT
+      run: >
+        msbuild samples\ComputeSharp.NativeLibrary.WinRT\ComputeSharp.NativeLibrary.WinRT.csproj /restore -t:publish
+        /p:Configuration=Release /p:Platform=${{matrix.platform}} /p:RuntimeIdentifier=win-${{matrix.platform}}
+
   # Download the NuGet packages generated in the previous job and use them
   # to build and run the sample project referencing them. This is used as
   # a test to ensure the NuGet packages work in a consuming project.
