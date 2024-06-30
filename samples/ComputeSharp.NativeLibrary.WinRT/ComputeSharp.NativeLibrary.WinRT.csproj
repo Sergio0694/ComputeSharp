@@ -9,6 +9,12 @@
   <PropertyGroup>
     <CsWinRTComponent>true</CsWinRTComponent>
 
+    <!--
+      CsWinRT uses the assembly name to find the root namespace to use to crawl for exported types.
+      We are changing this to exclude the 'WinRT' suffix, since that is not actually necessary.
+    -->
+    <AssemblyName>ComputeSharp.NativeLibrary</AssemblyName>
+
     <!-- CsWinRT size saving options (also disabling some features that aren't needed) -->
     <CsWinRTEnableDynamicObjectsSupport>false</CsWinRTEnableDynamicObjectsSupport>
     <CsWinRTUseExceptionResourceKeys>true</CsWinRTUseExceptionResourceKeys>

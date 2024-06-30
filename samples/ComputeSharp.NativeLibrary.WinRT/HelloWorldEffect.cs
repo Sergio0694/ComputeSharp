@@ -2,7 +2,7 @@ using ComputeSharp.D2D1;
 using ComputeSharp.D2D1.WinUI;
 using Windows.Foundation;
 
-namespace ComputeSharp.NativeLibrary.WinRT;
+namespace ComputeSharp.NativeLibrary;
 
 /// <summary>
 /// A hello world effect that displays a color gradient.
