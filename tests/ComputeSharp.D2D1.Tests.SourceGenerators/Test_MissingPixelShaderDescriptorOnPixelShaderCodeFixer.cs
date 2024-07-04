@@ -7,7 +7,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using CSharpCodeFixTest = Microsoft.CodeAnalysis.CSharp.Testing.CSharpCodeFixTest<
     ComputeSharp.D2D1.SourceGenerators.MissingPixelShaderDescriptorOnPixelShaderAnalyzer,
     ComputeSharp.D2D1.CodeFixers.MissingPixelShaderDescriptorOnPixelShaderCodeFixer,
-    Microsoft.CodeAnalysis.Testing.Verifiers.MSTestVerifier>;
+    Microsoft.CodeAnalysis.Testing.DefaultVerifier>;
 
 namespace ComputeSharp.D2D1.Tests.SourceGenerators;
 
