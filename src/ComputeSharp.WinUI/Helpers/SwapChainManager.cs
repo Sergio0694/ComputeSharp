@@ -335,8 +335,27 @@ internal sealed unsafe partial class SwapChainManager<TOwner> : ReferenceTracked
             ? this.dynamicResolutionScale
             : this.resolutionScale;
 
-        uint resizedWidth = (uint)Math.Max(Math.Ceiling(this.width * this.compositionScaleX * targetResolutionScale), 1.0);
-        uint resizeHeight = (uint)Math.Max(Math.Ceiling(this.height * this.compositionScaleY * targetResolutionScale), 1.0);
+        uint resizedWidth = (uint)Math.Max(Math.Ceiling(this.width * this.compositionScaleX * targetResolutionScale), 1.0f);
+        uint resizeHeight = (uint)Math.Max(Math.Ceiling(this.height * this.compositionScaleY * targetResolutionScale), 1.0f);
+
+        // Make sure not to exceed the maximum allowed size for textures. This might happen
+        // when the control is inside a ScrollView control that's zommed in to a very high
+        // amount, or when trying to manually set an invalid size to the control manually.
+        if (resizedWidth > D3D12.D3D12_REQ_TEXTURE2D_U_OR_V_DIMENSION ||
+            resizeHeight > D3D12.D3D12_REQ_TEXTURE2D_U_OR_V_DIMENSION)
+        {
+            // Make sure to scale down by preserving the aspect ratio
+            if (resizedWidth >= resizeHeight)
+            {
+                resizeHeight = (uint)Math.Max(resizeHeight * D3D12.D3D12_REQ_TEXTURE2D_U_OR_V_DIMENSION / (float)resizedWidth, 1.0f);
+                resizedWidth = D3D12.D3D12_REQ_TEXTURE2D_U_OR_V_DIMENSION;
+            }
+            else
+            {
+                resizedWidth = (uint)Math.Max(resizedWidth * D3D12.D3D12_REQ_TEXTURE2D_U_OR_V_DIMENSION / (float)resizeHeight, 1.0f);
+                resizeHeight = D3D12.D3D12_REQ_TEXTURE2D_U_OR_V_DIMENSION;
+            }
+        }
 
         if (this.texture is null ||
             this.texture.Width != resizedWidth ||
