@@ -118,7 +118,10 @@ public abstract unsafe partial class TransferTexture1D<T> : IReferenceTrackedObj
         }
     }
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Gets a <see cref="Span{T}"/> representing a view over the mapped contents of the current <see cref="TransferTexture1D{T}"/> instance.
+    /// </summary>
+    /// <remarks>The returned view is only valid while the current <see cref="TransferTexture1D{T}"/> instance is not disposed.</remarks>
     public Span<T> Span
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

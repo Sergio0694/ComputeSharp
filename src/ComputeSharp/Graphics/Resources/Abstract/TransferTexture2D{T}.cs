@@ -113,7 +113,10 @@ public abstract unsafe partial class TransferTexture2D<T> : IReferenceTrackedObj
     /// </summary>
     internal ref readonly D3D12_PLACED_SUBRESOURCE_FOOTPRINT D3D12PlacedSubresourceFootprint => ref this.d3D12PlacedSubresourceFootprint;
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Gets a <see cref="TextureView2D{T}"/> representing a view over the mapped contents of the current <see cref="TransferTexture2D{T}"/> instance.
+    /// </summary>
+    /// <remarks>The returned view is only valid while the current <see cref="TransferTexture2D{T}"/> instance is not disposed.</remarks>
     public TextureView2D<T> View
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
