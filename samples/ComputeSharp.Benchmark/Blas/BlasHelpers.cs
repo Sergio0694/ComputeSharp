@@ -94,7 +94,7 @@ internal static partial class BlasHelpers
         /// <inheritdoc/>
         public void Execute()
         {
-            int x_offset = (ThreadIds.X * n * p) + (ThreadIds.Y * m);
+            int x_offset = (ThreadIds.X * n * m) + (ThreadIds.Y * m);
             float result = 0f;
 
             for (int k = 0; k < m; k++)
