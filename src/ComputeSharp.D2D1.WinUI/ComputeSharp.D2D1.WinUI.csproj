@@ -33,7 +33,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Graphics.Win2D" Version="1.2.1-experimental1" />
+    <PackageReference Include="Microsoft.Graphics.Win2D" Version="1.2.1-experimental1-CI-240705.0" />
 
     <!--
       We need the CsWinRT reference for the generator to kick in and generate all necessary supporting code
