@@ -166,7 +166,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "arm64", "arm64", "{B4F6A41C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeSharp.NativeLibrary", "samples\ComputeSharp.NativeLibrary\ComputeSharp.NativeLibrary.csproj", "{1A3E20B3-F711-41C0-82EA-3B53A575955C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputeSharp.NativeLibrary.WinRT", "samples\ComputeSharp.NativeLibrary.WinRT\ComputeSharp.NativeLibrary.WinRT.csproj", "{551EF4FB-F34F-412A-B3E6-E345797560ED}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeSharp.NativeLibrary.WinRT", "samples\ComputeSharp.NativeLibrary.WinRT\ComputeSharp.NativeLibrary.WinRT.csproj", "{551EF4FB-F34F-412A-B3E6-E345797560ED}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "ComputeSharp.UI", "src\ComputeSharp.UI\ComputeSharp.UI.shproj", "{1CD1D9C5-7E00-43FB-A8C3-CFE98A885D3B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -511,6 +513,7 @@ Global
 		samples\ComputeSharp.SwapChain.Shaders.D2D1\ComputeSharp.SwapChain.Shaders.D2D1.projitems*{0071701e-b9c5-4098-be5f-ef556c4553c6}*SharedItemsImports = 5
 		samples\ComputeSharp.SwapChain.Shaders\ComputeSharp.SwapChain.Shaders.projitems*{0071701e-b9c5-4098-be5f-ef556c4553c6}*SharedItemsImports = 5
 		samples\ComputeSharp.SwapChain.Shaders\ComputeSharp.SwapChain.Shaders.projitems*{0800bd51-499d-44c2-9417-fd1f7fdfe9c4}*SharedItemsImports = 13
+		src\ComputeSharp.UI\ComputeSharp.UI.projitems*{1cd1d9c5-7e00-43fb-a8c3-cfe98a885d3b}*SharedItemsImports = 13
 		samples\ComputeSharp.SwapChain.Shaders.D2D1\ComputeSharp.SwapChain.Shaders.D2D1.projitems*{209c95a3-fa53-431b-b688-3299ca6c29d2}*SharedItemsImports = 5
 		src\ComputeSharp.CodeFixing\ComputeSharp.CodeFixing.projitems*{29f6e256-ba0e-4f3b-854e-50839d67c6dd}*SharedItemsImports = 13
 		src\ComputeSharp.Win32.D3D12\ComputeSharp.Win32.D3D12.projitems*{314eb353-e7e3-4146-8111-685cc83ec1de}*SharedItemsImports = 5
