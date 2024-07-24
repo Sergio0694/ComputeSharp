@@ -1,0 +1,48 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows10.0.22621.0</TargetFramework>
+    <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
+    <WindowsSdkPackageVersion>10.0.22621.37-preview</WindowsSdkPackageVersion>
+    <UseUwp>true</UseUwp>
+    <UseUwpTools>true</UseUwpTools>
+    <Platforms>x64;ARM64</Platforms>
+    <RuntimeIdentifiers>win-x64;win-arm64</RuntimeIdentifiers>
+    <DefineConstants>$(DefineConstants);WINDOWS_UWP</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup>
+
+    <!--
+      Disable IIDOptimizer, as it's causing a build error when the debug mode is set to embedded.
+      This is only needed when generating projections anyway, and not in normal C# class libraries.
+      See: https://github.com/microsoft/CsWinRT/issues/1478.
+    -->
+    <CsWinRTIIDOptimizerOptOut>true</CsWinRTIIDOptimizerOptOut>
+
+    <!--
+      Ignore some warnings about ambiguous cref attribute references. These are because the assembly defines
+      blittable bindings for several ABI types from Win2D, in the same namespace as the ABI types from the
+      CsWinRT projections that are in Win2D. They are internal, but Roslyn will still complain about them.
+    -->
+    <NoWarn>$(NoWarn);CS0419</NoWarn>
+
+    <!-- Ignore warnings for usings outside of a namespace (needed for some WinRT type aliases) -->
+    <NoWarn>$(NoWarn);IDE0065</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Graphics.Win2D" Version="1.2.1-experimental1" />
+
+    <!--
+      We need the CsWinRT reference for the generator to kick in and generate all necessary supporting code
+      to make the exposed types AOT compatible. Since we only need the generator, we can mark this as private.
+    -->
+    <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.1.0-prerelease.240722.1" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ComputeSharp.D2D1\ComputeSharp.D2D1.csproj" />
+  </ItemGroup>
+
+  <Import Project="..\ComputeSharp.D2D1.UI\ComputeSharp.D2D1.UI.projitems" Label="Shared" />
+</Project>
