@@ -170,6 +170,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeSharp.NativeLibrary.
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "ComputeSharp.UI", "src\ComputeSharp.UI\ComputeSharp.UI.shproj", "{1CD1D9C5-7E00-43FB-A8C3-CFE98A885D3B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputeSharp.Uwp", "src\ComputeSharp.Uwp\ComputeSharp.Uwp.csproj", "{2C4C1A6B-7E38-41EC-84D9-007676571441}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -466,6 +468,14 @@ Global
 		{551EF4FB-F34F-412A-B3E6-E345797560ED}.Release|ARM64.Build.0 = Release|ARM64
 		{551EF4FB-F34F-412A-B3E6-E345797560ED}.Release|x64.ActiveCfg = Release|x64
 		{551EF4FB-F34F-412A-B3E6-E345797560ED}.Release|x64.Build.0 = Release|x64
+		{2C4C1A6B-7E38-41EC-84D9-007676571441}.Debug|ARM64.ActiveCfg = Debug|ARM64
+		{2C4C1A6B-7E38-41EC-84D9-007676571441}.Debug|ARM64.Build.0 = Debug|ARM64
+		{2C4C1A6B-7E38-41EC-84D9-007676571441}.Debug|x64.ActiveCfg = Debug|x64
+		{2C4C1A6B-7E38-41EC-84D9-007676571441}.Debug|x64.Build.0 = Debug|x64
+		{2C4C1A6B-7E38-41EC-84D9-007676571441}.Release|ARM64.ActiveCfg = Release|ARM64
+		{2C4C1A6B-7E38-41EC-84D9-007676571441}.Release|ARM64.Build.0 = Release|ARM64
+		{2C4C1A6B-7E38-41EC-84D9-007676571441}.Release|x64.ActiveCfg = Release|x64
+		{2C4C1A6B-7E38-41EC-84D9-007676571441}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -516,6 +526,7 @@ Global
 		src\ComputeSharp.UI\ComputeSharp.UI.projitems*{1cd1d9c5-7e00-43fb-a8c3-cfe98a885d3b}*SharedItemsImports = 13
 		samples\ComputeSharp.SwapChain.Shaders.D2D1\ComputeSharp.SwapChain.Shaders.D2D1.projitems*{209c95a3-fa53-431b-b688-3299ca6c29d2}*SharedItemsImports = 5
 		src\ComputeSharp.CodeFixing\ComputeSharp.CodeFixing.projitems*{29f6e256-ba0e-4f3b-854e-50839d67c6dd}*SharedItemsImports = 13
+		src\ComputeSharp.UI\ComputeSharp.UI.projitems*{2c4c1a6b-7e38-41ec-84d9-007676571441}*SharedItemsImports = 5
 		src\ComputeSharp.Win32.D3D12\ComputeSharp.Win32.D3D12.projitems*{314eb353-e7e3-4146-8111-685cc83ec1de}*SharedItemsImports = 5
 		src\ComputeSharp.Win32.D2D1\ComputeSharp.Win32.D2D1.projitems*{4d7d9ba8-a821-4b1c-9ee2-cbcf5849906e}*SharedItemsImports = 5
 		src\ComputeSharp.Win32.D3D12\ComputeSharp.Win32.D3D12.projitems*{514ff00e-bbf0-4d55-a47c-eeeb6208adce}*SharedItemsImports = 13
