@@ -3,7 +3,11 @@ using ComputeSharp.Core.Extensions;
 using ComputeSharp.Graphics.Helpers;
 using ComputeSharp.Win32;
 
+#if WINDOWS_UWP
+namespace ComputeSharp.Uwp.Extensions;
+#else
 namespace ComputeSharp.WinUI.Extensions;
+#endif
 
 /// <summary>
 /// A <see langword="class"/> with extensions for the <see cref="IDXGIAdapter"/> type.

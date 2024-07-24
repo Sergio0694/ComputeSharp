@@ -5,14 +5,28 @@ using System.Threading;
 using ComputeSharp.Core.Extensions;
 using ComputeSharp.Graphics.Helpers;
 using ComputeSharp.Interop;
+#if WINDOWS_UWP
+using ComputeSharp.Uwp.Extensions;
+#else
 using ComputeSharp.WinUI.Extensions;
+#endif
 using ComputeSharp.Win32;
+#if !WINDOWS_UWP
 using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml.Controls;
+#endif
 using Windows.Foundation;
+#if WINDOWS_UWP
+using Windows.System;
+using Windows.UI.Xaml.Controls;
+#endif
 using WinRT;
 
+#if WINDOWS_UWP
+namespace ComputeSharp.Uwp.Helpers;
+#else
 namespace ComputeSharp.WinUI.Helpers;
+#endif
 
 /// <summary>
 /// A type managing rendering on a target swap chain object.

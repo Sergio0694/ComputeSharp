@@ -2,7 +2,11 @@ using System;
 using System.Runtime.CompilerServices;
 using System.Threading;
 
+#if WINDOWS_UWP
+namespace ComputeSharp.Uwp.Helpers;
+#else
 namespace ComputeSharp.WinUI.Helpers;
+#endif
 
 /// <summary>
 /// A helper type that is responsible for applying dynamic resolution changes.

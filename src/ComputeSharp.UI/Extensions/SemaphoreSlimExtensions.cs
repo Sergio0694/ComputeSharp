@@ -5,7 +5,11 @@ using System.Threading.Tasks;
 
 #pragma warning disable CS0618, IDE0290
 
+#if WINDOWS_UWP
+namespace ComputeSharp.Uwp.Extensions;
+#else
 namespace ComputeSharp.WinUI.Extensions;
+#endif
 
 /// <summary>
 /// A helper type for <see cref="SemaphoreSlim"/>.

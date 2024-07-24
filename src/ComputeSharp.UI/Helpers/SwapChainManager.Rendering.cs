@@ -3,9 +3,17 @@ using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using ComputeSharp.Interop;
+#if WINDOWS_UWP
+using ComputeSharp.Uwp.Extensions;
+#else
 using ComputeSharp.WinUI.Extensions;
+#endif
 
+#if WINDOWS_UWP
+namespace ComputeSharp.Uwp.Helpers;
+#else
 namespace ComputeSharp.WinUI.Helpers;
+#endif
 
 #pragma warning disable CS0420
 
