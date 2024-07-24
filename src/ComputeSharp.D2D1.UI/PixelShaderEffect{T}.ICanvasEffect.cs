@@ -3,14 +3,22 @@ using System.Buffers;
 using System.Runtime.InteropServices;
 using ABI.Microsoft.Graphics.Canvas;
 using ComputeSharp.D2D1.Extensions;
+#if WINDOWS_UWP
+using ComputeSharp.D2D1.Uwp.Helpers;
+#else
 using ComputeSharp.D2D1.WinUI.Helpers;
+#endif
 using ComputeSharp.Interop;
 using ComputeSharp.Win32;
 using Windows.Foundation;
 using ICanvasEffect = Microsoft.Graphics.Canvas.Effects.ICanvasEffect;
 using ICanvasResourceCreatorWithDpi = Microsoft.Graphics.Canvas.ICanvasResourceCreatorWithDpi;
 
+#if WINDOWS_UWP
+namespace ComputeSharp.D2D1.Uwp;
+#else
 namespace ComputeSharp.D2D1.WinUI;
+#endif
 
 /// <inheritdoc/>
 unsafe partial class PixelShaderEffect<T>

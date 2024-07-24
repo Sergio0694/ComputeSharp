@@ -9,7 +9,11 @@ using ComputeSharp.D2D1.Shaders.Interop.Effects.ResourceManagers;
 using ComputeSharp.D2D1.Shaders.Interop.Effects.TransformMappers;
 using ComputeSharp.Win32;
 
+#if WINDOWS_UWP
+namespace ComputeSharp.D2D1.Uwp.Extensions;
+#else
 namespace ComputeSharp.D2D1.WinUI.Extensions;
+#endif
 
 /// <summary>
 /// A <see langword="class"/> with extensions for the <see cref="ID2D1Effect"/> type.

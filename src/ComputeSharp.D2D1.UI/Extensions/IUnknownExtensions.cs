@@ -2,7 +2,11 @@ using System.Runtime.CompilerServices;
 using ComputeSharp.D2D1.Extensions;
 using ComputeSharp.Win32;
 
+#if WINDOWS_UWP
+namespace ComputeSharp.D2D1.Uwp.Extensions;
+#else
 namespace ComputeSharp.D2D1.WinUI.Extensions;
+#endif
 
 /// <summary>
 /// Helper methods for working with the <see cref="IUnknown"/> type.

@@ -5,7 +5,11 @@ using ComputeSharp.Win32;
 using Windows.Graphics.Effects;
 using WinRT;
 
+#if WINDOWS_UWP
+namespace ComputeSharp.D2D1.Uwp.Helpers;
+#else
 namespace ComputeSharp.D2D1.WinUI.Helpers;
+#endif
 
 using CanvasDevice = Microsoft.Graphics.Canvas.CanvasDevice;
 using ICanvasEffectFactoryNative = Microsoft.Graphics.Canvas.ICanvasEffectFactoryNative;

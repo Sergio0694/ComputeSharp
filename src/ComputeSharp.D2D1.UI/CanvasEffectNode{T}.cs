@@ -1,6 +1,10 @@
 using Microsoft.Graphics.Canvas;
 
+#if WINDOWS_UWP
+namespace ComputeSharp.D2D1.Uwp;
+#else
 namespace ComputeSharp.D2D1.WinUI;
+#endif
 
 /// <summary>
 /// A marker type for an effect node that can be registered and retrieved from an <see cref="CanvasEffectGraph"/> value.

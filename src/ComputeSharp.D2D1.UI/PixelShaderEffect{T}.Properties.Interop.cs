@@ -1,11 +1,19 @@
 using System;
 using ComputeSharp.D2D1.Interop;
+#if WINDOWS_UWP
+using ComputeSharp.D2D1.Uwp.Extensions;
+#else
 using ComputeSharp.D2D1.WinUI.Extensions;
+#endif
 using ComputeSharp.Interop;
 using ComputeSharp.Win32;
 using Microsoft.Graphics.Canvas;
 
+#if WINDOWS_UWP
+namespace ComputeSharp.D2D1.Uwp;
+#else
 namespace ComputeSharp.D2D1.WinUI;
+#endif
 
 /// <inheritdoc/>
 unsafe partial class PixelShaderEffect<T>

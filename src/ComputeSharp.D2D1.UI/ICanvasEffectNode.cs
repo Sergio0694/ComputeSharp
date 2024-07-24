@@ -1,4 +1,8 @@
+#if WINDOWS_UWP
+namespace ComputeSharp.D2D1.Uwp;
+#else
 namespace ComputeSharp.D2D1.WinUI;
+#endif
 
 /// <summary>
 /// A marker interface for an effect node that was registered from an <see cref="CanvasEffectGraph"/> value.

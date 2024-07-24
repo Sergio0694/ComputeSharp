@@ -31,7 +31,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Graphics.Win2D" Version="1.2.1-experimental1" />
+    <PackageReference Include="Win2D.uwp" Version="1.28.0-preview1-local" />
 
     <!--
       We need the CsWinRT reference for the generator to kick in and generate all necessary supporting code

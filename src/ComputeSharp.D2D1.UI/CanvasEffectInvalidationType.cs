@@ -1,7 +1,11 @@
 using ABI.Microsoft.Graphics.Canvas;
 using Microsoft.Graphics.Canvas;
 
+#if WINDOWS_UWP
+namespace ComputeSharp.D2D1.Uwp;
+#else
 namespace ComputeSharp.D2D1.WinUI;
+#endif
 
 /// <summary>
 /// Indicates the invalidation type to request when invoking <see cref="CanvasEffect.InvalidateEffectGraph"/> and related methods.
