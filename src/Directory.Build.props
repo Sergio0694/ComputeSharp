@@ -26,6 +26,9 @@
     <Description Condition="'$(MSBuildProjectName)' == 'ComputeSharp.Pix'">
 <![CDATA[An extension library for ComputeSharp to enable PIX support to produce debugging information.]]>
     </Description>
+    <Description Condition="'$(MSBuildProjectName)' == 'ComputeSharp.Uwp'">
+<![CDATA[A UWP library with controls to render DX12 shaders powered by ComputeSharp.]]>
+    </Description>
     <Description Condition="'$(MSBuildProjectName)' == 'ComputeSharp.WinUI'">
 <![CDATA[A WinUI 3 library with controls to render DX12 shaders powered by ComputeSharp.]]>
     </Description>
