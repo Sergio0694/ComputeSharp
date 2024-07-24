@@ -1,9 +1,19 @@
 using System;
+#if WINDOWS_UWP
+using ComputeSharp.Uwp.Helpers;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+#else
 using ComputeSharp.WinUI.Helpers;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+#endif
 
+#if WINDOWS_UWP
+namespace ComputeSharp.Uwp;
+#else
 namespace ComputeSharp.WinUI;
+#endif
 
 /// <summary>
 /// <para>
