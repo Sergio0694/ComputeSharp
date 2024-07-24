@@ -7,7 +7,11 @@ using Microsoft.Graphics.Canvas;
 using Microsoft.Graphics.Canvas.Effects;
 using ICanvasImageInterop = Microsoft.Graphics.Canvas.ICanvasImageInterop;
 
+#if WINDOWS_UWP
+namespace ComputeSharp.D2D1.Uwp;
+#else
 namespace ComputeSharp.D2D1.WinUI;
+#endif
 
 /// <summary>
 /// A custom <see cref="ICanvasEffect"/> implementation powered by a supplied shader type.

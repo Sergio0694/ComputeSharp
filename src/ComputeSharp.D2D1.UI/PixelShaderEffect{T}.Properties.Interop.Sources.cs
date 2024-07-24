@@ -3,9 +3,15 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using ABI.Microsoft.Graphics.Canvas;
 using ComputeSharp.D2D1.Extensions;
+#if WINDOWS_UWP
+using ComputeSharp.D2D1.Uwp.Buffers;
+using ComputeSharp.D2D1.Uwp.Extensions;
+using ComputeSharp.D2D1.Uwp.Helpers;
+#else
 using ComputeSharp.D2D1.WinUI.Buffers;
 using ComputeSharp.D2D1.WinUI.Extensions;
 using ComputeSharp.D2D1.WinUI.Helpers;
+#endif
 using ComputeSharp.Interop;
 using ComputeSharp.Win32;
 using Windows.Graphics.Effects;
@@ -16,7 +22,11 @@ using static ComputeSharp.Win32.D2D1_DPICOMPENSATION_INTERPOLATION_MODE;
 using static ComputeSharp.Win32.D2D1_DPICOMPENSATION_PROP;
 using static ComputeSharp.Win32.D2D1_PROPERTY_TYPE;
 
+#if WINDOWS_UWP
+namespace ComputeSharp.D2D1.Uwp;
+#else
 namespace ComputeSharp.D2D1.WinUI;
+#endif
 
 /// <inheritdoc/>
 unsafe partial class PixelShaderEffect<T>

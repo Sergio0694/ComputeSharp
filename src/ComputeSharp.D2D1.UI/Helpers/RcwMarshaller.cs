@@ -3,7 +3,11 @@ using ComputeSharp.Win32;
 using WinRT;
 using IInspectable = ComputeSharp.Win32.IInspectable;
 
+#if WINDOWS_UWP
+namespace ComputeSharp.D2D1.Uwp.Helpers;
+#else
 namespace ComputeSharp.D2D1.WinUI.Helpers;
+#endif
 
 /// <summary>
 /// A helper type to handle marshalling of RCW instances.

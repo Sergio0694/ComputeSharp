@@ -2,7 +2,11 @@ using ABI.Microsoft.Graphics.Canvas;
 using ComputeSharp.D2D1.Extensions;
 using ComputeSharp.Win32;
 
+#if WINDOWS_UWP
+namespace ComputeSharp.D2D1.Uwp.Extensions;
+#else
 namespace ComputeSharp.D2D1.WinUI.Extensions;
+#endif
 
 /// <summary>
 /// A <see langword="class"/> with extensions for the <see cref="ICanvasDevice"/> type.
