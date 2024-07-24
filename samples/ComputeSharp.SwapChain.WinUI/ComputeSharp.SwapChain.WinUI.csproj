@@ -64,6 +64,6 @@
   </ItemGroup>
 
   <!-- Shared projects for the DX12/D2D1 shaders -->
-  <Import Project="..\ComputeSharp.SwapChain.Shaders.Shared\ComputeSharp.SwapChain.Shaders.Shared.projitems" Label="Shared" />
-  <Import Project="..\ComputeSharp.SwapChain.Shaders.D2D1.Shared\ComputeSharp.SwapChain.Shaders.D2D1.Shared.projitems" Label="Shared" />
+  <Import Project="..\ComputeSharp.SwapChain.Shaders\ComputeSharp.SwapChain.Shaders.projitems" Label="Shared" />
+  <Import Project="..\ComputeSharp.SwapChain.Shaders.D2D1\ComputeSharp.SwapChain.Shaders.D2D1.projitems" Label="Shared" />
 </Project>

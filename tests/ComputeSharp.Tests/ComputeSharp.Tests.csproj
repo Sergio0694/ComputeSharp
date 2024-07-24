@@ -35,7 +35,7 @@
     <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
   </ItemGroup>
 
-  <Import Project="..\..\samples\ComputeSharp.SwapChain.Shaders.Shared\ComputeSharp.SwapChain.Shaders.Shared.projitems" Label="Shared" />
+  <Import Project="..\..\samples\ComputeSharp.SwapChain.Shaders\ComputeSharp.SwapChain.Shaders.projitems" Label="Shared" />
 
   <ItemGroup>
     <Compile Include="..\..\samples\ComputeSharp.ImageProcessing\Primitives\Complex64.cs" Link="Imaging\Primitives\Complex64.cs" />
