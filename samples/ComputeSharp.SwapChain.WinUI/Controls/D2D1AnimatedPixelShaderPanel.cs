@@ -13,6 +13,24 @@ namespace ComputeSharp.SwapChain.WinUI.Views;
 public sealed class D2D1AnimatedPixelShaderPanel : Control
 {
     /// <summary>
+    /// The <see cref="DependencyProperty"/> backing <see cref="PixelShaderEffect"/>.
+    /// </summary>
+    public static readonly DependencyProperty PixelShaderEffectProperty = DependencyProperty.Register(
+        nameof(PixelShaderEffect),
+        typeof(PixelShaderEffect),
+        typeof(D2D1AnimatedPixelShaderPanel),
+        new PropertyMetadata(null, OnPixelShaderEffectPropertyChanged));
+
+    /// <summary>
+    /// The <see cref="DependencyProperty"/> backing <see cref="IsPaused"/>.
+    /// </summary>
+    public static readonly DependencyProperty IsPausedProperty = DependencyProperty.Register(
+        nameof(IsPaused),
+        typeof(bool),
+        typeof(D2D1AnimatedPixelShaderPanel),
+        new PropertyMetadata(false, OnIsPausedPropertyChanged));
+
+    /// <summary>
     /// The wrapped <see cref="CanvasAnimatedControl"/> instance used to render frames.
     /// </summary>
     private CanvasAnimatedControl? canvasAnimatedControl;
@@ -31,6 +49,24 @@ public sealed class D2D1AnimatedPixelShaderPanel : Control
 
         Loaded += D2D1AnimatedPixelShaderPanel_Loaded;
         Unloaded += D2D1AnimatedPixelShaderPanel_Unloaded;
+    }
+
+    /// <summary>
+    /// Gets or sets the <see cref="Core.Shaders.PixelShaderEffect"/> instance to use to render content.
+    /// </summary>
+    public PixelShaderEffect? PixelShaderEffect
+    {
+        get => (PixelShaderEffect?)GetValue(PixelShaderEffectProperty);
+        set => SetValue(PixelShaderEffectProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets whether or not the rendering is paused.
+    /// </summary>
+    public bool IsPaused
+    {
+        get => (bool)GetValue(IsPausedProperty);
+        set => SetValue(IsPausedProperty, value);
     }
 
     /// <inheritdoc/>
@@ -78,24 +114,6 @@ public sealed class D2D1AnimatedPixelShaderPanel : Control
         args.DrawingSession.DrawImage(this.pixelShaderEffect);
     }
 
-    /// <summary>
-    /// Gets or sets the <see cref="Core.Shaders.PixelShaderEffect"/> instance to use to render content.
-    /// </summary>
-    public PixelShaderEffect? PixelShaderEffect
-    {
-        get => (PixelShaderEffect?)GetValue(PixelShaderEffectProperty);
-        set => SetValue(PixelShaderEffectProperty, value);
-    }
-
-    /// <summary>
-    /// The <see cref="DependencyProperty"/> backing <see cref="PixelShaderEffect"/>.
-    /// </summary>
-    public static readonly DependencyProperty PixelShaderEffectProperty = DependencyProperty.Register(
-        nameof(PixelShaderEffect),
-        typeof(PixelShaderEffect),
-        typeof(D2D1AnimatedPixelShaderPanel),
-        new PropertyMetadata(null, OnPixelShaderEffectPropertyChanged));
-
     /// <inheritdoc cref="DependencyPropertyChangedCallback"/>
     private static void OnPixelShaderEffectPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
@@ -113,24 +131,6 @@ public sealed class D2D1AnimatedPixelShaderPanel : Control
             canvasAnimatedControl.Paused = !shouldRender;
         }
     }
-
-    /// <summary>
-    /// Gets or sets whether or not the rendering is paused.
-    /// </summary>
-    public bool IsPaused
-    {
-        get => (bool)GetValue(IsPausedProperty);
-        set => SetValue(IsPausedProperty, value);
-    }
-
-    /// <summary>
-    /// The <see cref="DependencyProperty"/> backing <see cref="IsPaused"/>.
-    /// </summary>
-    public static readonly DependencyProperty IsPausedProperty = DependencyProperty.Register(
-        nameof(IsPaused),
-        typeof(bool),
-        typeof(D2D1AnimatedPixelShaderPanel),
-        new PropertyMetadata(false, OnIsPausedPropertyChanged));
 
     /// <inheritdoc cref="DependencyPropertyChangedCallback"/>
     private static void OnIsPausedPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
