@@ -14,6 +14,9 @@
     <Description Condition="'$(MSBuildProjectName)' == 'ComputeSharp.D2D1'">
 <![CDATA[A library to write D2D1 pixel shaders entirely with C# code, and to easily register and create ID2D1Effect-s from them.]]>
     </Description>
+    <Description Condition="'$(MSBuildProjectName)' == 'ComputeSharp.D2D1.Uwp'">
+<![CDATA[A UWP library with APIs to leverage D2D1 functionality with D2D1 pixel shaders powered by ComputeSharp.D2D1.]]>
+    </Description>
     <Description Condition="'$(MSBuildProjectName)' == 'ComputeSharp.D2D1.WinUI'">
 <![CDATA[A WinUI 3 library with APIs to leverage D2D1 functionality with D2D1 pixel shaders powered by ComputeSharp.D2D1.]]>
     </Description>
