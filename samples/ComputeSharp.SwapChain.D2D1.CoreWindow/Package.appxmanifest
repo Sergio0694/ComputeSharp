@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 
 <Package
   xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
@@ -32,7 +32,7 @@
   <Applications>
     <Application Id="App"
       Executable="$targetnametoken$.exe"
-      EntryPoint="ComputeSharp.SwapChain.CoreWindow.App">
+      EntryPoint="ComputeSharp.SwapChain.D2D1.CoreWindow.App">
       <uap:VisualElements
         DisplayName="ComputeSharp Sample App (Core)"
         Description="A sample app for ComputeSharp using CoreApplication and Win2D"
