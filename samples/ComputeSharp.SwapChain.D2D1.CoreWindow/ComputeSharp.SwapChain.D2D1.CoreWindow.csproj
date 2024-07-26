@@ -43,6 +43,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.2646-prerelease" ExcludeAssets="all" />
     <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.1.0-prerelease.240722.1" />
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.7.240721001-experimentalpr" IncludeAssets="build" PrivateAssets="all" />
   </ItemGroup>
