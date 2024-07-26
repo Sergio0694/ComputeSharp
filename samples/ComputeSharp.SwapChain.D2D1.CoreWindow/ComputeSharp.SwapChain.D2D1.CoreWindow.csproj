@@ -1,10 +1,59 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows10.0.22621.0</TargetFramework>
+    <WindowsSdkPackageVersion>10.0.22621.37-preview</WindowsSdkPackageVersion>
+    <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
+    <UseUwp>true</UseUwp>
+    <UseUwpTools>true</UseUwpTools>
+    <Platforms>x86;x64;arm64</Platforms>
+    <RuntimeIdentifiers>win-x86;win-x64;win-arm64</RuntimeIdentifiers>
+    <DefaultLanguage>en-US</DefaultLanguage>
+    <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.22621.0</TargetPlatformVersion>
+    <PublishProfile>win-$(Platform).pubxml</PublishProfile>
+    <EnableMsixTooling>true</EnableMsixTooling>
+    <HasPackageAndPublishMenu>true</HasPackageAndPublishMenu>
+    <AppxAddDefaultTargetDeviceFamilyItem>false</AppxAddDefaultTargetDeviceFamilyItem>
+    <TargetPlatformWinMDLocation>$(WinDir)\System32\WinMetadata</TargetPlatformWinMDLocation>
   </PropertyGroup>
 
+  <PropertyGroup>
+
+    <!--
+      Generate a .pdb file to avoid IIDOptimizer build errors.
+      See: https://github.com/microsoft/CsWinRT/issues/1478.
+    -->
+    <DebugType>full</DebugType>
+
+    <!-- Suppress warnings for using directives inside namespaces (needed to avoid CoreWindow conflicts) -->
+    <NoWarn>$(NoWarn);IDE0065</NoWarn>
+  </PropertyGroup>
+
+  <!-- NativeAOT settings, and size saving options for unnecessary features (optimize for speed otherwise) -->
+  <PropertyGroup>
+    <PublishAot>false</PublishAot>
+    <UseSystemResourceKeys>true</UseSystemResourceKeys>
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <StackTraceSupport>false</StackTraceSupport>
+    <OptimizationPreference>Speed</OptimizationPreference>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectCapability Include="Msix" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.1.0-prerelease.240722.1" />
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.7.240721001-experimentalpr" IncludeAssets="build" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\ComputeSharp.Core.SourceGenerators\ComputeSharp.Core.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" PrivateAssets="contentfiles;build" />
+    <ProjectReference Include="..\..\src\ComputeSharp.D2D1.Uwp\ComputeSharp.D2D1.Uwp.csproj" />
+    <ProjectReference Include="..\..\src\ComputeSharp.D2D1\ComputeSharp.D2D1.csproj" />
+    <ProjectReference Include="..\..\src\ComputeSharp.D2D1.SourceGenerators\ComputeSharp.D2D1.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" PrivateAssets="contentfiles;build" />
+  </ItemGroup>
+
+  <!-- Shared projects for the D2D1 shaders -->
+  <Import Project="..\ComputeSharp.SwapChain.Shaders.D2D1\ComputeSharp.SwapChain.Shaders.D2D1.projitems" Label="Shared" />
 </Project>
