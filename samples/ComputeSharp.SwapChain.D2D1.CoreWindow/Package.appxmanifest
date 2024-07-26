@@ -3,22 +3,26 @@
 <Package
   xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
   xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
-  IgnorableNamespaces="uap">
+  xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest"
+  xmlns:uap5="http://schemas.microsoft.com/appx/manifest/uap/windows10/5"
+  IgnorableNamespaces="uap uap5 mp">
 
   <Identity
     Name="0500384f-0d39-4588-96ba-14ccff63085b"
     Publisher="CN=Sergio"
     Version="1.0.0.0" />
 
+  <mp:PhoneIdentity PhoneProductId="3270f0ab-c78a-4f29-a964-3886d725e183" PhonePublisherId="3270f0ab-c78a-4f29-a964-3886d725e183"/>
+
   <Properties>
-    <DisplayName>ComputeSharp Sample App (WinUI 3)</DisplayName>
+    <DisplayName>ComputeSharp Sample App (Core)</DisplayName>
     <PublisherDisplayName>Sergio Pedri</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 
   <Dependencies>
     <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.17763.0" MaxVersionTested="10.0.22621.0" />
-    <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.17763.0" MaxVersionTested="10.0.22621.0" />
+    <PackageDependency Name="Microsoft.VCLibs.140.00" MinVersion="14.0.30704.0" Publisher="CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US" />
   </Dependencies>
 
   <Resources>
@@ -28,15 +32,15 @@
   <Applications>
     <Application Id="App"
       Executable="$targetnametoken$.exe"
-      EntryPoint="Windows.PartialTrustApplication">
+      EntryPoint="ComputeSharp.SwapChain.CoreWindow.App">
       <uap:VisualElements
-        DisplayName="ComputeSharp Sample App (WinUI 3)"
-        Description="A sample app for ComputeSharp and its WinUI 3 shader panels"
+        DisplayName="ComputeSharp Sample App (Core)"
+        Description="A sample app for ComputeSharp using CoreApplication and Win2D"
         BackgroundColor="#005491"
         Square150x150Logo="Assets\Square150x150Logo.png"
         Square44x44Logo="Assets\Square44x44Logo.png">
-        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" Square71x71Logo="Assets\SmallTile.png" Square310x310Logo="Assets\LargeTile.png"/>
-        <uap:SplashScreen Image="Assets\SplashScreen.png" BackgroundColor="transparent"/>
+        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" />
+        <uap:SplashScreen Image="Assets\SplashScreen.png" uap5:Optional="true" BackgroundColor="transparent" />
       </uap:VisualElements>
     </Application>
   </Applications>
