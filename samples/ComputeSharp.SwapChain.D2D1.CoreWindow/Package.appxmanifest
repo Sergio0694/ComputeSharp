@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 
 <Package
   xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
@@ -8,11 +8,11 @@
   IgnorableNamespaces="uap uap5 mp">
 
   <Identity
-    Name="0500384f-0d39-4588-96ba-14ccff63085b"
+    Name="b0b35275-65a6-4b18-96bf-8b79fb4bb0bf"
     Publisher="CN=Sergio"
     Version="1.0.0.0" />
 
-  <mp:PhoneIdentity PhoneProductId="3270f0ab-c78a-4f29-a964-3886d725e183" PhonePublisherId="3270f0ab-c78a-4f29-a964-3886d725e183"/>
+  <mp:PhoneIdentity PhoneProductId="b0b35275-65a6-4b18-96bf-8b79fb4bb0bf" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
     <DisplayName>ComputeSharp Sample App (Core)</DisplayName>
