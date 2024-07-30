@@ -31,7 +31,7 @@
 
   <!-- NativeAOT settings, and size saving options for unnecessary features (optimize for speed otherwise) -->
   <PropertyGroup>
-    <PublishAot>false</PublishAot>
+    <PublishAot>true</PublishAot>
     <UseSystemResourceKeys>true</UseSystemResourceKeys>
     <InvariantGlobalization>true</InvariantGlobalization>
     <StackTraceSupport>false</StackTraceSupport>
