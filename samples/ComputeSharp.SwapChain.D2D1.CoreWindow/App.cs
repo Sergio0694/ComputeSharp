@@ -1,14 +1,8 @@
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Threading;
-using ComputeSharp.D2D1.Uwp;
+using ComputeSharp.SwapChain.D2D1.Backend;
 using ComputeSharp.SwapChain.D2D1.Extensions;
 using ComputeSharp.SwapChain.Shaders.D2D1;
-using Microsoft.Graphics.Canvas;
-using Microsoft.Graphics.Canvas.Effects;
 using Windows.ApplicationModel.Core;
-using Windows.Graphics.Display;
-using Windows.UI;
 using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 
@@ -69,38 +63,22 @@ public sealed partial class App : IFrameworkViewSource, IFrameworkView
 
         ApplicationView.GetForCurrentView().TitleBar.StyleTitleBarForExtendedIntoViewMode();
 
-        CanvasSwapChain swapChain = CanvasSwapChain.CreateForCoreWindow(
-            CanvasDevice.GetSharedDevice(),
-            this.window,
-            DisplayInformation.GetForCurrentView().LogicalDpi);
+        PixelShaderEffect effect = new PixelShaderEffect.For<ColorfulInfinity>(static (time, width, height) => new((float)time.TotalSeconds, new int2(width, height)));
 
-        int2 sizeInPixels = new((int)swapChain.SizeInPixels.Width, (int)swapChain.SizeInPixels.Height);
-        CancellationTokenSource cancellationTokenSource = new();
-        Stopwatch stopwatch = Stopwatch.StartNew();
+        CoreWindowApplication application = new();
 
-        Thread thread = new(() =>
+        application.Draw += (s, e) =>
         {
-            PixelShaderEffect<ColorfulInfinity> shader = new();
-            PremultiplyEffect premultiply = new() { Source = shader };
+            // Set the effect properties
+            effect.ElapsedTime = e.TotalTime;
+            effect.ScreenWidth = (int)e.ScreenWidth;
+            effect.ScreenHeight = (int)e.ScreenHeight;
 
-            while (!cancellationTokenSource.IsCancellationRequested)
-            {
-                using (CanvasDrawingSession session = swapChain.CreateDrawingSession(Colors.Transparent))
-                {
-                    shader.ConstantBuffer = new ColorfulInfinity((float)stopwatch.Elapsed.TotalSeconds, sizeInPixels);
+            // Draw the effect
+            e.DrawingSession.DrawImage(effect);
+        };
 
-                    session.DrawImage(premultiply);
-                }
-
-                swapChain.Present(syncInterval: 1);
-            }
-        });
-
-        thread.Start();
-
-        this.window!.Activate();
-
-        this.window.Dispatcher.ProcessEvents(CoreProcessEventsOption.ProcessUntilQuit);
+        CoreWindowApplicationRunner.Run(application, this.window!);
     }
 
     /// <inheritdoc/>
