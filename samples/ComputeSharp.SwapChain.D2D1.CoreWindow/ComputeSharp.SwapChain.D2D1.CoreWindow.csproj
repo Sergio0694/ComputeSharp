@@ -24,9 +24,6 @@
       See: https://github.com/microsoft/CsWinRT/issues/1478.
     -->
     <DebugType>full</DebugType>
-
-    <!-- Suppress warnings for using directives inside namespaces (needed to avoid CoreWindow conflicts) -->
-    <NoWarn>$(NoWarn);IDE0065</NoWarn>
   </PropertyGroup>
 
   <!-- NativeAOT settings, and size saving options for unnecessary features (optimize for speed otherwise) -->

@@ -1,7 +1,7 @@
 using Windows.UI;
 using Windows.UI.ViewManagement;
 
-namespace ComputeSharp.SwapChain.D2D1.CoreWindow.Extensions;
+namespace ComputeSharp.SwapChain.D2D1.Extensions;
 
 /// <summary>
 /// Extensions for <see cref="ApplicationViewTitleBar"/>.

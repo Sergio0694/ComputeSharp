@@ -2,18 +2,17 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using ComputeSharp.D2D1.Uwp;
-using ComputeSharp.SwapChain.D2D1.CoreWindow.Extensions;
+using ComputeSharp.SwapChain.D2D1.Extensions;
 using ComputeSharp.SwapChain.Shaders.D2D1;
 using Microsoft.Graphics.Canvas;
 using Microsoft.Graphics.Canvas.Effects;
 using Windows.ApplicationModel.Core;
 using Windows.Graphics.Display;
 using Windows.UI;
+using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 
-namespace ComputeSharp.SwapChain.D2D1.CoreWindow;
-
-using Windows.UI.Core;
+namespace ComputeSharp.SwapChain.D2D1;
 
 /// <summary>
 /// A sample app rendering D2D shaders into a <see cref="CoreWindow"/> instance.
