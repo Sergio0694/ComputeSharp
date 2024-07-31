@@ -85,10 +85,7 @@ internal sealed class CoreWindowApplication
         if (this.isResizePending)
         {
             // Resize the swapchain if needed (the size is calculated automatically)
-            this.canvasSwapChain!.ResizeBuffers(
-                newWidth: 0,
-                newHeight: 0,
-                newDpi: DisplayInformation.GetForCurrentView().LogicalDpi);
+            this.canvasSwapChain!.ResizeBuffers(0, 0);
 
             BitmapSize bitmapSize = this.canvasSwapChain!.SizeInPixels;
 
