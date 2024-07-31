@@ -39,6 +39,9 @@ internal static class CoreWindowApplicationRunner
         // This allows the app to show up while already drawing.
         renderThread.Start((application, tokenSource.Token));
 
+        // Register a callback to monitor resize operations
+        window.ResizeCompleted += (s, e) => application.OnResize();
+
         // Activate the window
         window.Activate();
 
