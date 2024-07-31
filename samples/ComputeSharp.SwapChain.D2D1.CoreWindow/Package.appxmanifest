@@ -31,7 +31,7 @@
   <Applications>
     <Application Id="App"
       Executable="$targetnametoken$.exe"
-      EntryPoint="ComputeSharp.SwapChain.D2D1.CoreWindow.App">
+      EntryPoint="ComputeSharp.SwapChain.D2D1.App">
       <uap:VisualElements
         DisplayName="ComputeSharp Sample App (Core)"
         Description="A sample app for ComputeSharp using CoreApplication and Win2D"
