@@ -1,6 +1,9 @@
 extern alias Core;
 
-#if D2D1_TESTS
+#if D2D1_TESTS || D2D1_WINUI_TESTS
+#if D2D1_WINUI_TESTS
+extern alias D2D1_WinUI;
+#endif
 extern alias D2D1;
 #else
 extern alias D3D12;
@@ -176,7 +179,10 @@ internal static class CSharpGeneratorTest<TGenerator>
         [
             .. Net80.References.All,
             MetadataReference.CreateFromFile(typeof(Core::ComputeSharp.Hlsl).Assembly.Location),
-#if D2D1_TESTS
+#if D2D1_TESTS || D2D1_WINUI_TESTS
+#if D2D1_WINUI_TESTS
+            MetadataReference.CreateFromFile(typeof(D2D1_WinUI::ComputeSharp.D2D1.WinUI.CanvasEffect).Assembly.Location),
+#endif
             MetadataReference.CreateFromFile(typeof(D2D1::ComputeSharp.D2D1.ID2D1PixelShader).Assembly.Location)
 #else
             MetadataReference.CreateFromFile(typeof(D3D12::ComputeSharp.IComputeShader).Assembly.Location)
