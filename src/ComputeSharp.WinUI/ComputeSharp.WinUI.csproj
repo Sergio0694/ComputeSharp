@@ -23,7 +23,7 @@
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.240701003-experimental2" />
 
     <!-- Reference CsWinRT locally for the source generators (see comments in ComputeSharp.D2D1.WinUI) -->
-    <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.1.0-prerelease.240722.1" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.1.0-prerelease.240801.1" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>

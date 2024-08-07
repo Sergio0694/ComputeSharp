@@ -42,7 +42,7 @@
       We need the CsWinRT reference for the generator to kick in and generate all necessary supporting code
       to make the exposed types AOT compatible. Since we only need the generator, we can mark this as private.
     -->
-    <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.1.0-prerelease.240722.1" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.1.0-prerelease.240801.1" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>
