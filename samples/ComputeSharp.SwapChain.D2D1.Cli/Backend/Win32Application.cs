@@ -1,10 +1,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
-using ABI.Microsoft.Graphics.Canvas;
-using TerraFX.Interop.DirectX;
+using Microsoft.UI;
 using TerraFX.Interop.Windows;
-using TerraFX.Interop.WinRT;
-using WinRT;
 
 namespace ComputeSharp.SwapChain.D2D1.Backend;
 
@@ -13,7 +10,6 @@ using CanvasDevice = Microsoft.Graphics.Canvas.CanvasDevice;
 using CanvasDrawingSession = Microsoft.Graphics.Canvas.CanvasDrawingSession;
 using CanvasSwapChain = Microsoft.Graphics.Canvas.CanvasSwapChain;
 using DirectXPixelFormat = Windows.Graphics.DirectX.DirectXPixelFormat;
-using Windows = TerraFX.Interop.Windows.Windows;
 
 /// <summary>
 /// A simple Win32 application handling a D2D swapchain.
@@ -60,88 +56,12 @@ internal sealed class Win32Application
     {
         // Create a new canvas device, which will handle DX11/D2D initialization
         CanvasDevice canvasDevice = new();
-        CanvasSwapChain canvasSwapChain;
-
-        // Create the swap chain to display frames
-        using (ComPtr<IUnknown> direct3DDeviceUnknown = default)
-        using (ComPtr<IDXGIFactory2> dxgiFactory2 = default)
-        using (ComPtr<IDXGISwapChain1> dxgiSwapChain1 = default)
-        {
-            HRESULT hresult;
-
-            // Extract the underlying Direct3D device from the canvas device.
-            // This is needed for CreateSwapChainForHwnd, as the owning device.
-            using (ComPtr<IUnknown> canvasDeviceUnknown = default)
-            using (ComPtr<IDirect3DDxgiInterfaceAccess> direct3DDxgiInterfaceAccess = default)
-            {
-                canvasDeviceUnknown.Attach((IUnknown*)MarshalInspectable<CanvasDevice>.FromManaged(canvasDevice));
-
-                hresult = canvasDeviceUnknown.CopyTo(direct3DDxgiInterfaceAccess.GetAddressOf());
-
-                ExceptionHelpers.ThrowExceptionForHR(hresult);
-
-                hresult = direct3DDxgiInterfaceAccess.Get()->GetInterface(Windows.__uuidof<IUnknown>(), (void**)direct3DDeviceUnknown.GetAddressOf());
-
-                ExceptionHelpers.ThrowExceptionForHR(hresult);
-            }
-
-            // Create the DXGIFactory2 instance to create the swapchain with
-            hresult = DirectX.CreateDXGIFactory2(DXGI.DXGI_CREATE_FACTORY_DEBUG, Windows.__uuidof<IDXGIFactory2>(), (void**)dxgiFactory2.GetAddressOf());
-
-            ExceptionHelpers.ThrowExceptionForHR(hresult);
-
-            DXGI_SWAP_CHAIN_DESC1 dxgiSwapChainDesc1 = default;
-            dxgiSwapChainDesc1.AlphaMode = DXGI_ALPHA_MODE.DXGI_ALPHA_MODE_IGNORE;
-            dxgiSwapChainDesc1.BufferCount = 2;
-            dxgiSwapChainDesc1.BufferUsage = DXGI.DXGI_USAGE_RENDER_TARGET_OUTPUT;
-            dxgiSwapChainDesc1.Flags = 0;
-            dxgiSwapChainDesc1.Format = DXGI_FORMAT.DXGI_FORMAT_B8G8R8A8_UNORM;
-            dxgiSwapChainDesc1.Width = this.screenWidth = 1;
-            dxgiSwapChainDesc1.Height = this.screenHeight = 1;
-            dxgiSwapChainDesc1.SampleDesc = new DXGI_SAMPLE_DESC(count: 1, quality: 0);
-            dxgiSwapChainDesc1.Scaling = DXGI_SCALING.DXGI_SCALING_STRETCH;
-            dxgiSwapChainDesc1.Stereo = 0;
-            dxgiSwapChainDesc1.SwapEffect = DXGI_SWAP_EFFECT.DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL;
-
-            // Create the native DXGI swapchain object to wrap
-            hresult = dxgiFactory2.Get()->CreateSwapChainForHwnd(
-                direct3DDeviceUnknown.Get(),
-                hwnd,
-                &dxgiSwapChainDesc1,
-                null,
-                null,
-                dxgiSwapChain1.GetAddressOf());
-
-            ExceptionHelpers.ThrowExceptionForHR(hresult);
-
-            using ComPtr<ICanvasFactoryNative> canvasFactoryNative = default;
-
-            // Get the activation factory for CanvasDevice
-            using (IObjectReference canvasDeviceActivationFactory = ActivationFactory.Get(
-                typeName: "Microsoft.Graphics.Canvas.CanvasDevice",
-                iid: Windows.__uuidof<ICanvasFactoryNative>()))
-            {
-                canvasFactoryNative.Attach((ICanvasFactoryNative*)canvasDeviceActivationFactory.GetRef());
-            }
-
-            // Create a Win2D wrapper for the swapchain
-            using (ComPtr<IUnknown> canvasDeviceUnknown = default)
-            using (ComPtr<IUnknown> canvasSwapChainUnknown = default)
-            {
-                canvasDeviceUnknown.Attach((IUnknown*)MarshalInspectable<CanvasDevice>.FromManaged(canvasDevice));
-
-                hresult = canvasFactoryNative.Get()->GetOrCreate(
-                    device: canvasDeviceUnknown.Get(),
-                    resource: (IUnknown*)dxgiSwapChain1.Get(),
-                    dpi: 96.0f,
-                    wrapper: (void**)canvasSwapChainUnknown.GetAddressOf());
-
-                ExceptionHelpers.ThrowExceptionForHR(hresult);
-
-                // Marshal to a WinRT managed object
-                canvasSwapChain = MarshalInspectable<CanvasSwapChain>.FromAbi((IntPtr)canvasSwapChainUnknown.Get());
-            }
-        }
+        CanvasSwapChain canvasSwapChain = CanvasSwapChain.CreateForWindowId(
+            resourceCreator: canvasDevice,
+            windowId: Win32Interop.GetWindowIdFromWindow(hwnd),
+            width: this.screenWidth = 1,
+            height: this.screenHeight = 1,
+            dpi: 96.0f);
 
         // Save the Win2D objects for later use
         this.canvasDevice = canvasDevice;
