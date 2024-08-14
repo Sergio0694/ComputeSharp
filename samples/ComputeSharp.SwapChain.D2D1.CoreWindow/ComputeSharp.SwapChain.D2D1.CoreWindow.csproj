@@ -2,7 +2,7 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net8.0-windows10.0.22621.0</TargetFramework>
-    <WindowsSdkPackageVersion>10.0.22621.37-preview</WindowsSdkPackageVersion>
+    <WindowsSdkPackageVersion>10.0.22621.39</WindowsSdkPackageVersion>
     <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
     <UseUwp>true</UseUwp>
     <UseUwpTools>true</UseUwpTools>
@@ -13,12 +13,17 @@
     <PublishProfile>win-$(Platform).pubxml</PublishProfile>
     <EnableMsixTooling>true</EnableMsixTooling>
     <HasPackageAndPublishMenu>true</HasPackageAndPublishMenu>
-    <AppxAddDefaultTargetDeviceFamilyItem>false</AppxAddDefaultTargetDeviceFamilyItem>
-    <TargetPlatformWinMDLocation>$(WinDir)\System32\WinMetadata</TargetPlatformWinMDLocation>
   </PropertyGroup>
 
   <PropertyGroup>
 
+    <!--
+      This sample does not need WebView2, but WinAppSDK is pulling it in as a transitive NuGet
+      dependency. We can manually exclude the native .dll-s to avoid them being in the output.
+    -->
+    <WebView2EnableCsWinRTProjectionExcludeCoreRef>true</WebView2EnableCsWinRTProjectionExcludeCoreRef>
+    <WebView2NeverCopyLoaderDllToOutputDirectory>true</WebView2NeverCopyLoaderDllToOutputDirectory>
+    
     <!--
       Generate a .pdb file to avoid IIDOptimizer build errors.
       See: https://github.com/microsoft/CsWinRT/issues/1478.
@@ -44,9 +49,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.2646-prerelease" ExcludeAssets="all" />
-    <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.1.0-prerelease.240722.1" />
-    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.7.240721001-experimentalpr" IncludeAssets="build" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.1.1" />
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.240807006-preview1" IncludeAssets="build" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>
