@@ -66,8 +66,12 @@ jobs:
       run: dotnet pack src\ComputeSharp.D2D1\ComputeSharp.D2D1.csproj -c Release
     - name: Build ComputeSharp.Pix package
       run: dotnet pack src\ComputeSharp.Pix\ComputeSharp.Pix.csproj -c Release
+    - name: Build ComputeSharp.Uwp package
+      run: msbuild src\ComputeSharp.Uwp\ComputeSharp.Uwp.csproj /restore -t:pack /p:Configuration=Release
     - name: Build ComputeSharp.WinUI package
       run: msbuild src\ComputeSharp.WinUI\ComputeSharp.WinUI.csproj /restore -t:pack /p:Configuration=Release
+    - name: Build ComputeSharp.D2D1.Uwp package
+      run: msbuild src\ComputeSharp.D2D1.Uwp\ComputeSharp.D2D1.Uwp.csproj /restore -t:pack /p:Configuration=Release
     - name: Build ComputeSharp.D2D1.WinUI package
       run: msbuild src\ComputeSharp.D2D1.WinUI\ComputeSharp.D2D1.WinUI.csproj /restore -t:pack /p:Configuration=Release
     

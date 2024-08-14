@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>1cd1d9c5-7e00-43fb-a8c3-cfe98a885d3b</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>ComputeSharp.UI</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\AnimatedComputeShaderPanel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\AnimatedComputeShaderPanel.Properties.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\ComputeShaderPanel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\ComputeShaderPanel.Properties.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\RenderingFailedEventArgs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\IDXGIAdapterExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\SemaphoreSlimExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\DynamicResolutionManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\SwapChainManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\SwapChainManager.Rendering.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IFrameRequestQueue.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IShaderRunner.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ShaderRunner{T}.cs" />
+  </ItemGroup>
+</Project>
