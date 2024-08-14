@@ -38,7 +38,8 @@
 
     <!-- Package tags -->
     <PackageTags Condition="$(MSBuildProjectName.Contains('.D2D1'))">$(PackageTags) d2d d2d1 direct2d pixel</PackageTags>
-    <PackageTags Condition="$(MSBuildProjectName.EndsWith('.WinUI'))">$(PackageTags) winui winui3 wasdk</PackageTags>
+    <PackageTags Condition="$(MSBuildProjectName.EndsWith('.Uwp'))">$(PackageTags) uwp xaml winui winui2</PackageTags>
+    <PackageTags Condition="$(MSBuildProjectName.EndsWith('.WinUI'))">$(PackageTags) xaml winui winui3 winappsdk</PackageTags>
   </PropertyGroup>
 
   <!-- Additional properties for all source projects-->
