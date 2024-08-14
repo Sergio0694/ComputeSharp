@@ -196,7 +196,7 @@ internal abstract partial class HlslSourceRewriter(
     }
 
     /// <inheritdoc/>
-    public sealed unsafe override SyntaxNode? VisitLiteralExpression(LiteralExpressionSyntax node)
+    public sealed override unsafe SyntaxNode? VisitLiteralExpression(LiteralExpressionSyntax node)
     {
         CancellationToken.ThrowIfCancellationRequested();
 
