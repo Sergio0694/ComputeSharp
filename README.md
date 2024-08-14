@@ -27,7 +27,7 @@ Here's a showcase of some of them:
 
 The sample app is available in the Microsoft Store, showcasing several pixel shaders all powered by **ComputeSharp**!
 
-<a href="https://apps.microsoft.com/store/detail/9PDC095X3PKV?launch=true&cid=github&mode=mini"><img src="https://developer.microsoft.com/en-us/store/badges/images/English_get-it-from-MS.png" alt="Get it from Microsoft" width='280' /></a>
+<a href="https://apps.microsoft.com/store/detail/9PDC095X3PKV?cid=github&mode=direct"><img src="https://learn.microsoft.com/en-us/windows/apps/images/new-badge-light.png" alt="Download from the Microsoft Store" width='320' /></a>
 
 # Available packages 📦
 
