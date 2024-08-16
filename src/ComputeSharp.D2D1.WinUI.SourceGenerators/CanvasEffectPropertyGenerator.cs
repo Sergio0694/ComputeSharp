@@ -35,6 +35,12 @@ public sealed partial class CanvasEffectPropertyGenerator : IIncrementalGenerato
                         return default;
                     }
 
+                    // Ensure that the property declaration is a partial definition with no implementation
+                    if (propertySymbol is not { IsPartialDefinition: true, PartialImplementationPart: null })
+                    {
+                        return default;
+                    }
+
                     // Ensure that the containing type derives from CanvasEffect
                     if (!typeSymbol.InheritsFromFullyQualifiedMetadataName("ComputeSharp.D2D1.WinUI.CanvasEffect"))
                     {

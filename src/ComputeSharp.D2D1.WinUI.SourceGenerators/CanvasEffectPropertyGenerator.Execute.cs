@@ -25,7 +25,13 @@ partial class CanvasEffectPropertyGenerator
         public static bool IsCandidatePropertyDeclaration(SyntaxNode node, CancellationToken token)
         {
             // The node must be a property declaration with two accessors
-            if (node is not PropertyDeclarationSyntax { AccessorList.Accessors: { Count: 2 } accessors })
+            if (node is not PropertyDeclarationSyntax { AccessorList.Accessors: { Count: 2 } accessors } property)
+            {
+                return false;
+            }
+
+            // The property must be partial (we'll check that it's a declaration from its symbol)
+            if (!property.Modifiers.Any(SyntaxKind.PartialKeyword))
             {
                 return false;
             }
