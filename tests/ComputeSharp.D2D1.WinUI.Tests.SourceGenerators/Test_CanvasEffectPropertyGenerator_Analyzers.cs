@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using ComputeSharp.D2D1.WinUI.SourceGenerators;
 using ComputeSharp.Tests.SourceGenerators.Helpers;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ComputeSharp.D2D1.WinUI.Tests.SourceGenerators;
@@ -14,14 +15,14 @@ public class Test_CanvasEffectPropertyGenerator_Analyzers
         const string source = """
             using ComputeSharp.D2D1.WinUI;
 
-            public class MyEffect
+            public partial class MyEffect
             {
                 [{|CMPSD2DWINUI0001:GeneratedCanvasEffectProperty|}]
-                public int Number { get; set; }
+                public partial int {|CS9248:Number|} { get; set; }
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidGeneratedCanvasEffectPropertyContainingTypeAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerWithLanguageVersionTest<InvalidGeneratedCanvasEffectPropertyContainingTypeAnalyzer>.VerifyAnalyzerAsync(source, languageVersion: LanguageVersion.Preview);
     }
 
     [TestMethod]
@@ -30,14 +31,14 @@ public class Test_CanvasEffectPropertyGenerator_Analyzers
         const string source = """
             using ComputeSharp.D2D1.WinUI;
 
-            public class MyEffect
+            public partial class MyEffect
             {
                 [{|CMPSD2DWINUI0002:GeneratedCanvasEffectProperty|}]
-                public int Number { get; }
+                public partial int {|CS9248:Number|} { get; }
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidGeneratedCanvasEffectPropertyAccessorsAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerWithLanguageVersionTest<InvalidGeneratedCanvasEffectPropertyAccessorsAnalyzer>.VerifyAnalyzerAsync(source, languageVersion: LanguageVersion.Preview);
     }
 
     [TestMethod]
@@ -46,13 +47,13 @@ public class Test_CanvasEffectPropertyGenerator_Analyzers
         const string source = """
             using ComputeSharp.D2D1.WinUI;
 
-            public abstract class MyEffect : CanvasEffect
+            public abstract partial class MyEffect : CanvasEffect
             {
                 [{|CMPSD2DWINUI0002:GeneratedCanvasEffectProperty|}]
-                public int Number { get; init; }
+                public partial int {|CS9248:Number|} { get; init; }
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidGeneratedCanvasEffectPropertyAccessorsAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerWithLanguageVersionTest<InvalidGeneratedCanvasEffectPropertyAccessorsAnalyzer>.VerifyAnalyzerAsync(source, languageVersion: LanguageVersion.Preview);
     }
 }

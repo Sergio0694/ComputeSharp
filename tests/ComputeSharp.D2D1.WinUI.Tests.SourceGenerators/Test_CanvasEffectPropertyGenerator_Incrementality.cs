@@ -17,7 +17,7 @@ public class Test_CanvasEffectPropertyGenerator_Incrementality
             abstract partial class MyEffect : CanvasEffect
             {
                 [GeneratedCanvasEffectProperty]
-                public int Number { get; set; }
+                public partial int Number { get; set; }
             }
             """";
 
@@ -27,7 +27,7 @@ public class Test_CanvasEffectPropertyGenerator_Incrementality
             abstract partial class MyEffect : CanvasEffect
             {
                 [GeneratedCanvasEffectProperty(CanvasEffectInvalidationType.Creation)]
-                public int Number { get; set; }
+                public partial int Number { get; set; }
             }
             """";
 
@@ -50,7 +50,7 @@ public class Test_CanvasEffectPropertyGenerator_Incrementality
             abstract partial class MyEffect : CanvasEffect
             {
                 [GeneratedCanvasEffectProperty]
-                public int Number { get; set; }
+                public partial int Number { get; set; }
             }
             """";
 
@@ -63,7 +63,7 @@ public class Test_CanvasEffectPropertyGenerator_Incrementality
                 /// This is some property.
                 /// </summary>
                 [GeneratedCanvasEffectProperty]
-                public int Number { get; set; }
+                public partial int Number { get; set; }
             }
             """";
 
@@ -86,7 +86,7 @@ public class Test_CanvasEffectPropertyGenerator_Incrementality
             abstract partial class MyEffect : CanvasEffect
             {
                 [GeneratedCanvasEffectProperty]
-                public int Number { get; set; }
+                public partial int Number { get; set; }
             }
             """";
 
@@ -100,7 +100,7 @@ public class Test_CanvasEffectPropertyGenerator_Incrementality
                 }
 
                 [GeneratedCanvasEffectProperty]
-                public int Number { get; set; }
+                public partial int Number { get; set; }
             }
             """";
 

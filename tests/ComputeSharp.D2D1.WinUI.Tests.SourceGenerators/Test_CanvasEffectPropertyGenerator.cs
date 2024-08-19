@@ -1,6 +1,6 @@
-using System.Threading.Tasks;
 using ComputeSharp.D2D1.WinUI.SourceGenerators;
 using ComputeSharp.Tests.SourceGenerators.Helpers;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ComputeSharp.D2D1.WinUI.Tests.SourceGenerators;
@@ -9,7 +9,7 @@ namespace ComputeSharp.D2D1.WinUI.Tests.SourceGenerators;
 public class Test_CanvasEffectPropertyGenerator
 {
     [TestMethod]
-    public async Task SingleProperty()
+    public void SingleProperty()
     {
         const string source = """
             using ComputeSharp.D2D1.WinUI;
@@ -19,7 +19,7 @@ public class Test_CanvasEffectPropertyGenerator
             public abstract partial class MyEffect : CanvasEffect
             {
                 [GeneratedCanvasEffectProperty]
-                public int Number { get; set; }
+                public partial int Number { get; set; }
             }
             """;
 
@@ -89,11 +89,11 @@ public class Test_CanvasEffectPropertyGenerator
             }
             """";
 
-        await VerifyGeneratedDiagnosticsAsync(source, ("MyNamespace.MyEffect.g.cs", result));
+        VerifyGeneratedDiagnostics(source, ("MyNamespace.MyEffect.g.cs", result));
     }
 
     [TestMethod]
-    public async Task SingleProperty_WithNullabilityAnnotations()
+    public void SingleProperty_WithNullabilityAnnotations()
     {
         const string source = """
             using ComputeSharp.D2D1.WinUI;
@@ -103,7 +103,7 @@ public class Test_CanvasEffectPropertyGenerator
             public abstract partial class MyEffect : CanvasEffect
             {
                 [GeneratedCanvasEffectProperty]
-                public object? Instance { get; set; }
+                public partial object? Instance { get; set; }
             }
             """;
 
@@ -173,11 +173,11 @@ public class Test_CanvasEffectPropertyGenerator
             }
             """";
 
-        await VerifyGeneratedDiagnosticsAsync(source, ("MyNamespace.MyEffect.g.cs", result));
+        VerifyGeneratedDiagnostics(source, ("MyNamespace.MyEffect.g.cs", result));
     }
 
     [TestMethod]
-    public async Task SingleProperty_WithNotNullableReferenceType()
+    public void SingleProperty_WithNotNullableReferenceType()
     {
         const string source = """
             using ComputeSharp.D2D1.WinUI;
@@ -187,7 +187,7 @@ public class Test_CanvasEffectPropertyGenerator
             public abstract partial class MyEffect : CanvasEffect
             {
                 [GeneratedCanvasEffectProperty]
-                public object Instance { get; set; }
+                public partial object Instance { get; set; }
             }
             """;
 
@@ -257,11 +257,11 @@ public class Test_CanvasEffectPropertyGenerator
             }
             """";
 
-        await VerifyGeneratedDiagnosticsAsync(source, ("MyNamespace.MyEffect.g.cs", result));
+        VerifyGeneratedDiagnostics(source, ("MyNamespace.MyEffect.g.cs", result));
     }
 
     [TestMethod]
-    public async Task SingleProperty_WithCustomAccessorVisibility()
+    public void SingleProperty_WithCustomAccessorVisibility()
     {
         const string source = """
             using ComputeSharp.D2D1.WinUI;
@@ -271,7 +271,7 @@ public class Test_CanvasEffectPropertyGenerator
             public abstract partial class MyEffect : CanvasEffect
             {
                 [GeneratedCanvasEffectProperty]
-                public int Number { get; private set; }
+                public partial int Number { get; private set; }
             }
             """;
 
@@ -341,11 +341,11 @@ public class Test_CanvasEffectPropertyGenerator
             }
             """";
 
-        await VerifyGeneratedDiagnosticsAsync(source, ("MyNamespace.MyEffect.g.cs", result));
+        VerifyGeneratedDiagnostics(source, ("MyNamespace.MyEffect.g.cs", result));
     }
 
     [TestMethod]
-    public async Task MultipleProperties()
+    public void MultipleProperties()
     {
         const string source = """
             using ComputeSharp.D2D1.WinUI;
@@ -355,10 +355,10 @@ public class Test_CanvasEffectPropertyGenerator
             public abstract partial class MyEffect : CanvasEffect
             {
                 [GeneratedCanvasEffectProperty]
-                public int X { get; set; }
+                public partial int X { get; set; }
 
                 [GeneratedCanvasEffectProperty(CanvasEffectInvalidationType.Creation)]
-                public int Y { get; set; }
+                public partial int Y { get; set; }
             }
             """;
 
@@ -482,7 +482,7 @@ public class Test_CanvasEffectPropertyGenerator
             }
             """";
 
-        await VerifyGeneratedDiagnosticsAsync(source, ("MyNamespace.MyEffect.g.cs", result));
+        VerifyGeneratedDiagnostics(source, ("MyNamespace.MyEffect.g.cs", result));
     }
 
     /// <summary>
@@ -491,11 +491,10 @@ public class Test_CanvasEffectPropertyGenerator
     /// <param name="source">The input source to process.</param>
     /// <param name="result">The expected source to be generated.</param>
     /// <returns>The task for the operation.</returns>
-    private static async Task VerifyGeneratedDiagnosticsAsync(string source, (string Filename, string Source) result)
+    private static void VerifyGeneratedDiagnostics(string source, (string Filename, string Source) result)
     {
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidGeneratedCanvasEffectPropertyContainingTypeAnalyzer>.VerifyAnalyzerAsync(source);
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidGeneratedCanvasEffectPropertyAccessorsAnalyzer>.VerifyAnalyzerAsync(source);
-
-        CSharpGeneratorTest<CanvasEffectPropertyGenerator>.VerifySources(source, result);
+        // We cannot run the analyzers on the input source, because they'd report unwanted dsiagnostics due to the
+        // partial properties missing an implementation part. For this generator, we just test analyzers individually.
+        CSharpGeneratorTest<CanvasEffectPropertyGenerator>.VerifySources(source, result, languageVersion: LanguageVersion.Preview);
     }
 }

@@ -57,9 +57,10 @@ internal static class CSharpGeneratorTest<TGenerator>
     /// </summary>
     /// <param name="source">The input source to process.</param>
     /// <param name="result">The expected source to be generated.</param>
-    public static void VerifySources(string source, (string Filename, string Source) result)
+    /// <param name="languageVersion">The language version to use to run the test.</param>
+    public static void VerifySources(string source, (string Filename, string Source) result, LanguageVersion languageVersion = LanguageVersion.CSharp12)
     {
-        RunGenerator(source, out Compilation compilation, out ImmutableArray<Diagnostic> diagnostics);
+        RunGenerator(source, out Compilation compilation, out ImmutableArray<Diagnostic> diagnostics, languageVersion);
 
         // Ensure that no diagnostics were generated
         CollectionAssert.AreEquivalent(Array.Empty<Diagnostic>(), diagnostics);
@@ -171,8 +172,9 @@ internal static class CSharpGeneratorTest<TGenerator>
     /// Creates a compilation from a given source.
     /// </summary>
     /// <param name="source">The input source to process.</param>
+    /// <param name="languageVersion">The language version to use to run the test.</param>
     /// <returns>The resulting <see cref="Compilation"/> object.</returns>
-    private static CSharpCompilation CreateCompilation(string source)
+    private static CSharpCompilation CreateCompilation(string source, LanguageVersion languageVersion = LanguageVersion.CSharp12)
     {
         // Get all assembly references for the .NET TFM and ComputeSharp
         IEnumerable<MetadataReference> metadataReferences =
@@ -189,10 +191,10 @@ internal static class CSharpGeneratorTest<TGenerator>
 #endif
         ];
 
-        // Parse the source text (C# 12)
+        // Parse the source text
         SyntaxTree sourceTree = CSharpSyntaxTree.ParseText(
             source,
-            CSharpParseOptions.Default.WithLanguageVersion(LanguageVersion.CSharp12));
+            CSharpParseOptions.Default.WithLanguageVersion(languageVersion));
 
         // Create the original compilation
         return CSharpCompilation.Create(
@@ -208,12 +210,14 @@ internal static class CSharpGeneratorTest<TGenerator>
     /// <param name="source">The input source to process.</param>
     /// <param name="compilation"><inheritdoc cref="GeneratorDriver.RunGeneratorsAndUpdateCompilation" path="/param[@name='outputCompilation']/node()"/></param>
     /// <param name="diagnostics"><inheritdoc cref="GeneratorDriver.RunGeneratorsAndUpdateCompilation" path="/param[@name='diagnostics']/node()"/></param>
+    /// <param name="languageVersion">The language version to use to run the test.</param>
     private static void RunGenerator(
         string source,
         out Compilation compilation,
-        out ImmutableArray<Diagnostic> diagnostics)
+        out ImmutableArray<Diagnostic> diagnostics,
+        LanguageVersion languageVersion = LanguageVersion.CSharp12)
     {
-        Compilation originalCompilation = CreateCompilation(source);
+        Compilation originalCompilation = CreateCompilation(source, languageVersion);
 
         // Create the generator driver with the D2D shader generator
         GeneratorDriver driver = CSharpGeneratorDriver.Create(new TGenerator()).WithUpdatedParseOptions(originalCompilation.SyntaxTrees.First().Options);
