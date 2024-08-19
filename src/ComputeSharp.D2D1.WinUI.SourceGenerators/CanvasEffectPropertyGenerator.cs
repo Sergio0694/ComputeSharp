@@ -41,6 +41,12 @@ public sealed partial class CanvasEffectPropertyGenerator : IIncrementalGenerato
                         return default;
                     }
 
+                    // Also ignore all properties that have an invalid declaration
+                    if (propertySymbol.IsStatic || propertySymbol.ReturnsByRef || propertySymbol.ReturnsByRefReadonly || propertySymbol.Type.IsRefLikeType)
+                    {
+                        return default;
+                    }
+
                     // Ensure that the containing type derives from CanvasEffect
                     if (!typeSymbol.InheritsFromFullyQualifiedMetadataName("ComputeSharp.D2D1.WinUI.CanvasEffect"))
                     {
