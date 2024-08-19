@@ -32,8 +32,8 @@ public sealed class InvalidGeneratedCanvasEffectPropertyContainingTypeAnalyzer :
 
             context.RegisterSymbolAction(context =>
             {
-                // Validate that we have a valid containing type
-                if (context.Symbol is not IPropertySymbol { ContainingType: { } containingTypeSymbol })
+                // Validate that we have a valid containing type (also skip implementation parts)
+                if (context.Symbol is not IPropertySymbol { ContainingType: { } containingTypeSymbol, PartialDefinitionPart: null })
                 {
                     return;
                 }

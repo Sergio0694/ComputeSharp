@@ -37,8 +37,8 @@ public sealed class InvalidGeneratedCanvasEffectPropertyDeclarationAnalyzer : Di
 
             context.RegisterSymbolAction(context =>
             {
-                // Ensure that we have some target property to analyze
-                if (context.Symbol is not IPropertySymbol propertySymbol)
+                // Ensure that we have some target property to analyze (also skip implementation parts)
+                if (context.Symbol is not IPropertySymbol { PartialDefinitionPart: null } propertySymbol)
                 {
                     return;
                 }

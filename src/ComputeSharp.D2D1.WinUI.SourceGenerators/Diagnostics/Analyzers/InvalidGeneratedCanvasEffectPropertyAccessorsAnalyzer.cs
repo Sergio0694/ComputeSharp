@@ -37,6 +37,12 @@ public sealed class InvalidGeneratedCanvasEffectPropertyAccessorsAnalyzer : Diag
                     return;
                 }
 
+                // Skip implementation parts to avoid duplicate errors
+                if (context.Symbol is IPropertySymbol { PartialDefinitionPart: not null })
+                {
+                    return;
+                }
+
                 // If the property is using [GeneratedCanvasEffectProperty], emit the diagnostic
                 if (context.Symbol.TryGetAttributeWithType(generatedCanvasEffectPropertyAttributeSymbol, out AttributeData? generatedCanvasEffectPropertyAttribute))
                 {
