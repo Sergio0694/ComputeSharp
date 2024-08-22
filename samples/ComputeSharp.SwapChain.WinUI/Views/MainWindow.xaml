@@ -9,11 +9,14 @@
     xmlns:enums="using:ComputeSharp.SwapChain.Core.Enums"
     xmlns:media="using:CommunityToolkit.WinUI.UI.Media"
     xmlns:ui="using:CommunityToolkit.WinUI.UI"
-    xmlns:viewmodels="using:ComputeSharp.SwapChain.Core.ViewModels"
+    xmlns:viewModels="using:ComputeSharp.SwapChain.Core.ViewModels"
     xmlns:views="using:ComputeSharp.SwapChain.WinUI.Views"
     SizeChanged="Window_SizeChanged">
 
     <Grid x:Name="Root">
+        <Grid.DataContext>
+            <viewModels:MainViewModel x:Name="ViewModel"/>
+        </Grid.DataContext>
         <Grid.Resources>
 
             <!--
@@ -109,7 +112,7 @@
                         <ListView.ItemTemplate>
 
                             <!--  Shader template  -->
-                            <DataTemplate x:DataType="viewmodels:ShaderRunnerViewModel">
+                            <DataTemplate x:DataType="viewModels:ShaderRunnerViewModel">
                                 <controls:ConstrainedBox
                                     HorizontalAlignment="Stretch"
                                     VerticalAlignment="Stretch"

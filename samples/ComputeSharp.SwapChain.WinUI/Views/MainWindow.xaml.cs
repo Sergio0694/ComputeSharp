@@ -1,6 +1,5 @@
 using System;
 using System.Runtime.CompilerServices;
-using ComputeSharp.SwapChain.Core.Services;
 using ComputeSharp.SwapChain.Core.ViewModels;
 using ComputeSharp.WinUI;
 using Microsoft.UI.Xaml;
@@ -25,14 +24,7 @@ public sealed partial class MainWindow : Window
         ExtendsContentIntoTitleBar = true;
 
         SetTitleBar(this.TitleBarRectangle);
-
-        this.Root.DataContext = new MainViewModel(new DebugAnalyticsService());
     }
-
-    /// <summary>
-    /// Gets the <see cref="MainViewModel"/> instance for the current view.
-    /// </summary>
-    public MainViewModel ViewModel => (MainViewModel)this.Root.DataContext;
 
     /// <summary>
     /// Stops all rendering when the application is closing.
