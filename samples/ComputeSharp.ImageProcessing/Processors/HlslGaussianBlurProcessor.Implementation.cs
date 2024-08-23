@@ -1,7 +1,6 @@
 using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using CommunityToolkit.Diagnostics;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing.Processors;
 using ImageSharpRgba32 = SixLabors.ImageSharp.PixelFormats.Rgba32;
@@ -95,7 +94,7 @@ public sealed partial class HlslGaussianBlurProcessor
         {
             if (!source.DangerousTryGetSinglePixelMemory(out Memory<ImageSharpRgba32> pixelMemory))
             {
-                ThrowHelper.ThrowInvalidOperationException("Cannot process image frames wrapping discontiguous memory.");
+                throw new ArgumentException("Cannot process image frames wrapping discontiguous memory.");
             }
 
             Span<Rgba32> span = MemoryMarshal.Cast<ImageSharpRgba32, Rgba32>(pixelMemory.Span);

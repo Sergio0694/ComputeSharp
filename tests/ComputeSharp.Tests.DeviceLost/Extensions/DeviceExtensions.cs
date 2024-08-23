@@ -1,5 +1,5 @@
+using System;
 using System.Linq;
-using CommunityToolkit.Diagnostics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ComputeSharp.Tests.Extensions;
@@ -21,7 +21,7 @@ public static class DeviceExtensions
         {
             Device.Discrete => GraphicsDevice.QueryDevices(info => info.IsHardwareAccelerated).FirstOrDefault(),
             Device.Warp => GraphicsDevice.QueryDevices(info => !info.IsHardwareAccelerated).FirstOrDefault(),
-            _ => ThrowHelper.ThrowArgumentException<GraphicsDevice>("Invalid device.")
+            _ => throw new ArgumentException("Invalid device type.", nameof(type))
         };
 
         if (device is null)

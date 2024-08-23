@@ -1,6 +1,5 @@
 using System;
 using System.Runtime.InteropServices;
-using CommunityToolkit.Diagnostics;
 using ComputeSharp.Resources;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SixLabors.ImageSharp;
@@ -24,7 +23,7 @@ public static class ImagingExtensions
         where TFrom : unmanaged
         where TTo : unmanaged, IPixel<TTo>
     {
-        Guard.IsEqualTo(sizeof(TTo), sizeof(TFrom), nameof(TTo));
+        ArgumentOutOfRangeException.ThrowIfNotEqual(sizeof(TTo), sizeof(TFrom), nameof(TTo));
 
         Image<TTo> image = new(texture.Width, texture.Height);
 
@@ -49,7 +48,7 @@ public static class ImagingExtensions
         where TFrom : unmanaged
         where TTo : unmanaged, IPixel<TTo>
     {
-        Guard.IsEqualTo(sizeof(TTo), sizeof(TFrom), nameof(TTo));
+        ArgumentOutOfRangeException.ThrowIfNotEqual(sizeof(TTo), sizeof(TFrom), nameof(TTo));
 
         Image<TTo> image = new(texture.Width, texture.Height);
 
