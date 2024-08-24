@@ -30,9 +30,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
-    <PackageReference Include="CommunityToolkit.WinUI.UI.Controls.Core" Version="7.1.2" />
-    <PackageReference Include="CommunityToolkit.WinUI.UI.Media" Version="7.1.2" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.0-build.5.g1bf778c86e" />
+    <PackageReference Include="CommunityToolkit.WinUI.Controls.Primitives" Version="8.2.240824-pull-488.1154" />
+    <PackageReference Include="CommunityToolkit.WinUI.Media" Version="8.2.240824-pull-488.1154" />
   </ItemGroup>
 
   <!-- 
