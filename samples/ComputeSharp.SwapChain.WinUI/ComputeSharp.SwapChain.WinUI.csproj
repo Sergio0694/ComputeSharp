@@ -43,10 +43,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Manifest Include="$(ApplicationManifest)" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.0-build.5.g1bf778c86e" />
     <PackageReference Include="CommunityToolkit.WinUI.Controls.Primitives" Version="8.2.240824-pull-488.1154" />
     <PackageReference Include="CommunityToolkit.WinUI.Media" Version="8.2.240824-pull-488.1154" />
