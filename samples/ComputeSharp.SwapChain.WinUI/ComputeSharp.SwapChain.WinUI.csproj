@@ -16,6 +16,20 @@
     </RestoreSources>
   </PropertyGroup>
 
+  <PropertyGroup>
+
+    <!--
+      Temporary workaround: don't fail builds for 'IL2059' errors, like this:
+      "XamlTypeInfo.g.cs(495): Trim analysis warning IL2059: ComputeSharp.SwapChain.WinUI.ComputeSharp_SwapChain_WinUI_XamlTypeInfo.XamlTypeInfoProvider.
+      StaticInitializer_38_Nullable(): Unrecognized value passed to the parameter 'type' of method 'System.Runtime. CompilerServices.RuntimeHelpers
+      .RunClassConstructor(RuntimeTypeHandle)'. It's not possible to guarantee the availability of the target static constructor."
+      This is due to a bug in the .NET trim analyzer and in ILC, see: https://github.com/dotnet/runtime/issues/106939.
+      The best fix would also be to update the XAML compiler in WinAppSDK to skip generating unnecessary static constructor stubs.
+    -->
+    <TrimmerSingleWarn>false</TrimmerSingleWarn>
+    <WarningsNotAsErrors>$(WarningsNotAsErrors);IL2059</WarningsNotAsErrors>
+  </PropertyGroup>
+
   <!-- Additional CsWinRT properties (temporary, until the .NET SDK is updated) -->
   <PropertyGroup>
     
