@@ -326,6 +326,13 @@ jobs:
       run: >
         msbuild samples\ComputeSharp.NativeLibrary.WinRT\ComputeSharp.NativeLibrary.WinRT.csproj /restore -t:publish
         /p:Configuration=Release /p:Platform=${{matrix.platform}} /p:RuntimeIdentifier=win-${{matrix.platform}}
+      
+      # Publish the WinUI 3 sample app with NativeAOT
+    - if: matrix.platform == 'x64'
+      name: Publish ComputeSharp.SwapChain.WinUI
+      run: >
+        msbuild samples\ComputeSharp.SwapChain.WinUI\ComputeSharp.SwapChain.WinUI.csproj /restore -t:publish
+        /p:Configuration=Release /p:Platform=${{matrix.platform}} /p:RuntimeIdentifier=win-${{matrix.platform}}
 
   # Download the NuGet packages generated in the previous job and use them
   # to build and run the sample project referencing them. This is used as
