@@ -7,6 +7,8 @@ using ComputeSharp.SwapChain.Core.Shaders.Runners;
 using ComputeSharp.SwapChain.Shaders;
 using ComputeSharp.WinUI;
 
+#pragma warning disable IDE0300 // CsWinRT does not support marshalling collection expression (https://github.com/microsoft/CsWinRT/issues/1661)
+
 namespace ComputeSharp.SwapChain.Core.ViewModels;
 
 /// <summary>
@@ -68,13 +70,13 @@ public sealed partial class MainViewModel : ObservableObject
     /// <summary>
     /// Gets the available resolution scaling options (as percentage values).
     /// </summary>
-    public IList<int> ResolutionScaleOptions { get; } = [25, 50, 75, 100];
+    public IList<int> ResolutionScaleOptions { get; } = new int[] { 25, 50, 75, 100 };
 
     /// <summary>
     /// Gets the collection of available compute shader.
     /// </summary>
-    public IReadOnlyList<ShaderRunnerViewModel> ComputeShaderOptions { get; } =
-    [
+    public IReadOnlyList<ShaderRunnerViewModel> ComputeShaderOptions { get; } = new ShaderRunnerViewModel[]
+    {
         new(
             nameof(ColorfulInfinity),
             new ShaderRunner<ColorfulInfinity>(static time => new((float)time.TotalSeconds)),
@@ -112,7 +114,7 @@ public sealed partial class MainViewModel : ObservableObject
             nameof(TerracedHills),
             new ShaderRunner<TerracedHills>(static time => new((float)time.TotalSeconds)),
             new PixelShaderEffect.For<SwapChain.Shaders.D2D1.TerracedHills>(static (time, width, height) => new((float)time.TotalSeconds, new int2(width, height)))),
-    ];
+    };
 
     /// <summary>
     /// Checks whether the resolution scale can currently be expliclty set.

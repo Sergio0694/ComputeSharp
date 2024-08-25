@@ -10,29 +10,68 @@
     <PublishProfile>win-$(Platform).pubxml</PublishProfile>
     <UseWinUI>true</UseWinUI>
     <EnableMsixTooling>true</EnableMsixTooling>
+    <RestoreSources>
+      https://api.nuget.org/v3/index.json;
+      https://pkgs.dev.azure.com/dotnet/CommunityToolkit/_packaging/CommunityToolkit-MainLatest/nuget/v3/index.json;
+    </RestoreSources>
+  </PropertyGroup>
+
+  <PropertyGroup>
+
+    <!--
+      Temporary workaround: don't fail builds for 'IL2059' errors, like this:
+      "XamlTypeInfo.g.cs(495): Trim analysis warning IL2059: ComputeSharp.SwapChain.WinUI.ComputeSharp_SwapChain_WinUI_XamlTypeInfo.XamlTypeInfoProvider.
+      StaticInitializer_38_Nullable(): Unrecognized value passed to the parameter 'type' of method 'System.Runtime. CompilerServices.RuntimeHelpers
+      .RunClassConstructor(RuntimeTypeHandle)'. It's not possible to guarantee the availability of the target static constructor."
+      This is due to a bug in the .NET trim analyzer and in ILC, see: https://github.com/dotnet/runtime/issues/106939.
+      The best fix would also be to update the XAML compiler in WinAppSDK to skip generating unnecessary static constructor stubs.
+    -->
+    <TrimmerSingleWarn>false</TrimmerSingleWarn>
+    <WarningsNotAsErrors>$(WarningsNotAsErrors);IL2059</WarningsNotAsErrors>
+  </PropertyGroup>
+
+  <!-- Additional CsWinRT properties (temporary, until the .NET SDK is updated) -->
+  <PropertyGroup>
+    
+    <!--
+      We're only referencing CsWinRT for the source generators, we don't need to read any WinRT metadata.
+      CsWinRT is in projection mode by default, so we want to disable it (or it'd need the Windows SDK).
+    -->
+    <CsWinRTGenerateProjection>false</CsWinRTGenerateProjection>
+
+    <!-- We'll never have any IIDs to patch in this library -->
+    <CsWinRTIIDOptimizerOptOut>true</CsWinRTIIDOptimizerOptOut>
+
+    <!-- Enable AOT warnings for types implementing projected WinRT interfaces mapped to built-in types (eg. 'INotifyPropertyChanged') -->
+    <CsWinRTAotWarningLevel>2</CsWinRTAotWarningLevel>
+  </PropertyGroup>
+
+  <!-- CsWinRT size saving options -->
+  <PropertyGroup>
+    <CsWinRTEnableDynamicObjectsSupport>false</CsWinRTEnableDynamicObjectsSupport>
+    <CsWinRTUseExceptionResourceKeys>true</CsWinRTUseExceptionResourceKeys>
+  </PropertyGroup>
+
+  <!-- NativeAOT options -->
+  <PropertyGroup>
+    <PublishAot>true</PublishAot>
+    <UseSystemResourceKeys>true</UseSystemResourceKeys>
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <StackTraceSupport>false</StackTraceSupport>
+    <OptimizationPreference>Speed</OptimizationPreference>
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="Assets\SplashScreen.scale-200.png" />
-    <Content Include="Assets\LockScreenLogo.scale-200.png" />
-    <Content Include="Assets\Square150x150Logo.scale-200.png" />
-    <Content Include="Assets\Square44x44Logo.scale-200.png" />
-    <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
-    <Content Include="Assets\Wide310x150Logo.scale-200.png" />
-    <Content Include="Assets\Misc\noise_low.png" />
     <Content Include="..\ComputeSharp.SwapChain\Textures\RustyMetal.png">
       <Link>Assets\Textures\RustyMetal.png</Link>
     </Content>
   </ItemGroup>
 
   <ItemGroup>
-    <Manifest Include="$(ApplicationManifest)" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
-    <PackageReference Include="CommunityToolkit.WinUI.UI.Controls.Core" Version="7.1.2" />
-    <PackageReference Include="CommunityToolkit.WinUI.UI.Media" Version="7.1.2" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.0-build.5" />
+    <PackageReference Include="CommunityToolkit.WinUI.Controls.Primitives" Version="8.2.240824-build.1155" />
+    <PackageReference Include="CommunityToolkit.WinUI.Media" Version="8.2.240824-build.1155" />
+    <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.1.1" />
   </ItemGroup>
 
   <!-- 

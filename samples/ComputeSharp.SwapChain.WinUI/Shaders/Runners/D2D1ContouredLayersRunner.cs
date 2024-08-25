@@ -11,7 +11,7 @@ namespace ComputeSharp.SwapChain.Core.Shaders.Runners;
 /// <summary>
 /// A specialized <see cref="PixelShaderEffect"/> for <see cref="ContouredLayers"/>.
 /// </summary>
-public sealed class D2D1ContouredLayersEffect : PixelShaderEffect
+public sealed partial class D2D1ContouredLayersEffect : PixelShaderEffect
 {
     /// <summary>
     /// The reusable <see cref="PixelShaderEffect{T}"/> node to use to render frames.

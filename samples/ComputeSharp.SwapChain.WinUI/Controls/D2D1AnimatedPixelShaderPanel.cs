@@ -10,7 +10,7 @@ namespace ComputeSharp.SwapChain.WinUI.Views;
 /// A custom <see cref="Control"/> that can be used to render animated backgrounds via Win2D.
 /// </summary>
 [TemplatePart(Name = "PART_CanvasAnimatedControl", Type = typeof(CanvasAnimatedControl))]
-public sealed class D2D1AnimatedPixelShaderPanel : Control
+public sealed partial class D2D1AnimatedPixelShaderPanel : Control
 {
     /// <summary>
     /// The <see cref="DependencyProperty"/> backing <see cref="PixelShaderEffect"/>.

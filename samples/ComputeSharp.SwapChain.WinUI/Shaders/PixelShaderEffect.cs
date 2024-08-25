@@ -8,7 +8,7 @@ namespace ComputeSharp.SwapChain.Core.Shaders;
 /// <summary>
 /// An base effect for an animated pixel shader.
 /// </summary>
-public abstract class PixelShaderEffect : CanvasEffect
+public abstract partial class PixelShaderEffect : CanvasEffect
 {
     /// <summary>
     /// The current elapsed time.
@@ -57,7 +57,7 @@ public abstract class PixelShaderEffect : CanvasEffect
     /// </summary>
     /// <typeparam name="T">The type of pixel shader to render.</typeparam>
     /// <param name="factory">The input <typeparamref name="T"/> factory.</param>
-    public sealed class For<T>(For<T>.Factory factory) : PixelShaderEffect
+    public sealed partial class For<T>(For<T>.Factory factory) : PixelShaderEffect
         where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
     {
         /// <summary>
