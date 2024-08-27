@@ -111,16 +111,22 @@ internal static class WICFormatHelper
     /// <exception cref="ArgumentException">Thrown when the input filename doesn't have a valid file extension.</exception>
     public static Guid GetForFilename(ReadOnlySpan<char> filename)
     {
-        return Path.GetExtension(filename) switch
+        return Path.GetExtension(filename).ToString().ToLowerInvariant() switch
         {
+            ".dib" or
+            ".rle" or
             ".bmp" => GUID.GUID_ContainerFormatBmp,
             ".png" => GUID.GUID_ContainerFormatPng,
+            ".jpe" or
+            ".jfif" or
+            ".exif" or
             ".jpg" or
             ".jpeg" => GUID.GUID_ContainerFormatJpeg,
             ".jxr" or
             ".hdp" or
             ".wdp" or
             ".wmp" => GUID.GUID_ContainerFormatWmp,
+            ".tif" or
             ".tiff" => GUID.GUID_ContainerFormatTiff,
             ".dds" => GUID.GUID_ContainerFormatDds,
             _ => default(ArgumentException).Throw<Guid>(nameof(filename))
