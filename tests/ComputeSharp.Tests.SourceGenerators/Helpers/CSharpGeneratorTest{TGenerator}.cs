@@ -83,6 +83,7 @@ internal static class CSharpGeneratorTest<TGenerator>
     /// <param name="outputReason">The reason for the <c>"Output"</c> step.</param>
     /// <param name="diagnosticsSourceReason">The reason for the output step for the diagnostics.</param>
     /// <param name="sourceReason">The reason for the final output source.</param>
+    /// <param name="languageVersion">The language version to use to run the test.</param>
     public static void VerifyIncrementalSteps(
         string source,
         string updatedSource,
@@ -90,9 +91,10 @@ internal static class CSharpGeneratorTest<TGenerator>
         IncrementalStepRunReason? diagnosticsReason,
         IncrementalStepRunReason outputReason,
         IncrementalStepRunReason? diagnosticsSourceReason,
-        IncrementalStepRunReason sourceReason)
+        IncrementalStepRunReason sourceReason,
+        LanguageVersion languageVersion = LanguageVersion.CSharp12)
     {
-        Compilation compilation = CreateCompilation(source);
+        Compilation compilation = CreateCompilation(source, languageVersion);
 
         GeneratorDriver driver = CSharpGeneratorDriver.Create(
             generators: [new TGenerator().AsSourceGenerator()],
@@ -104,7 +106,7 @@ internal static class CSharpGeneratorTest<TGenerator>
         // Update the compilation by replacing the source
         compilation = compilation.ReplaceSyntaxTree(
             compilation.SyntaxTrees.First(),
-            CSharpSyntaxTree.ParseText(updatedSource, CSharpParseOptions.Default.WithLanguageVersion(LanguageVersion.CSharp12)));
+            CSharpSyntaxTree.ParseText(updatedSource, CSharpParseOptions.Default.WithLanguageVersion(languageVersion)));
 
         // Run the generators again on the updated source
         driver = driver.RunGenerators(compilation);

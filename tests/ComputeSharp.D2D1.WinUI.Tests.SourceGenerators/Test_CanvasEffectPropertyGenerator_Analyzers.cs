@@ -173,4 +173,38 @@ public class Test_CanvasEffectPropertyGenerator_Analyzers
 
         await CSharpAnalyzerWithLanguageVersionTest<InvalidGeneratedCanvasEffectPropertyDeclarationAnalyzer>.VerifyAnalyzerAsync(source, languageVersion: LanguageVersion.Preview);
     }
+
+    [TestMethod]
+    public async Task RequireCSharpLanguageVersionPreviewAnalyzer_LanguageVersionIsNotPreview_Warns()
+    {
+        const string source = """
+            using System;
+            using ComputeSharp.D2D1.WinUI;
+
+            public abstract partial class MyEffect : CanvasEffect
+            {
+                [{|CMPSD2DWINUI0007:GeneratedCanvasEffectProperty|}]
+                public int Number { get; set; }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<RequireCSharpLanguageVersionPreviewAnalyzer>.VerifyAnalyzerAsync(source);
+    }
+
+    [TestMethod]
+    public async Task RequireCSharpLanguageVersionPreviewAnalyzer_LanguageVersionIsPreview_DoesNotWarn()
+    {
+        const string source = """
+            using System;
+            using ComputeSharp.D2D1.WinUI;
+
+            public abstract partial class MyEffect : CanvasEffect
+            {
+                [GeneratedCanvasEffectProperty]
+                public int Number { get; set; }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<RequireCSharpLanguageVersionPreviewAnalyzer>.VerifyAnalyzerAsync(source, languageVersion: LanguageVersion.Preview);
+    }
 }

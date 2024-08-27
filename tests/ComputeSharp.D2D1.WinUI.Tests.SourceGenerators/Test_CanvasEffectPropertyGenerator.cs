@@ -33,7 +33,7 @@ public class Test_CanvasEffectPropertyGenerator
                 partial class MyEffect
                 {
                     /// <inheritdoc/>
-                    [global::System.CodeDom.Compiler.GeneratedCode("ComputeSharp.D2D1.WinUI.CanvasEffectPropertyGenerator", "3.0.0.0")]
+                    [global::System.CodeDom.Compiler.GeneratedCode("ComputeSharp.D2D1.WinUI.CanvasEffectPropertyGenerator", <ASSEMBLY_VERSION>)]
                     [global::System.Diagnostics.DebuggerNonUserCode]
                     [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
                     public partial int Number
@@ -63,27 +63,27 @@ public class Test_CanvasEffectPropertyGenerator
                     /// <summary>Executes the logic for when <see cref="Number"/> is changing.</summary>
                     /// <param name="value">The new property value being set.</param>
                     /// <remarks>This method is invoked right before the value of <see cref="Number"/> is changed.</remarks>
-                    [global::System.CodeDom.Compiler.GeneratedCode("ComputeSharp.D2D1.WinUI.CanvasEffectPropertyGenerator", "3.0.0.0")]
+                    [global::System.CodeDom.Compiler.GeneratedCode("ComputeSharp.D2D1.WinUI.CanvasEffectPropertyGenerator", <ASSEMBLY_VERSION>)]
                     partial void OnNumberChanging(int newValue);
 
                     /// <summary>Executes the logic for when <see cref="Number"/> is changing.</summary>
                     /// <param name="oldValue">The previous property value that is being replaced.</param>
                     /// <param name="newValue">The new property value being set.</param>
                     /// <remarks>This method is invoked right before the value of <see cref="Number"/> is changed.</remarks>
-                    [global::System.CodeDom.Compiler.GeneratedCode("ComputeSharp.D2D1.WinUI.CanvasEffectPropertyGenerator", "3.0.0.0")]
+                    [global::System.CodeDom.Compiler.GeneratedCode("ComputeSharp.D2D1.WinUI.CanvasEffectPropertyGenerator", <ASSEMBLY_VERSION>)]
                     partial void OnNumberChanging(int oldValue, int newValue);
 
                     /// <summary>Executes the logic for when <see cref="Number"/> has just changed.</summary>
                     /// <param name="value">The new property value that has been set.</param>
                     /// <remarks>This method is invoked right after the value of <see cref="Number"/> is changed.</remarks>
-                    [global::System.CodeDom.Compiler.GeneratedCode("ComputeSharp.D2D1.WinUI.CanvasEffectPropertyGenerator", "3.0.0.0")]
+                    [global::System.CodeDom.Compiler.GeneratedCode("ComputeSharp.D2D1.WinUI.CanvasEffectPropertyGenerator", <ASSEMBLY_VERSION>)]
                     partial void OnNumberChanged(int newValue);
 
                     /// <summary>Executes the logic for when <see cref="Number"/> has just changed.</summary>
                     /// <param name="oldValue">The previous property value that has been replaced.</param>
                     /// <param name="newValue">The new property value that has been set.</param>
                     /// <remarks>This method is invoked right after the value of <see cref="Number"/> is changed.</remarks>
-                    [global::System.CodeDom.Compiler.GeneratedCode("ComputeSharp.D2D1.WinUI.CanvasEffectPropertyGenerator", "3.0.0.0")]
+                    [global::System.CodeDom.Compiler.GeneratedCode("ComputeSharp.D2D1.WinUI.CanvasEffectPropertyGenerator", <ASSEMBLY_VERSION>)]
                     partial void OnNumberChanged(int oldValue, int newValue);
                 }
             }
@@ -117,7 +117,7 @@ public class Test_CanvasEffectPropertyGenerator
                 partial class MyEffect
                 {
                     /// <inheritdoc/>
-                    [global::System.CodeDom.Compiler.GeneratedCode("ComputeSharp.D2D1.WinUI.CanvasEffectPropertyGenerator", "3.0.0.0")]
+                    [global::System.CodeDom.Compiler.GeneratedCode("ComputeSharp.D2D1.WinUI.CanvasEffectPropertyGenerator", <ASSEMBLY_VERSION>)]
                     [global::System.Diagnostics.DebuggerNonUserCode]
                     [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
                     public partial object? Instance
@@ -147,27 +147,27 @@ public class Test_CanvasEffectPropertyGenerator
                     /// <summary>Executes the logic for when <see cref="Instance"/> is changing.</summary>
                     /// <param name="value">The new property value being set.</param>
                     /// <remarks>This method is invoked right before the value of <see cref="Instance"/> is changed.</remarks>
-                    [global::System.CodeDom.Compiler.GeneratedCode("ComputeSharp.D2D1.WinUI.CanvasEffectPropertyGenerator", "3.0.0.0")]
+                    [global::System.CodeDom.Compiler.GeneratedCode("ComputeSharp.D2D1.WinUI.CanvasEffectPropertyGenerator", <ASSEMBLY_VERSION>)]
                     partial void OnInstanceChanging(object? newValue);
 
                     /// <summary>Executes the logic for when <see cref="Instance"/> is changing.</summary>
                     /// <param name="oldValue">The previous property value that is being replaced.</param>
                     /// <param name="newValue">The new property value being set.</param>
                     /// <remarks>This method is invoked right before the value of <see cref="Instance"/> is changed.</remarks>
-                    [global::System.CodeDom.Compiler.GeneratedCode("ComputeSharp.D2D1.WinUI.CanvasEffectPropertyGenerator", "3.0.0.0")]
+                    [global::System.CodeDom.Compiler.GeneratedCode("ComputeSharp.D2D1.WinUI.CanvasEffectPropertyGenerator", <ASSEMBLY_VERSION>)]
                     partial void OnInstanceChanging(object? oldValue, object? newValue);
 
                     /// <summary>Executes the logic for when <see cref="Instance"/> has just changed.</summary>
                     /// <param name="value">The new property value that has been set.</param>
                     /// <remarks>This method is invoked right after the value of <see cref="Instance"/> is changed.</remarks>
-                    [global::System.CodeDom.Compiler.GeneratedCode("ComputeSharp.D2D1.WinUI.CanvasEffectPropertyGenerator", "3.0.0.0")]
+                    [global::System.CodeDom.Compiler.GeneratedCode("ComputeSharp.D2D1.WinUI.CanvasEffectPropertyGenerator", <ASSEMBLY_VERSION>)]
                     partial void OnInstanceChanged(object? newValue);
 
                     /// <summary>Executes the logic for when <see cref="Instance"/> has just changed.</summary>
                     /// <param name="oldValue">The previous property value that has been replaced.</param>
                     /// <param name="newValue">The new property value that has been set.</param>
                     /// <remarks>This method is invoked right after the value of <see cref="Instance"/> is changed.</remarks>
-                    [global::System.CodeDom.Compiler.GeneratedCode("ComputeSharp.D2D1.WinUI.CanvasEffectPropertyGenerator", "3.0.0.0")]
+                    [global::System.CodeDom.Compiler.GeneratedCode("ComputeSharp.D2D1.WinUI.CanvasEffectPropertyGenerator", <ASSEMBLY_VERSION>)]
                     partial void OnInstanceChanged(object? oldValue, object? newValue);
                 }
             }
@@ -201,7 +201,7 @@ public class Test_CanvasEffectPropertyGenerator
                 partial class MyEffect
                 {
                     /// <inheritdoc/>
-                    [global::System.CodeDom.Compiler.GeneratedCode("ComputeSharp.D2D1.WinUI.CanvasEffectPropertyGenerator", "3.0.0.0")]
+                    [global::System.CodeDom.Compiler.GeneratedCode("ComputeSharp.D2D1.WinUI.CanvasEffectPropertyGenerator", <ASSEMBLY_VERSION>)]
                     [global::System.Diagnostics.DebuggerNonUserCode]
                     [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
                     public partial object Instance
@@ -231,27 +231,27 @@ public class Test_CanvasEffectPropertyGenerator
                     /// <summary>Executes the logic for when <see cref="Instance"/> is changing.</summary>
                     /// <param name="value">The new property value being set.</param>
                     /// <remarks>This method is invoked right before the value of <see cref="Instance"/> is changed.</remarks>
-                    [global::System.CodeDom.Compiler.GeneratedCode("ComputeSharp.D2D1.WinUI.CanvasEffectPropertyGenerator", "3.0.0.0")]
+                    [global::System.CodeDom.Compiler.GeneratedCode("ComputeSharp.D2D1.WinUI.CanvasEffectPropertyGenerator", <ASSEMBLY_VERSION>)]
                     partial void OnInstanceChanging(object newValue);
 
                     /// <summary>Executes the logic for when <see cref="Instance"/> is changing.</summary>
                     /// <param name="oldValue">The previous property value that is being replaced.</param>
                     /// <param name="newValue">The new property value being set.</param>
                     /// <remarks>This method is invoked right before the value of <see cref="Instance"/> is changed.</remarks>
-                    [global::System.CodeDom.Compiler.GeneratedCode("ComputeSharp.D2D1.WinUI.CanvasEffectPropertyGenerator", "3.0.0.0")]
+                    [global::System.CodeDom.Compiler.GeneratedCode("ComputeSharp.D2D1.WinUI.CanvasEffectPropertyGenerator", <ASSEMBLY_VERSION>)]
                     partial void OnInstanceChanging(object? oldValue, object newValue);
 
                     /// <summary>Executes the logic for when <see cref="Instance"/> has just changed.</summary>
                     /// <param name="value">The new property value that has been set.</param>
                     /// <remarks>This method is invoked right after the value of <see cref="Instance"/> is changed.</remarks>
-                    [global::System.CodeDom.Compiler.GeneratedCode("ComputeSharp.D2D1.WinUI.CanvasEffectPropertyGenerator", "3.0.0.0")]
+                    [global::System.CodeDom.Compiler.GeneratedCode("ComputeSharp.D2D1.WinUI.CanvasEffectPropertyGenerator", <ASSEMBLY_VERSION>)]
                     partial void OnInstanceChanged(object newValue);
 
                     /// <summary>Executes the logic for when <see cref="Instance"/> has just changed.</summary>
                     /// <param name="oldValue">The previous property value that has been replaced.</param>
                     /// <param name="newValue">The new property value that has been set.</param>
                     /// <remarks>This method is invoked right after the value of <see cref="Instance"/> is changed.</remarks>
-                    [global::System.CodeDom.Compiler.GeneratedCode("ComputeSharp.D2D1.WinUI.CanvasEffectPropertyGenerator", "3.0.0.0")]
+                    [global::System.CodeDom.Compiler.GeneratedCode("ComputeSharp.D2D1.WinUI.CanvasEffectPropertyGenerator", <ASSEMBLY_VERSION>)]
                     partial void OnInstanceChanged(object? oldValue, object newValue);
                 }
             }
@@ -285,7 +285,7 @@ public class Test_CanvasEffectPropertyGenerator
                 partial class MyEffect
                 {
                     /// <inheritdoc/>
-                    [global::System.CodeDom.Compiler.GeneratedCode("ComputeSharp.D2D1.WinUI.CanvasEffectPropertyGenerator", "3.0.0.0")]
+                    [global::System.CodeDom.Compiler.GeneratedCode("ComputeSharp.D2D1.WinUI.CanvasEffectPropertyGenerator", <ASSEMBLY_VERSION>)]
                     [global::System.Diagnostics.DebuggerNonUserCode]
                     [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
                     public partial int Number
@@ -315,27 +315,27 @@ public class Test_CanvasEffectPropertyGenerator
                     /// <summary>Executes the logic for when <see cref="Number"/> is changing.</summary>
                     /// <param name="value">The new property value being set.</param>
                     /// <remarks>This method is invoked right before the value of <see cref="Number"/> is changed.</remarks>
-                    [global::System.CodeDom.Compiler.GeneratedCode("ComputeSharp.D2D1.WinUI.CanvasEffectPropertyGenerator", "3.0.0.0")]
+                    [global::System.CodeDom.Compiler.GeneratedCode("ComputeSharp.D2D1.WinUI.CanvasEffectPropertyGenerator", <ASSEMBLY_VERSION>)]
                     partial void OnNumberChanging(int newValue);
 
                     /// <summary>Executes the logic for when <see cref="Number"/> is changing.</summary>
                     /// <param name="oldValue">The previous property value that is being replaced.</param>
                     /// <param name="newValue">The new property value being set.</param>
                     /// <remarks>This method is invoked right before the value of <see cref="Number"/> is changed.</remarks>
-                    [global::System.CodeDom.Compiler.GeneratedCode("ComputeSharp.D2D1.WinUI.CanvasEffectPropertyGenerator", "3.0.0.0")]
+                    [global::System.CodeDom.Compiler.GeneratedCode("ComputeSharp.D2D1.WinUI.CanvasEffectPropertyGenerator", <ASSEMBLY_VERSION>)]
                     partial void OnNumberChanging(int oldValue, int newValue);
 
                     /// <summary>Executes the logic for when <see cref="Number"/> has just changed.</summary>
                     /// <param name="value">The new property value that has been set.</param>
                     /// <remarks>This method is invoked right after the value of <see cref="Number"/> is changed.</remarks>
-                    [global::System.CodeDom.Compiler.GeneratedCode("ComputeSharp.D2D1.WinUI.CanvasEffectPropertyGenerator", "3.0.0.0")]
+                    [global::System.CodeDom.Compiler.GeneratedCode("ComputeSharp.D2D1.WinUI.CanvasEffectPropertyGenerator", <ASSEMBLY_VERSION>)]
                     partial void OnNumberChanged(int newValue);
 
                     /// <summary>Executes the logic for when <see cref="Number"/> has just changed.</summary>
                     /// <param name="oldValue">The previous property value that has been replaced.</param>
                     /// <param name="newValue">The new property value that has been set.</param>
                     /// <remarks>This method is invoked right after the value of <see cref="Number"/> is changed.</remarks>
-                    [global::System.CodeDom.Compiler.GeneratedCode("ComputeSharp.D2D1.WinUI.CanvasEffectPropertyGenerator", "3.0.0.0")]
+                    [global::System.CodeDom.Compiler.GeneratedCode("ComputeSharp.D2D1.WinUI.CanvasEffectPropertyGenerator", <ASSEMBLY_VERSION>)]
                     partial void OnNumberChanged(int oldValue, int newValue);
                 }
             }
@@ -372,7 +372,7 @@ public class Test_CanvasEffectPropertyGenerator
                 partial class MyEffect
                 {
                     /// <inheritdoc/>
-                    [global::System.CodeDom.Compiler.GeneratedCode("ComputeSharp.D2D1.WinUI.CanvasEffectPropertyGenerator", "3.0.0.0")]
+                    [global::System.CodeDom.Compiler.GeneratedCode("ComputeSharp.D2D1.WinUI.CanvasEffectPropertyGenerator", <ASSEMBLY_VERSION>)]
                     [global::System.Diagnostics.DebuggerNonUserCode]
                     [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
                     public partial int X
@@ -400,7 +400,7 @@ public class Test_CanvasEffectPropertyGenerator
                     }
 
                     /// <inheritdoc/>
-                    [global::System.CodeDom.Compiler.GeneratedCode("ComputeSharp.D2D1.WinUI.CanvasEffectPropertyGenerator", "3.0.0.0")]
+                    [global::System.CodeDom.Compiler.GeneratedCode("ComputeSharp.D2D1.WinUI.CanvasEffectPropertyGenerator", <ASSEMBLY_VERSION>)]
                     [global::System.Diagnostics.DebuggerNonUserCode]
                     [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
                     public partial int Y
@@ -430,53 +430,53 @@ public class Test_CanvasEffectPropertyGenerator
                     /// <summary>Executes the logic for when <see cref="X"/> is changing.</summary>
                     /// <param name="value">The new property value being set.</param>
                     /// <remarks>This method is invoked right before the value of <see cref="X"/> is changed.</remarks>
-                    [global::System.CodeDom.Compiler.GeneratedCode("ComputeSharp.D2D1.WinUI.CanvasEffectPropertyGenerator", "3.0.0.0")]
+                    [global::System.CodeDom.Compiler.GeneratedCode("ComputeSharp.D2D1.WinUI.CanvasEffectPropertyGenerator", <ASSEMBLY_VERSION>)]
                     partial void OnXChanging(int newValue);
 
                     /// <summary>Executes the logic for when <see cref="X"/> is changing.</summary>
                     /// <param name="oldValue">The previous property value that is being replaced.</param>
                     /// <param name="newValue">The new property value being set.</param>
                     /// <remarks>This method is invoked right before the value of <see cref="X"/> is changed.</remarks>
-                    [global::System.CodeDom.Compiler.GeneratedCode("ComputeSharp.D2D1.WinUI.CanvasEffectPropertyGenerator", "3.0.0.0")]
+                    [global::System.CodeDom.Compiler.GeneratedCode("ComputeSharp.D2D1.WinUI.CanvasEffectPropertyGenerator", <ASSEMBLY_VERSION>)]
                     partial void OnXChanging(int oldValue, int newValue);
 
                     /// <summary>Executes the logic for when <see cref="X"/> has just changed.</summary>
                     /// <param name="value">The new property value that has been set.</param>
                     /// <remarks>This method is invoked right after the value of <see cref="X"/> is changed.</remarks>
-                    [global::System.CodeDom.Compiler.GeneratedCode("ComputeSharp.D2D1.WinUI.CanvasEffectPropertyGenerator", "3.0.0.0")]
+                    [global::System.CodeDom.Compiler.GeneratedCode("ComputeSharp.D2D1.WinUI.CanvasEffectPropertyGenerator", <ASSEMBLY_VERSION>)]
                     partial void OnXChanged(int newValue);
 
                     /// <summary>Executes the logic for when <see cref="X"/> has just changed.</summary>
                     /// <param name="oldValue">The previous property value that has been replaced.</param>
                     /// <param name="newValue">The new property value that has been set.</param>
                     /// <remarks>This method is invoked right after the value of <see cref="X"/> is changed.</remarks>
-                    [global::System.CodeDom.Compiler.GeneratedCode("ComputeSharp.D2D1.WinUI.CanvasEffectPropertyGenerator", "3.0.0.0")]
+                    [global::System.CodeDom.Compiler.GeneratedCode("ComputeSharp.D2D1.WinUI.CanvasEffectPropertyGenerator", <ASSEMBLY_VERSION>)]
                     partial void OnXChanged(int oldValue, int newValue);
 
                     /// <summary>Executes the logic for when <see cref="Y"/> is changing.</summary>
                     /// <param name="value">The new property value being set.</param>
                     /// <remarks>This method is invoked right before the value of <see cref="Y"/> is changed.</remarks>
-                    [global::System.CodeDom.Compiler.GeneratedCode("ComputeSharp.D2D1.WinUI.CanvasEffectPropertyGenerator", "3.0.0.0")]
+                    [global::System.CodeDom.Compiler.GeneratedCode("ComputeSharp.D2D1.WinUI.CanvasEffectPropertyGenerator", <ASSEMBLY_VERSION>)]
                     partial void OnYChanging(int newValue);
 
                     /// <summary>Executes the logic for when <see cref="Y"/> is changing.</summary>
                     /// <param name="oldValue">The previous property value that is being replaced.</param>
                     /// <param name="newValue">The new property value being set.</param>
                     /// <remarks>This method is invoked right before the value of <see cref="Y"/> is changed.</remarks>
-                    [global::System.CodeDom.Compiler.GeneratedCode("ComputeSharp.D2D1.WinUI.CanvasEffectPropertyGenerator", "3.0.0.0")]
+                    [global::System.CodeDom.Compiler.GeneratedCode("ComputeSharp.D2D1.WinUI.CanvasEffectPropertyGenerator", <ASSEMBLY_VERSION>)]
                     partial void OnYChanging(int oldValue, int newValue);
 
                     /// <summary>Executes the logic for when <see cref="Y"/> has just changed.</summary>
                     /// <param name="value">The new property value that has been set.</param>
                     /// <remarks>This method is invoked right after the value of <see cref="Y"/> is changed.</remarks>
-                    [global::System.CodeDom.Compiler.GeneratedCode("ComputeSharp.D2D1.WinUI.CanvasEffectPropertyGenerator", "3.0.0.0")]
+                    [global::System.CodeDom.Compiler.GeneratedCode("ComputeSharp.D2D1.WinUI.CanvasEffectPropertyGenerator", <ASSEMBLY_VERSION>)]
                     partial void OnYChanged(int newValue);
 
                     /// <summary>Executes the logic for when <see cref="Y"/> has just changed.</summary>
                     /// <param name="oldValue">The previous property value that has been replaced.</param>
                     /// <param name="newValue">The new property value that has been set.</param>
                     /// <remarks>This method is invoked right after the value of <see cref="Y"/> is changed.</remarks>
-                    [global::System.CodeDom.Compiler.GeneratedCode("ComputeSharp.D2D1.WinUI.CanvasEffectPropertyGenerator", "3.0.0.0")]
+                    [global::System.CodeDom.Compiler.GeneratedCode("ComputeSharp.D2D1.WinUI.CanvasEffectPropertyGenerator", <ASSEMBLY_VERSION>)]
                     partial void OnYChanged(int oldValue, int newValue);
                 }
             }
