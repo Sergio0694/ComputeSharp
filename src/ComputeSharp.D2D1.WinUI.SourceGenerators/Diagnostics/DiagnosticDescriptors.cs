@@ -102,4 +102,20 @@ internal static class DiagnosticDescriptors
         isEnabledByDefault: true,
         description: "A property using [GeneratedCanvasEffectProperty] has a ref struct type ([GeneratedCanvasEffectProperty] must be used on properties with a type that is not a ref struct).",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+    /// <summary>
+    /// Gets a <see cref="DiagnosticDescriptor"/> for a CanvasEffect property with invalid accessors.
+    /// <para>
+    /// Format: <c>"Using [GeneratedCanvasEffectProperty] requires the C# language version to be set to 'preview', as support for the 'field' keyword is needed by the source generators to emit valid code (add &lt;LangVersion&gt;preview&lt;/LangVersion&gt; to your .csproj/.props file)"</c>.
+    /// </para>
+    /// </summary>
+    public static readonly DiagnosticDescriptor CSharpLanguageVersionIsNotPreview = new(
+        id: "CMPSD2DWINUI0007",
+        title: "C# language version is not 'preview'",
+        messageFormat: """Using [GeneratedCanvasEffectProperty] requires the C# language version to be set to 'preview', as support for the 'field' keyword is needed by the source generators to emit valid code (add <LangVersion>preview</LangVersion> to your .csproj/.props file)""",
+        category: "ComputeSharp.D2D1.WinUI.Effects",
+        defaultSeverity: DiagnosticSeverity.Error,
+        isEnabledByDefault: true,
+        description: "The C# language version must be set to 'preview' when using [GeneratedComputeShaderDescriptor] for the source generators to emit valid code (the <LangVersion>preview</LangVersion> option must be set in the .csproj/.props file).",
+        helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 }

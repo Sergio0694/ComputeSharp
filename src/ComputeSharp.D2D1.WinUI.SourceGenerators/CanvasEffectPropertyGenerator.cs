@@ -29,6 +29,12 @@ public sealed partial class CanvasEffectPropertyGenerator : IIncrementalGenerato
                 Execute.IsCandidatePropertyDeclaration,
                 static (context, token) =>
                 {
+                    // This generator requires C# preview to be used (due to the use of the 'field' keyword)
+                    if (!context.SemanticModel.Compilation.IsLanguageVersionPreview())
+                    {
+                        return default;
+                    }
+
                     // Ensure we do have a property with a valid containing type
                     if (context.TargetSymbol is not IPropertySymbol { ContainingType: INamedTypeSymbol typeSymbol } propertySymbol)
                     {

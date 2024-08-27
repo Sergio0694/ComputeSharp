@@ -47,6 +47,16 @@ internal static class CompilationExtensions
     }
 
     /// <summary>
+    /// Checks whether a given compilation (assumed to be for C#) is using the preview language version.
+    /// </summary>
+    /// <param name="compilation">The <see cref="Compilation"/> to consider for analysis.</param>
+    /// <returns>Whether <paramref name="compilation"/> is using the preview language version.</returns>
+    public static bool IsLanguageVersionPreview(this Compilation compilation)
+    {
+        return ((CSharpCompilation)compilation).LanguageVersion == LanguageVersion.Preview;
+    }
+
+    /// <summary>
     /// Checks whether the <c>AllowUnsafeBlocks</c> option is set for a given compilation.
     /// </summary>
     /// <param name="compilation">The <see cref="Compilation"/> object to check.</param>
