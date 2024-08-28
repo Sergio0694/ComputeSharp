@@ -358,6 +358,7 @@ internal sealed unsafe class WICHelper
         where T : unmanaged
     {
         using ComPtr<IWICBitmapEncoder> wicBitmapEncoder = default;
+
         Guid containerGuid = WICFormatHelper.GetForFilename(filename);
 
         // Create the image encoder
@@ -397,6 +398,7 @@ internal sealed unsafe class WICHelper
         where T : unmanaged
     {
         using ComPtr<IWICBitmapEncoder> wicBitmapEncoder = default;
+
         Guid containerGuid = WICFormatHelper.GetForFormat(format);
 
         // Create the image encoder
@@ -431,6 +433,7 @@ internal sealed unsafe class WICHelper
         where T : unmanaged
     {
         using ComPtr<IWICBitmapEncoder> wicBitmapEncoder = default;
+
         Guid containerGuid = WICFormatHelper.GetForFormat(format);
 
         // Create the image encoder
