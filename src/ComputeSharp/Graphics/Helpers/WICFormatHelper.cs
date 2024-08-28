@@ -111,7 +111,13 @@ internal static class WICFormatHelper
     /// <exception cref="ArgumentException">Thrown when the input filename doesn't have a valid file extension.</exception>
     public static Guid GetForFilename(ReadOnlySpan<char> filename)
     {
-        return Path.GetExtension(filename).ToString().ToLowerInvariant() switch
+        Span<char> extension = stackalloc char[4];
+
+        int length = Path.GetExtension(filename).ToLowerInvariant(extension);
+
+        default(ArgumentException).ThrowIf(length == -1, nameof(filename));
+
+        return extension[..length] switch
         {
             ".dib" or
             ".rle" or
