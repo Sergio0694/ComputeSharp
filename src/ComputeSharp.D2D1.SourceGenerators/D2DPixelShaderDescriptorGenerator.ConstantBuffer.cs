@@ -48,7 +48,11 @@ partial class D2DPixelShaderDescriptorGenerator
             writer.WriteLine("/// <inheritdoc/>");
             writer.WriteGeneratedAttributes(GeneratorName);
             writer.WriteLine("[global::System.Runtime.CompilerServices.SkipLocalsInit]");
-            writer.WriteLine($"static unsafe void global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<{typeName}>.LoadConstantBuffer<TLoader>(in {typeName} shader, ref TLoader loader)");
+
+            // Write the method declaration (we only need unsafe blocks if we have any values in the constant buffer)
+            writer.Write("static ");
+            writer.WriteIf(!info.Fields.IsEmpty, "unsafe ");
+            writer.WriteLine($"void global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<{typeName}>.LoadConstantBuffer<TLoader>(in {typeName} shader, ref TLoader loader)");
 
             using (writer.WriteBlock())
             {
@@ -91,7 +95,7 @@ partial class D2DPixelShaderDescriptorGenerator
             writer.WriteLine("/// <inheritdoc/>");
             writer.WriteGeneratedAttributes(GeneratorName);
             writer.WriteLine("[global::System.Runtime.CompilerServices.SkipLocalsInit]");
-            writer.WriteLine($"static unsafe {typeName} global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<{typeName}>.CreateFromConstantBuffer(global::System.ReadOnlySpan<byte> data)");
+            writer.WriteLine($"static {typeName} global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<{typeName}>.CreateFromConstantBuffer(global::System.ReadOnlySpan<byte> data)");
 
             using (writer.WriteBlock())
             {

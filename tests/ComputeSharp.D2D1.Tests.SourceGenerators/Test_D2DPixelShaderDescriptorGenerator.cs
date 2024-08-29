@@ -202,7 +202,7 @@ public class Test_D2DPixelShaderDescriptorGenerator
                     [global::System.Diagnostics.DebuggerNonUserCode]
                     [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
                     [global::System.Runtime.CompilerServices.SkipLocalsInit]
-                    static unsafe MyShader global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<MyShader>.CreateFromConstantBuffer(global::System.ReadOnlySpan<byte> data)
+                    static MyShader global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<MyShader>.CreateFromConstantBuffer(global::System.ReadOnlySpan<byte> data)
                     {
                         ref readonly global::ComputeSharp.D2D1.Generated.ConstantBuffer buffer = ref global::System.Runtime.InteropServices.MemoryMarshal.AsRef<global::ComputeSharp.D2D1.Generated.ConstantBuffer>(data);
 
@@ -502,7 +502,7 @@ public class Test_D2DPixelShaderDescriptorGenerator
                     [global::System.Diagnostics.DebuggerNonUserCode]
                     [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
                     [global::System.Runtime.CompilerServices.SkipLocalsInit]
-                    static unsafe MyShader global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<MyShader>.CreateFromConstantBuffer(global::System.ReadOnlySpan<byte> data)
+                    static MyShader global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<MyShader>.CreateFromConstantBuffer(global::System.ReadOnlySpan<byte> data)
                     {
                         ref readonly global::ComputeSharp.D2D1.Generated.ConstantBuffer buffer = ref global::System.Runtime.InteropServices.MemoryMarshal.AsRef<global::ComputeSharp.D2D1.Generated.ConstantBuffer>(data);
 
@@ -854,7 +854,7 @@ public class Test_D2DPixelShaderDescriptorGenerator
                     [global::System.Diagnostics.DebuggerNonUserCode]
                     [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
                     [global::System.Runtime.CompilerServices.SkipLocalsInit]
-                    static unsafe MyShader global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<MyShader>.CreateFromConstantBuffer(global::System.ReadOnlySpan<byte> data)
+                    static MyShader global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<MyShader>.CreateFromConstantBuffer(global::System.ReadOnlySpan<byte> data)
                     {
                         ref readonly global::ComputeSharp.D2D1.Generated.ConstantBuffer buffer = ref global::System.Runtime.InteropServices.MemoryMarshal.AsRef<global::ComputeSharp.D2D1.Generated.ConstantBuffer>(data);
 
@@ -1152,7 +1152,7 @@ public class Test_D2DPixelShaderDescriptorGenerator
                     [global::System.Diagnostics.DebuggerNonUserCode]
                     [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
                     [global::System.Runtime.CompilerServices.SkipLocalsInit]
-                    static unsafe MyShader global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<MyShader>.CreateFromConstantBuffer(global::System.ReadOnlySpan<byte> data)
+                    static MyShader global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<MyShader>.CreateFromConstantBuffer(global::System.ReadOnlySpan<byte> data)
                     {
                         ref readonly global::ComputeSharp.D2D1.Generated.ConstantBuffer buffer = ref global::System.Runtime.InteropServices.MemoryMarshal.AsRef<global::ComputeSharp.D2D1.Generated.ConstantBuffer>(data);
 
@@ -1442,7 +1442,7 @@ public class Test_D2DPixelShaderDescriptorGenerator
                     [global::System.Diagnostics.DebuggerNonUserCode]
                     [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
                     [global::System.Runtime.CompilerServices.SkipLocalsInit]
-                    static unsafe MyShader global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<MyShader>.CreateFromConstantBuffer(global::System.ReadOnlySpan<byte> data)
+                    static MyShader global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<MyShader>.CreateFromConstantBuffer(global::System.ReadOnlySpan<byte> data)
                     {
                         return default;
                     }
@@ -1452,7 +1452,7 @@ public class Test_D2DPixelShaderDescriptorGenerator
                     [global::System.Diagnostics.DebuggerNonUserCode]
                     [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
                     [global::System.Runtime.CompilerServices.SkipLocalsInit]
-                    static unsafe void global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<MyShader>.LoadConstantBuffer<TLoader>(in MyShader shader, ref TLoader loader)
+                    static void global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<MyShader>.LoadConstantBuffer<TLoader>(in MyShader shader, ref TLoader loader)
                     {
                         loader.LoadConstantBuffer(default);
                     }
@@ -1728,7 +1728,7 @@ public class Test_D2DPixelShaderDescriptorGenerator
                     [global::System.Diagnostics.DebuggerNonUserCode]
                     [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
                     [global::System.Runtime.CompilerServices.SkipLocalsInit]
-                    static unsafe MyShader global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<MyShader>.CreateFromConstantBuffer(global::System.ReadOnlySpan<byte> data)
+                    static MyShader global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<MyShader>.CreateFromConstantBuffer(global::System.ReadOnlySpan<byte> data)
                     {
                         return default;
                     }
@@ -1738,7 +1738,7 @@ public class Test_D2DPixelShaderDescriptorGenerator
                     [global::System.Diagnostics.DebuggerNonUserCode]
                     [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
                     [global::System.Runtime.CompilerServices.SkipLocalsInit]
-                    static unsafe void global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<MyShader>.LoadConstantBuffer<TLoader>(in MyShader shader, ref TLoader loader)
+                    static void global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<MyShader>.LoadConstantBuffer<TLoader>(in MyShader shader, ref TLoader loader)
                     {
                         loader.LoadConstantBuffer(default);
                     }
