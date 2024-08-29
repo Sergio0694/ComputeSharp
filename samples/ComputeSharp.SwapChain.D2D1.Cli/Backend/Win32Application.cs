@@ -1,7 +1,6 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
-using Microsoft.UI;
-using TerraFX.Interop.Windows;
+using Microsoft.UI.Windowing;
 
 namespace ComputeSharp.SwapChain.D2D1.Backend;
 
@@ -49,16 +48,16 @@ internal sealed class Win32Application
     /// <summary>
     /// Initializes the current application.
     /// </summary>
-    /// <param name="hwnd">The handle for the window.</param>
+    /// <param name="appWindow">The window to show.</param>
     [MemberNotNull(nameof(canvasDevice))]
     [MemberNotNull(nameof(canvasSwapChain))]
-    public unsafe void OnInitialize(HWND hwnd)
+    public unsafe void OnInitialize(AppWindow appWindow)
     {
         // Create a new canvas device, which will handle DX11/D2D initialization
         CanvasDevice canvasDevice = new();
         CanvasSwapChain canvasSwapChain = CanvasSwapChain.CreateForWindowId(
             resourceCreator: canvasDevice,
-            windowId: Win32Interop.GetWindowIdFromWindow(hwnd),
+            windowId: appWindow.Id,
             width: this.screenWidth = 1,
             height: this.screenHeight = 1,
             dpi: 96.0f);
@@ -66,6 +65,9 @@ internal sealed class Win32Application
         // Save the Win2D objects for later use
         this.canvasDevice = canvasDevice;
         this.canvasSwapChain = canvasSwapChain;
+
+        // Request a resize before the first draw operation
+        this.isResizePending = true;
     }
 
     /// <summary>
