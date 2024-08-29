@@ -2,6 +2,7 @@ using System.Diagnostics;
 using System.Threading;
 using Microsoft.UI.Dispatching;
 using Microsoft.UI.Windowing;
+using Windows.UI;
 
 namespace ComputeSharp.SwapChain.D2D1.Backend;
 
@@ -23,6 +24,22 @@ internal static unsafe class Win32ApplicationRunner
 
         appWindow.Title = windowTitle;
         appWindow.TitleBar.ExtendsContentIntoTitleBar = true;
+
+        // Transparent colors for the title bar
+        appWindow.TitleBar.ForegroundColor = Colors.Transparent;
+        appWindow.TitleBar.BackgroundColor = Colors.Transparent;
+        appWindow.TitleBar.ButtonBackgroundColor = Colors.Transparent;
+        appWindow.TitleBar.InactiveBackgroundColor = Colors.Transparent;
+        appWindow.TitleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
+
+        // Theme aware colors for the title bar
+        appWindow.TitleBar.ButtonForegroundColor = Colors.White;
+        appWindow.TitleBar.ButtonHoverForegroundColor = Colors.White;
+        appWindow.TitleBar.ButtonPressedForegroundColor = Colors.White;
+        appWindow.TitleBar.ButtonHoverBackgroundColor = Color.FromArgb(0x20, 0xFF, 0xFF, 0xFF);
+        appWindow.TitleBar.ButtonPressedBackgroundColor = Color.FromArgb(0x40, 0xFF, 0xFF, 0xFF);
+        appWindow.TitleBar.ButtonInactiveForegroundColor = Color.FromArgb(0xC0, 0xFF, 0xFF, 0xFF);
+        appWindow.TitleBar.InactiveForegroundColor = Color.FromArgb(0xA0, 0xA0, 0xA0, 0xA0);
 
         // Initialize the application
         application.OnInitialize(appWindow);

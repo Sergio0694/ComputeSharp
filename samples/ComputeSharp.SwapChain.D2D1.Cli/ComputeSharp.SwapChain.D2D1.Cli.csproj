@@ -36,7 +36,6 @@
     <CsWinRTUseExceptionResourceKeys>true</CsWinRTUseExceptionResourceKeys>
     <CsWinRTEnableDefaultCustomTypeMappings>false</CsWinRTEnableDefaultCustomTypeMappings>
     <CsWinRTEnableICustomPropertyProviderSupport>false</CsWinRTEnableICustomPropertyProviderSupport>
-    <CsWinRTEnableIReferenceSupport>false</CsWinRTEnableIReferenceSupport>
     <CsWinRTEnableIDynamicInterfaceCastableSupport>false</CsWinRTEnableIDynamicInterfaceCastableSupport>
   </PropertyGroup>
 
