@@ -46,7 +46,9 @@ if (args is [] or [_])
             e.DrawingSession.DrawImage(effect);
         };
 
-        return Win32ApplicationRunner.Run(win32Application, "ComputeSharp.D2D1", "ComputeSharp.D2D1");
+        Win32ApplicationRunner.Run(win32Application, "ComputeSharp.D2D1");
+
+        return S.S_OK;
     }
 
     // If no shader matches, check if help was requested
