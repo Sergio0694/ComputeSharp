@@ -72,11 +72,20 @@ internal static unsafe class Win32ApplicationRunner
             }
         };
 
+        DispatcherQueueController dispatcherQueueController = DispatcherQueueController.CreateOnCurrentThread();
+
+        // Bind the window to a 'DispatcherQueue' instance, so it can flow the exit message
+        appWindow.AssociateWithDispatcherQueue(dispatcherQueueController.DispatcherQueue);
+
+        // Enqueue the exit message when the window is closed. This ensures that
+        // the process actually terminates after closing the window, as expected.
+        appWindow.Closing += static (s, e) => s.DispatcherQueue.EnqueueEventLoopExit();
+
         // Display the window
         appWindow.Show(activateWindow: true);
 
         // Process any messages in the queue
-        DispatcherQueueController.CreateOnCurrentThread().DispatcherQueue.RunEventLoop(DispatcherRunOptions.ContinueOnQuit, deferral: null);
+        dispatcherQueueController.DispatcherQueue.RunEventLoop(DispatcherRunOptions.QuitOnlyLocalLoop, deferral: null);
 
         tokenSource.Cancel();
 
