@@ -38,6 +38,14 @@
     <CsWinRTEnableIDynamicInterfaceCastableSupport>false</CsWinRTEnableIDynamicInterfaceCastableSupport>
   </PropertyGroup>
 
+  <!--
+    If experimental support for Xbox is enabled, link against 'WindowsApp.lib'.
+    Additionally, set the AppContainer switch, as Xbox might be validating that.
+  -->
+  <ItemGroup Condition="'$(EXPERIMENTAL_XBOX_SUPPORT)' == 'true'">
+    <LinkerArg Include="/APPCONTAINER /DEFAULTLIB:WindowsApp.lib WindowsApp.lib" />
+  </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.1.3" />
   </ItemGroup>
