@@ -334,6 +334,13 @@ jobs:
         msbuild samples\ComputeSharp.SwapChain.WinUI\ComputeSharp.SwapChain.WinUI.csproj /restore -t:publish
         /p:Configuration=Release /p:Platform=${{matrix.platform}} /p:RuntimeIdentifier=win-${{matrix.platform}}
 
+      # Publish the UWP CoreWindow sample app with NativeAOT
+    - if: matrix.platform == 'x64'
+      name: Publish ComputeSharp.SwapChain.D2D1.CoreWindow
+      run: >
+        msbuild samples\ComputeSharp.SwapChain.D2D1.CoreWindow\ComputeSharp.SwapChain.D2D1.CoreWindow.csproj /restore
+        -t:publish /p:Configuration=Release /p:Platform=${{matrix.platform}} /p:RuntimeIdentifier=win-${{matrix.platform}}
+
   # Download the NuGet packages generated in the previous job and use them
   # to build and run the sample project referencing them. This is used as
   # a test to ensure the NuGet packages work in a consuming project.
