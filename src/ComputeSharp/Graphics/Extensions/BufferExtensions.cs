@@ -206,7 +206,7 @@ public static class BufferExtensions
     }
 
     /// <summary>
-    /// Writes the contents of the specified <see cref="Buffer{T}"/> instance to the curreent <see cref="Buffer{T}"/> instance.
+    /// Writes the contents of the specified <see cref="Buffer{T}"/> instance to the current <see cref="Buffer{T}"/> instance.
     /// </summary>
     /// <typeparam name="T">The type of items stored on the buffers.</typeparam>
     /// <param name="destination">The input <see cref="Buffer{T}"/> instance to write data data to.</param>

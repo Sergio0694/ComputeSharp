@@ -81,7 +81,7 @@ internal unsafe struct CommandList : IDisposable
     }
 
     /// <summary>
-    /// Gets whether or not the curreent <see cref="CommandList"/> instance is allocated.
+    /// Gets whether or not the current <see cref="CommandList"/> instance is allocated.
     /// </summary>
     public readonly bool IsAllocated => this.device is not null;
 
