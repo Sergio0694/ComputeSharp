@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "ComputeSharp.SwapChain.D2D1.CoreWindow": {
+    "ComputeSharp.SwapChain.D2D1.Uwp": {
       "commandName": "MsixPackage"
     }
   }
