@@ -11,7 +11,7 @@ namespace ComputeSharp.D2D1;
 public static class D2D
 {
     /// <summary>
-    /// Returns the color of the input texture at a specific index, for the curreent coordinate.
+    /// Returns the color of the input texture at a specific index, for the current coordinate.
     /// </summary>
     /// <param name="index">The index of the input texture to get the input from.</param>
     /// <returns>The color from the target input at the current coordinate, in <c>INPUTN</c> format.</returns>
@@ -47,7 +47,7 @@ public static class D2D
     public static Float4 SampleInput(int index, Float2 uv) => throw new InvalidExecutionContextException($"{typeof(D2D)}.{nameof(SampleInput)}({typeof(int)}, {typeof(Float2)})");
 
     /// <summary>
-    /// Samples the input texturee at a specified index and at a given offset from the input coordinate.
+    /// Samples the input texture at a specified index and at a given offset from the input coordinate.
     /// </summary>
     /// <param name="index">The index of the input texture to sample.</param>
     /// <param name="offset">The normalized offset to use to sample the texture.</param>
