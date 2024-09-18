@@ -60,7 +60,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.0" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.2" />
     <PackageReference Include="CommunityToolkit.WinUI.Controls.Primitives" Version="8.2.240824-build.1155" />
     <PackageReference Include="CommunityToolkit.WinUI.Media" Version="8.2.240824-build.1155" />
     <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.1.3" />
