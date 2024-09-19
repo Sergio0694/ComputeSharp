@@ -14,16 +14,6 @@
     <EnableXamlCompilerTargetsForUwpApps>false</EnableXamlCompilerTargetsForUwpApps>
   </PropertyGroup>
 
-  <PropertyGroup>
-
-    <!--
-      This sample does not need WebView2, but WinAppSDK is pulling it in as a transitive NuGet
-      dependency. We can manually exclude the native .dll-s to avoid them being in the output.
-    -->
-    <WebView2EnableCsWinRTProjectionExcludeCoreRef>true</WebView2EnableCsWinRTProjectionExcludeCoreRef>
-    <WebView2NeverCopyLoaderDllToOutputDirectory>true</WebView2NeverCopyLoaderDllToOutputDirectory>
-  </PropertyGroup>
-
   <!-- NativeAOT settings, and size saving options for unnecessary features (optimize for speed otherwise) -->
   <PropertyGroup>
     <PublishAot>true</PublishAot>
@@ -48,6 +38,13 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.1.3" />
+
+    <!--
+      This sample does not need WebView2, but WinAppSDK is pulling it in as a transitive NuGet
+      dependency. We can manually exclude all of its assets to avoid them being in the output.
+      This also prevents the old projections from being referenced and triggering the generator.
+    -->
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.2739.15" IncludeAssets="none" />
   </ItemGroup>
 
   <ItemGroup>
