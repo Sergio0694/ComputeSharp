@@ -10,9 +10,6 @@
 
   <PropertyGroup>
 
-    <!-- Also disabled in 'ComputeSharp.D2D1.WinUI', see notes there -->
-    <CsWinRTIIDOptimizerOptOut>true</CsWinRTIIDOptimizerOptOut>
-
     <!-- Same warnings as in 'ComputeSharp.D2D1.WinUI', see notes there -->
     <NoWarn>$(NoWarn);CS0419</NoWarn>
     <NoWarn>$(NoWarn);IDE0065</NoWarn>
