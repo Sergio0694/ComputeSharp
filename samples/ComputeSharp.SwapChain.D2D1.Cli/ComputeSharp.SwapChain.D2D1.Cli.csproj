@@ -20,12 +20,6 @@
 
   <PropertyGroup>
 
-    <!--
-      Generate a .pdb file to avoid IIDOptimizer build errors.
-      See: https://github.com/microsoft/CsWinRT/issues/1478.
-    -->
-    <DebugType>full</DebugType>
-
     <!-- Suppress warnings for using directives inside namespaces (needed to avoid some WinRT conflicts) -->
     <NoWarn>$(NoWarn);IDE0065</NoWarn>
   </PropertyGroup>
