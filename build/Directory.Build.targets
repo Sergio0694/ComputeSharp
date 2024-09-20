@@ -10,28 +10,6 @@
   -->
 
   <!--
-    Additional global options for all projects targeting Windows in their TFMs.
-    These must be in a .targets file because they need to read 'TargetFramework'.
-  -->
-  <PropertyGroup Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net8.0-windows'))">
-
-    <!--
-      Enable the CsWinRT trim/AOT analyzer for scenarios involving all types (including built-in types).
-      The .NET SDK sets this to '1' (which excludes built-in types) by default to reduce false positives.
-    -->
-    <CsWinRTAotWarningLevel>2</CsWinRTAotWarningLevel>
-
-    <!--
-      We're only referencing CsWinRT for the source generators, we don't need to read any WinRT metadata.
-      CsWinRT is in projection mode by default, so we want to disable it (or it'd need the Windows SDK).
-    -->
-    <CsWinRTGenerateProjection>false</CsWinRTGenerateProjection>
-
-    <!-- We'll never have any IIDs to patch in this library -->
-    <CsWinRTIIDOptimizerOptOut>true</CsWinRTIIDOptimizerOptOut>
-  </PropertyGroup>
-
-  <!--
     Manually set the version if null. This is copied from Microsoft.NET.DefaultAssemblyInfo.targets and is needed
     for cases where that target is not being automatically imported (which happens because MSBuild is used instead
     of dotnet build for some cases, due to the solution having some WinUI 3 projects). The lines setting the prefix
@@ -65,4 +43,6 @@
       <AutoGen>True</AutoGen>
     </Compile>
   </ItemGroup>
+
+  <Import Project="Directory.Build.Performance.targets" />
 </Project>

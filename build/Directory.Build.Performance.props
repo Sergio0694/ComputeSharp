@@ -1,0 +1,29 @@
+<Project>
+
+  <!--
+    Additional global options for all projects targeting Windows in their TFMs.
+    We actually set these in a .props file and without checking the framework, as:
+      - Setting these properties in non-Windows projects will just not do anything.
+      - Setting these from the shared .targets causes them to be imported too late.
+        They'd need to be added to "CustomBeforeMicrosoftCommonTargets" file, but the
+        complexity of having to set that up and validate it is just not worth it, as
+        we can just unconditionally set these and worst case, they'll be no-ops.
+  -->
+  <PropertyGroup>
+
+    <!--
+      Enable the CsWinRT trim/AOT analyzer for scenarios involving all types (including built-in types).
+      The .NET SDK sets this to '1' (which excludes built-in types) by default to reduce false positives.
+    -->
+    <CsWinRTAotWarningLevel>2</CsWinRTAotWarningLevel>
+
+    <!--
+      We're only referencing CsWinRT for the source generators, we don't need to read any WinRT metadata.
+      CsWinRT is in projection mode by default, so we want to disable it (or it'd need the Windows SDK).
+    -->
+    <CsWinRTGenerateProjection>false</CsWinRTGenerateProjection>
+
+    <!-- We'll never have any IIDs to patch in any projects in the solution -->
+    <CsWinRTIIDOptimizerOptOut>true</CsWinRTIIDOptimizerOptOut>
+  </PropertyGroup>
+</Project>
