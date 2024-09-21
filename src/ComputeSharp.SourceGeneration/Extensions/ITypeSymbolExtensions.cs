@@ -10,6 +10,26 @@ namespace ComputeSharp.SourceGeneration.Extensions;
 internal static class ITypeSymbolExtensions
 {
     /// <summary>
+    /// Gets the method of this symbol that have a particular name.
+    /// </summary>
+    /// <param name="symbol">The input <see cref="ITypeSymbol"/> instance to check.</param>
+    /// <param name="name">The name of the method to find.</param>
+    /// <returns>The target method, if present.</returns>
+    public static IMethodSymbol? GetMethod(this ITypeSymbol symbol, string name)
+    {
+        foreach (ISymbol memberSymbol in symbol.GetMembers(name))
+        {
+            if (memberSymbol is IMethodSymbol methodSymbol &&
+                memberSymbol.Name == name)
+            {
+                return methodSymbol;
+            }
+        }
+
+        return null;
+    }
+
+    /// <summary>
     /// Checks whether or not a given type symbol has a specified fully qualified metadata name.
     /// </summary>
     /// <param name="symbol">The input <see cref="ITypeSymbol"/> instance to check.</param>
@@ -28,7 +48,7 @@ internal static class ITypeSymbolExtensions
     /// Checks whether or not a given <see cref="ITypeSymbol"/> implements an interface of a specified type.
     /// </summary>
     /// <param name="typeSymbol">The target <see cref="ITypeSymbol"/> instance to check.</param>
-    /// <param name="interfaceSymbol">The <see cref="ITypeSymbol"/> instane to check for inheritance from.</param>
+    /// <param name="interfaceSymbol">The <see cref="ITypeSymbol"/> instance to check for inheritance from.</param>
     /// <returns>Whether or not <paramref name="typeSymbol"/> has an interface of type <paramref name="interfaceSymbol"/>.</returns>
     public static bool HasInterfaceWithType(this ITypeSymbol typeSymbol, ITypeSymbol interfaceSymbol)
     {

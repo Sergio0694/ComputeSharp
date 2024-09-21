@@ -315,6 +315,31 @@ namespace ComputeSharp.Tests
 
             Assert.AreEqual(info.TextureStoreInstructionCount, 1u);
             Assert.AreEqual(info.BoundResourceCount, 2u);
+            Assert.AreEqual("""
+                #define __GroupSize__get_X 8
+                #define __GroupSize__get_Y 8
+                #define __GroupSize__get_Z 1
+                
+                cbuffer _ : register(b0)
+                {
+                    uint __x;
+                    uint __y;
+                }
+                
+                RWTexture2D<unorm float4> __outputTexture : register(u0);
+                
+                [NumThreads(__GroupSize__get_X, __GroupSize__get_Y, __GroupSize__get_Z)]
+                void Execute(uint3 ThreadIds : SV_DispatchThreadID)
+                {
+                    if (ThreadIds.x < __x && ThreadIds.y < __y)
+                    {
+                        {
+                            __outputTexture[ThreadIds.xy] = float4(1, 1, 1, 1);
+                            return;
+                        }
+                    }
+                }
+                """, info.HlslSource);
         }
 
         [ThreadGroupSize(DefaultThreadGroupSizes.XY)]

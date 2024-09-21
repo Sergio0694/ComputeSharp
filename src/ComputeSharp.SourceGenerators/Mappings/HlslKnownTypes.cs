@@ -208,11 +208,18 @@ partial class HlslKnownTypes
     /// <summary>
     /// Gets the mapped HLSL-compatible type name for the output texture of a pixel shader.
     /// </summary>
-    /// <param name="typeSymbol">The pixel shader type to map.</param>
+    /// <param name="typeSymbol">The shader type to map.</param>
     /// <returns>The HLSL-compatible type name that can be used in an HLSL shader.</returns>
-    public static string GetMappedNameForPixelShaderType(INamedTypeSymbol typeSymbol)
+    public static string? GetMappedNameForPixelShaderType(INamedTypeSymbol typeSymbol)
     {
-        string genericArgumentName = ((INamedTypeSymbol)typeSymbol.TypeArguments.First()).GetFullyQualifiedMetadataName();
+        // If the shader type is not a pixel shader type (ie. it has a type argument), stop here.
+        // At this point the input is guaranteed to either be 'IComputeShader' or 'IComputeShader<TPixel>'.
+        if (typeSymbol.TypeArguments is not [INamedTypeSymbol pixelShaderType])
+        {
+            return null;
+        }
+
+        string genericArgumentName = pixelShaderType.GetFullyQualifiedMetadataName();
 
         // If the current type is a custom type, format it as needed
         if (!KnownHlslTypeMetadataNames.TryGetValue(genericArgumentName, out string? mappedElementType))

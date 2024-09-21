@@ -154,12 +154,21 @@ internal sealed partial class ShaderSourceRewriter(
             Diagnostics.Add(UnsafeModifierOnMethodOrFunction, node);
         }
 
-        if (updatedNode is not null)
+        // Add the tracked implicit declarations (at the start of the body).
+        // To optimize, we only do this if we do have any implicit variables.
+        if (this.implicitVariables.Count > 0)
         {
             BlockSyntax implicitBlock = Block(this.implicitVariables.Select(static v => LocalDeclarationStatement(v)).ToArray());
 
-            // Add the tracked implicit declarations (at the start of the body)
             updatedNode = updatedNode.WithBody(implicitBlock).AddBodyStatements([.. updatedNode.Body!.Statements]);
+        }
+
+        // The entry point might be an explicit interface method implementation. In that case,
+        // the transpiled method will have the rewritten interface name as a prefix for the
+        // method name, which we don't want (it's invalid HLSL). So in that case, remove it.
+        if (this.isEntryPoint && updatedNode.ExplicitInterfaceSpecifier is not null)
+        {
+            updatedNode = updatedNode.WithExplicitInterfaceSpecifier(null);
         }
 
         return updatedNode;

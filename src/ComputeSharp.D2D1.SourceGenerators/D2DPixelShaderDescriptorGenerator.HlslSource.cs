@@ -29,15 +29,17 @@ partial class D2DPixelShaderDescriptorGenerator
         /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
         /// <param name="compilation">The input <see cref="Compilation"/> object currently in use.</param>
         /// <param name="structDeclarationSymbol">The <see cref="INamedTypeSymbol"/> for the shader type.</param>
+        /// <param name="shaderInterfaceType">The shader interface type implemented by the shader type.</param>
         /// <param name="inputCount">The number of inputs for the shader.</param>
-        /// <param name="inputSimpleIndices">The indicess of the simple shader inputs.</param>
-        /// <param name="inputComplexIndices">The indicess of the complex shader inputs.</param>
+        /// <param name="inputSimpleIndices">The indices of the simple shader inputs.</param>
+        /// <param name="inputComplexIndices">The indices of the complex shader inputs.</param>
         /// <param name="token">The <see cref="CancellationToken"/> used to cancel the operation, if needed.</param>
         /// <returns>The HLSL source for the shader.</returns>
         public static string GetHlslSource(
             ImmutableArrayBuilder<DiagnosticInfo> diagnostics,
             Compilation compilation,
             INamedTypeSymbol structDeclarationSymbol,
+            INamedTypeSymbol shaderInterfaceType,
             int inputCount,
             ImmutableArray<int> inputSimpleIndices,
             ImmutableArray<int> inputComplexIndices,
@@ -45,6 +47,8 @@ partial class D2DPixelShaderDescriptorGenerator
         {
             // Detect any invalid properties
             HlslDefinitionsSyntaxProcessor.DetectAndReportInvalidPropertyDeclarations(diagnostics, structDeclarationSymbol);
+
+            token.ThrowIfCancellationRequested();
 
             // We need to sets to track all discovered custom types and static methods
             HashSet<INamedTypeSymbol> discoveredTypes = new(SymbolEqualityComparer.Default);
@@ -72,6 +76,7 @@ partial class D2DPixelShaderDescriptorGenerator
             (string entryPoint, ImmutableArray<HlslMethod> processedMethods) = GetProcessedMethods(
                 diagnostics,
                 structDeclarationSymbol,
+                shaderInterfaceType,
                 semanticModelProvider,
                 discoveredTypes,
                 staticMethods,
@@ -302,6 +307,7 @@ partial class D2DPixelShaderDescriptorGenerator
         /// </summary>
         /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
         /// <param name="structDeclarationSymbol">The type symbol for the shader type.</param>
+        /// <param name="shaderInterfaceType">The shader interface type implemented by the shader type.</param>
         /// <param name="semanticModel">The <see cref="SemanticModelProvider"/> instance for the type to process.</param>
         /// <param name="discoveredTypes">The collection of currently discovered types.</param>
         /// <param name="staticMethods">The set of discovered and processed static methods.</param>
@@ -315,6 +321,7 @@ partial class D2DPixelShaderDescriptorGenerator
         private static (string EntryPoint, ImmutableArray<HlslMethod> Methods) GetProcessedMethods(
             ImmutableArrayBuilder<DiagnosticInfo> diagnostics,
             INamedTypeSymbol structDeclarationSymbol,
+            INamedTypeSymbol shaderInterfaceType,
             SemanticModelProvider semanticModel,
             ICollection<INamedTypeSymbol> discoveredTypes,
             IDictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods,
@@ -327,6 +334,7 @@ partial class D2DPixelShaderDescriptorGenerator
         {
             using ImmutableArrayBuilder<HlslMethod> methods = new();
 
+            IMethodSymbol entryPointInterfaceMethod = shaderInterfaceType.GetMethod("Execute")!;
             string? entryPoint = null;
 
             // By default, the scene position is not required. We will set this while
@@ -341,16 +349,17 @@ partial class D2DPixelShaderDescriptorGenerator
                     continue;
                 }
 
+                // Ensure that we have accessible source information
                 if (!methodSymbol.TryGetSyntaxNode(token, out MethodDeclarationSyntax? methodDeclaration))
                 {
                     continue;
                 }
 
-                bool isShaderEntryPoint =
-                    methodSymbol.Name == "Execute" &&
-                    methodSymbol.ReturnType.HasFullyQualifiedMetadataName("ComputeSharp.Float4") &&
-                    methodSymbol.TypeParameters.Length == 0 &&
-                    methodSymbol.Parameters.Length == 0;
+                // Check whether the current method is the entry point (ie. it's implementing 'Execute').
+                // This is the same logic as in the DX12 generator for compute shaders and pixel shaders.
+                bool isShaderEntryPoint = SymbolEqualityComparer.Default.Equals(
+                    structDeclarationSymbol.FindImplementationForInterfaceMember(entryPointInterfaceMethod),
+                    methodSymbol);
 
                 // Except for the entry point, ignore explicit interface implementations
                 if (!isShaderEntryPoint && !methodSymbol.ExplicitInterfaceImplementations.IsDefaultOrEmpty)
@@ -460,8 +469,8 @@ partial class D2DPixelShaderDescriptorGenerator
         /// <param name="typeMethodDeclarations"><inheritdoc cref="HlslSourceSyntaxProcessor.WriteMethodDeclarations" path="/param[@name='typeMethodDeclarations']/node()"/></param>
         /// <param name="executeMethod">The body of the entry point of the shader.</param>
         /// <param name="inputCount">The number of shader inputs to declare.</param>
-        /// <param name="inputSimpleIndices">The indicess of the simple shader inputs.</param>
-        /// <param name="inputComplexIndices">The indicess of the complex shader inputs.</param>
+        /// <param name="inputSimpleIndices">The indices of the simple shader inputs.</param>
+        /// <param name="inputComplexIndices">The indices of the complex shader inputs.</param>
         /// <param name="requiresScenePosition">Whether the shader requires the scene position.</param>
         /// <returns>The series of statements to build the HLSL source to compile to execute the current shader.</returns>
         private static string GetHlslSource(

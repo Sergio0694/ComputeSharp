@@ -31,6 +31,8 @@ partial class ComputeShaderDescriptorGenerator
         /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
         /// <param name="compilation">The input <see cref="Compilation"/> object currently in use.</param>
         /// <param name="structDeclarationSymbol">The <see cref="INamedTypeSymbol"/> for the shader type.</param>
+        /// <param name="shaderInterfaceType">The shader interface type implemented by the shader type.</param>
+        /// <param name="isPixelShaderLike">Whether <paramref name="structDeclarationSymbol"/> is a "pixel shader like" type.</param>
         /// <param name="threadsX">The thread ids value for the X axis.</param>
         /// <param name="threadsY">The thread ids value for the Y axis.</param>
         /// <param name="threadsZ">The thread ids value for the Z axis.</param>
@@ -42,6 +44,8 @@ partial class ComputeShaderDescriptorGenerator
             ImmutableArrayBuilder<DiagnosticInfo> diagnostics,
             Compilation compilation,
             INamedTypeSymbol structDeclarationSymbol,
+            INamedTypeSymbol shaderInterfaceType,
+            bool isPixelShaderLike,
             int threadsX,
             int threadsY,
             int threadsZ,
@@ -53,6 +57,8 @@ partial class ComputeShaderDescriptorGenerator
             // Detect any invalid properties
             HlslDefinitionsSyntaxProcessor.DetectAndReportInvalidPropertyDeclarations(diagnostics, structDeclarationSymbol);
 
+            token.ThrowIfCancellationRequested();
+
             // We need to sets to track all discovered custom types and static methods
             HashSet<INamedTypeSymbol> discoveredTypes = new(SymbolEqualityComparer.Default);
             Dictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods = new(SymbolEqualityComparer.Default);
@@ -62,9 +68,8 @@ partial class ComputeShaderDescriptorGenerator
             Dictionary<IFieldSymbol, HlslStaticField> staticFieldDefinitions = new(SymbolEqualityComparer.Default);
 
             // Setup the semantic model and basic properties
-            INamedTypeSymbol? pixelShaderSymbol = structDeclarationSymbol.AllInterfaces.FirstOrDefault(static interfaceSymbol => interfaceSymbol is { IsGenericType: true, Name: "IComputeShader" });
-            bool isComputeShader = pixelShaderSymbol is null;
-            string? implicitTextureType = isComputeShader ? null : HlslKnownTypes.GetMappedNameForPixelShaderType(pixelShaderSymbol!);
+            bool isComputeShader = !isPixelShaderLike;
+            string? implicitTextureType = HlslKnownTypes.GetMappedNameForPixelShaderType(shaderInterfaceType);
 
             token.ThrowIfCancellationRequested();
 
@@ -90,6 +95,7 @@ partial class ComputeShaderDescriptorGenerator
             (string entryPoint, ImmutableArray<HlslMethod> processedMethods, isSamplerUsed) = GetProcessedMethods(
                 diagnostics,
                 structDeclarationSymbol,
+                shaderInterfaceType,
                 semanticModelProvider,
                 discoveredTypes,
                 staticMethods,
@@ -360,6 +366,7 @@ partial class ComputeShaderDescriptorGenerator
         /// </summary>
         /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
         /// <param name="structDeclarationSymbol">The type symbol for the shader type.</param>
+        /// <param name="shaderInterfaceType">The shader interface type implemented by the shader type.</param>
         /// <param name="semanticModel">The <see cref="SemanticModelProvider"/> instance for the type to process.</param>
         /// <param name="discoveredTypes">The collection of currently discovered types.</param>
         /// <param name="staticMethods">The set of discovered and processed static methods.</param>
@@ -373,6 +380,7 @@ partial class ComputeShaderDescriptorGenerator
         private static (string EntryPoint, ImmutableArray<HlslMethod> Methods, bool IsSamplerUser) GetProcessedMethods(
             ImmutableArrayBuilder<DiagnosticInfo> diagnostics,
             INamedTypeSymbol structDeclarationSymbol,
+            INamedTypeSymbol shaderInterfaceType,
             SemanticModelProvider semanticModel,
             ICollection<INamedTypeSymbol> discoveredTypes,
             IDictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods,
@@ -385,6 +393,7 @@ partial class ComputeShaderDescriptorGenerator
         {
             using ImmutableArrayBuilder<HlslMethod> methods = new();
 
+            IMethodSymbol entryPointInterfaceMethod = shaderInterfaceType.GetMethod("Execute")!;
             string? entryPoint = null;
             bool isSamplerUsed = false;
 
@@ -396,22 +405,17 @@ partial class ComputeShaderDescriptorGenerator
                     continue;
                 }
 
+                // Ensure that we have accessible source information
                 if (!methodSymbol.TryGetSyntaxNode(token, out MethodDeclarationSyntax? methodDeclaration))
                 {
                     continue;
                 }
 
-                bool isShaderEntryPoint =
-                    (isComputeShader &&
-                     methodSymbol.Name == "Execute" &&
-                     methodSymbol.ReturnsVoid &&
-                     methodSymbol.TypeParameters.Length == 0 &&
-                     methodSymbol.Parameters.Length == 0) ||
-                    (!isComputeShader &&
-                     methodSymbol.Name == "Execute" &&
-                     methodSymbol.ReturnType is not null && // TODO: match for pixel type
-                     methodSymbol.TypeParameters.Length == 0 &&
-                     methodSymbol.Parameters.Length == 0);
+                // Check whether the current method is the entry point (ie. it's implementing 'Execute'). We use
+                // 'FindImplementationForInterfaceMember' to handle explicit interface implementations as well.
+                bool isShaderEntryPoint = SymbolEqualityComparer.Default.Equals(
+                    structDeclarationSymbol.FindImplementationForInterfaceMember(entryPointInterfaceMethod),
+                    methodSymbol);
 
                 // Except for the entry point, ignore explicit interface implementations
                 if (!isShaderEntryPoint && !methodSymbol.ExplicitInterfaceImplementations.IsDefaultOrEmpty)
