@@ -25,6 +25,22 @@ internal abstract class ExecuteMethodRewriter(ShaderSourceRewriter shaderSourceR
     }
 
     /// <inheritdoc/>
+    public override SyntaxNode? VisitMethodDeclaration(MethodDeclarationSyntax node)
+    {
+        MethodDeclarationSyntax updatedNode = ((MethodDeclarationSyntax)base.VisitMethodDeclaration(node)!).WithModifiers(TokenList());
+
+        // The entry point might be an explicit interface method implementation. In that case,
+        // the transpiled method will have the rewritten interface name as a prefix for the
+        // method name, which we don't want (it's invalid HLSL). So in that case, remove it.
+        if (updatedNode.ExplicitInterfaceSpecifier is not null)
+        {
+            updatedNode = updatedNode.WithExplicitInterfaceSpecifier(null);
+        }
+
+        return updatedNode;
+    }
+
+    /// <inheritdoc/>
     public override SyntaxNode? VisitParameterList(ParameterListSyntax node)
     {
         ParameterListSyntax updatedNode = (ParameterListSyntax)base.VisitParameterList(node)!;
