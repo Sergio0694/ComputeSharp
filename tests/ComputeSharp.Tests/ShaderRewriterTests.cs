@@ -1559,4 +1559,100 @@ public partial class ShaderRewriterTests
             buffer[3] = mask2x3_r_or.M11 ? 1 : 0;
         }
     }
+
+    // See https://github.com/Sergio0694/ComputeSharp/issues/855
+    [TestMethod]
+    public void CompileExplicitEntryPointMethodComputeShader()
+    {
+        ShaderInfo info = ReflectionServices.GetShaderInfo<ExplicitEntryPointMethodComputeShader>();
+
+        Assert.AreEqual(
+            """
+            #define __GroupSize__get_X 64
+            #define __GroupSize__get_Y 1
+            #define __GroupSize__get_Z 1
+            
+            cbuffer _ : register(b0)
+            {
+                uint __x;
+                uint __y;
+                uint __z;
+            }
+            
+            RWStructuredBuffer<float> __reserved__buffer : register(u0);
+            
+            [NumThreads(__GroupSize__get_X, __GroupSize__get_Y, __GroupSize__get_Z)]
+            void Execute(uint3 ThreadIds : SV_DispatchThreadID)
+            {
+                if (ThreadIds.x < __x && ThreadIds.y < __y && ThreadIds.z < __z)
+                {
+                    __reserved__buffer[0] = 42;
+                }
+            }
+            """,
+            info.HlslSource);
+    }
+
+    [AutoConstructor]
+    [ThreadGroupSize(DefaultThreadGroupSizes.X)]
+    [GeneratedComputeShaderDescriptor]
+    public readonly partial struct ExplicitEntryPointMethodComputeShader : IComputeShader
+    {
+        public readonly ReadWriteBuffer<float> buffer;
+
+        void IComputeShader.Execute()
+        {
+            buffer[0] = 42;
+        }
+    }
+
+    // See https://github.com/Sergio0694/ComputeSharp/issues/855
+    [TestMethod]
+    public void CompileExplicitEntryPointMethodPixelShader()
+    {
+        ShaderInfo info = ReflectionServices.GetShaderInfo<ExplicitEntryPointMethodPixelShader, float4>();
+
+        Assert.AreEqual(
+            """
+            #define __GroupSize__get_X 64
+            #define __GroupSize__get_Y 1
+            #define __GroupSize__get_Z 1
+            
+            cbuffer _ : register(b0)
+            {
+                uint __x;
+                uint __y;
+            }
+            
+            RWTexture2D<unorm float4> __outputTexture : register(u0);
+            
+            RWStructuredBuffer<float> __reserved__buffer : register(u1);
+            
+            [NumThreads(__GroupSize__get_X, __GroupSize__get_Y, __GroupSize__get_Z)]
+            void Execute(uint3 ThreadIds : SV_DispatchThreadID)
+            {
+                if (ThreadIds.x < __x && ThreadIds.y < __y)
+                {
+                    {
+                        __outputTexture[ThreadIds.xy] = __reserved__buffer[0];
+                        return;
+                    }
+                }
+            }
+            """,
+            info.HlslSource);
+    }
+
+    [AutoConstructor]
+    [ThreadGroupSize(DefaultThreadGroupSizes.X)]
+    [GeneratedComputeShaderDescriptor]
+    public readonly partial struct ExplicitEntryPointMethodPixelShader : IComputeShader<float4>
+    {
+        public readonly ReadWriteBuffer<float> buffer;
+
+        float4 IComputeShader<float4>.Execute()
+        {
+            return buffer[0];
+        }
+    }
 }
