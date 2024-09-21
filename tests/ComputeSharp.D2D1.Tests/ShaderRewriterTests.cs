@@ -208,4 +208,33 @@ public partial class ShaderRewriterTests
             return new float4(0.0f, 1.0f, 0.0f, 1.0f);
         }
     }
+
+    // See https://github.com/Sergio0694/ComputeSharp/issues/855
+    [TestMethod]
+    public void ExplicitEntryPointMethodPixelShader_IsRewrittenCorrectly()
+    {
+        D2D1ShaderInfo shaderInfo = D2D1ReflectionServices.GetShaderInfo<ExplicitEntryPointMethodPixelShader>();
+
+        Assert.AreEqual("""
+            #define D2D_INPUT_COUNT 0
+            
+            #include "d2d1effecthelpers.hlsli"
+            
+            D2D_PS_ENTRY(Execute)
+            {
+                return (float4)0;
+            }
+            """, shaderInfo.HlslSource);
+    }
+
+    [D2DInputCount(0)]
+    [D2DShaderProfile(D2D1ShaderProfile.PixelShader50)]
+    [D2DGeneratedPixelShaderDescriptor]
+    internal readonly partial struct ExplicitEntryPointMethodPixelShader : ID2D1PixelShader
+    {
+        float4 ID2D1PixelShader.Execute()
+        {
+            return default;
+        }
+    }
 }
