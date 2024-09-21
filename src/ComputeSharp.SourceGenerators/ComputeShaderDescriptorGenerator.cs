@@ -54,7 +54,11 @@ public sealed partial class ComputeShaderDescriptorGenerator : IIncrementalGener
                     }
 
                     // Check whether type is a compute shader, and if so, if it's pixel shader like
-                    if (!TryGetIsPixelShaderLike(typeSymbol, context.SemanticModel.Compilation, out bool isPixelShaderLike))
+                    if (!TryGetIsPixelShaderLike(
+                        typeSymbol,
+                        context.SemanticModel.Compilation,
+                        out INamedTypeSymbol? shaderInterfaceType,
+                        out bool isPixelShaderLike))
                     {
                         return default;
                     }
@@ -91,6 +95,8 @@ public sealed partial class ComputeShaderDescriptorGenerator : IIncrementalGener
                         diagnostics,
                         context.SemanticModel.Compilation,
                         typeSymbol,
+                        shaderInterfaceType,
+                        isPixelShaderLike,
                         threadsX,
                         threadsY,
                         threadsZ,
