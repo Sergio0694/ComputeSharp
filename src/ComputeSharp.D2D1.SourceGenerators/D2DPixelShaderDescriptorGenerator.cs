@@ -53,8 +53,10 @@ public sealed partial class D2DPixelShaderDescriptorGenerator : IIncrementalGene
                         return default;
                     }
 
+                    INamedTypeSymbol shaderInterfaceType = context.SemanticModel.Compilation.GetTypeByMetadataName("ComputeSharp.D2D1.ID2D1PixelShader")!;
+
                     // Check that the shader implements the ID2D1PixelShader interface
-                    if (!typeSymbol.HasInterfaceWithType(context.SemanticModel.Compilation.GetTypeByMetadataName("ComputeSharp.D2D1.ID2D1PixelShader")!))
+                    if (!typeSymbol.HasInterfaceWithType(shaderInterfaceType))
                     {
                         return default;
                     }
@@ -142,6 +144,7 @@ public sealed partial class D2DPixelShaderDescriptorGenerator : IIncrementalGene
                         diagnostics,
                         context.SemanticModel.Compilation,
                         typeSymbol,
+                        shaderInterfaceType,
                         inputCount,
                         inputSimpleIndices,
                         inputComplexIndices,
