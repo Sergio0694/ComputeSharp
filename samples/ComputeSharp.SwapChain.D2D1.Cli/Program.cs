@@ -33,9 +33,9 @@ if (args is [] or [_])
     // If a shader is found, run it
     if (effect is not null)
     {
-        Win32Application win32Application = new();
+        Win32Application application = new();
 
-        win32Application.Draw += (_, e) =>
+        application.Draw += (_, e) =>
         {
             // Set the effect properties
             effect.ElapsedTime = e.TotalTime;
@@ -46,7 +46,7 @@ if (args is [] or [_])
             e.DrawingSession.DrawImage(effect);
         };
 
-        Win32ApplicationRunner.Run(win32Application, "ComputeSharp.D2D1");
+        Win32ApplicationRunner.Run(application, "ComputeSharp.D2D1");
 
         return S.S_OK;
     }
