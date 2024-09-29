@@ -18,6 +18,17 @@
     <MvvmToolkitEnableINotifyPropertyChangingSupport>false</MvvmToolkitEnableINotifyPropertyChangingSupport>
   </PropertyGroup>
 
+  <!-- Temporary workaround for the .NET 8 SDK -->
+  <PropertyGroup>
+    <CsWinRTUseWindowsUIXamlProjections>true</CsWinRTUseWindowsUIXamlProjections>
+  </PropertyGroup>
+  <ItemGroup>
+    <CompilerVisibleProperty Include="CsWinRTUseWindowsUIXamlProjections" />
+    <RuntimeHostConfigurationOption Include="CSWINRT_USE_WINDOWS_UI_XAML_PROJECTIONS"
+                                    Value="$(CsWinRTUseWindowsUIXamlProjections)"
+                                    Trim="true" />
+  </ItemGroup>
+
   <!-- Same CsWinRT options as the WinUI 3 sample app -->
   <PropertyGroup>
     <CsWinRTGenerateProjection>false</CsWinRTGenerateProjection>
