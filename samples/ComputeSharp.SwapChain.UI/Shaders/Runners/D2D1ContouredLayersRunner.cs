@@ -2,7 +2,11 @@ using System;
 using System.IO;
 using ComputeSharp.D2D1;
 using ComputeSharp.D2D1.Interop;
+#if WINDOWS_UWP
+using ComputeSharp.D2D1.Uwp;
+#else
 using ComputeSharp.D2D1.WinUI;
+#endif
 using ComputeSharp.SwapChain.Shaders.D2D1;
 using Windows.ApplicationModel;
 
