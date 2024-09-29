@@ -600,6 +600,7 @@ Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		samples\ComputeSharp.SwapChain.Shaders.D2D1\ComputeSharp.SwapChain.Shaders.D2D1.projitems*{0071701e-b9c5-4098-be5f-ef556c4553c6}*SharedItemsImports = 5
 		samples\ComputeSharp.SwapChain.Shaders\ComputeSharp.SwapChain.Shaders.projitems*{0071701e-b9c5-4098-be5f-ef556c4553c6}*SharedItemsImports = 5
+		samples\ComputeSharp.SwapChain.UI\ComputeSharp.SwapChain.UI.projitems*{0071701e-b9c5-4098-be5f-ef556c4553c6}*SharedItemsImports = 5
 		samples\ComputeSharp.SwapChain.Shaders\ComputeSharp.SwapChain.Shaders.projitems*{0800bd51-499d-44c2-9417-fd1f7fdfe9c4}*SharedItemsImports = 13
 		src\ComputeSharp.UI\ComputeSharp.UI.projitems*{1cd1d9c5-7e00-43fb-a8c3-cfe98a885d3b}*SharedItemsImports = 13
 		samples\ComputeSharp.SwapChain.Shaders.D2D1\ComputeSharp.SwapChain.Shaders.D2D1.projitems*{209c95a3-fa53-431b-b688-3299ca6c29d2}*SharedItemsImports = 5
