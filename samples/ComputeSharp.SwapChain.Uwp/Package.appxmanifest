@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Package
+  xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
+  xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest"
+  xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
+  xmlns:uap5="http://schemas.microsoft.com/appx/manifest/uap/windows10/5"
+  IgnorableNamespaces="uap uap5 mp">
+
+  <Identity
+    Name="e9c6835d-5b29-45c7-ae95-72f09715bc8b"
+    Publisher="CN=Sergio"
+    Version="1.0.0.0" />
+
+  <mp:PhoneIdentity PhoneProductId="e9c6835d-5b29-45c7-ae95-72f09715bc8b" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+
+  <Properties>
+    <DisplayName>ComputeSharp Sample App</DisplayName>
+    <PublisherDisplayName>Sergio Pedri</PublisherDisplayName>
+    <Logo>Assets\StoreLogo.png</Logo>
+  </Properties>
+
+  <Dependencies>
+    <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.0.0" MaxVersionTested="10.0.0.0" />
+  </Dependencies>
+
+  <Resources>
+    <Resource Language="x-generate"/>
+  </Resources>
+
+  <Applications>
+    <Application Id="App"
+      Executable="$targetnametoken$.exe"
+      EntryPoint="ComputeSharp.SwapChain.Uwp.App">
+      <uap:VisualElements
+        DisplayName="ComputeSharp Sample App"
+        Description="A sample app for ComputeSharp and its UWP shader panels"
+        BackgroundColor="#005491"
+        Square150x150Logo="Assets\Square150x150Logo.png"
+        Square44x44Logo="Assets\Square44x44Logo.png">
+        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" Square71x71Logo="Assets\SmallTile.png" Square310x310Logo="Assets\LargeTile.png"/>
+        <uap:SplashScreen Image="Assets\SplashScreen.png" uap5:Optional="true" BackgroundColor="transparent"/>
+      </uap:VisualElements>
+    </Application>
+  </Applications>
+</Package>
