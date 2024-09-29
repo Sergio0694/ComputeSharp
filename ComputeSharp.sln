@@ -188,6 +188,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputeSharp.D2D1.Uwp.Sourc
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputeSharp.SwapChain.Uwp", "samples\ComputeSharp.SwapChain.Uwp\ComputeSharp.SwapChain.Uwp.csproj", "{6A861D53-2DBD-4B4F-8543-90DC8C0F2DC8}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "ComputeSharp.SwapChain.UI", "samples\ComputeSharp.SwapChain.UI\ComputeSharp.SwapChain.UI.shproj", "{6BC471C6-72F9-43CF-AE1E-F6D3E5ED3129}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -590,6 +592,7 @@ Global
 		{9FBE070E-A210-4CEF-9F04-61C2B269C600} = {0ED8F632-5E17-46BE-8CC3-B14A82D4AEB1}
 		{916331A5-1EA6-41D7-B199-2E50C513EFDE} = {F8EFBB27-4EE2-4463-A75B-7EFDFB55D0F7}
 		{6A861D53-2DBD-4B4F-8543-90DC8C0F2DC8} = {0ED8F632-5E17-46BE-8CC3-B14A82D4AEB1}
+		{6BC471C6-72F9-43CF-AE1E-F6D3E5ED3129} = {0ED8F632-5E17-46BE-8CC3-B14A82D4AEB1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4664C5E3-0340-4E22-BCFD-98AAEDF5F2DC}
@@ -609,6 +612,7 @@ Global
 		src\ComputeSharp.CodeFixing\ComputeSharp.CodeFixing.projitems*{54654960-54b5-4e19-b3ed-993591ca39e5}*SharedItemsImports = 5
 		src\ComputeSharp.D2D1.UI.SourceGenerators\ComputeSharp.D2D1.UI.SourceGenerators.projitems*{690c4014-a06b-44db-b717-aea4cafa9d68}*SharedItemsImports = 5
 		src\ComputeSharp.SourceGeneration\ComputeSharp.SourceGeneration.projitems*{690c4014-a06b-44db-b717-aea4cafa9d68}*SharedItemsImports = 5
+		samples\ComputeSharp.SwapChain.UI\ComputeSharp.SwapChain.UI.projitems*{6bc471c6-72f9-43cf-ae1e-f6d3e5ed3129}*SharedItemsImports = 13
 		src\ComputeSharp.D2D1.UI\ComputeSharp.D2D1.UI.projitems*{716df19e-69ba-4a9c-9ca4-bfd196152f46}*SharedItemsImports = 5
 		samples\ComputeSharp.SwapChain.Shaders.D2D1\ComputeSharp.SwapChain.Shaders.D2D1.projitems*{73c32d0f-64db-4674-84e9-8fcc41228474}*SharedItemsImports = 5
 		src\ComputeSharp.SourceGeneration.Hlsl\ComputeSharp.SourceGeneration.Hlsl.projitems*{9ac496a3-bbf0-4c8f-a50d-a20bf01c5e05}*SharedItemsImports = 13
