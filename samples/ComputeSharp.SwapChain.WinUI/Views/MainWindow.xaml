@@ -15,7 +15,7 @@
 
     <Grid x:Name="Root">
         <Grid.DataContext>
-            <viewModels:MainViewModel x:Name="ViewModel"/>
+            <viewModels:MainViewModel x:Name="ViewModel" />
         </Grid.DataContext>
         <Grid.Resources>
 
