@@ -8,16 +8,59 @@
     <UseUwpTools>true</UseUwpTools>
     <Platforms>x86;x64;arm64</Platforms>
     <RuntimeIdentifiers>win-x86;win-x64;win-arm64</RuntimeIdentifiers>
+    <DefineConstants>$(DefineConstants);WINDOWS_UWP</DefineConstants>
     <DefaultLanguage>en-US</DefaultLanguage>
     <PublishAot>true</PublishAot>
     <PublishProfile>win-$(Platform).pubxml</PublishProfile>
     <EnableMsixTooling>true</EnableMsixTooling>
+
+    <!-- Disable 'INotifyPropertyChanging' support, same as in the WinUI 3 sample app -->
+    <MvvmToolkitEnableINotifyPropertyChangingSupport>false</MvvmToolkitEnableINotifyPropertyChangingSupport>
+  </PropertyGroup>
+
+  <!-- Same CsWinRT options as the WinUI 3 sample app -->
+  <PropertyGroup>
+    <CsWinRTGenerateProjection>false</CsWinRTGenerateProjection>
+    <CsWinRTIIDOptimizerOptOut>true</CsWinRTIIDOptimizerOptOut>
+    <CsWinRTAotWarningLevel>2</CsWinRTAotWarningLevel>
+  </PropertyGroup>
+
+  <!-- CsWinRT size saving options -->
+  <PropertyGroup>
+    <CsWinRTEnableDynamicObjectsSupport>false</CsWinRTEnableDynamicObjectsSupport>
+    <CsWinRTUseExceptionResourceKeys>true</CsWinRTUseExceptionResourceKeys>
+  </PropertyGroup>
+
+  <!-- NativeAOT options -->
+  <PropertyGroup>
+    <PublishAot>true</PublishAot>
+    <UseSystemResourceKeys>true</UseSystemResourceKeys>
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <StackTraceSupport>false</StackTraceSupport>
+    <OptimizationPreference>Speed</OptimizationPreference>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.2" />
+    <PackageReference Include="CommunityToolkit.Uwp.Controls.Primitives" Version="8.2.240924-local" />
+    <PackageReference Include="CommunityToolkit.Uwp.Media" Version="8.2.240924-local" />
     <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.1.3" />
 
     <!-- Temporary workaround, see notes in D2D1 UWP sample app -->
     <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.2739.15" IncludeAssets="none" />
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\ComputeSharp.Core.SourceGenerators\ComputeSharp.Core.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" PrivateAssets="contentfiles;build" />
+    <ProjectReference Include="..\..\src\ComputeSharp.D2D1.Uwp\ComputeSharp.D2D1.Uwp.csproj" />
+    <ProjectReference Include="..\..\src\ComputeSharp.D2D1\ComputeSharp.D2D1.csproj" />
+    <ProjectReference Include="..\..\src\ComputeSharp.D2D1.SourceGenerators\ComputeSharp.D2D1.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" PrivateAssets="contentfiles;build" />
+    <ProjectReference Include="..\..\src\ComputeSharp.Uwp\ComputeSharp.Uwp.csproj" />
+    <ProjectReference Include="..\..\src\ComputeSharp.SourceGenerators\ComputeSharp.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" PrivateAssets="contentfiles;build" />
+  </ItemGroup>
+
+  <!-- Shared projects for the DX12/D2D1 shaders and the app backend -->
+  <Import Project="..\ComputeSharp.SwapChain.Shaders\ComputeSharp.SwapChain.Shaders.projitems" Label="Shared" />
+  <Import Project="..\ComputeSharp.SwapChain.Shaders.D2D1\ComputeSharp.SwapChain.Shaders.D2D1.projitems" Label="Shared" />
+  <Import Project="..\ComputeSharp.SwapChain.UI\ComputeSharp.SwapChain.UI.projitems" Label="Shared" />
 </Project>
