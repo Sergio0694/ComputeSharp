@@ -53,12 +53,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="..\ComputeSharp.SwapChain\Textures\RustyMetal.png">
-      <Link>Assets\Textures\RustyMetal.png</Link>
-    </Content>
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.2" />
     <PackageReference Include="CommunityToolkit.WinUI.Controls.Primitives" Version="8.2.241112-preview1" />
     <PackageReference Include="CommunityToolkit.WinUI.Media" Version="8.2.241112-preview1" />
@@ -92,7 +86,8 @@
     <ProjectReference Include="..\..\src\ComputeSharp.SourceGenerators\ComputeSharp.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" PrivateAssets="contentfiles;build" />
   </ItemGroup>
 
-  <!-- Shared projects for the DX12/D2D1 shaders -->
+  <!-- Shared projects for the DX12/D2D1 shaders and the app backend -->
   <Import Project="..\ComputeSharp.SwapChain.Shaders\ComputeSharp.SwapChain.Shaders.projitems" Label="Shared" />
   <Import Project="..\ComputeSharp.SwapChain.Shaders.D2D1\ComputeSharp.SwapChain.Shaders.D2D1.projitems" Label="Shared" />
+  <Import Project="..\ComputeSharp.SwapChain.UI\ComputeSharp.SwapChain.UI.projitems" Label="Shared" />
 </Project>
