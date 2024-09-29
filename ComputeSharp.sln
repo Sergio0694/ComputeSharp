@@ -636,6 +636,9 @@ Global
 		src\ComputeSharp.CodeFixing\ComputeSharp.CodeFixing.projitems*{54654960-54b5-4e19-b3ed-993591ca39e5}*SharedItemsImports = 5
 		src\ComputeSharp.D2D1.UI.SourceGenerators\ComputeSharp.D2D1.UI.SourceGenerators.projitems*{690c4014-a06b-44db-b717-aea4cafa9d68}*SharedItemsImports = 5
 		src\ComputeSharp.SourceGeneration\ComputeSharp.SourceGeneration.projitems*{690c4014-a06b-44db-b717-aea4cafa9d68}*SharedItemsImports = 5
+		samples\ComputeSharp.SwapChain.Shaders.D2D1\ComputeSharp.SwapChain.Shaders.D2D1.projitems*{6a861d53-2dbd-4b4f-8543-90dc8c0f2dc8}*SharedItemsImports = 5
+		samples\ComputeSharp.SwapChain.Shaders\ComputeSharp.SwapChain.Shaders.projitems*{6a861d53-2dbd-4b4f-8543-90dc8c0f2dc8}*SharedItemsImports = 5
+		samples\ComputeSharp.SwapChain.UI\ComputeSharp.SwapChain.UI.projitems*{6a861d53-2dbd-4b4f-8543-90dc8c0f2dc8}*SharedItemsImports = 5
 		samples\ComputeSharp.SwapChain.UI\ComputeSharp.SwapChain.UI.projitems*{6bc471c6-72f9-43cf-ae1e-f6d3e5ed3129}*SharedItemsImports = 13
 		src\ComputeSharp.D2D1.UI\ComputeSharp.D2D1.UI.projitems*{716df19e-69ba-4a9c-9ca4-bfd196152f46}*SharedItemsImports = 5
 		samples\ComputeSharp.SwapChain.Shaders.D2D1\ComputeSharp.SwapChain.Shaders.D2D1.projitems*{73c32d0f-64db-4674-84e9-8fcc41228474}*SharedItemsImports = 5

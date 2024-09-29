@@ -5,7 +5,11 @@ using ComputeSharp.SwapChain.Core.Enums;
 using ComputeSharp.SwapChain.Core.Shaders;
 using ComputeSharp.SwapChain.Core.Shaders.Runners;
 using ComputeSharp.SwapChain.Shaders;
+#if WINDOWS_UWP
+using ComputeSharp.Uwp;
+#else
 using ComputeSharp.WinUI;
+#endif
 
 #pragma warning disable IDE0300 // CsWinRT does not support marshalling collection expression (https://github.com/microsoft/CsWinRT/issues/1661)
 
