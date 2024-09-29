@@ -16,7 +16,7 @@
 
     <Grid x:Name="Root">
         <Grid.DataContext>
-            <viewModels:MainViewModel x:Name="ViewModel"/>
+            <viewModels:MainViewModel x:Name="ViewModel" />
         </Grid.DataContext>
         <Grid.Resources>
 
@@ -251,14 +251,6 @@
                 </Button.Flyout>
             </Button>
         </StackPanel>
-
-        <!--  Invisible title bar  -->
-        <Rectangle
-            x:Name="TitleBarRectangle"
-            Height="32"
-            HorizontalAlignment="Stretch"
-            VerticalAlignment="Top"
-            Fill="Transparent" />
 
         <!--  Info bar  -->
         <muxc:InfoBar
