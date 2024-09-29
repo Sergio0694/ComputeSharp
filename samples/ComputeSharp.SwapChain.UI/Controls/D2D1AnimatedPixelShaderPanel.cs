@@ -1,10 +1,19 @@
 using ComputeSharp.SwapChain.Core.Shaders;
 using Microsoft.Graphics.Canvas;
 using Microsoft.Graphics.Canvas.UI.Xaml;
+#if WINDOWS_UWP
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+#else
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+#endif
 
+#if WINDOWS_UWP
+namespace ComputeSharp.SwapChain.Uwp.Views;
+#else
 namespace ComputeSharp.SwapChain.WinUI.Views;
+#endif
 
 /// <summary>
 /// A custom <see cref="Control"/> that can be used to render animated backgrounds via Win2D.

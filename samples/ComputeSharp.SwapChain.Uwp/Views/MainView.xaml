@@ -1,0 +1,289 @@
+<UserControl
+    x:Class="ComputeSharp.SwapChain.Uwp.Views.MainView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:animations="using:CommunityToolkit.WinUI.Animations"
+    xmlns:computesharp="using:ComputeSharp.Uwp"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:converters="using:ComputeSharp.SwapChain.Core.Converters"
+    xmlns:enums="using:ComputeSharp.SwapChain.Core.Enums"
+    xmlns:media="using:CommunityToolkit.WinUI.Media"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    xmlns:ui="using:CommunityToolkit.WinUI"
+    xmlns:viewModels="using:ComputeSharp.SwapChain.Core.ViewModels"
+    xmlns:views="using:ComputeSharp.SwapChain.Uwp.Views"
+    SizeChanged="UserControl_SizeChanged">
+
+    <Grid x:Name="Root">
+        <Grid.DataContext>
+            <viewModels:MainViewModel x:Name="ViewModel"/>
+        </Grid.DataContext>
+        <Grid.Resources>
+
+            <!--
+                Shader selection panel. This is declared as a resource and then added and removed to the visual
+                tree entirely instead of just changing its visibility, so that the loaded panels can detect the
+                change and stop their render loops. This avoids wasting GPU resources when the panel isn't visible.
+            -->
+            <Border
+                x:Key="ShaderSelectionPanel"
+                x:Name="ShaderSelectionPanel"
+                IsTapEnabled="True"
+                Tapped="ShaderSelectionPanel_Tapped">
+                <animations:Implicit.ShowAnimations>
+                    <animations:OpacityAnimation
+                        From="0"
+                        To="1.0"
+                        Duration="0:0:0.5" />
+                </animations:Implicit.ShowAnimations>
+                <animations:Implicit.HideAnimations>
+                    <animations:OpacityAnimation
+                        From="1.0"
+                        To="0"
+                        Duration="0:0:0.5" />
+                </animations:Implicit.HideAnimations>
+                <Border.Background>
+                    <media:AcrylicBrush
+                        BlurAmount="12"
+                        TextureUri="ms-appx:///Assets/Misc/noise_low.png"
+                        TintColor="#FF222222"
+                        TintOpacity="0.2" />
+                </Border.Background>
+
+                <!--  Shadow panel with the shaders list  -->
+                <Border
+                    x:Name="ShadersListContainerPanel"
+                    Height="320"
+                    Margin="-20,0,-20,0"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Bottom"
+                    Background="#FF222222">
+                    <animations:Implicit.ShowAnimations>
+                        <animations:TranslationAnimation
+                            From="0,320,0"
+                            To="0"
+                            Duration="0:0:0.5" />
+                    </animations:Implicit.ShowAnimations>
+                    <animations:Implicit.HideAnimations>
+                        <animations:TranslationAnimation
+                            From="0"
+                            To="0,320,0"
+                            Duration="0:0:0.5" />
+                    </animations:Implicit.HideAnimations>
+                    <ui:Effects.Shadow>
+                        <media:AttachedCardShadow
+                            BlurRadius="20"
+                            CornerRadius="0"
+                            Opacity="1"
+                            Offset="-12,-2"
+                            Color="Black" />
+                    </ui:Effects.Shadow>
+
+                    <!--  Shaders list  -->
+                    <ListView
+                        ItemsSource="{x:Bind ViewModel.ComputeShaderOptions}"
+                        ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                        ScrollViewer.HorizontalScrollMode="Enabled"
+                        ScrollViewer.VerticalScrollBarVisibility="Hidden"
+                        ScrollViewer.VerticalScrollMode="Disabled"
+                        SelectedItem="{x:Bind ViewModel.SelectedComputeShader, Mode=TwoWay}"
+                        SelectionMode="Single">
+                        <ListView.Resources>
+
+                            <!--
+                                Lightweight styling to remove the selection background with the accent color, and
+                                to remove the padding and stretch the list items to occupy all the available space
+                            -->
+                            <SolidColorBrush x:Key="ListViewItemBackgroundSelected" Color="Transparent" />
+                            <SolidColorBrush x:Key="ListViewItemBackgroundSelectedPointerOver" Color="Transparent" />
+                            <SolidColorBrush x:Key="ListViewItemBackgroundSelectedPressed" Color="Transparent" />
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                <Setter Property="VerticalContentAlignment" Value="Stretch" />
+                                <Setter Property="HorizontalAlignment" Value="Stretch" />
+                                <Setter Property="VerticalAlignment" Value="Stretch" />
+                                <Setter Property="Padding" Value="0" />
+                            </Style>
+                        </ListView.Resources>
+                        <ListView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <ItemsStackPanel Orientation="Horizontal" />
+                            </ItemsPanelTemplate>
+                        </ListView.ItemsPanel>
+                        <ListView.ItemTemplate>
+
+                            <!--  Shader template  -->
+                            <DataTemplate x:DataType="viewModels:ShaderRunnerViewModel">
+                                <controls:ConstrainedBox
+                                    HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Stretch"
+                                    ui:UIElementExtensions.ClipToBounds="True"
+                                    AspectRatio="16:9">
+                                    <Grid>
+
+                                        <!--  Shader preview  -->
+                                        <computesharp:AnimatedComputeShaderPanel RenderingFailed="SelectionShaderPanel_RenderingFailed" ShaderRunner="{x:Bind ShaderRunner}" />
+
+                                        <!--
+                                            Note: here we have a selection property to work around {x:Bind} not working correctly outside of the
+                                            current template scope. Once that's fixed in WinUI 3, this can be rewritten as a multi-binding like this:
+                                            Visibility="{x:Bind system:Object.ReferenceEquals((local:ComputeShader), ViewModel.SelectedComputeShader), Mode=OneWay}".
+                                            When that is working, the ComputeShader.IsSelected property can also be removed, as it will no longer be needed.
+                                        -->
+                                        <Border
+                                            BorderBrush="White"
+                                            BorderThickness="4"
+                                            Visibility="{x:Bind IsSelected, Mode=OneWay}">
+                                            <Polygon
+                                                HorizontalAlignment="Right"
+                                                VerticalAlignment="Top"
+                                                Fill="White"
+                                                Points="0,0 32,0 32,32" />
+                                        </Border>
+                                    </Grid>
+                                </controls:ConstrainedBox>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </Border>
+            </Border>
+        </Grid.Resources>
+
+        <!--  Shader switches (for DirectX 12 or Win2D)  -->
+        <controls:SwitchPresenter Grid.Row="1" Value="{x:Bind ViewModel.SelectedRenderingMode, Mode=OneWay}">
+            <controls:Case IsDefault="True" Value="{x:Bind enums:RenderingMode.DirectX12}">
+
+                <!--  DirectX 12 shader  -->
+                <computesharp:AnimatedComputeShaderPanel
+                    IsDynamicResolutionEnabled="{x:Bind ViewModel.IsDynamicResolutionEnabled, Mode=OneWay}"
+                    IsPaused="{x:Bind ViewModel.IsRenderingPaused, Mode=OneWay}"
+                    IsVerticalSyncEnabled="{x:Bind ViewModel.IsVerticalSyncEnabled, Mode=OneWay}"
+                    RenderingFailed="MainShaderPanel_RenderingFailed"
+                    ResolutionScale="{x:Bind converters:ResolutionScaleConverter.ConvertPercentageToScale(ViewModel.SelectedResolutionScale), Mode=OneWay}"
+                    ShaderRunner="{x:Bind ViewModel.SelectedComputeShader.ShaderRunner, Mode=OneWay}" />
+            </controls:Case>
+            <controls:Case Value="{x:Bind enums:RenderingMode.Win2D}">
+
+                <!--  Win2D shader  -->
+                <views:D2D1AnimatedPixelShaderPanel IsPaused="{x:Bind ViewModel.IsRenderingPaused, Mode=OneWay}" PixelShaderEffect="{x:Bind ViewModel.SelectedComputeShader.PixelShaderEffect, Mode=OneWay}" />
+            </controls:Case>
+        </controls:SwitchPresenter>
+
+        <!--  Settings panel  -->
+        <StackPanel
+            Margin="48"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Bottom"
+            Orientation="Horizontal"
+            Spacing="20">
+
+            <!--  Shader pause button  -->
+            <Button
+                Padding="20"
+                Command="{x:Bind ViewModel.ToggleRenderingPausedCommand}"
+                CornerRadius="9999"
+                ToolTipService.ToolTip="Select shader">
+                <SymbolIcon Symbol="{x:Bind converters:RenderingPauseConverter.ConvertPausedToSymbol(ViewModel.IsRenderingPaused), Mode=OneWay}" />
+            </Button>
+
+            <!--  Shader selection button  -->
+            <Button
+                Padding="20"
+                Click="OpenShaderSelectionPanelButton_Click"
+                CornerRadius="9999"
+                ToolTipService.ToolTip="Select shader">
+                <SymbolIcon Symbol="Pictures" />
+            </Button>
+
+            <!--  Settings button  -->
+            <Button
+                Padding="20"
+                CornerRadius="9999"
+                ToolTipService.ToolTip="Settings">
+                <SymbolIcon Symbol="Setting" />
+                <Button.Flyout>
+                    <MenuFlyout>
+                        <ToggleMenuFlyoutItem
+                            Command="{x:Bind ViewModel.SetRenderingModeCommand}"
+                            CommandParameter="{x:Bind enums:RenderingMode.DirectX12}"
+                            IsChecked="{x:Bind ViewModel.SelectedRenderingMode.Equals(enums:RenderingMode.DirectX12), Mode=OneWay}"
+                            Text="DirectX 12" />
+                        <ToggleMenuFlyoutItem
+                            Command="{x:Bind ViewModel.SetRenderingModeCommand}"
+                            CommandParameter="{x:Bind enums:RenderingMode.Win2D}"
+                            IsChecked="{x:Bind ViewModel.SelectedRenderingMode.Equals(enums:RenderingMode.Win2D), Mode=OneWay}"
+                            Text="Win2D (Direct2D)" />
+                        <MenuFlyoutSeparator />
+                        <ToggleMenuFlyoutItem
+                            IsChecked="{x:Bind ViewModel.IsVerticalSyncEnabled, Mode=TwoWay}"
+                            IsEnabled="{x:Bind ViewModel.SelectedRenderingMode.Equals(enums:RenderingMode.DirectX12), Mode=OneWay}"
+                            Text="Vertical sync" />
+                        <ToggleMenuFlyoutItem
+                            IsChecked="{x:Bind ViewModel.IsDynamicResolutionEnabled, Mode=TwoWay}"
+                            IsEnabled="{x:Bind ViewModel.SelectedRenderingMode.Equals(enums:RenderingMode.DirectX12), Mode=OneWay}"
+                            Text="Dynamic resolution" />
+                        <MenuFlyoutSeparator />
+                        <ToggleMenuFlyoutItem
+                            Command="{x:Bind ViewModel.SetResolutionScaleCommand}"
+                            CommandParameter="{x:Bind ViewModel.ResolutionScaleOptions[0]}"
+                            IsChecked="{x:Bind ViewModel.SelectedResolutionScale.Equals(ViewModel.ResolutionScaleOptions[0]), Mode=OneWay}"
+                            IsEnabled="{x:Bind ViewModel.IsResolutionScaleOptionEnabled, Mode=OneWay}"
+                            Text="{x:Bind converters:ResolutionScaleConverter.ConvertPercentageToFormattedString(ViewModel.ResolutionScaleOptions[0])}" />
+                        <ToggleMenuFlyoutItem
+                            Command="{x:Bind ViewModel.SetResolutionScaleCommand}"
+                            CommandParameter="{x:Bind ViewModel.ResolutionScaleOptions[1]}"
+                            IsChecked="{x:Bind ViewModel.SelectedResolutionScale.Equals(ViewModel.ResolutionScaleOptions[1]), Mode=OneWay}"
+                            IsEnabled="{x:Bind ViewModel.IsResolutionScaleOptionEnabled, Mode=OneWay}"
+                            Text="{x:Bind converters:ResolutionScaleConverter.ConvertPercentageToFormattedString(ViewModel.ResolutionScaleOptions[1])}" />
+                        <ToggleMenuFlyoutItem
+                            Command="{x:Bind ViewModel.SetResolutionScaleCommand}"
+                            CommandParameter="{x:Bind ViewModel.ResolutionScaleOptions[2]}"
+                            IsChecked="{x:Bind ViewModel.SelectedResolutionScale.Equals(ViewModel.ResolutionScaleOptions[2]), Mode=OneWay}"
+                            IsEnabled="{x:Bind ViewModel.IsResolutionScaleOptionEnabled, Mode=OneWay}"
+                            Text="{x:Bind converters:ResolutionScaleConverter.ConvertPercentageToFormattedString(ViewModel.ResolutionScaleOptions[2])}" />
+                        <ToggleMenuFlyoutItem
+                            Command="{x:Bind ViewModel.SetResolutionScaleCommand}"
+                            CommandParameter="{x:Bind ViewModel.ResolutionScaleOptions[3]}"
+                            IsChecked="{x:Bind ViewModel.SelectedResolutionScale.Equals(ViewModel.ResolutionScaleOptions[3]), Mode=OneWay}"
+                            IsEnabled="{x:Bind ViewModel.IsResolutionScaleOptionEnabled, Mode=OneWay}"
+                            Text="{x:Bind converters:ResolutionScaleConverter.ConvertPercentageToFormattedString(ViewModel.ResolutionScaleOptions[3])}" />
+                    </MenuFlyout>
+                </Button.Flyout>
+            </Button>
+        </StackPanel>
+
+        <!--  Invisible title bar  -->
+        <Rectangle
+            x:Name="TitleBarRectangle"
+            Height="32"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Top"
+            Fill="Transparent" />
+
+        <!--  Info bar  -->
+        <muxc:InfoBar
+            x:Name="RenderingErrorInfoBar"
+            Title="Rendering error"
+            Margin="80"
+            Message="There was an error that caused the rendering to fail. Try pausing and starting the rendering again, or restarting the app. If the issue persists, please report it by opening an issue on GitHub."
+            Severity="Error">
+            <muxc:InfoBar.ActionButton>
+                <HyperlinkButton Content="Report the issue" NavigateUri="https://github.com/Sergio0694/ComputeSharp/issues" />
+            </muxc:InfoBar.ActionButton>
+            <animations:Implicit.ShowAnimations>
+                <animations:OpacityAnimation
+                    From="0"
+                    To="1.0"
+                    Duration="0:0:0.5" />
+                <animations:TranslationAnimation
+                    From="0,20,0"
+                    To="0"
+                    Duration="0:0:0.5" />
+            </animations:Implicit.ShowAnimations>
+            <animations:Implicit.HideAnimations>
+                <animations:OpacityAnimation To="0" Duration="0:0:0.5" />
+                <animations:TranslationAnimation To="0,20,0" Duration="0:0:0.5" />
+            </animations:Implicit.HideAnimations>
+        </muxc:InfoBar>
+    </Grid>
+</UserControl>
