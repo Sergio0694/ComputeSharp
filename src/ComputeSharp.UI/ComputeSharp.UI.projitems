@@ -17,7 +17,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\IDXGIAdapterExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\SemaphoreSlimExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\DynamicResolutionManager.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Helpers\SwapChainManager.IID.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\SwapChainPanelNativeMarshaller.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\SwapChainManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\SwapChainManager.Rendering.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IFrameRequestQueue.cs" />

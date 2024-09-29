@@ -20,7 +20,6 @@ using Windows.Foundation;
 using Windows.System;
 using Windows.UI.Xaml.Controls;
 #endif
-using WinRT;
 
 #if WINDOWS_UWP
 namespace ComputeSharp.Uwp.Helpers;
@@ -233,7 +232,7 @@ internal sealed unsafe partial class SwapChainManager<TOwner> : ReferenceTracked
         // IDXGISwapChain reference just created and set that as the swap chain panel to use.
         fixed (ISwapChainPanelNative** swapChainPanelNative = this.swapChainPanelNative)
         {
-            ((IWinRTObject)owner).NativeObject.TryAs(*IID_ISwapChainPanelNative, out *(nint*)swapChainPanelNative).Assert();
+            SwapChainPanelNativeMarshaller.GetNativeObject(owner, swapChainPanelNative);
         }
 
         // Get the underlying ID3D12Device in use
