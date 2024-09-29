@@ -233,9 +233,7 @@ internal sealed unsafe partial class SwapChainManager<TOwner> : ReferenceTracked
         // IDXGISwapChain reference just created and set that as the swap chain panel to use.
         fixed (ISwapChainPanelNative** swapChainPanelNative = this.swapChainPanelNative)
         {
-            Guid guid = new(0x63AAD0B8, 0x7C24, 0x40FF, 0x85, 0xA8, 0x64, 0x0D, 0x94, 0x4C, 0xC3, 0x25);
-
-            ((IWinRTObject)owner).NativeObject.TryAs(guid, out *(nint*)swapChainPanelNative).Assert();
+            ((IWinRTObject)owner).NativeObject.TryAs(*IID_ISwapChainPanelNative, out *(nint*)swapChainPanelNative).Assert();
         }
 
         // Get the underlying ID3D12Device in use
