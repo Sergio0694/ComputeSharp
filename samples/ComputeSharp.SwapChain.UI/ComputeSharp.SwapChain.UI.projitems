@@ -64,4 +64,15 @@
     <Content Include="$(MSBuildThisFileDirectory)Assets\Wide310x150Logo.scale-200.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Wide310x150Logo.scale-400.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\D2D1AnimatedPixelShaderPanel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Converters\RenderingPauseConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Converters\ResolutionScaleConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Enums\RenderingMode.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Shaders\PixelShaderEffect.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Shaders\Runners\ContouredLayersRunner.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Shaders\Runners\D2D1ContouredLayersRunner.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\MainViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ShaderRunnerViewModel.cs" />
+  </ItemGroup>
 </Project>
