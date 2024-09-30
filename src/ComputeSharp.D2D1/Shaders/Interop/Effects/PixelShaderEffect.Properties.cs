@@ -162,7 +162,7 @@ unsafe partial struct PixelShaderEffect
     /// <param name="dataSize">The number of bytes in the property to retrieve.</param>
     /// <param name="actualSize">A optional pointer to a variable that stores the actual number of bytes retrieved on the property.</param>
     /// <returns>The <see cref="HRESULT"/> for the operation.</returns>
-    private int GetResourceTextureManagerAtIndex(int index, byte* data, uint dataSize, uint* actualSize)
+    private readonly int GetResourceTextureManagerAtIndex(int index, byte* data, uint dataSize, uint* actualSize)
     {
         try
         {
@@ -210,22 +210,23 @@ unsafe partial struct PixelShaderEffect
             // Check that the input object implements ID2D1ResourceTextureManager
             unknown.CopyTo(resourceTextureManager.GetAddressOf()).Assert();
 
-            using ComPtr<ID2D1ResourceTextureManagerInternal> resourceTextureManagerInternal = default;
-
-            // Then, also check that it implements ID2D1ResourceTextureManagerInternal
-            unknown.CopyTo(resourceTextureManagerInternal.GetAddressOf()).Assert();
-
-            // Initialize the resource texture manager, if an effect context is available
-            if (this.d2D1EffectContext.Get() is not null)
+            using (ComPtr<ID2D1ResourceTextureManagerInternal> resourceTextureManagerInternal = default)
             {
-                uint dimensions = (uint)GetGlobals().ResourceTextureDescriptions.Span[index].Dimensions;
+                // Then, also check that it implements ID2D1ResourceTextureManagerInternal
+                unknown.CopyTo(resourceTextureManagerInternal.GetAddressOf()).Assert();
 
-                // ID2D1ResourceTextureManager::Initialize should generally return either S_OK for first
-                // initialization, S_FALSE if an ID2D1EffectContext is already present (which is allowed, to
-                // enable sharing resource texture managers across different source textures and effects), or
-                // E_INVALIDARG if the manager has already been initialized through the public interface,
-                // and the stored dimensions for that don't match the ones for this resource texture index.
-                resourceTextureManagerInternal.Get()->Initialize(this.d2D1EffectContext.Get(), &dimensions).Assert();
+                // Initialize the resource texture manager, if an effect context is available
+                if (this.d2D1EffectContext.Get() is not null)
+                {
+                    uint dimensions = (uint)GetGlobals().ResourceTextureDescriptions.Span[index].Dimensions;
+
+                    // ID2D1ResourceTextureManager::Initialize should generally return either S_OK for first
+                    // initialization, S_FALSE if an ID2D1EffectContext is already present (which is allowed, to
+                    // enable sharing resource texture managers across different source textures and effects), or
+                    // E_INVALIDARG if the manager has already been initialized through the public interface,
+                    // and the stored dimensions for that don't match the ones for this resource texture index.
+                    resourceTextureManagerInternal.Get()->Initialize(this.d2D1EffectContext.Get(), &dimensions).Assert();
+                }
             }
 
             // Store the resource texture manager into the buffer
