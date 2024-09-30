@@ -261,7 +261,7 @@ internal static unsafe partial class D3DCompiler
         // We cannot use Regex (this method was originally using Regex.Replace(message, @"^[A-Z]:\\[^:]+: (\w+ \w+:)", ...)), because that
         // causes significant binary size increase, as it's the only thing rooting all the Regex stack across the whole library. So this
         // code reimplements equivalent logic in a simple way. Because this is a throw helper, allocating a little bit of garbage is fine.
-        string[] lines = message.Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
+        string[] lines = message.Split(['\n', '\r'], StringSplitOptions.RemoveEmptyEntries);
 
         // Go over each (non empty) line and look for the leading file path to trim away
         foreach (ref string line in lines.AsSpan())

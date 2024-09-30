@@ -6,6 +6,9 @@
     <Platforms>x64;ARM64</Platforms>
     <RuntimeIdentifiers>win-x64;win-arm64</RuntimeIdentifiers>
     <DefineConstants>$(DefineConstants);D2D1_WINUI_TESTS</DefineConstants>
+
+    <!-- Temporary workaround, see notes in 'ComputeSharp.D2D1.Tests.SourceGenerators' -->
+    <NoWarn>$(NoWarn);NU1902;NU1903</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>

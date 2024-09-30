@@ -2,6 +2,14 @@
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <DefineConstants>$(DefineConstants);D2D1_TESTS</DefineConstants>
+
+    <!--
+      Temporarily suppress warnings about packages with security vulnerabilities coming from
+      transitive dependencies of the 'Microsoft.CodeAnalysis.CSharp' testing packages. This
+      can be removed once new stable releases of those packages are shipped. We don't want
+      to add a new more recent top-level dependency to guard against binary breaking changes.
+    -->
+    <NoWarn>$(NoWarn);NU1903</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
