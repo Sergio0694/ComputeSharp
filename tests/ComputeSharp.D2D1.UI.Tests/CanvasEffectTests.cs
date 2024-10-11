@@ -383,7 +383,7 @@ public partial class CanvasEffectTests
 
     private sealed class EffectWithNoInputs : CanvasEffect
     {
-        private static readonly EffectNode<PixelShaderEffect<ShaderWithNoInputs>> Effect = new();
+        private static readonly CanvasEffectNode<PixelShaderEffect<ShaderWithNoInputs>> Effect = new();
 
         private int value;
 
@@ -396,7 +396,7 @@ public partial class CanvasEffectTests
         public int ValueWithReload
         {
             get => this.value;
-            set => SetAndInvalidateEffectGraph(ref this.value, value, InvalidationType.Creation);
+            set => SetAndInvalidateEffectGraph(ref this.value, value, CanvasEffectInvalidationType.Creation);
         }
 
         public int NumberOfBuildEffectGraphCalls { get; private set; }
@@ -405,21 +405,21 @@ public partial class CanvasEffectTests
 
         public int NumberOfDisposeCalls { get; private set; }
 
-        protected override void BuildEffectGraph(EffectGraph effectGraph)
+        protected override void BuildEffectGraph(CanvasEffectGraph effectGraph)
         {
             NumberOfBuildEffectGraphCalls++;
 
             effectGraph.RegisterOutputNode(Effect, new PixelShaderEffect<ShaderWithNoInputs>());
         }
 
-        protected override void ConfigureEffectGraph(EffectGraph effectGraph)
+        protected override void ConfigureEffectGraph(CanvasEffectGraph effectGraph)
         {
             NumberOfConfigureEffectGraphCalls++;
 
             effectGraph.GetNode(Effect).ConstantBuffer = new ShaderWithNoInputs(this.value);
 
             // Also test the non-generic overload
-            Assert.IsTrue(effectGraph.GetNode((IEffectNode)Effect) is PixelShaderEffect<ShaderWithNoInputs>);
+            Assert.IsTrue(effectGraph.GetNode((ICanvasEffectNode)Effect) is PixelShaderEffect<ShaderWithNoInputs>);
         }
 
         protected override void Dispose(bool disposing)
@@ -434,17 +434,17 @@ public partial class CanvasEffectTests
     {
         public bool WasConfigureEffectGraphCalled { get; private set; }
 
-        protected override void BuildEffectGraph(EffectGraph effectGraph)
+        protected override void BuildEffectGraph(CanvasEffectGraph effectGraph)
         {
-            effectGraph.RegisterOutputNode(new EffectNode<ColorSourceEffect>(), new ColorSourceEffect());
-            effectGraph.RegisterOutputNode(new EffectNode<ColorSourceEffect>(), new ColorSourceEffect());
+            effectGraph.RegisterOutputNode(new CanvasEffectNode<ColorSourceEffect>(), new ColorSourceEffect());
+            effectGraph.RegisterOutputNode(new CanvasEffectNode<ColorSourceEffect>(), new ColorSourceEffect());
         }
 
-        protected override void ConfigureEffectGraph(EffectGraph effectGraph)
+        protected override void ConfigureEffectGraph(CanvasEffectGraph effectGraph)
         {
             WasConfigureEffectGraphCalled = true;
 
-            effectGraph.SetOutputNode(new EffectNode<ColorSourceEffect>());
+            effectGraph.SetOutputNode(new CanvasEffectNode<ColorSourceEffect>());
         }
     }
 
@@ -452,14 +452,14 @@ public partial class CanvasEffectTests
     {
         public bool WasConfigureEffectGraphCalled { get; private set; }
 
-        protected override void BuildEffectGraph(EffectGraph effectGraph)
+        protected override void BuildEffectGraph(CanvasEffectGraph effectGraph)
         {
             effectGraph.RegisterNode(new ColorSourceEffect());
-            effectGraph.RegisterNode(new EffectNode<ColorSourceEffect>(), new ColorSourceEffect());
-            effectGraph.RegisterNode(new EffectNode<ColorSourceEffect>(), new ColorSourceEffect());
+            effectGraph.RegisterNode(new CanvasEffectNode<ColorSourceEffect>(), new ColorSourceEffect());
+            effectGraph.RegisterNode(new CanvasEffectNode<ColorSourceEffect>(), new ColorSourceEffect());
         }
 
-        protected override void ConfigureEffectGraph(EffectGraph effectGraph)
+        protected override void ConfigureEffectGraph(CanvasEffectGraph effectGraph)
         {
             WasConfigureEffectGraphCalled = true;
         }
@@ -467,15 +467,15 @@ public partial class CanvasEffectTests
 
     private sealed class EffectRegisteringNodesMultipleTimes1 : CanvasEffect
     {
-        protected override void BuildEffectGraph(EffectGraph effectGraph)
+        protected override void BuildEffectGraph(CanvasEffectGraph effectGraph)
         {
-            EffectNode<ColorSourceEffect> node = new();
+            CanvasEffectNode<ColorSourceEffect> node = new();
 
             effectGraph.RegisterNode(node, new ColorSourceEffect());
             effectGraph.RegisterOutputNode(node, new ColorSourceEffect());
         }
 
-        protected override void ConfigureEffectGraph(EffectGraph effectGraph)
+        protected override void ConfigureEffectGraph(CanvasEffectGraph effectGraph)
         {
             Assert.Fail();
         }
@@ -483,16 +483,16 @@ public partial class CanvasEffectTests
 
     private sealed class EffectRegisteringNodesMultipleTimes2 : CanvasEffect
     {
-        protected override void BuildEffectGraph(EffectGraph effectGraph)
+        protected override void BuildEffectGraph(CanvasEffectGraph effectGraph)
         {
-            EffectNode<ColorSourceEffect> node = new();
+            CanvasEffectNode<ColorSourceEffect> node = new();
 
             effectGraph.RegisterNode(node, new ColorSourceEffect());
             effectGraph.RegisterNode(node, new ColorSourceEffect());
-            effectGraph.RegisterOutputNode(new EffectNode<ColorSourceEffect>(), new ColorSourceEffect());
+            effectGraph.RegisterOutputNode(new CanvasEffectNode<ColorSourceEffect>(), new ColorSourceEffect());
         }
 
-        protected override void ConfigureEffectGraph(EffectGraph effectGraph)
+        protected override void ConfigureEffectGraph(CanvasEffectGraph effectGraph)
         {
             Assert.Fail();
         }
@@ -500,63 +500,63 @@ public partial class CanvasEffectTests
 
     private sealed class EffectRegisteringNullObjects : CanvasEffect
     {
-        protected override unsafe void BuildEffectGraph(EffectGraph effectGraph)
+        protected override unsafe void BuildEffectGraph(CanvasEffectGraph effectGraph)
         {
             // Verify that if the effect graph is invalid, arguments are validated first
-            _ = Assert.ThrowsException<ArgumentNullException>(() => default(EffectGraph).RegisterNode(null!));
-            _ = Assert.ThrowsException<ArgumentNullException>(() => default(EffectGraph).RegisterNode(null!, new ColorSourceEffect()));
-            _ = Assert.ThrowsException<ArgumentNullException>(() => default(EffectGraph).RegisterNode(new EffectNode<ColorSourceEffect>(), null!));
-            _ = Assert.ThrowsException<ArgumentNullException>(() => default(EffectGraph).RegisterNode(null!, (ColorSourceEffect?)null!));
-            _ = Assert.ThrowsException<ArgumentNullException>(() => default(EffectGraph).RegisterOutputNode(null!));
-            _ = Assert.ThrowsException<ArgumentNullException>(() => default(EffectGraph).RegisterOutputNode(null!, new ColorSourceEffect()));
-            _ = Assert.ThrowsException<ArgumentNullException>(() => default(EffectGraph).RegisterOutputNode(new EffectNode<ColorSourceEffect>(), null!));
-            _ = Assert.ThrowsException<ArgumentNullException>(() => default(EffectGraph).RegisterOutputNode(null!, (ColorSourceEffect)null!));
+            _ = Assert.ThrowsException<ArgumentNullException>(() => default(CanvasEffectGraph).RegisterNode(null!));
+            _ = Assert.ThrowsException<ArgumentNullException>(() => default(CanvasEffectGraph).RegisterNode(null!, new ColorSourceEffect()));
+            _ = Assert.ThrowsException<ArgumentNullException>(() => default(CanvasEffectGraph).RegisterNode(new CanvasEffectNode<ColorSourceEffect>(), null!));
+            _ = Assert.ThrowsException<ArgumentNullException>(() => default(CanvasEffectGraph).RegisterNode(null!, (ColorSourceEffect?)null!));
+            _ = Assert.ThrowsException<ArgumentNullException>(() => default(CanvasEffectGraph).RegisterOutputNode(null!));
+            _ = Assert.ThrowsException<ArgumentNullException>(() => default(CanvasEffectGraph).RegisterOutputNode(null!, new ColorSourceEffect()));
+            _ = Assert.ThrowsException<ArgumentNullException>(() => default(CanvasEffectGraph).RegisterOutputNode(new CanvasEffectNode<ColorSourceEffect>(), null!));
+            _ = Assert.ThrowsException<ArgumentNullException>(() => default(CanvasEffectGraph).RegisterOutputNode(null!, (ColorSourceEffect)null!));
 
             void* ptr = &effectGraph;
 
-            _ = Assert.ThrowsException<ArgumentNullException>(() => (*(EffectGraph*)ptr).RegisterNode(null!));
-            _ = Assert.ThrowsException<ArgumentNullException>(() => (*(EffectGraph*)ptr).RegisterNode(null!, new ColorSourceEffect()));
-            _ = Assert.ThrowsException<ArgumentNullException>(() => (*(EffectGraph*)ptr).RegisterNode(new EffectNode<ColorSourceEffect>(), null!));
-            _ = Assert.ThrowsException<ArgumentNullException>(() => (*(EffectGraph*)ptr).RegisterNode(null!, (ColorSourceEffect?)null!));
-            _ = Assert.ThrowsException<ArgumentNullException>(() => (*(EffectGraph*)ptr).RegisterOutputNode(null!));
-            _ = Assert.ThrowsException<ArgumentNullException>(() => (*(EffectGraph*)ptr).RegisterOutputNode(null!, new ColorSourceEffect()));
-            _ = Assert.ThrowsException<ArgumentNullException>(() => (*(EffectGraph*)ptr).RegisterOutputNode(new EffectNode<ColorSourceEffect>(), null!));
-            _ = Assert.ThrowsException<ArgumentNullException>(() => (*(EffectGraph*)ptr).RegisterOutputNode(null!, (ColorSourceEffect)null!));
+            _ = Assert.ThrowsException<ArgumentNullException>(() => (*(CanvasEffectGraph*)ptr).RegisterNode(null!));
+            _ = Assert.ThrowsException<ArgumentNullException>(() => (*(CanvasEffectGraph*)ptr).RegisterNode(null!, new ColorSourceEffect()));
+            _ = Assert.ThrowsException<ArgumentNullException>(() => (*(CanvasEffectGraph*)ptr).RegisterNode(new CanvasEffectNode<ColorSourceEffect>(), null!));
+            _ = Assert.ThrowsException<ArgumentNullException>(() => (*(CanvasEffectGraph*)ptr).RegisterNode(null!, (ColorSourceEffect?)null!));
+            _ = Assert.ThrowsException<ArgumentNullException>(() => (*(CanvasEffectGraph*)ptr).RegisterOutputNode(null!));
+            _ = Assert.ThrowsException<ArgumentNullException>(() => (*(CanvasEffectGraph*)ptr).RegisterOutputNode(null!, new ColorSourceEffect()));
+            _ = Assert.ThrowsException<ArgumentNullException>(() => (*(CanvasEffectGraph*)ptr).RegisterOutputNode(new CanvasEffectNode<ColorSourceEffect>(), null!));
+            _ = Assert.ThrowsException<ArgumentNullException>(() => (*(CanvasEffectGraph*)ptr).RegisterOutputNode(null!, (ColorSourceEffect)null!));
 
-            effectGraph.RegisterOutputNode(new EffectNode<ColorSourceEffect>(), new ColorSourceEffect());
+            effectGraph.RegisterOutputNode(new CanvasEffectNode<ColorSourceEffect>(), new ColorSourceEffect());
         }
 
-        protected override void ConfigureEffectGraph(EffectGraph effectGraph)
+        protected override void ConfigureEffectGraph(CanvasEffectGraph effectGraph)
         {
         }
     }
 
     private sealed class EffectConfiguringGraphIncorrectly : CanvasEffect
     {
-        private static readonly EffectNode<ColorSourceEffect> EffectNode1 = new();
-        private static readonly EffectNode<ColorSourceEffect> EffectNode2 = new();
-        private static readonly EffectNode<ColorSourceEffect> EffectNode3 = new();
+        private static readonly CanvasEffectNode<ColorSourceEffect> EffectNode1 = new();
+        private static readonly CanvasEffectNode<ColorSourceEffect> EffectNode2 = new();
+        private static readonly CanvasEffectNode<ColorSourceEffect> EffectNode3 = new();
 #pragma warning disable CA2213
         private readonly ColorSourceEffect effect1 = new();
         private readonly ColorSourceEffect effect2 = new();
         private readonly ColorSourceEffect effect3 = new();
 #pragma warning restore CA2213
 
-        protected override void BuildEffectGraph(EffectGraph effectGraph)
+        protected override void BuildEffectGraph(CanvasEffectGraph effectGraph)
         {
             effectGraph.RegisterNode(EffectNode1, this.effect1);
             effectGraph.RegisterNode(EffectNode2, this.effect2);
             effectGraph.RegisterOutputNode(EffectNode3, this.effect3);
         }
 
-        protected override unsafe void ConfigureEffectGraph(EffectGraph effectGraph)
+        protected override unsafe void ConfigureEffectGraph(CanvasEffectGraph effectGraph)
         {
             void* ptr = &effectGraph;
 
-            _ = Assert.ThrowsException<ArgumentNullException>(() => (*(EffectGraph*)ptr).GetNode((EffectNode<ColorSourceEffect>)null!));
-            _ = Assert.ThrowsException<ArgumentException>(() => (*(EffectGraph*)ptr).GetNode(new EffectNode<ColorSourceEffect>()));
-            _ = Assert.ThrowsException<InvalidOperationException>(() => (*(EffectGraph*)ptr).RegisterNode(new EffectNode<ColorSourceEffect>(), new ColorSourceEffect()));
-            _ = Assert.ThrowsException<InvalidOperationException>(() => (*(EffectGraph*)ptr).RegisterOutputNode(new EffectNode<ColorSourceEffect>(), new ColorSourceEffect()));
+            _ = Assert.ThrowsException<ArgumentNullException>(() => (*(CanvasEffectGraph*)ptr).GetNode((CanvasEffectNode<ColorSourceEffect>)null!));
+            _ = Assert.ThrowsException<ArgumentException>(() => (*(CanvasEffectGraph*)ptr).GetNode(new CanvasEffectNode<ColorSourceEffect>()));
+            _ = Assert.ThrowsException<InvalidOperationException>(() => (*(CanvasEffectGraph*)ptr).RegisterNode(new CanvasEffectNode<ColorSourceEffect>(), new ColorSourceEffect()));
+            _ = Assert.ThrowsException<InvalidOperationException>(() => (*(CanvasEffectGraph*)ptr).RegisterOutputNode(new CanvasEffectNode<ColorSourceEffect>(), new ColorSourceEffect()));
 
             Assert.AreSame(effectGraph.GetNode(EffectNode1), this.effect1);
             Assert.AreSame(effectGraph.GetNode(EffectNode2), this.effect2);
@@ -566,47 +566,47 @@ public partial class CanvasEffectTests
 
     private sealed class EffectOnlyUsingAnonymousNodes : CanvasEffect
     {
-        protected override void BuildEffectGraph(EffectGraph effectGraph)
+        protected override void BuildEffectGraph(CanvasEffectGraph effectGraph)
         {
             effectGraph.RegisterNode(new ColorSourceEffect());
             effectGraph.RegisterNode(new ColorSourceEffect());
             effectGraph.RegisterOutputNode(new ColorSourceEffect());
         }
 
-        protected override void ConfigureEffectGraph(EffectGraph effectGraph)
+        protected override void ConfigureEffectGraph(CanvasEffectGraph effectGraph)
         {
         }
     }
 
     private sealed class EffectUsingEffectGraphInInvalidState : CanvasEffect
     {
-        protected override void BuildEffectGraph(EffectGraph effectGraph)
+        protected override void BuildEffectGraph(CanvasEffectGraph effectGraph)
         {
-            _ = Assert.ThrowsException<InvalidOperationException>(() => default(EffectGraph).RegisterNode(new ColorSourceEffect()));
-            _ = Assert.ThrowsException<InvalidOperationException>(() => default(EffectGraph).RegisterNode(new EffectNode<ColorSourceEffect>(), new ColorSourceEffect()));
-            _ = Assert.ThrowsException<InvalidOperationException>(() => default(EffectGraph).RegisterOutputNode(new ColorSourceEffect()));
-            _ = Assert.ThrowsException<InvalidOperationException>(() => default(EffectGraph).RegisterOutputNode(new EffectNode<ColorSourceEffect>(), new ColorSourceEffect()));
+            _ = Assert.ThrowsException<InvalidOperationException>(() => default(CanvasEffectGraph).RegisterNode(new ColorSourceEffect()));
+            _ = Assert.ThrowsException<InvalidOperationException>(() => default(CanvasEffectGraph).RegisterNode(new CanvasEffectNode<ColorSourceEffect>(), new ColorSourceEffect()));
+            _ = Assert.ThrowsException<InvalidOperationException>(() => default(CanvasEffectGraph).RegisterOutputNode(new ColorSourceEffect()));
+            _ = Assert.ThrowsException<InvalidOperationException>(() => default(CanvasEffectGraph).RegisterOutputNode(new CanvasEffectNode<ColorSourceEffect>(), new ColorSourceEffect()));
 
-            effectGraph.RegisterOutputNode(new EffectNode<ColorSourceEffect>(), new ColorSourceEffect());
+            effectGraph.RegisterOutputNode(new CanvasEffectNode<ColorSourceEffect>(), new ColorSourceEffect());
         }
 
-        protected override void ConfigureEffectGraph(EffectGraph effectGraph)
+        protected override void ConfigureEffectGraph(CanvasEffectGraph effectGraph)
         {
-            _ = Assert.ThrowsException<InvalidOperationException>(() => default(EffectGraph).GetNode(new EffectNode<ColorSourceEffect>()));
+            _ = Assert.ThrowsException<InvalidOperationException>(() => default(CanvasEffectGraph).GetNode(new CanvasEffectNode<ColorSourceEffect>()));
         }
     }
 
     private sealed class PixelShaderSwitchEffect : CanvasEffect
     {
-        private static readonly EffectNode<PixelShaderEffect<HelloWorld>> HelloWorldNode = new();
-        private static readonly EffectNode<PixelShaderEffect<ColorfulInfinity>> ColorfulInfinityNode = new();
-        private static readonly EffectNode<PixelShaderEffect<FractalTiling>> FractalTilingNode = new();
-        private static readonly EffectNode<PixelShaderEffect<Octagrams>> OctagramsNode = new();
-        private static readonly EffectNode<PixelShaderEffect<ProteanClouds>> ProteanCloudsNode = new();
+        private static readonly CanvasEffectNode<PixelShaderEffect<HelloWorld>> HelloWorldNode = new();
+        private static readonly CanvasEffectNode<PixelShaderEffect<ColorfulInfinity>> ColorfulInfinityNode = new();
+        private static readonly CanvasEffectNode<PixelShaderEffect<FractalTiling>> FractalTilingNode = new();
+        private static readonly CanvasEffectNode<PixelShaderEffect<Octagrams>> OctagramsNode = new();
+        private static readonly CanvasEffectNode<PixelShaderEffect<ProteanClouds>> ProteanCloudsNode = new();
 
         private int step;
 
-        protected override void BuildEffectGraph(EffectGraph effectGraph)
+        protected override void BuildEffectGraph(CanvasEffectGraph effectGraph)
         {
             effectGraph.RegisterNode(HelloWorldNode, new PixelShaderEffect<HelloWorld> { ConstantBuffer = new HelloWorld(0, new int2(1280, 720)) });
             effectGraph.RegisterNode(ColorfulInfinityNode, new PixelShaderEffect<ColorfulInfinity> { ConstantBuffer = new ColorfulInfinity(0, new int2(1280, 720)) });
@@ -616,7 +616,7 @@ public partial class CanvasEffectTests
             effectGraph.SetOutputNode(HelloWorldNode);
         }
 
-        protected override void ConfigureEffectGraph(EffectGraph effectGraph)
+        protected override void ConfigureEffectGraph(CanvasEffectGraph effectGraph)
         {
             switch (this.step++)
             {
@@ -640,24 +640,24 @@ public partial class CanvasEffectTests
 
     private sealed class EffectTestingDisposal : CanvasEffect
     {
-        private static readonly EffectNode<DummyCanvasImageTrackingDisposal> EffectNode1 = new();
-        private static readonly EffectNode<DummyCanvasImageTrackingDisposal> EffectNode2 = new();
-        private static readonly EffectNode<DummyCanvasImageTrackingDisposal> EffectNode3 = new();
+        private static readonly CanvasEffectNode<DummyCanvasImageTrackingDisposal> EffectNode1 = new();
+        private static readonly CanvasEffectNode<DummyCanvasImageTrackingDisposal> EffectNode2 = new();
+        private static readonly CanvasEffectNode<DummyCanvasImageTrackingDisposal> EffectNode3 = new();
         public readonly List<DummyCanvasImageTrackingDisposal> Effects1 = new();
         public readonly List<DummyCanvasImageTrackingDisposal> Effects2 = new();
         public readonly List<DummyCanvasImageTrackingDisposal> Effects3 = new();
 
         public void InvalidateCreation()
         {
-            InvalidateEffectGraph(InvalidationType.Creation);
+            InvalidateEffectGraph(CanvasEffectInvalidationType.Creation);
         }
 
         public void InvalidateUpdate()
         {
-            InvalidateEffectGraph(InvalidationType.Update);
+            InvalidateEffectGraph(CanvasEffectInvalidationType.Update);
         }
 
-        protected override void BuildEffectGraph(EffectGraph effectGraph)
+        protected override void BuildEffectGraph(CanvasEffectGraph effectGraph)
         {
             this.Effects1.Add(new DummyCanvasImageTrackingDisposal());
             this.Effects2.Add(new DummyCanvasImageTrackingDisposal());
@@ -668,7 +668,7 @@ public partial class CanvasEffectTests
             effectGraph.RegisterOutputNode(EffectNode3, this.Effects3[^1]);
         }
 
-        protected override void ConfigureEffectGraph(EffectGraph effectGraph)
+        protected override void ConfigureEffectGraph(CanvasEffectGraph effectGraph)
         {
         }
     }
