@@ -22,10 +22,10 @@ public sealed class D2D1ContouredLayersEffect : PixelShaderEffect
     /// <summary>
     /// The reusable <see cref="PixelShaderEffect{T}"/> node to use to render frames.
     /// </summary>
-    private static readonly EffectNode<PixelShaderEffect<ContouredLayers>> PixelShaderEffect = new();
+    private static readonly CanvasEffectNode<PixelShaderEffect<ContouredLayers>> PixelShaderEffect = new();
 
     /// <inheritdoc/>
-    protected override unsafe void BuildEffectGraph(EffectGraph effectGraph)
+    protected override unsafe void BuildEffectGraph(CanvasEffectGraph effectGraph)
     {
         string filename = Path.Combine(Package.Current.InstalledLocation.Path, "Assets", "Textures", "RustyMetal.png");
 
@@ -62,7 +62,7 @@ public sealed class D2D1ContouredLayersEffect : PixelShaderEffect
     }
 
     /// <inheritdoc/>
-    protected override void ConfigureEffectGraph(EffectGraph effectGraph)
+    protected override void ConfigureEffectGraph(CanvasEffectGraph effectGraph)
     {
         effectGraph.GetNode(PixelShaderEffect).ConstantBuffer = new ContouredLayers((float)ElapsedTime.TotalSeconds, new int2(ScreenWidth, ScreenHeight));
     }
