@@ -97,9 +97,11 @@ public partial class CanvasEffectTests
     }
 
     [TestMethod]
-    [ExpectedException(typeof(InvalidOperationException))]
+    [ExpectedException(typeof(Exception), AllowDerivedTypes = true)]
     public void CanvasEffect_EffectNotRegisteringAnOutputNode()
     {
+        const int COR_E_INVALIDOPERATION = unchecked((int)0x80131509);
+
         EffectNotRegisteringAnOutputNode effect = new();
 
         try
@@ -109,8 +111,14 @@ public partial class CanvasEffectTests
 
             drawingSession.DrawImage(effect);
         }
-        catch
+        catch (Exception e)
         {
+            // Note: this test should ideally expect and catch an InvalidOperationException, as that's the exception
+            // type thrown by CanvasEffect. But it seems that CsWinRT isn't correctly forwarding the exception type
+            // in this case, and it ends up only throwing a COMException on the managed side. To work around this in
+            // this test, we can just catch a generic Exception and manually verify that the HRESULT is a match.
+            // See https://github.com/microsoft/CsWinRT/issues/1393 (and ideally update the test once that's fixed).
+            Assert.AreEqual(COR_E_INVALIDOPERATION, e.HResult);
             Assert.IsTrue(effect.WasConfigureEffectGraphCalled);
 
             throw;
