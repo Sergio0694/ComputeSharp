@@ -196,7 +196,7 @@ partial class AnimatedComputeShaderPanel
         AnimatedComputeShaderPanel @this = (AnimatedComputeShaderPanel)d;
 
         if (@this.IsLoaded &&
-            (bool)e.NewValue is false &&
+            !(bool)e.NewValue &&
             @this.ShaderRunner is IShaderRunner shaderRunner)
         {
             @this.swapChainManager.StartRenderLoop(null, shaderRunner);

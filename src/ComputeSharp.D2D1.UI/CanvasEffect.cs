@@ -19,19 +19,25 @@ public abstract partial class CanvasEffect : ICanvasImage, ICanvasImageInterop.I
     /// The mapping of registered transform nodes for the current effect graph.
     /// </summary>
     /// <remarks>
-    /// When not empty (ie. when an effect graph has been built), this will always also include <see cref="canvasImage"/>.
+    /// <para>
+    /// When not empty (ie. when an effect graph has been built), this will always also include <see cref="CanvasImage"/>.
+    /// </para>
+    /// <para>
+    /// This field and the two below are <see langword="internal"/> due to lack of <see langword="friend"/> modifier in C#.
+    /// The <see cref="CanvasEffectGraph"/> type is the only one that needs access to these fields to configure the effect.
+    /// </para>
     /// </remarks>
-    private readonly Dictionary<object, ICanvasImage> transformNodes = new();
+    internal readonly Dictionary<object, ICanvasImage> TransformNodes = new();
 
     /// <summary>
     /// The current cached result for <see cref="GetCanvasImage"/>, if available.
     /// </summary>
-    private ICanvasImage? canvasImage;
+    internal ICanvasImage? CanvasImage;
 
     /// <summary>
     /// Indicates the current invalidation state for the effect graph (which controls the logic in <see cref="GetCanvasImage"/>).
     /// </summary>
-    private InvalidationType invalidationType = InvalidationType.Creation;
+    internal CanvasEffectInvalidationType InvalidationType = CanvasEffectInvalidationType.Creation;
 
     /// <summary>
     /// Indicates whether the effect is disposed.
@@ -42,14 +48,14 @@ public abstract partial class CanvasEffect : ICanvasImage, ICanvasImageInterop.I
     /// Builds the effect graph for the current <see cref="CanvasEffect"/> instance, and configures all effect nodes, as well as the output
     /// node for the graph. That <see cref="ICanvasImage"/> instance will then be passed to Win2D to perform the actual drawing, when needed.
     /// </summary>
-    /// <param name="effectGraph">The input <see cref="EffectGraph"/> value to use to build the effect graph.</param>
+    /// <param name="effectGraph">The input <see cref="CanvasEffectGraph"/> value to use to build the effect graph.</param>
     /// <remarks>
     /// <para>
     /// This method is called once before the current effect is drawn, and the resulting image is automatically cached and reused.
-    /// It will remain in use until <see cref="InvalidateEffectGraph"/> is called with <see cref="InvalidationType.Creation"/>.
+    /// It will remain in use until <see cref="InvalidateEffectGraph"/> is called with <see cref="CanvasEffectInvalidationType.Creation"/>.
     /// </para>
     /// <para>
-    /// If the effect is invalidated with <see cref="InvalidationType.Update"/>, only <see cref="ConfigureEffectGraph"/> will be
+    /// If the effect is invalidated with <see cref="CanvasEffectInvalidationType.Update"/>, only <see cref="ConfigureEffectGraph"/> will be
     /// called. As such, derived types should save any effect graph nodes that might need updates into instance fields, for later use.
     /// </para>
     /// <para>
@@ -77,19 +83,19 @@ public abstract partial class CanvasEffect : ICanvasImage, ICanvasImageInterop.I
     /// </list>
     /// </para>
     /// <para>
-    /// For convenience, it is recommended to store all necessary <see cref="EffectNode{T}"/> objects in <see langword="static"/>
+    /// For convenience, it is recommended to store all necessary <see cref="CanvasEffectNode{T}"/> objects in <see langword="static"/>
     /// <see langword="readonly"/> fields, so they can easily be accessed from <see cref="BuildEffectGraph"/> and <see cref="ConfigureEffectGraph"/>.
     /// </para>
     /// <para>
     /// This method should never be called directly. It is automatically invoked when an effect graph is needed.
     /// </para>
     /// </remarks>
-    protected abstract void BuildEffectGraph(EffectGraph effectGraph);
+    protected abstract void BuildEffectGraph(CanvasEffectGraph effectGraph);
 
     /// <summary>
     /// Configures the current effect graph whenever it is invalidated.
     /// </summary>
-    /// <param name="effectGraph">The input <see cref="EffectGraph"/> value to use to configure the effect graph.</param>
+    /// <param name="effectGraph">The input <see cref="CanvasEffectGraph"/> value to use to configure the effect graph.</param>
     /// <remarks>
     /// <para>
     /// This method is guaranteed to be called after <see cref="BuildEffectGraph"/> has been invoked already. As such, any instance
@@ -99,7 +105,7 @@ public abstract partial class CanvasEffect : ICanvasImage, ICanvasImageInterop.I
     /// This method should never be called directly. It is used internally to configure the current effect graph.
     /// </para>
     /// </remarks>
-    protected abstract void ConfigureEffectGraph(EffectGraph effectGraph);
+    protected abstract void ConfigureEffectGraph(CanvasEffectGraph effectGraph);
 
     /// <summary>
     /// Invalidates the last returned result from <see cref="GetCanvasImage"/>.
@@ -112,14 +118,14 @@ public abstract partial class CanvasEffect : ICanvasImage, ICanvasImageInterop.I
     /// or whether it simply needs to refresh its internal state (by calling <see cref="ConfigureEffectGraph"/>).
     /// </para>
     /// <para>
-    /// If <see cref="InvalidateEffectGraph"/> is called with <see cref="InvalidationType.Update"/>, the effect
+    /// If <see cref="InvalidateEffectGraph"/> is called with <see cref="CanvasEffectInvalidationType.Update"/>, the effect
     /// graph will only be refreshed the next time the image is actually requested. That is, repeated requests
     /// for updates do not result in unnecessarily calls to <see cref="ConfigureEffectGraph"/>.
     /// </para>
     /// </remarks>
-    protected void InvalidateEffectGraph(InvalidationType invalidationType = InvalidationType.Update)
+    protected void InvalidateEffectGraph(CanvasEffectInvalidationType invalidationType = CanvasEffectInvalidationType.Update)
     {
-        lock (this.transformNodes)
+        lock (this.TransformNodes)
         {
             // This method only updates the invalidation type. The next time the effect is drawn,
             // the current graph (if existing) will be disposed automatically before building a
@@ -127,7 +133,7 @@ public abstract partial class CanvasEffect : ICanvasImage, ICanvasImageInterop.I
             // The new invalidation type is always set to the maximum between the current one and
             // the requested one. This means that eg. if the current invalidation type is creation,
             // and a property only needing an update is set, the creation request will persist.
-            this.invalidationType = (InvalidationType)Math.Max((byte)this.invalidationType, (byte)invalidationType);
+            this.InvalidationType = (CanvasEffectInvalidationType)Math.Max((byte)this.InvalidationType, (byte)invalidationType);
         }
     }
 
@@ -139,7 +145,7 @@ public abstract partial class CanvasEffect : ICanvasImage, ICanvasImageInterop.I
     /// <param name="storage">The storage for the effect property value.</param>
     /// <param name="value">The new effect property value to set.</param>
     /// <param name="invalidationType">The invalidation type to request.</param>
-    protected void SetAndInvalidateEffectGraph<T>([NotNullIfNotNull(nameof(value))] ref T storage, T value, InvalidationType invalidationType = InvalidationType.Update)
+    protected void SetAndInvalidateEffectGraph<T>([NotNullIfNotNull(nameof(value))] ref T storage, T value, CanvasEffectInvalidationType invalidationType = CanvasEffectInvalidationType.Update)
     {
         if (EqualityComparer<T>.Default.Equals(storage, value))
         {
@@ -189,7 +195,7 @@ public abstract partial class CanvasEffect : ICanvasImage, ICanvasImageInterop.I
             // the lock itself might have already been collected by the time this code runs, which would lead the lock
             // statement to throw a NullReferenceException. So if a finalizer is running, just let objects be collected
             // on their own. This is fine here since there are no unmanaged references to free, but just managed wrappers.
-            lock (this.transformNodes)
+            lock (this.TransformNodes)
             {
                 DisposeEffectGraph();
             }
@@ -204,35 +210,5 @@ public abstract partial class CanvasEffect : ICanvasImage, ICanvasImageInterop.I
         Dispose(disposing: true);
 
         GC.SuppressFinalize(this);
-    }
-
-    /// <summary>
-    /// Indicates the invalidation type to request when invoking <see cref="InvalidateEffectGraph"/> and related methods.
-    /// </summary>
-    protected enum InvalidationType : byte
-    {
-        /// <summary>
-        /// Invalidates the state of the effect graph, causing it to be configured again the next time it is used.
-        /// </summary>
-        /// <remarks>
-        /// <para>
-        /// This will preserve the last returned <see cref="ICanvasImage"/> instance, if available, and it will only
-        /// mark the internal state as being out of date, resulting in <see cref="ConfigureEffectGraph"/> to be called
-        /// the next time the effect is used for drawing.
-        /// </para>
-        /// <para>
-        /// This is much less expensive than creating the effect graph again, and should be preferred if possible.
-        /// </para>
-        /// </remarks>
-        Update,
-
-        /// <summary>
-        /// Fully invalidates the effect graph, causing it to be created again the next time it is needed.
-        /// </summary>
-        /// <remarks>
-        /// This will cause the last returned <see cref="ICanvasImage"/> instance to be disposed and discarded,
-        /// and <see cref="BuildEffectGraph"/> to be called again the next time the effect is used for drawing.
-        /// </remarks>
-        Creation
     }
 }

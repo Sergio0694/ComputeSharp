@@ -66,40 +66,40 @@ partial class CanvasEffect
     /// </summary>
     /// <returns>The current <see cref="ICanvasImage"/> instance.</returns>
     /// <exception cref="ObjectDisposedException">Thrown if the current instance is disposed.</exception>
-    [MemberNotNull(nameof(canvasImage))]
+    [MemberNotNull(nameof(CanvasImage))]
     private ICanvasImage GetCanvasImage()
     {
-        lock (this.transformNodes)
+        lock (this.TransformNodes)
         {
             default(ObjectDisposedException).ThrowIf(this.isDisposed, this);
 
             // Build the effect graph (the output node might not have been set yet)
-            if (this.invalidationType == InvalidationType.Creation)
+            if (this.InvalidationType == CanvasEffectInvalidationType.Creation)
             {
                 DisposeEffectGraph();
-                BuildEffectGraph(new EffectGraph(this));
+                BuildEffectGraph(new CanvasEffectGraph(this));
 
                 // We successfully got past the effect graph creation, so update the current
                 // invalidation state. This ensures that even if the configuration failed, the
                 // next time the effect is drawn again the graph won't be created again too.
-                this.invalidationType = InvalidationType.Update;
+                this.InvalidationType = CanvasEffectInvalidationType.Update;
             }
 
             // Configure the effect graph, if the effect is invalidated
-            if (this.invalidationType == InvalidationType.Update)
+            if (this.InvalidationType == CanvasEffectInvalidationType.Update)
             {
-                ConfigureEffectGraph(new EffectGraph(this));
+                ConfigureEffectGraph(new CanvasEffectGraph(this));
 
                 // The effect graph is now ready to go: no further work will be done before drawing
                 // unless it is explicitly invalidated again, using either creation or update mode.
-                this.invalidationType = default;
+                this.InvalidationType = default;
             }
 
             // At this point, there must be an output canvas image being set.
             // If not, it means a derived type has forgot to set an output node.
-            default(InvalidOperationException).ThrowIf(this.canvasImage is null, "No output node is set in the effect graph.");
+            default(InvalidOperationException).ThrowIf(this.CanvasImage is null, "No output node is set in the effect graph.");
 
-            return this.canvasImage;
+            return this.CanvasImage;
         }
     }
 
@@ -109,7 +109,7 @@ partial class CanvasEffect
     private void DisposeEffectGraph()
     {
         // Dispose all registered canvas images
-        foreach (ICanvasImage canvasImage in this.transformNodes.Values)
+        foreach (ICanvasImage canvasImage in this.TransformNodes.Values)
         {
             canvasImage.Dispose();
         }
@@ -117,7 +117,7 @@ partial class CanvasEffect
         // Also clear the current effect graph. Note that the canvas image used as output
         // node for the effect graph does not need to be explicitly disposed here, as that
         // object is guaranteed to have been part of the dictionary of transform nodes.
-        this.transformNodes.Clear();
-        this.canvasImage = null;
+        this.TransformNodes.Clear();
+        this.CanvasImage = null;
     }
 }

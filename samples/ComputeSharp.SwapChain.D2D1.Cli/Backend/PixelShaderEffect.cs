@@ -62,7 +62,7 @@ internal abstract class PixelShaderEffect : CanvasEffect
         /// <summary>
         /// The <see cref="PixelShaderEffect{T}"/> node in use.
         /// </summary>
-        private static readonly EffectNode<PixelShaderEffect<T>> Effect = new();
+        private static readonly CanvasEffectNode<PixelShaderEffect<T>> Effect = new();
 
         /// <summary>
         /// The <typeparamref name="T"/> factory to use.
@@ -79,13 +79,13 @@ internal abstract class PixelShaderEffect : CanvasEffect
         }
 
         /// <inheritdoc/>
-        protected override void BuildEffectGraph(EffectGraph effectGraph)
+        protected override void BuildEffectGraph(CanvasEffectGraph effectGraph)
         {
             effectGraph.RegisterOutputNode(Effect, new PixelShaderEffect<T>());
         }
 
         /// <inheritdoc/>
-        protected override void ConfigureEffectGraph(EffectGraph effectGraph)
+        protected override void ConfigureEffectGraph(CanvasEffectGraph effectGraph)
         {
             effectGraph.GetNode(Effect).ConstantBuffer = this.factory(ElapsedTime, ScreenWidth, ScreenHeight);
         }
