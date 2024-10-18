@@ -19,11 +19,6 @@
     <AdditionalFiles Include="AnalyzerReleases.Unshipped.md" />
   </ItemGroup>
 
-  <!-- ComputeSharp.D2D1.WinUI APIs -->
-  <ItemGroup>
-    <Compile Include="..\ComputeSharp.D2D1.UI\CanvasEffectInvalidationType.cs" Link="ComputeSharp.D2D1.WinUI\CanvasEffectInvalidationType.cs" />
-  </ItemGroup>
-
-  <!-- Shared project with common helpers -->
   <Import Project="..\ComputeSharp.SourceGeneration\ComputeSharp.SourceGeneration.projitems" Label="Shared" />
+  <Import Project="..\ComputeSharp.D2D1.UI.SourceGenerators\ComputeSharp.D2D1.UI.SourceGenerators.projitems" Label="Shared" />
 </Project>
