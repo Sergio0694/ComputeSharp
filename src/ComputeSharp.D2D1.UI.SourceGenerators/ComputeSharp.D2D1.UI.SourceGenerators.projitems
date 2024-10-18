@@ -9,5 +9,14 @@
     <Import_RootNamespace>ComputeSharp.D2D1.UI.SourceGenerators</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)CanvasEffectPropertyGenerator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CanvasEffectPropertyGenerator.Execute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Diagnostics\Analyzers\InvalidGeneratedCanvasEffectPropertyAccessorsAnalyzer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Diagnostics\Analyzers\InvalidGeneratedCanvasEffectPropertyContainingTypeAnalyzer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Diagnostics\Analyzers\InvalidGeneratedCanvasEffectPropertyDeclarationAnalyzer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Diagnostics\Analyzers\RequireCSharpLanguageVersionPreviewAnalyzer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Diagnostics\DiagnosticDescriptors.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\CanvasEffectPropertyInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)..\ComputeSharp.D2D1.UI\CanvasEffectInvalidationType.cs" Link="ComputeSharp.D2D1.UI\CanvasEffectInvalidationType.cs" />
   </ItemGroup>
 </Project>
