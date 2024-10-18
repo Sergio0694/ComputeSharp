@@ -1,4 +1,9 @@
 using System.Collections.Immutable;
+#if WINDOWS_UWP
+using ComputeSharp.D2D1.Uwp.SourceGenerators.Constants;
+#else
+using ComputeSharp.D2D1.WinUI.SourceGenerators.Constants;
+#endif
 using ComputeSharp.SourceGeneration.Extensions;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
@@ -38,7 +43,7 @@ public sealed class RequireCSharpLanguageVersionPreviewAnalyzer : DiagnosticAnal
             }
 
             // Get the [GeneratedCanvasEffectProperty] symbols
-            if (context.Compilation.GetTypeByMetadataName("ComputeSharp.D2D1.WinUI.GeneratedCanvasEffectPropertyAttribute") is not { } generatedCanvasEffectPropertyAttributeSymbol)
+            if (context.Compilation.GetTypeByMetadataName(WellKnownTypeNames.GeneratedCanvasEffectPropertyAttribute) is not { } generatedCanvasEffectPropertyAttributeSymbol)
             {
                 return;
             }

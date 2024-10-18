@@ -1,4 +1,9 @@
 using System.Collections.Immutable;
+#if WINDOWS_UWP
+using ComputeSharp.D2D1.Uwp.SourceGenerators.Constants;
+#else
+using ComputeSharp.D2D1.WinUI.SourceGenerators.Constants;
+#endif
 using ComputeSharp.SourceGeneration.Extensions;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
@@ -32,8 +37,8 @@ public sealed class InvalidGeneratedCanvasEffectPropertyContainingTypeAnalyzer :
         context.RegisterCompilationStartAction(static context =>
         {
             // Get the [GeneratedCanvasEffectProperty] and CanvasEffect symbols
-            if (context.Compilation.GetTypeByMetadataName("ComputeSharp.D2D1.WinUI.GeneratedCanvasEffectPropertyAttribute") is not { } generatedCanvasEffectPropertyAttributeSymbol ||
-                context.Compilation.GetTypeByMetadataName("ComputeSharp.D2D1.WinUI.CanvasEffect") is not { } canvasEffectSymbol)
+            if (context.Compilation.GetTypeByMetadataName(WellKnownTypeNames.GeneratedCanvasEffectPropertyAttribute) is not { } generatedCanvasEffectPropertyAttributeSymbol ||
+                context.Compilation.GetTypeByMetadataName(WellKnownTypeNames.CanvasEffect) is not { } canvasEffectSymbol)
             {
                 return;
             }

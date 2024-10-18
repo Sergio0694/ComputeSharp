@@ -1,6 +1,8 @@
 #if WINDOWS_UWP
+using ComputeSharp.D2D1.Uwp.SourceGenerators.Constants;
 using ComputeSharp.D2D1.Uwp.SourceGenerators.Models;
 #else
+using ComputeSharp.D2D1.WinUI.SourceGenerators.Constants;
 using ComputeSharp.D2D1.WinUI.SourceGenerators.Models;
 #endif
 using ComputeSharp.SourceGeneration.Constants;
@@ -25,7 +27,12 @@ public sealed partial class CanvasEffectPropertyGenerator : IIncrementalGenerato
     /// <summary>
     /// The name of generator to include in the generated code.
     /// </summary>
-    private const string GeneratorName = "ComputeSharp.D2D1.WinUI.CanvasEffectPropertyGenerator";
+    private const string GeneratorName =
+#if WINDOWS_UWP
+        "ComputeSharp.D2D1.Uwp.CanvasEffectPropertyGenerator";
+#else
+        "ComputeSharp.D2D1.WinUI.CanvasEffectPropertyGenerator";
+#endif
 
     /// <inheritdoc/>
     public void Initialize(IncrementalGeneratorInitializationContext context)
@@ -33,7 +40,7 @@ public sealed partial class CanvasEffectPropertyGenerator : IIncrementalGenerato
         IncrementalValuesProvider<CanvasEffectPropertyInfo> propertyInfo =
             context.SyntaxProvider
             .ForAttributeWithMetadataName(
-                "ComputeSharp.D2D1.WinUI.GeneratedCanvasEffectPropertyAttribute",
+                WellKnownTypeNames.GeneratedCanvasEffectPropertyAttribute,
                 Execute.IsCandidatePropertyDeclaration,
                 static (context, token) =>
                 {
@@ -62,7 +69,7 @@ public sealed partial class CanvasEffectPropertyGenerator : IIncrementalGenerato
                     }
 
                     // Ensure that the containing type derives from CanvasEffect
-                    if (!typeSymbol.InheritsFromFullyQualifiedMetadataName("ComputeSharp.D2D1.WinUI.CanvasEffect"))
+                    if (!typeSymbol.InheritsFromFullyQualifiedMetadataName(WellKnownTypeNames.CanvasEffect))
                     {
                         return default;
                     }

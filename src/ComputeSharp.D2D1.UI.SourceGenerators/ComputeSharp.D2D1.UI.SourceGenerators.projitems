@@ -11,6 +11,7 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)CanvasEffectPropertyGenerator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CanvasEffectPropertyGenerator.Execute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Constants\WellKnownTypeNames.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Diagnostics\Analyzers\InvalidGeneratedCanvasEffectPropertyAccessorsAnalyzer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Diagnostics\Analyzers\InvalidGeneratedCanvasEffectPropertyContainingTypeAnalyzer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Diagnostics\Analyzers\InvalidGeneratedCanvasEffectPropertyDeclarationAnalyzer.cs" />
