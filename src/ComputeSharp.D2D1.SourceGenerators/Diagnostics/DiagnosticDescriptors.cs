@@ -944,13 +944,13 @@ partial class DiagnosticDescriptors
     /// <summary>
     /// Gets a <see cref="DiagnosticDescriptor"/> for when the <c>AllowUnsafeBlocks</c> option is not set.
     /// <para>
-    /// Format: <c>"Using [D2DGeneratedPixelShaderDescriptor] requires unsafe blocks being enabled, as they needed by the source generators to emit valid code (add &lt;AllowUnsafeBlocks&gt;true&lt;/AllowUnsafeBlocks&gt; to your .csproj/.props file)"</c>.
+    /// Format: <c>"Using [D2DGeneratedPixelShaderDescriptor] requires unsafe blocks being enabled, as they are needed by the source generators to emit valid code (add &lt;AllowUnsafeBlocks&gt;true&lt;/AllowUnsafeBlocks&gt; to your .csproj/.props file)"</c>.
     /// </para>
     /// </summary>
     public static readonly DiagnosticDescriptor MissingAllowUnsafeBlocksOption = new(
         id: "CMPSD2D0064",
         title: "Missing 'AllowUnsafeBlocks' compilation option",
-        messageFormat: "Using [D2DGeneratedPixelShaderDescriptor] requires unsafe blocks being enabled, as they needed by the source generators to emit valid code (add <AllowUnsafeBlocks>true</AllowUnsafeBlocks> to your .csproj/.props file)",
+        messageFormat: "Using [D2DGeneratedPixelShaderDescriptor] requires unsafe blocks being enabled, as they are needed by the source generators to emit valid code (add <AllowUnsafeBlocks>true</AllowUnsafeBlocks> to your .csproj/.props file)",
         category: "ComputeSharp.D2D1.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,

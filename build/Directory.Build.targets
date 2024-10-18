@@ -43,4 +43,16 @@
       <AutoGen>True</AutoGen>
     </Compile>
   </ItemGroup>
+
+  <!--
+    Setting this property is needed as a temporary workaround for an MSBuild bug triggered by WinAppSDK,
+    around 'GetReferenceTargetPlatformMonikers'. That target is currently producing multiple items and breaking
+    the build (in particular here it causes aliases to be lost/overwritten, and to ignore some attributes such
+    as 'PrivateAssets', causing potential type collisions across different projects) when compiling projects.
+    This can be removed once the bug is fixed in MSBuild and the tooling is updated here (likely VS 17.12).
+    See: https://github.com/dotnet/msbuild/pull/10220.
+  -->
+  <PropertyGroup>
+    <FindInvalidProjectReferences>false</FindInvalidProjectReferences>
+  </PropertyGroup>
 </Project>

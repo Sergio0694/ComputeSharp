@@ -1,5 +1,8 @@
 extern alias Core;
-#if D2D1_TESTS
+#if D2D1_TESTS || D2D1_WINUI_TESTS
+#if D2D1_WINUI_TESTS
+extern alias D2D1_WinUI;
+#endif
 extern alias D2D1;
 #else
 extern alias D3D12;
@@ -68,7 +71,10 @@ internal sealed class CSharpAnalyzerWithLanguageVersionTest<TAnalyzer> : CSharpA
 
         test.TestState.ReferenceAssemblies = ReferenceAssemblies.Net.Net80;
         test.TestState.AdditionalReferences.Add(MetadataReference.CreateFromFile(typeof(Core::ComputeSharp.Hlsl).Assembly.Location));
-#if D2D1_TESTS
+#if D2D1_TESTS || D2D1_WINUI_TESTS
+#if D2D1_WINUI_TESTS
+        test.TestState.AdditionalReferences.Add(MetadataReference.CreateFromFile(typeof(D2D1_WinUI::ComputeSharp.D2D1.WinUI.CanvasEffect).Assembly.Location));
+#endif
         test.TestState.AdditionalReferences.Add(MetadataReference.CreateFromFile(typeof(D2D1::ComputeSharp.D2D1.ID2D1PixelShader).Assembly.Location));
 #else
         test.TestState.AdditionalReferences.Add(MetadataReference.CreateFromFile(typeof(D3D12::ComputeSharp.IComputeShader).Assembly.Location));
