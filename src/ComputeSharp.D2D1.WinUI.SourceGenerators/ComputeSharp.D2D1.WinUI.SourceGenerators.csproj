@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <DefineConstants>$(DefineConstants);D2D1_UWINUI_SOURCE_GENERATOR</DefineConstants>
+    <DefineConstants>$(DefineConstants);D2D1_WINUI_SOURCE_GENERATOR</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup>
