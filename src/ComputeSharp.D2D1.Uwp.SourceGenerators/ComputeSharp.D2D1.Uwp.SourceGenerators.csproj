@@ -3,7 +3,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <DefineConstants>$(DefineConstants);D2D1_WINUI_SOURCE_GENERATOR</DefineConstants>
 
-    <!-- Ignore warnings for unresolved XML cref attributes (for imported types, same as in the D3D12 generator) -->
+    <!-- Same suppression as the WinUI generator -->
     <NoWarn>$(NoWarn);CS1574</NoWarn>
   </PropertyGroup>
 
