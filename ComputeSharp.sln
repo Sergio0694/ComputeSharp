@@ -182,6 +182,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputeSharp.D2D1.WinUI.Sou
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeSharp.D2D1.WinUI.Tests.SourceGenerators", "tests\ComputeSharp.D2D1.WinUI.Tests.SourceGenerators\ComputeSharp.D2D1.WinUI.Tests.SourceGenerators.csproj", "{916331A5-1EA6-41D7-B199-2E50C513EFDE}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "ComputeSharp.D2D1.UI.SourceGenerators", "src\ComputeSharp.D2D1.UI.SourceGenerators\ComputeSharp.D2D1.UI.SourceGenerators.shproj", "{D20E610F-EB37-46E7-B028-04784D7400D5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -590,6 +592,7 @@ Global
 		src\ComputeSharp.D2D1.UI\ComputeSharp.D2D1.UI.projitems*{a2a2171b-0baf-4a2a-bfb3-3357ef714bf0}*SharedItemsImports = 13
 		src\ComputeSharp.D2D1.UI\ComputeSharp.D2D1.UI.projitems*{bd9e6556-357e-4c20-bfcd-fb131f9372fa}*SharedItemsImports = 5
 		samples\ComputeSharp.SwapChain.Shaders\ComputeSharp.SwapChain.Shaders.projitems*{c12d7ace-98ed-4813-8118-6667c34f484f}*SharedItemsImports = 5
+		src\ComputeSharp.D2D1.UI.SourceGenerators\ComputeSharp.D2D1.UI.SourceGenerators.projitems*{d20e610f-eb37-46e7-b028-04784d7400d5}*SharedItemsImports = 13
 		src\ComputeSharp.SourceGeneration.Hlsl\ComputeSharp.SourceGeneration.Hlsl.projitems*{e44053bd-a761-47fb-aa78-087a599672ea}*SharedItemsImports = 5
 		src\ComputeSharp.SourceGeneration\ComputeSharp.SourceGeneration.projitems*{e44053bd-a761-47fb-aa78-087a599672ea}*SharedItemsImports = 5
 		samples\ComputeSharp.SwapChain.Shaders\ComputeSharp.SwapChain.Shaders.projitems*{e7c9247d-016b-4819-af9f-0e9b3591e04b}*SharedItemsImports = 5
