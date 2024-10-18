@@ -1,7 +1,11 @@
 using ComputeSharp.SourceGeneration.Models;
 using Microsoft.CodeAnalysis;
 
+#if WINDOWS_UWP
+namespace ComputeSharp.D2D1.Uwp.SourceGenerators.Models;
+#else
 namespace ComputeSharp.D2D1.WinUI.SourceGenerators.Models;
+#endif
 
 /// <summary>
 /// A model representing a generated canvas effect property.

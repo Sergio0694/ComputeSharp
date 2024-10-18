@@ -7,10 +7,10 @@
 
 Rule ID | Category | Severity | Notes
 --------|----------|----------|-------
-CMPSD2DWINUI0001 | ComputeSharp.D2D1.WinUI.Effects | Error | [Documentation](https://github.com/Sergio0694/ComputeSharp)
-CMPSD2DWINUI0002 | ComputeSharp.D2D1.WinUI.Effects | Error | [Documentation](https://github.com/Sergio0694/ComputeSharp)
-CMPSD2DWINUI0003 | ComputeSharp.D2D1.WinUI.Effects | Error | [Documentation](https://github.com/Sergio0694/ComputeSharp)
-CMPSD2DWINUI0004 | ComputeSharp.D2D1.WinUI.Effects | Error | [Documentation](https://github.com/Sergio0694/ComputeSharp)
-CMPSD2DWINUI0005 | ComputeSharp.D2D1.WinUI.Effects | Error | [Documentation](https://github.com/Sergio0694/ComputeSharp)
-CMPSD2DWINUI0006 | ComputeSharp.D2D1.WinUI.Effects | Error | [Documentation](https://github.com/Sergio0694/ComputeSharp)
-CMPSD2DWINUI0007 | ComputeSharp.D2D1.WinUI.Effects | Error | [Documentation](https://github.com/Sergio0694/ComputeSharp)
+CMPSD2DUWP0001 | ComputeSharp.D2D1.Uwp.Effects | Error | [Documentation](https://github.com/Sergio0694/ComputeSharp)
+CMPSD2DUWP0002 | ComputeSharp.D2D1.Uwp.Effects | Error | [Documentation](https://github.com/Sergio0694/ComputeSharp)
+CMPSD2DUWP0003 | ComputeSharp.D2D1.Uwp.Effects | Error | [Documentation](https://github.com/Sergio0694/ComputeSharp)
+CMPSD2DUWP0004 | ComputeSharp.D2D1.Uwp.Effects | Error | [Documentation](https://github.com/Sergio0694/ComputeSharp)
+CMPSD2DUWP0005 | ComputeSharp.D2D1.Uwp.Effects | Error | [Documentation](https://github.com/Sergio0694/ComputeSharp)
+CMPSD2DUWP0006 | ComputeSharp.D2D1.Uwp.Effects | Error | [Documentation](https://github.com/Sergio0694/ComputeSharp)
+CMPSD2DUWP0007 | ComputeSharp.D2D1.Uwp.Effects | Error | [Documentation](https://github.com/Sergio0694/ComputeSharp)

@@ -2,9 +2,17 @@ using System.Collections.Immutable;
 using ComputeSharp.SourceGeneration.Extensions;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
+#if WINDOWS_UWP
+using static ComputeSharp.D2D1.Uwp.SourceGenerators.DiagnosticDescriptors;
+#else
 using static ComputeSharp.D2D1.WinUI.SourceGenerators.DiagnosticDescriptors;
+#endif
 
+#if WINDOWS_UWP
+namespace ComputeSharp.D2D1.Uwp.SourceGenerators;
+#else
 namespace ComputeSharp.D2D1.WinUI.SourceGenerators;
+#endif
 
 /// <summary>
 /// A diagnostic analyzer that generates errors when a property using [GeneratedCanvasEffectProperty] is in an invalid type.

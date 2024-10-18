@@ -1,12 +1,20 @@
 using System.Threading;
+#if WINDOWS_UWP
+using ComputeSharp.D2D1.Uwp.SourceGenerators.Models;
+#else
 using ComputeSharp.D2D1.WinUI.SourceGenerators.Models;
+#endif
 using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Helpers;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
+#if WINDOWS_UWP
+namespace ComputeSharp.D2D1.Uwp.SourceGenerators;
+#else
 namespace ComputeSharp.D2D1.WinUI.SourceGenerators;
+#endif
 
 /// <inheritdoc/>
 partial class CanvasEffectPropertyGenerator

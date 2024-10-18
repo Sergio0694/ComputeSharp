@@ -1,4 +1,4 @@
-#if !D2D1_WINUI_SOURCE_GENERATOR
+#if !D2D1_UI_SOURCE_GENERATOR
 using ABI.Microsoft.Graphics.Canvas;
 using Microsoft.Graphics.Canvas;
 #endif
