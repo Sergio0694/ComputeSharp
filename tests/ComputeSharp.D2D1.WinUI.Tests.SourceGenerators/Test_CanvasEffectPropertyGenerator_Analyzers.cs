@@ -108,6 +108,26 @@ public class Test_CanvasEffectPropertyGenerator_Analyzers
     }
 
     [TestMethod]
+    public async Task InvalidGeneratedCanvasEffectPropertyDeclarationAnalyzer_PartialPropertyWithImplementation_GeneratedByGenerator_DoesNotWarn()
+    {
+        const string source = """
+            using System.CodeDom.Compiler;
+            using ComputeSharp.D2D1.WinUI;
+
+            public abstract partial class MyEffect : CanvasEffect
+            {
+                [GeneratedCanvasEffectProperty]
+                public partial int Number { get; set; }
+
+                [GeneratedCode("ComputeSharp.D2D1.WinUI.CanvasEffectPropertyGenerator", "1.0.0")]
+                public partial int Number { get => 42; set { } }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<InvalidGeneratedCanvasEffectPropertyDeclarationAnalyzer>.VerifyAnalyzerAsync(source, languageVersion: LanguageVersion.Preview);
+    }
+
+    [TestMethod]
     public async Task InvalidGeneratedCanvasEffectPropertyDeclarationAnalyzer_PartialPropertyImplementationPart_Warns()
     {
         const string source = """
