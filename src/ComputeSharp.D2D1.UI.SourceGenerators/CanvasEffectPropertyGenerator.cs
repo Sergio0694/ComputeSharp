@@ -27,7 +27,7 @@ public sealed partial class CanvasEffectPropertyGenerator : IIncrementalGenerato
     /// <summary>
     /// The name of generator to include in the generated code.
     /// </summary>
-    private const string GeneratorName =
+    internal const string GeneratorName =
 #if WINDOWS_UWP
         "ComputeSharp.D2D1.Uwp.CanvasEffectPropertyGenerator";
 #else
