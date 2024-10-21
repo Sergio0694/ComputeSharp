@@ -1,7 +1,9 @@
 using System.Threading;
 #if WINDOWS_UWP
+using ComputeSharp.D2D1.Uwp.SourceGenerators.Constants;
 using ComputeSharp.D2D1.Uwp.SourceGenerators.Models;
 #else
+using ComputeSharp.D2D1.WinUI.SourceGenerators.Constants;
 using ComputeSharp.D2D1.WinUI.SourceGenerators.Models;
 #endif
 using ComputeSharp.SourceGeneration.Extensions;
@@ -182,7 +184,7 @@ partial class CanvasEffectPropertyGenerator
                             On{{propertyInfo.PropertyName}}Changed(value);
                             On{{propertyInfo.PropertyName}}Changed(oldValue, value);
                     
-                            InvalidateEffectGraph(global::ComputeSharp.D2D1.WinUI.CanvasEffectInvalidationType.{{propertyInfo.InvalidationType}});
+                            InvalidateEffectGraph(global::{{WellKnownTypeNames.CanvasEffectInvalidationType}}.{{propertyInfo.InvalidationType}});
                         }
                     }
                     """, isMultiline: true);
