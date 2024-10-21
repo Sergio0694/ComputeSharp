@@ -390,13 +390,13 @@ public partial class CanvasEffectTests
         public int Value
         {
             get => this.value;
-            set => SetAndInvalidateEffectGraph(ref this.value, value);
+            set => SetPropertyAndInvalidateEffectGraph(ref this.value, value);
         }
 
         public int ValueWithReload
         {
             get => this.value;
-            set => SetAndInvalidateEffectGraph(ref this.value, value, CanvasEffectInvalidationType.Creation);
+            set => SetPropertyAndInvalidateEffectGraph(ref this.value, value, CanvasEffectInvalidationType.Creation);
         }
 
         public int NumberOfBuildEffectGraphCalls { get; private set; }

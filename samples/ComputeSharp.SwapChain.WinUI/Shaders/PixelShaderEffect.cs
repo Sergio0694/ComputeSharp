@@ -31,7 +31,7 @@ public abstract partial class PixelShaderEffect : CanvasEffect
     public TimeSpan ElapsedTime
     {
         get => this.elapsedTime;
-        set => SetAndInvalidateEffectGraph(ref this.elapsedTime, value);
+        set => SetPropertyAndInvalidateEffectGraph(ref this.elapsedTime, value);
     }
 
     /// <summary>
@@ -40,7 +40,7 @@ public abstract partial class PixelShaderEffect : CanvasEffect
     public int ScreenWidth
     {
         get => this.screenWidth;
-        set => SetAndInvalidateEffectGraph(ref this.screenWidth, value);
+        set => SetPropertyAndInvalidateEffectGraph(ref this.screenWidth, value);
     }
 
     /// <summary>
@@ -49,7 +49,7 @@ public abstract partial class PixelShaderEffect : CanvasEffect
     public int ScreenHeight
     {
         get => this.screenHeight;
-        set => SetAndInvalidateEffectGraph(ref this.screenHeight, value);
+        set => SetPropertyAndInvalidateEffectGraph(ref this.screenHeight, value);
     }
 
     /// <summary>

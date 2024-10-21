@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.Graphics.Canvas;
 
@@ -144,7 +145,7 @@ public abstract partial class CanvasEffect : ICanvasImage, ICanvasImageInterop
     /// <param name="storage">The storage for the effect property value.</param>
     /// <param name="value">The new effect property value to set.</param>
     /// <param name="invalidationType">The invalidation type to request.</param>
-    protected void SetAndInvalidateEffectGraph<T>([NotNullIfNotNull(nameof(value))] ref T storage, T value, CanvasEffectInvalidationType invalidationType = CanvasEffectInvalidationType.Update)
+    protected void SetPropertyAndInvalidateEffectGraph<T>([NotNullIfNotNull(nameof(value))] ref T storage, T value, CanvasEffectInvalidationType invalidationType = CanvasEffectInvalidationType.Update)
     {
         if (EqualityComparer<T>.Default.Equals(storage, value))
         {
@@ -154,6 +155,14 @@ public abstract partial class CanvasEffect : ICanvasImage, ICanvasImageInterop
         storage = value;
 
         InvalidateEffectGraph(invalidationType);
+    }
+
+    /// <inheritdoc cref="SetPropertyAndInvalidateEffectGraph"/>
+    [Obsolete("Use 'SetPropertyAndInvalidateEffectGraph' instead.")]
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    protected void SetAndInvalidateEffectGraph<T>([NotNullIfNotNull(nameof(value))] ref T storage, T value, CanvasEffectInvalidationType invalidationType = CanvasEffectInvalidationType.Update)
+    {
+        SetPropertyAndInvalidateEffectGraph(ref storage, value, invalidationType);
     }
 
     /// <summary>
