@@ -3,6 +3,14 @@
 
   <PropertyGroup>
 
+    <!--
+      Enable C# preview in the samples to allow using '[GeneratedCanvasEffectProperty]'.
+      We only want to enable this in samples and not in the whole repo, to ensure that
+      most of the code is still building with stable C# and not producing weird behavior,
+      such as failing the CI build due to some new .NET SDK warning only showing up there.
+    -->
+    <LangVersion>preview</LangVersion>
+
     <!-- Samples don't need public XML docs for all APIs -->
     <NoWarn>$(NoWarn);CS1591</NoWarn>
 

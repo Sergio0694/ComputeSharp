@@ -14,29 +14,17 @@ public sealed partial class HelloWorldEffect : CanvasEffect
     /// </summary>
     private static readonly CanvasEffectNode<PixelShaderEffect<Shader>> EffectNode = new();
 
-    /// <summary><inheritdoc cref="Shader(float, Int2)" path="/param[@name='time']/node()"/></summary>
-    private float time;
-
-    /// <summary><inheritdoc cref="Shader(float, Int2)" path="/param[@name='dispatchSize']/node()"/></summary>
-    private Rect dispatchArea;
-
     /// <summary>
     /// Gets or sets the current time since the start of the application.
     /// </summary>
-    public float Time
-    {
-        get => this.time;
-        set => SetAndInvalidateEffectGraph(ref this.time, value);
-    }
+    [GeneratedCanvasEffectProperty]
+    public partial float Time { get; set; }
 
     /// <summary>
     /// Gets or sets the dispatch area for the current output.
     /// </summary>
-    public Rect DispatchArea
-    {
-        get => this.dispatchArea;
-        set => SetAndInvalidateEffectGraph(ref this.dispatchArea, value);
-    }
+    [GeneratedCanvasEffectProperty]
+    public partial Rect DispatchArea { get; set; }
 
     /// <inheritdoc/>
     protected override void BuildEffectGraph(CanvasEffectGraph effectGraph)
@@ -48,10 +36,10 @@ public sealed partial class HelloWorldEffect : CanvasEffect
     protected override void ConfigureEffectGraph(CanvasEffectGraph effectGraph)
     {
         effectGraph.GetNode(EffectNode).ConstantBuffer = new Shader(
-            time: this.time,
+            time: Time,
             dispatchSize: new int2(
-                x: (int)double.Round(this.dispatchArea.Width),
-                y: (int)double.Round(this.dispatchArea.Height)));
+                x: (int)double.Round(DispatchArea.Width),
+                y: (int)double.Round(DispatchArea.Height)));
     }
 
     /// <summary>
