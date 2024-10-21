@@ -1,6 +1,10 @@
 using System;
 
+#if WINDOWS_UWP
+namespace ComputeSharp.D2D1.Uwp;
+#else
 namespace ComputeSharp.D2D1.WinUI;
+#endif
 
 /// <summary>
 /// An attribute that indicates that a given property represents an effect property, which should invalidate the effect.

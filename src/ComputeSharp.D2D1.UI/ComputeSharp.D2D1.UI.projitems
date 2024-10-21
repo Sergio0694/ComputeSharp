@@ -23,6 +23,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)ABI.Microsoft.Graphics.Canvas\Win2D.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ABI.Microsoft.Graphics.Canvas\WIN2D_GET_D2D_IMAGE_FLAGS.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ABI.Microsoft.Graphics.Canvas\WIN2D_GET_DEVICE_ASSOCIATION_TYPE.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Attributes\GeneratedCanvasEffectPropertyAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Buffers\GraphicsEffectSourceBuffer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Buffers\ResourceTextureManagerBuffer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Buffers\SourceReference.cs" />
