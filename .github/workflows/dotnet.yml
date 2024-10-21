@@ -164,12 +164,23 @@ jobs:
     - name: Build ComputeSharp.D2D1.WinUI.Tests
       run: msbuild tests\ComputeSharp.D2D1.WinUI.Tests\ComputeSharp.D2D1.WinUI.Tests.csproj /restore -t:build /p:Configuration=Release /p:Platform=x64
 
-      # Run the D2D1 WinAppSDK unit tests with VS Test again
+      # Run the D2D1 WinAppSDK unit tests with VS Test
     - name: Run ComputeSharp.D2D1.WinUI.Tests
       run: >
         $vs_path = vswhere -latest -products * -requires Microsoft.VisualStudio.Workload.ManagedDesktop -requiresAny -property installationPath;
         $vstest_path = join-path $vs_path 'Common7\IDE\CommonExtensions\Microsoft\TestWindow\vstest.console.exe';
         & $vstest_path /Platform:x64 tests\ComputeSharp.D2D1.WinUI.Tests\bin\x64\Release\net8.0-windows10.0.22621.0\win-x64\ComputeSharp.D2D1.WinUI.Tests.build.appxrecipe
+
+      # Build the D2D1 WinAppSDK source generators tests
+    - name: Build ComputeSharp.D2D1.WinUI.Tests.SourceGenerators
+      run: msbuild tests\ComputeSharp.D2D1.WinUI.Tests.SourceGenerators\ComputeSharp.D2D1.WinUI.Tests.SourceGenerators.csproj /restore -t:build /p:Configuration=Release /p:Platform=x64
+
+      # Run the D2D1 WinAppSDK source generators tests (same as above)
+    - name: Run ComputeSharp.D2D1.WinUI.Tests.SourceGenerators
+      run: >
+        $vs_path = vswhere -latest -products * -requires Microsoft.VisualStudio.Workload.ManagedDesktop -requiresAny -property installationPath;
+        $vstest_path = join-path $vs_path 'Common7\IDE\CommonExtensions\Microsoft\TestWindow\vstest.console.exe';
+        & $vstest_path /Platform:x64 tests\ComputeSharp.D2D1.WinUI.Tests.SourceGenerators\bin\x64\Release\net8.0-windows10.0.22621.0\ComputeSharp.D2D1.WinUI.Tests.SourceGenerators.dll
 
   # Run all the local samples to ensure they build and run with no errors
   run-samples:
