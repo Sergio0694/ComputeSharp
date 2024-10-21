@@ -20,12 +20,22 @@ internal static class WellKnownTypeNames
 #endif
 
     /// <summary>
-    /// The fully qualified type name for the <c>[CanvasEffect]</c> type.
+    /// The fully qualified type name for the <c>CanvasEffect</c> type.
     /// </summary>
     public const string CanvasEffect =
 #if WINDOWS_UWP
         "ComputeSharp.D2D1.Uwp.CanvasEffect";
 #else
         "ComputeSharp.D2D1.WinUI.CanvasEffect";
+#endif
+
+    /// <summary>
+    /// The fully qualified type name for the <c>CanvasEffect</c> type.
+    /// </summary>
+    public const string CanvasEffectInvalidationType =
+#if WINDOWS_UWP
+        "ComputeSharp.D2D1.Uwp.CanvasEffectInvalidationType";
+#else
+        "ComputeSharp.D2D1.WinUI.CanvasEffectInvalidationType";
 #endif
 }
