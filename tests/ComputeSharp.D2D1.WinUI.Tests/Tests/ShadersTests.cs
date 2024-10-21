@@ -120,7 +120,7 @@ public class ShadersTests
         public T ConstantBuffer
         {
             get => this.constantBuffer;
-            set => SetAndInvalidateEffectGraph(ref this.constantBuffer, value);
+            set => SetPropertyAndInvalidateEffectGraph(ref this.constantBuffer, value);
         }
 
         protected override void BuildEffectGraph(CanvasEffectGraph effectGraph)

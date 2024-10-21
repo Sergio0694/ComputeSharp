@@ -26,7 +26,7 @@ public sealed partial class HelloWorldEffect : CanvasEffect
     public float Time
     {
         get => this.time;
-        set => SetAndInvalidateEffectGraph(ref this.time, value);
+        set => SetPropertyAndInvalidateEffectGraph(ref this.time, value);
     }
 
     /// <summary>
@@ -35,7 +35,7 @@ public sealed partial class HelloWorldEffect : CanvasEffect
     public Rect DispatchArea
     {
         get => this.dispatchArea;
-        set => SetAndInvalidateEffectGraph(ref this.dispatchArea, value);
+        set => SetPropertyAndInvalidateEffectGraph(ref this.dispatchArea, value);
     }
 
     /// <inheritdoc/>
