@@ -52,7 +52,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.2" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0-preview1" />
     <PackageReference Include="CommunityToolkit.Uwp.Controls.Primitives" Version="8.2.240924-local" />
     <PackageReference Include="CommunityToolkit.Uwp.Media" Version="8.2.240924-local" />
     <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.1.3" />

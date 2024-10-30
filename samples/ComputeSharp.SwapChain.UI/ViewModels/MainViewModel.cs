@@ -25,12 +25,8 @@ public sealed partial class MainViewModel : ObservableObject
     /// </summary>
     public MainViewModel()
     {
-        this.selectedRenderingMode = RenderingMode.DirectX12;
-        this.isVerticalSyncEnabled = true;
-        this.isDynamicResolutionEnabled = true;
-        this.selectedResolutionScale = 100;
-        this.selectedComputeShader = ComputeShaderOptions[0];
-        this.selectedComputeShader.IsSelected = true;
+        SelectedComputeShader = ComputeShaderOptions[0];
+        SelectedComputeShader.IsSelected = true;
     }
 
     /// <summary>
@@ -38,38 +34,38 @@ public sealed partial class MainViewModel : ObservableObject
     /// </summary>
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsResolutionScaleOptionEnabled))]
-    private RenderingMode selectedRenderingMode;
+    public partial RenderingMode SelectedRenderingMode { get; set; } = RenderingMode.DirectX12;
 
     /// <summary>
     /// Gets or sets whether the vertical sync is enabled.
     /// </summary>
     [ObservableProperty]
-    private bool isVerticalSyncEnabled;
+    public partial bool IsVerticalSyncEnabled { get; set; } = true;
 
     /// <summary>
     /// Gets or sets whether the dynamic resolution is enabled.
     /// </summary>
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsResolutionScaleOptionEnabled))]
-    private bool isDynamicResolutionEnabled;
+    public partial bool IsDynamicResolutionEnabled { get; set; } = true;
 
     /// <summary>
     /// Gets the currently selected resolution scale setting (as percentage value).
     /// </summary>
     [ObservableProperty]
-    private int selectedResolutionScale;
+    public partial int SelectedResolutionScale { get; set; } = 100;
 
     /// <summary>
     /// Gets or sets the currently selected compute shader.
     /// </summary>
     [ObservableProperty]
-    private ShaderRunnerViewModel selectedComputeShader;
+    public partial ShaderRunnerViewModel SelectedComputeShader { get; set; }
 
     /// <summary>
     /// Gets or sets whether the rendering is currently paused.
     /// </summary>
     [ObservableProperty]
-    private bool isRenderingPaused;
+    public partial bool IsRenderingPaused { get; set; }
 
     /// <summary>
     /// Gets the available resolution scaling options (as percentage values).
@@ -121,7 +117,7 @@ public sealed partial class MainViewModel : ObservableObject
     };
 
     /// <summary>
-    /// Checks whether the resolution scale can currently be expliclty set.
+    /// Checks whether the resolution scale can currently be explicitly set.
     /// </summary>
     public bool IsResolutionScaleOptionEnabled => SelectedRenderingMode == RenderingMode.DirectX12 && !IsDynamicResolutionEnabled;
 
@@ -153,9 +149,9 @@ public sealed partial class MainViewModel : ObservableObject
     }
 
     /// <inheritdoc/>
-    partial void OnSelectedComputeShaderChanging(ShaderRunnerViewModel? oldValue, ShaderRunnerViewModel newValue)
+    partial void OnSelectedComputeShaderChanging(ShaderRunnerViewModel oldValue, ShaderRunnerViewModel newValue)
     {
-        oldValue!.IsSelected = false;
+        oldValue.IsSelected = false;
         newValue.IsSelected = true;
     }
 }

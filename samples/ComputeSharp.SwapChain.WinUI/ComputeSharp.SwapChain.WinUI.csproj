@@ -57,7 +57,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.2" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0-preview1" />
     <PackageReference Include="CommunityToolkit.WinUI.Controls.Primitives" Version="8.2.241010-build.1216" />
     <PackageReference Include="CommunityToolkit.WinUI.Media" Version="8.2.241010-build.1216" />
     <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.1.6" />
