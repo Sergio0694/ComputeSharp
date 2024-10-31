@@ -13,13 +13,6 @@
   <PropertyGroup>
 
     <!--
-      Disable IIDOptimizer, as it's causing a build error when the debug mode is set to embedded.
-      This is only needed when generating projections anyway, and not in normal C# class libraries.
-      See: https://github.com/microsoft/CsWinRT/issues/1478.
-    -->
-    <CsWinRTIIDOptimizerOptOut>true</CsWinRTIIDOptimizerOptOut>
-
-    <!--
       Ignore some warnings about ambiguous cref attribute references. These are because the assembly defines
       blittable bindings for several ABI types from Win2D, in the same namespace as the ABI types from the
       CsWinRT projections that are in Win2D. They are internal, but Roslyn will still complain about them.
@@ -32,12 +25,6 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Graphics.Win2D" Version="1.3.0" />
-
-    <!--
-      We need the CsWinRT reference for the generator to kick in and generate all necessary supporting code
-      to make the exposed types AOT compatible. Since we only need the generator, we can mark this as private.
-    -->
-    <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.1.6" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>

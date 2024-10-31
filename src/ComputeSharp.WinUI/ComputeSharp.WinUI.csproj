@@ -13,17 +13,8 @@
     <WebView2EnableCsWinRTProjectionExcludeCoreRef>true</WebView2EnableCsWinRTProjectionExcludeCoreRef>
   </PropertyGroup>
 
-  <PropertyGroup>
-
-    <!-- Disable IIDOptimizer, as it's not needed (see comments in ComputeSharp.D2D1.WinUI)-->
-    <CsWinRTIIDOptimizerOptOut>true</CsWinRTIIDOptimizerOptOut>
-  </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.240923002" />
-
-    <!-- Reference CsWinRT locally for the source generators (see comments in ComputeSharp.D2D1.WinUI) -->
-    <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.1.6" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>
