@@ -38,13 +38,6 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.1.6" />
-
-    <!--
-      This sample does not need WebView2, but WinAppSDK is pulling it in as a transitive NuGet
-      dependency. We can manually exclude all of its assets to avoid them being in the output.
-      This also prevents the old projections from being referenced and triggering the generator.
-    -->
-    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.2792.45" IncludeAssets="none" />
   </ItemGroup>
 
   <ItemGroup>
