@@ -10,9 +10,6 @@
 
   <PropertyGroup>
 
-    <!-- Also disabled in 'ComputeSharp.D2D1.WinUI', see notes there -->
-    <CsWinRTIIDOptimizerOptOut>true</CsWinRTIIDOptimizerOptOut>
-
     <!-- Same warnings as in 'ComputeSharp.D2D1.WinUI', see notes there -->
     <NoWarn>$(NoWarn);CS0419</NoWarn>
     <NoWarn>$(NoWarn);IDE0065</NoWarn>
@@ -23,12 +20,6 @@
 
   <ItemGroup>
     <PackageReference Include="Win2D.uwp" Version="1.28.0-preview1" />
-
-    <!--
-      We need the CsWinRT reference for the generator to kick in and generate all necessary supporting code
-      to make the exposed types AOT compatible. Since we only need the generator, we can mark this as private.
-    -->
-    <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.1.6" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>
