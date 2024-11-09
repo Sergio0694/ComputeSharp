@@ -52,7 +52,7 @@ public static class D2D
     /// <param name="index">The index of the input texture to sample.</param>
     /// <param name="offset">The normalized offset to use to sample the texture.</param>
     /// <returns>The sampled value from the texture, in <c>TEXCOORDN</c> format.</returns>
-    /// <remarks>This method is only available for simple inputs.</remarks>
+    /// <remarks>This method is only available for complex inputs.</remarks>
     [HlslIntrinsicName("D2DSampleInputAtOffset")]
     public static Float4 SampleInputAtOffset(int index, Float2 offset) => throw new InvalidExecutionContextException($"{typeof(D2D)}.{nameof(SampleInputAtOffset)}({typeof(int)}, {typeof(Float2)})");
 
