@@ -201,7 +201,7 @@ namespace Microsoft.Graphics.Canvas
                 {
                     ExceptionHelpers.SetErrorInfo(e);
 
-                    return Marshal.GetHRForException(e);
+                    return ExceptionHelpers.GetHRForException(e);
                 }
             }
 
@@ -225,7 +225,7 @@ namespace Microsoft.Graphics.Canvas
                 {
                     ExceptionHelpers.SetErrorInfo(e);
 
-                    return Marshal.GetHRForException(e);
+                    return ExceptionHelpers.GetHRForException(e);
                 }
             }
         }
