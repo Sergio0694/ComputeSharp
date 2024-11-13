@@ -3,9 +3,12 @@
     <TargetFramework>net8.0-windows10.0.22621.0</TargetFramework>
     <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
     <WindowsSdkPackageVersion>10.0.22621.54</WindowsSdkPackageVersion>
+    <UseUwp>true</UseUwp>
     <Platforms>x64;ARM64</Platforms>
     <RuntimeIdentifiers>win-x64;win-arm64</RuntimeIdentifiers>
+    <DefaultLanguage>en-US</DefaultLanguage>
     <DefineConstants>$(DefineConstants);WINDOWS_UWP</DefineConstants>
+    <EnableXamlCompilerTargetsForUwpApps>false</EnableXamlCompilerTargetsForUwpApps>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -19,7 +22,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Win2D.uwp" Version="1.28.0-preview1" />
+    <PackageReference Include="Win2D.uwp" Version="1.28.0" />
   </ItemGroup>
 
   <ItemGroup>
