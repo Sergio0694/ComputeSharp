@@ -2,13 +2,21 @@
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <DefineConstants>$(DefineConstants);D2D1_TESTS</DefineConstants>
+
+    <!--
+      Temporarily suppress warnings about packages with security vulnerabilities coming from
+      transitive dependencies of the 'Microsoft.CodeAnalysis.CSharp' testing packages. This
+      can be removed once new stable releases of those packages are shipped. We don't want
+      to add a new more recent top-level dependency to guard against binary breaking changes.
+    -->
+    <NoWarn>$(NoWarn);NU1903</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Basic.Reference.Assemblies.Net80" Version="1.7.9" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
-    <PackageReference Include="MSTest.TestAdapter" Version="3.6.1" />
-    <PackageReference Include="MSTest.TestFramework" Version="3.6.1" />
+    <PackageReference Include="MSTest.TestAdapter" Version="3.6.3" />
+    <PackageReference Include="MSTest.TestFramework" Version="3.6.3" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Analyzer.Testing" Version="1.1.2" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.CodeFix.Testing" Version="1.1.2" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.11.0" />

@@ -3,7 +3,7 @@
     <OutputType Condition="'$(CI_RUNNER_SAMPLES_INTEGRATION_TESTS)' == 'true'">Exe</OutputType>
     <OutputType Condition="'$(CI_RUNNER_SAMPLES_INTEGRATION_TESTS)' != 'true'">WinExe</OutputType>
     <TargetFramework>net8.0-windows10.0.22621</TargetFramework>
-    <WindowsSdkPackageVersion>10.0.22621.53</WindowsSdkPackageVersion>
+    <WindowsSdkPackageVersion>10.0.22621.57</WindowsSdkPackageVersion>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <Platforms>x64;ARM64</Platforms>
     <RuntimeIdentifiers>win-x64;win-arm64</RuntimeIdentifiers>
@@ -60,13 +60,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="TerraFX.Interop.Windows" Version="10.0.26100" />
+    <PackageReference Include="TerraFX.Interop.Windows" Version="10.0.26100.1" />
 
     <!--
       Reference CsWinRT locally for the source generators (see comments in ComputeSharp.D2D1.WinUI).
       Note that this is an executable and not a library, so we must drop the 'PrivateAssets' here.
       -->
-    <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.1.6" />
+    <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.2.0" />
   </ItemGroup>
 
   <!-- Note: using SetPlatform="Platform=AnyCPU" for the analyzers to avoid issues (see https://github.com/dotnet/roslyn/issues/70148) -->
