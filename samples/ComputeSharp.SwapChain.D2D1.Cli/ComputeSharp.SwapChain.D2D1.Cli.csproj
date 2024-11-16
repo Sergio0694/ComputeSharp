@@ -2,7 +2,7 @@
   <PropertyGroup>
     <OutputType Condition="'$(CI_RUNNER_SAMPLES_INTEGRATION_TESTS)' == 'true'">Exe</OutputType>
     <OutputType Condition="'$(CI_RUNNER_SAMPLES_INTEGRATION_TESTS)' != 'true'">WinExe</OutputType>
-    <TargetFramework>net8.0-windows10.0.22621</TargetFramework>
+    <TargetFramework>net9.0-windows10.0.22621</TargetFramework>
     <WindowsSdkPackageVersion>10.0.22621.57</WindowsSdkPackageVersion>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <Platforms>x64;ARM64</Platforms>
