@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <Platforms>AnyCPU;x64;ARM64</Platforms>
+    <Platforms>x64;ARM64</Platforms>
   </PropertyGroup>
 
   <!-- Add a defined constant to selectively enable D3D12MA in unit tests -->
