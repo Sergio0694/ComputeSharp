@@ -3,9 +3,8 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net8.0-windows10.0.26100.0</TargetFramework>
     <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
-    <WindowsSdkPackageVersion>10.0.26100.45</WindowsSdkPackageVersion>
+    <WindowsSdkPackageVersion>10.0.26100.57</WindowsSdkPackageVersion>
     <UseUwp>true</UseUwp>
-    <UseUwpTools>true</UseUwpTools>
     <Platforms>x64;ARM64</Platforms>
     <RuntimeIdentifiers>win-x64;win-arm64</RuntimeIdentifiers>
     <DefineConstants>$(DefineConstants);WINDOWS_UWP</DefineConstants>
@@ -52,7 +51,7 @@
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.2" />
     <PackageReference Include="CommunityToolkit.Uwp.Controls.Primitives" Version="8.2.240924-local" />
     <PackageReference Include="CommunityToolkit.Uwp.Media" Version="8.2.240924-local" />
-    <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.1.3" />
+    <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.2.0" />
 
     <!-- Temporary workaround, see notes in D2D1 UWP sample app -->
     <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.2739.15" IncludeAssets="none" />
