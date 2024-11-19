@@ -102,6 +102,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeSharp.Tests.GlobalSt
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{B86A48A7-18BD-4946-B995-3CE26B092DDF}"
 	ProjectSection(SolutionItems) = preProject
+		src\Directory.Build.BeforeMicrosoftCommon.targets = src\Directory.Build.BeforeMicrosoftCommon.targets
 		src\Directory.Build.props = src\Directory.Build.props
 		src\Directory.Build.targets = src\Directory.Build.targets
 	EndProjectSection

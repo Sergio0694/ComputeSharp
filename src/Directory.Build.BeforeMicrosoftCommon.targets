@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  
+  <!-- Add a marker value to verify from a later .targets that this .targets has been correctly invoked -->
+  <PropertyGroup>
+    <_ComputeSharpCustomBeforeMicrosoftCommonTargetsValid>true</_ComputeSharpCustomBeforeMicrosoftCommonTargetsValid>
+  </PropertyGroup>
+
+  <!-- Import the original custom .targets, if it exists -->
+  <Import Project="$(_ComputeSharpCustomBeforeMicrosoftCommonTargets)"
+          Condition="'$(_ComputeSharpCustomBeforeMicrosoftCommonTargets)' != '' AND Exists('$(_ComputeSharpCustomBeforeMicrosoftCommonTargets)')"/>
+
+  <!-- Emit an error if our custom 'BeforeCommon' .targets file has not been invoked -->
+  <Target Name="_ComputeSharpCheckForInvalidCustomBeforeMicrosoftCommonTargets"
+          BeforeTargets="_CheckForInvalidConfigurationAndPlatform;CoreCompile">
+    <Error Condition ="'$(_ComputeSharpCustomBeforeMicrosoftCommonTargetsValid)' != 'true'"
+           Text="The '_ComputeSharpCustomBeforeMicrosoftCommonTargetsValid' marker property is not set."/>
+  </Target>
+</Project>
