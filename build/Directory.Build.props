@@ -6,6 +6,12 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 
     <!--
+      Show full details for all trim/AOT warnings produced during builds.
+      Normally, the linker would only show a generic warning per assembly.
+    -->
+    <TrimmerSingleWarn>false</TrimmerSingleWarn>
+
+    <!--
       Enable the latest warning wave, which shows additional warnings for invalid language features that are disabled by default.
       For additional info, see https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/compiler-messages/warning-waves.
     -->
