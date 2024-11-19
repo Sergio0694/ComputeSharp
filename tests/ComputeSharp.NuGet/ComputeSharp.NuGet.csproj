@@ -2,7 +2,6 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net8.0</TargetFramework>
-    <Platforms>x64;ARM64</Platforms>
     <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
     <NoWarn>$(NoWarn);IL2026</NoWarn>
     <PublishAot Condition="'$(COMPUTESHARP_NUGET_TESTS_PUBLISH_AOT)' == 'true'">true</PublishAot>
