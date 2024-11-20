@@ -1237,4 +1237,36 @@ partial class DiagnosticDescriptors
         isEnabledByDefault: true,
         description: "Shaders can only be annotated with [D2DRequiresDoublePrecisionSupport] to perform validation for use of double precision operations if they are precompiled.",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+    /// <summary>
+    /// Gets a <see cref="DiagnosticDescriptor"/> for a D2D intrinsic call with an out of range input.
+    /// <para>
+    /// Format: <c>"The D2D intrinsic '{0}' cannot be used for input {1}, as the containing shader {2} only declares {3} input(s) (use a valid argument for the D2D intrinsic, or adjust the number of inputs for the shader using [D2DInputCount])"</c>.
+    /// </para>
+    /// </summary>
+    public static readonly DiagnosticDescriptor IndexOutOfRangeForD2DIntrinsic = new(
+        id: "CMPSD2D0083",
+        title: "Index out of range for D2D intrinsic",
+        messageFormat: "The D2D intrinsic '{0}' cannot be used for input {1}, as the containing shader {2} only declares {3} input(s) (use a valid argument for the D2D intrinsic, or adjust the number of inputs for the shader using [D2DInputCount])",
+        category: "ComputeSharp.D2D1.Shaders",
+        defaultSeverity: DiagnosticSeverity.Error,
+        isEnabledByDefault: true,
+        description: "D2D intrinsics must be used with valid input indices (the number of inputs for a shader can be configured using [D2DInputCount]).",
+        helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+    /// <summary>
+    /// Gets a <see cref="DiagnosticDescriptor"/> for a D2D intrinsic call with an invalid input type.
+    /// <para>
+    /// Format: <c>"The D2D intrinsic '{0}' cannot be used for input {1}, as it does not have the right input type (you can configure the input type of each input using [D2DInputSimple] and [D2DInputComplex] on the shader type)"</c>.
+    /// </para>
+    /// </summary>
+    public static readonly DiagnosticDescriptor InvalidInputTypeForD2DIntrinsic = new(
+        id: "CMPSD2D0084",
+        title: "Invalid input type for D2D intrinsic",
+        messageFormat: "The D2D intrinsic '{0}' cannot be used for input {1}, as it does not have the right input type (you can configure the input type of each input using [D2DInputSimple] and [D2DInputComplex] on the shader type)",
+        category: "ComputeSharp.D2D1.Shaders",
+        defaultSeverity: DiagnosticSeverity.Error,
+        isEnabledByDefault: true,
+        description: "D2D intrinsics must be used with compatible input types (the input type of each shader input can be configured using [D2DInputSimple] and [D2DInputComplex] on the shader type).",
+        helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 }

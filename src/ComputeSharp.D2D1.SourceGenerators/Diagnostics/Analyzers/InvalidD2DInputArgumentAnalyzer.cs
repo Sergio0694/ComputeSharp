@@ -17,7 +17,11 @@ namespace ComputeSharp.D2D1.SourceGenerators;
 public sealed class InvalidD2DInputArgumentAnalyzer : DiagnosticAnalyzer
 {
     /// <inheritdoc/>
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = [InvalidD2DEffectIdAttributeValue];
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } =
+    [
+        IndexOutOfRangeForD2DIntrinsic,
+        InvalidInputTypeForD2DIntrinsic
+    ];
 
     /// <inheritdoc/>
     public override void Initialize(AnalysisContext context)
@@ -88,13 +92,23 @@ public sealed class InvalidD2DInputArgumentAnalyzer : DiagnosticAnalyzer
                 // First validation: the index must be in range
                 if ((uint)index >= (uint)inputCount)
                 {
-                    // TODO: emit diagnostic
+                    context.ReportDiagnostic(Diagnostic.Create(
+                        IndexOutOfRangeForD2DIntrinsic,
+                        operation.Syntax.GetLocation(),
+                        targetMethodSymbol.Name,
+                        index,
+                        typeSymbol,
+                        inputCount));
                 }
 
                 // Second validation: the input type must match
                 if ((D2D1PixelShaderInputType)inputTypes[index] != targetInputType)
                 {
-                    // TODO: emit diagnostic
+                    context.ReportDiagnostic(Diagnostic.Create(
+                        InvalidInputTypeForD2DIntrinsic,
+                        operation.Syntax.GetLocation(),
+                        targetMethodSymbol.Name,
+                        index));
                 }
             }, OperationKind.Invocation);
         });
