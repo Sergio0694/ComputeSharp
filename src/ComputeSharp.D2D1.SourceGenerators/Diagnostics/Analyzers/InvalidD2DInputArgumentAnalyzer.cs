@@ -1,7 +1,8 @@
-using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
 using ComputeSharp.D2D1.Interop;
+using ComputeSharp.D2D1.Intrinsics;
 using ComputeSharp.SourceGeneration.Extensions;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
@@ -51,14 +52,14 @@ public sealed class InvalidD2DInputArgumentAnalyzer : DiagnosticAnalyzer
                 IInvocationOperation operation = (IInvocationOperation)context.Operation;
 
                 // Cheap initial filter: we only care about static methods from the 'D2D' type
-                if (operation.TargetMethod is not { IsStatic: false, ContainingType.Name: "D2D" } targetMethodSymbol)
+                if (operation.TargetMethod is not { IsStatic: true, ContainingType.Name: "D2D" } targetMethodSymbol)
                 {
                     return;
                 }
 
                 // Second cheap inital filter: we only care about invocations with a constant 'int' argument in first position.
                 // While we're validating this, let's also get the 'index' parameter, since we need to validate it anyway.
-                if (operation.Arguments is not [ILiteralOperation { Type.SpecialType: SpecialType.System_Int32, ConstantValue: { HasValue: true, Value: int index } }])
+                if (operation.Arguments is not [{ Value.ConstantValue: { HasValue: true, Value: int index } }, ..])
                 {
                     return;
                 }
@@ -100,10 +101,9 @@ public sealed class InvalidD2DInputArgumentAnalyzer : DiagnosticAnalyzer
                         typeSymbol,
                         inputCount));
                 }
-
-                // Second validation: the input type must match
-                if ((D2D1PixelShaderInputType)inputTypes[index] != targetInputType)
+                else if ((D2D1PixelShaderInputType)inputTypes[index] != targetInputType)
                 {
+                    // Second validation: the input type must match
                     context.ReportDiagnostic(Diagnostic.Create(
                         InvalidInputTypeForD2DIntrinsic,
                         operation.Syntax.GetLocation(),
@@ -131,13 +131,13 @@ public sealed class InvalidD2DInputArgumentAnalyzer : DiagnosticAnalyzer
         }
 
         // Get the symbols for all relevant 'D2D' methods
-        List<IMethodSymbol?> d2DMethodSymbols =
+        IMethodSymbol?[] d2DMethodSymbols =
         [
             d2DSymbol.GetMethod(nameof(D2D.GetInput)),
             d2DSymbol.GetMethod(nameof(D2D.GetInputCoordinate)),
             d2DSymbol.GetMethod(nameof(D2D.SampleInput)),
             d2DSymbol.GetMethod(nameof(D2D.SampleInputAtOffset)),
-            d2DSymbol.GetMethod(nameof(D2D.GetInput))
+            d2DSymbol.GetMethod(nameof(D2D.SampleInputAtPosition))
         ];
 
         ImmutableDictionary<IMethodSymbol, D2D1PixelShaderInputType>.Builder inputTypeMethodMap = ImmutableDictionary.CreateBuilder<IMethodSymbol, D2D1PixelShaderInputType>(SymbolEqualityComparer.Default);
@@ -153,21 +153,8 @@ public sealed class InvalidD2DInputArgumentAnalyzer : DiagnosticAnalyzer
                 return false;
             }
 
-            // Lookup the attribute to get the D2D input type
-            if (!d2DMethodSymbol.TryGetAttributeWithFullyQualifiedMetadataName("ComputeSharp.D2D1.Intrinsics.HlslD2DIntrinsicInputTypeAttribute", out AttributeData? attributeData))
-            {
-                methodSymbols = null;
-
-                return false;
-            }
-
-            // Verify we can extract the D2D input type
-            if (attributeData.ConstructorArguments is not [{ Kind: TypedConstantKind.Primitive, Type.TypeKind: TypeKind.Enum, Value: int inputType }])
-            {
-                methodSymbols = null;
-
-                return false;
-            }
+            // Lookup the attribute to get the D2D input type (the attribute only exists on the 'D2D' type loaded in the analyzer)
+            D2D1PixelShaderInputType inputType = typeof(D2D).GetMethod(d2DMethodSymbol.Name).GetCustomAttribute<HlslD2DIntrinsicInputTypeAttribute>()!.InputType;
 
             inputTypeMethodMap.Add(d2DMethodSymbol, (D2D1PixelShaderInputType)inputType);
         }
