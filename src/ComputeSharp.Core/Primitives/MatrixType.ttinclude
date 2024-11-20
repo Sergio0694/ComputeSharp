@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 <#
     if (typeName == "Float" || typeName == "Int")
     {
-        WriteLine("using ComputeSharp.Core.Intrinsics.Attributes;");
+        WriteLine("using ComputeSharp.Core.Intrinsics;");
     }
 #>
 

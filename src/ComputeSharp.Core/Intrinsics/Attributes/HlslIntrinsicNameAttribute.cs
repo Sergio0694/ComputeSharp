@@ -1,7 +1,7 @@
 using System;
 using System.Diagnostics;
 
-namespace ComputeSharp.Core.Intrinsics.Attributes;
+namespace ComputeSharp.Core.Intrinsics;
 
 /// <summary>
 /// An attribute indicating the native member name of a given HLSL intrinsic.

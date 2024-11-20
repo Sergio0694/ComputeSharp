@@ -73,7 +73,7 @@ void GenerateVectorProperties(string typeName, int elementSize)
 
     if (elementTypeName == "Float" || elementTypeName == "Int")
     {
-        WriteLine("using ComputeSharp.Core.Intrinsics.Attributes;");
+        WriteLine("using ComputeSharp.Core.Intrinsics;");
     }
 #>
 

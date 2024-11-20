@@ -3,7 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using ComputeSharp.Core.Intrinsics.Attributes;
+using ComputeSharp.Core.Intrinsics;
 
 #nullable enable
 #pragma warning disable CS0660, CS0661

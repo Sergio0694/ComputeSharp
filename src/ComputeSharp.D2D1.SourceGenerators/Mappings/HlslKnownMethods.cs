@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using ComputeSharp.Core.Intrinsics.Attributes;
+using ComputeSharp.Core.Intrinsics;
 using ComputeSharp.D2D1;
 
 namespace ComputeSharp.SourceGeneration.Mappings;
