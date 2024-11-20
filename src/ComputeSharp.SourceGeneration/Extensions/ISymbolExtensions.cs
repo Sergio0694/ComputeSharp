@@ -1,3 +1,4 @@
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using Microsoft.CodeAnalysis;
@@ -154,5 +155,25 @@ internal static class ISymbolExtensions
         syntaxNode = candidateNode;
 
         return candidateNode is not null;
+    }
+
+    /// <summary>
+    /// Gets the first symbol of a specific type among the ancestors of a given symbol.
+    /// </summary>
+    /// <param name="symbol">The input symbol to start the search from.</param>
+    /// <param name="predicate">An optional predicate to filter symbols.</param>
+    /// <remarks>The resulting symbol, if a match was found.</remarks>
+    public static TSymbol? FirstAncestorOrSelf<TSymbol>(this ISymbol symbol, Func<TSymbol, bool>? predicate = null)
+        where TSymbol : class, ISymbol
+    {
+        for (ISymbol? parentSymbol = symbol; parentSymbol is not null; parentSymbol = parentSymbol.ContainingSymbol)
+        {
+            if (parentSymbol is TSymbol targetSymbol && (predicate?.Invoke(targetSymbol) is not false))
+            {
+                return targetSymbol;
+            }
+        }
+
+        return null;
     }
 }
