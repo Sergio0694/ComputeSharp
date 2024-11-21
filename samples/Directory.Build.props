@@ -9,12 +9,4 @@
     <!-- Ignore platform compatibility warnings -->
     <NoWarn>$(NoWarn);CA1416</NoWarn>
   </PropertyGroup>
-
-  <!-- Reference PolySharp for all sample projects -->
-  <ItemGroup>
-    <PackageReference Include="PolySharp" Version="1.14.1">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>build;analyzers</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
 </Project>

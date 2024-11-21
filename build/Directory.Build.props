@@ -176,4 +176,30 @@
     <AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)..\build\computesharp.snk</AssemblyOriginatorKeyFile>
     <AssemblySignPublicKey>00240000048000009400000006020000002400005253413100040000010001001DA244ACFEE0D02ADF2D7F464B5E2562BB1AEF50B32DCD8B2DADEC659A5ED8B6C5817B03EB5E723067718A7972C936F626879DCE8E85636E7812B92CAB100D4947E3E6655AD49359E279A09F34B65E5ECA5FD5D8941C70BD48E56D8739A3BFF4F1C85071B7494D0B3A692F16CA6CC40585BCA8AD5B24BB2E7B834F15B6E667BB</AssemblySignPublicKey>
   </PropertyGroup>
+
+  <!--
+    We need PolySharp for all .NET Standard 2.0 polyfills. We do not want to use polyfills in published projects,
+    as those should just adhere to the available APIs in each LTS release of .NET, so we only enable this reference
+    for projects which are not published (ie. tests and samples), or just for the source generator projects.
+  -->
+  <PropertyGroup>
+    <IsPolySharpPackageReferenceNeeded>false</IsPolySharpPackageReferenceNeeded>
+    <IsPolySharpPackageReferenceNeeded Condition="'$(IsPublishedProject)' == 'false' OR '$(IsSourceGeneratorProject)' == 'true'">true</IsPolySharpPackageReferenceNeeded>
+  </PropertyGroup>
+
+  <!-- Add the package reference, if needed -->
+  <ItemGroup Condition="'$(IsPolySharpPackageReferenceNeeded)' == 'true'">
+    <PackageReference Include="PolySharp" Version="1.15.0" PrivateAssets="all" IsImplicitlyDefined="true" />
+  </ItemGroup>
+
+  <!-- Define the type alias for [UnmanagedCallersOnly] when on the .NET Standard 2.0 target -->
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+    <Using Include="System.Runtime.InteropServices2.UnmanagedCallersOnlyAttribute" Alias="UnmanagedCallersOnlyAttribute" />
+  </ItemGroup>
+
+  <!-- Configure PolySharp options -->
+  <PropertyGroup>
+    <PolySharpIncludeRuntimeSupportedAttributes>true</PolySharpIncludeRuntimeSupportedAttributes>
+    <PolySharpUseInteropServices2NamespaceForUnmanagedCallersOnlyAttribute>true</PolySharpUseInteropServices2NamespaceForUnmanagedCallersOnlyAttribute>
+  </PropertyGroup>
 </Project>

@@ -15,12 +15,4 @@
     <!-- Missing readonly modifier for readonly struct members (not needed in tests) -->
     <NoWarn>$(NoWarn);IDE0251</NoWarn>
   </PropertyGroup>
-
-  <!-- Reference PolySharp for all test projects -->
-  <ItemGroup>
-    <PackageReference Include="PolySharp" Version="1.14.1">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>build;analyzers</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
 </Project>
