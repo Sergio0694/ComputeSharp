@@ -473,6 +473,7 @@ public partial class PixelShaderEffectTests
     }
 
     [D2DInputCount(1)]
+    [D2DInputSimple(0)]
     [D2DGeneratedPixelShaderDescriptor]
     [AutoConstructor]
     internal readonly partial struct ShaderWithSomePropertiesAndInputs : ID2D1PixelShader

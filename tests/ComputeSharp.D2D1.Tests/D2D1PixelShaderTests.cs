@@ -558,12 +558,15 @@ namespace ComputeSharp.D2D1.Tests
         [D2DInputCount(1)]
         [D2DInputComplex(0)]
         [D2DShaderProfile(D2D1ShaderProfile.PixelShader40Level91)]
+        [D2DRequiresScenePosition]
         [D2DGeneratedPixelShaderDescriptor]
         internal readonly partial struct ComplexShaderWithExplicitShaderProfileAndNoCompileOptions : ID2D1PixelShader
         {
             public float4 Execute()
             {
-                return D2D.GetInput(0);
+                float2 uv = D2D.GetScenePosition().XY;
+
+                return D2D.SampleInput(0, uv);
             }
         }
 
