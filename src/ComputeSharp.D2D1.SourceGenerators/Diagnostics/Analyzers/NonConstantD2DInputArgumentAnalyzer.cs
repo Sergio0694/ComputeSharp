@@ -62,8 +62,8 @@ public sealed class NonConstantD2DInputArgumentAnalyzer : DiagnosticAnalyzer
                     return;
                 }
 
-                // This analyzer should only kick in when the target parameter is an 'int', and the argument is not constant
-                if (operation.Value is ILiteralOperation { ConstantValue.HasValue: true } or IUnaryOperation { ConstantValue.HasValue: true, Operand: ILiteralOperation })
+                // This analyzer should also only kick in when the argument is not constant
+                if (operation.Value.ConstantValue.HasValue)
                 {
                     return;
                 }

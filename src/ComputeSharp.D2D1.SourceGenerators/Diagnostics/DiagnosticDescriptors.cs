@@ -1273,16 +1273,16 @@ partial class DiagnosticDescriptors
     /// <summary>
     /// Gets a <see cref="DiagnosticDescriptor"/> for a D2D intrinsic call with a source input index that is not a constant.
     /// <para>
-    /// Format: <c>"The argument for parameter '{0}' in the call to the D2D intrinsic '{1}' must be a constant value with a literal expression (for instance, 'D2D.GetInput(0)' is valid, whereas 'D2D.GetInput(x)' or 'D2D.GetInput(ConstantIndex)' are not)"</c>.
+    /// Format: <c>"The argument for parameter '{0}' in the call to the D2D intrinsic '{1}' must be a constant value (for instance, 'D2D.GetInput(0)' is valid, whereas 'D2D.GetInput(x)' is not)"</c>.
     /// </para>
     /// </summary>
     public static readonly DiagnosticDescriptor NonConstantSourceInputIndexForD2DIntrinsic = new(
         id: "CMPSD2D0085",
         title: "Non constant input index for D2D intrinsic",
-        messageFormat: "The argument for parameter '{0}' in the call to the D2D intrinsic '{1}' must be a constant value with a literal expression (for instance, 'D2D.GetInput(0)' is valid, whereas 'D2D.GetInput(x)' or 'D2D.GetInput(ConstantIndex)' are not)",
+        messageFormat: "The argument for parameter '{0}' in the call to the D2D intrinsic '{1}' must be a constant value (for instance, 'D2D.GetInput(0)' is valid, whereas 'D2D.GetInput(x)' is not)",
         category: "ComputeSharp.D2D1.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
-        description: "Arguments for parameters indicating the source shader input index in calls to D2D intrinsics must be constant values with a literal expression (for instance, 'D2D.GetInput(0)' is valid, whereas 'D2D.GetInput(x)' or 'D2D.GetInput(ConstantIndex)' are not).",
+        description: "Arguments for parameters indicating the source shader input index in calls to D2D intrinsics must be constant values (for instance, 'D2D.GetInput(0)' is valid, whereas 'D2D.GetInput(x)' is not).",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 }
