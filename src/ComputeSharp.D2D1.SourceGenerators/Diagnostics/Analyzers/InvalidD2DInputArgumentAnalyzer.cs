@@ -130,23 +130,23 @@ public sealed class InvalidD2DInputArgumentAnalyzer : DiagnosticAnalyzer
             return false;
         }
 
-        // Get the symbols for all relevant 'D2D' methods
-        IMethodSymbol?[] d2DMethodSymbols =
+        // These are all the 'D2D' intrinsic methods that take a target shader input index
+        string[] d2DMethodNames =
         [
-            d2DSymbol.GetMethod(nameof(D2D.GetInput)),
-            d2DSymbol.GetMethod(nameof(D2D.GetInputCoordinate)),
-            d2DSymbol.GetMethod(nameof(D2D.SampleInput)),
-            d2DSymbol.GetMethod(nameof(D2D.SampleInputAtOffset)),
-            d2DSymbol.GetMethod(nameof(D2D.SampleInputAtPosition))
+            nameof(D2D.GetInput),
+            nameof(D2D.GetInputCoordinate),
+            nameof(D2D.SampleInput),
+            nameof(D2D.SampleInputAtOffset),
+            nameof(D2D.SampleInputAtPosition)
         ];
 
         ImmutableDictionary<IMethodSymbol, D2D1PixelShaderInputType?>.Builder inputTypeMethodMap = ImmutableDictionary.CreateBuilder<IMethodSymbol, D2D1PixelShaderInputType?>(SymbolEqualityComparer.Default);
 
         // Validate all methods and build the map
-        foreach (IMethodSymbol? d2DMethodSymbol in d2DMethodSymbols)
+        foreach (string d2DMethodName in d2DMethodNames)
         {
-            // We failed to find a symbol (shouldn't really ever happen), just stop here
-            if (d2DMethodSymbol is null)
+            // If we can't resolve a symbol (shouldn't really ever happen), just stop here
+            if (d2DSymbol.GetMethod(d2DMethodName) is not { } d2DMethodSymbol)
             {
                 methodSymbols = null;
 
