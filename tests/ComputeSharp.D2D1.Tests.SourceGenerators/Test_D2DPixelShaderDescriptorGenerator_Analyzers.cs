@@ -1394,4 +1394,106 @@ public class Test_D2DPixelShaderDescriptorGenerator_Analyzers
 
         await CSharpAnalyzerWithLanguageVersionTest<InvalidD2DInputArgumentAnalyzer>.VerifyAnalyzerAsync(source);
     }
+
+    [TestMethod]
+    public async Task NonConstantSourceInputIndexForD2DIntrinsic_LiteralExpression_DoesNotWarn()
+    {
+        const string source = """
+            using ComputeSharp.D2D1;
+            using float4 = ComputeSharp.Float4;
+
+            [D2DInputCount(1)]
+            [D2DInputSimple(0)]
+            internal readonly partial struct MyType : ID2D1PixelShader
+            {
+                public float4 Execute()
+                {
+                    return D2D.GetInput(0);
+                }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<NonConstantD2DInputArgumentAnalyzer>.VerifyAnalyzerAsync(source);
+    }
+
+    [TestMethod]
+    public async Task NonConstantSourceInputIndexForD2DIntrinsic_LiteralExpression_WithOtherMethodsTakingNonConstants_DoesNotWarn()
+    {
+        const string source = """
+            using ComputeSharp.D2D1;
+            using float4 = ComputeSharp.Float4;
+
+            [D2DInputCount(1)]
+            [D2DInputSimple(0)]
+            internal readonly partial struct MyType(int x) : ID2D1PixelShader
+            {
+                public float4 Execute()
+                {
+                    return D2D.GetInput(0) + M1(x) + M2(x, 1) + M3(x) + M4(x, 1);
+                }
+
+                public int M1(int index) => 1;
+                public int M2(int index, int x) => 2;
+
+                public static int M3(int index) => 1;
+                public static int M4(int index, int x) => 1;
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<NonConstantD2DInputArgumentAnalyzer>.VerifyAnalyzerAsync(source);
+    }
+
+    [TestMethod]
+    public async Task NonConstantSourceInputIndexForD2DIntrinsic_NonConstantExpression_Warns()
+    {
+        const string source = """
+            using ComputeSharp.D2D1;
+            using float4 = ComputeSharp.Float4;
+
+            [D2DInputCount(1)]
+            internal readonly partial struct MyType(int x) : ID2D1PixelShader
+            {
+                public float4 Execute()
+                {
+                    D2D.GetInput({|CMPSD2D0085:x|});
+                    D2D.GetInputCoordinate({|CMPSD2D0085:x|});
+                    D2D.SampleInput({|CMPSD2D0085:x|}, 0);
+                    D2D.SampleInputAtOffset({|CMPSD2D0085:x|}, 0);
+                    D2D.SampleInputAtPosition({|CMPSD2D0085:x|}, 0);
+
+                    return 0;
+                }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<NonConstantD2DInputArgumentAnalyzer>.VerifyAnalyzerAsync(source);
+    }
+
+    [TestMethod]
+    public async Task NonConstantSourceInputIndexForD2DIntrinsic_NonLiteralConstant_Warns()
+    {
+        const string source = """
+            using ComputeSharp.D2D1;
+            using float4 = ComputeSharp.Float4;
+
+            [D2DInputCount(1)]
+            internal readonly partial struct MyType(int x) : ID2D1PixelShader
+            {
+                public const int SourceIndex = 0;
+
+                public float4 Execute()
+                {
+                    D2D.GetInput({|CMPSD2D0085:SourceIndex|});
+                    D2D.GetInputCoordinate({|CMPSD2D0085:SourceIndex|});
+                    D2D.SampleInput({|CMPSD2D0085:SourceIndex|}, 0);
+                    D2D.SampleInputAtOffset({|CMPSD2D0085:SourceIndex|}, 0);
+                    D2D.SampleInputAtPosition({|CMPSD2D0085:SourceIndex|}, 0);
+
+                    return 0;
+                }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<NonConstantD2DInputArgumentAnalyzer>.VerifyAnalyzerAsync(source);
+    }
 }
