@@ -83,26 +83,4 @@
     <!-- Pack the license file, if present -->
     <None Condition="$(IsLicenseFileAvailableForPacking)" Include="LICENSE.txt" Pack="true" PackagePath="\" Visible="False" />
   </ItemGroup>
-
-  <!--
-    Reference PolySharp for all .NET Standard 2.0 polyfills.
-    Only needed for the .Core project and all source generators.
-  -->
-  <ItemGroup Condition="'$(MSBuildProjectName)' == 'ComputeSharp.Core' OR $(IsSourceGeneratorProject)">
-    <PackageReference Include="PolySharp" Version="1.14.1">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>build;analyzers</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
-
-  <!-- Define the type alias for [UnmanagedCallersOnly] when on the .NET Standard 2.0 target -->
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    <Using Include="System.Runtime.InteropServices2.UnmanagedCallersOnlyAttribute" Alias="UnmanagedCallersOnlyAttribute" />
-  </ItemGroup>
-
-  <!-- Configure PolySharp options -->
-  <PropertyGroup>
-    <PolySharpIncludeRuntimeSupportedAttributes>true</PolySharpIncludeRuntimeSupportedAttributes>
-    <PolySharpUseInteropServices2NamespaceForUnmanagedCallersOnlyAttribute>true</PolySharpUseInteropServices2NamespaceForUnmanagedCallersOnlyAttribute>
-  </PropertyGroup>
 </Project>
