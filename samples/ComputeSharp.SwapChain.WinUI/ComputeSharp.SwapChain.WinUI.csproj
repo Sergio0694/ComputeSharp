@@ -10,10 +10,6 @@
     <PublishProfile>win-$(Platform).pubxml</PublishProfile>
     <UseWinUI>true</UseWinUI>
     <EnableMsixTooling>true</EnableMsixTooling>
-    <RestoreSources>
-      https://api.nuget.org/v3/index.json;
-      https://pkgs.dev.azure.com/dotnet/CommunityToolkit/_packaging/CommunityToolkit-MainLatest/nuget/v3/index.json;
-    </RestoreSources>
 
     <!-- Ignore warnings for the '[Experimental]' attribute ('CanvasAnimatedControl' temporarily has it) -->
     <NoWarn>$(NoWarn);CS8305;WMC1501</NoWarn>
@@ -64,8 +60,8 @@
 
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.2" />
-    <PackageReference Include="CommunityToolkit.WinUI.Controls.Primitives" Version="8.2.241010-build.1216" />
-    <PackageReference Include="CommunityToolkit.WinUI.Media" Version="8.2.241010-build.1216" />
+    <PackageReference Include="CommunityToolkit.WinUI.Controls.Primitives" Version="8.2.241112-preview1" />
+    <PackageReference Include="CommunityToolkit.WinUI.Media" Version="8.2.241112-preview1" />
     <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.2.0" />
   </ItemGroup>
 
