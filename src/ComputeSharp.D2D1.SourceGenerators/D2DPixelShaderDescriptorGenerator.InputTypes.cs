@@ -13,7 +13,7 @@ partial class D2DPixelShaderDescriptorGenerator
     /// <summary>
     /// A helper with all logic to generate the <c>InputTypes</c> properties.
     /// </summary>
-    private static partial class InputTypes
+    internal static partial class InputTypes
     {
         /// <summary>
         /// Extracts the input info for the current shader.

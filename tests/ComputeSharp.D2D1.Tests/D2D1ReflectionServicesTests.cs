@@ -21,7 +21,7 @@ public partial class D2D1ReflectionServicesTests
         Assert.AreEqual("""
             #define D2D_INPUT_COUNT 3
             #define D2D_INPUT0_SIMPLE
-            #define D2D_INPUT1_COMPLEX
+            #define D2D_INPUT1_SIMPLE
             #define D2D_INPUT2_COMPLEX
             #define D2D_REQUIRES_SCENE_POSITION
 
@@ -52,7 +52,7 @@ public partial class D2D1ReflectionServicesTests
 
     [D2DInputCount(3)]
     [D2DInputSimple(0)]
-    [D2DInputComplex(1)]
+    [D2DInputSimple(1)]
     [D2DInputComplex(2)]
     [D2DRequiresScenePosition]
     [D2DShaderProfile(D2D1ShaderProfile.PixelShader41)]
@@ -98,6 +98,7 @@ public partial class D2D1ReflectionServicesTests
 
         Assert.AreEqual("""
             #define D2D_INPUT_COUNT 1
+            #define D2D_INPUT0_SIMPLE
 
             #include "d2d1effecthelpers.hlsli"
 
@@ -113,6 +114,7 @@ public partial class D2D1ReflectionServicesTests
     }
 
     [D2DInputCount(1)]
+    [D2DInputSimple(0)]
     [D2DRequiresDoublePrecisionSupport]
     [D2DShaderProfile(D2D1ShaderProfile.PixelShader50)]
     [D2DGeneratedPixelShaderDescriptor]

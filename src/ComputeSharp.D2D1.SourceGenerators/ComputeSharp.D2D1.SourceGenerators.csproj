@@ -61,7 +61,9 @@
     <Compile Include="..\ComputeSharp.D2D1\Attributes\Enums\D2D1Filter.cs" Link="ComputeSharp.D2D1\Attributes\Enums\D2D1Filter.cs" />
     <Compile Include="..\ComputeSharp.D2D1\Attributes\Enums\D2D1PixelOptions.cs" Link="ComputeSharp.D2D1\Attributes\Enums\D2D1PixelOptions.cs" />
     <Compile Include="..\ComputeSharp.D2D1\Intrinsics\D2D.cs" Link="ComputeSharp.D2D1\Intrinsics\D2D.cs" />
+    <Compile Include="..\ComputeSharp.D2D1\Intrinsics\Attributes\HlslD2DIntrinsicInputTypeAttribute.cs" Link="ComputeSharp.D2D1\Intrinsics\Attributes\HlslD2DIntrinsicInputTypeAttribute.cs" />
     <Compile Include="..\ComputeSharp.D2D1\Shaders\Exceptions\FxcCompilationException.cs" Link="ComputeSharp.D2D1\Shaders\Exceptions\FxcCompilationException.cs" />
+    <Compile Include="..\ComputeSharp.D2D1\Shaders\Interop\D2D1PixelShaderInputType.cs" Link="ComputeSharp.D2D1\Shaders\Interop\D2D1PixelShaderInputType.cs" />
     <Compile Include="..\ComputeSharp.D2D1\Shaders\Interop\Helpers\D2D1AssemblyAssociatedMemory.cs" Link="ComputeSharp.D2D1\Shaders\Interop\Helpers\D2D1AssemblyAssociatedMemory.cs" />
     <Compile Include="..\ComputeSharp.D2D1\Shaders\Translation\ASCII.cs" Link="ComputeSharp.D2D1\Shaders\Translation\ASCII.cs" />
     <Compile Include="..\ComputeSharp.D2D1\Shaders\Translation\D3DCompiler.cs" Link="ComputeSharp.D2D1\Shaders\Translation\D3DCompiler.cs" />

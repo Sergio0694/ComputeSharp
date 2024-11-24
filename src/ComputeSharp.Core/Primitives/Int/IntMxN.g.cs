@@ -1,6 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
-using ComputeSharp.Core.Intrinsics.Attributes;
+using ComputeSharp.Core.Intrinsics;
 
 #pragma warning disable CS0660, CS0661
 

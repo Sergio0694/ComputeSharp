@@ -1,4 +1,6 @@
-using ComputeSharp.Core.Intrinsics.Attributes;
+using ComputeSharp.Core.Intrinsics;
+using ComputeSharp.D2D1.Interop;
+using ComputeSharp.D2D1.Intrinsics;
 
 #pragma warning disable IDE0022
 
@@ -15,7 +17,6 @@ public static class D2D
     /// </summary>
     /// <param name="index">The index of the input texture to get the input from.</param>
     /// <returns>The color from the target input at the current coordinate, in <c>INPUTN</c> format.</returns>
-    /// <remarks>This method is only available for simple inputs.</remarks>
     [HlslIntrinsicName("D2DGetInput")]
     public static Float4 GetInput(int index) => throw new InvalidExecutionContextException($"{typeof(D2D)}.{nameof(GetInput)}({typeof(int)})");
 
@@ -26,6 +27,7 @@ public static class D2D
     /// <returns>The input coordinate, in <c>TEXCOORDN</c> format.</returns>
     /// <remarks>This method is only available for complex inputs.</remarks>
     [HlslIntrinsicName("D2DGetInputCoordinate")]
+    [HlslD2DIntrinsicInputType(D2D1PixelShaderInputType.Complex)]
     public static Float4 GetInputCoordinate(int index) => throw new InvalidExecutionContextException($"{typeof(D2D)}.{nameof(GetInputCoordinate)}({typeof(int)})");
 
     /// <summary>
@@ -44,6 +46,7 @@ public static class D2D
     /// <returns>The sampled value from the texture, in <c>TEXCOORDN</c> format.</returns>
     /// <remarks>This method is only available for complex inputs.</remarks>
     [HlslIntrinsicName("D2DSampleInput")]
+    [HlslD2DIntrinsicInputType(D2D1PixelShaderInputType.Complex)]
     public static Float4 SampleInput(int index, Float2 uv) => throw new InvalidExecutionContextException($"{typeof(D2D)}.{nameof(SampleInput)}({typeof(int)}, {typeof(Float2)})");
 
     /// <summary>
@@ -54,6 +57,7 @@ public static class D2D
     /// <returns>The sampled value from the texture, in <c>TEXCOORDN</c> format.</returns>
     /// <remarks>This method is only available for complex inputs.</remarks>
     [HlslIntrinsicName("D2DSampleInputAtOffset")]
+    [HlslD2DIntrinsicInputType(D2D1PixelShaderInputType.Complex)]
     public static Float4 SampleInputAtOffset(int index, Float2 offset) => throw new InvalidExecutionContextException($"{typeof(D2D)}.{nameof(SampleInputAtOffset)}({typeof(int)}, {typeof(Float2)})");
 
     /// <summary>
@@ -64,5 +68,6 @@ public static class D2D
     /// <returns>The sampled value from the texture, in <c>TEXCOORDN</c> format.</returns>
     /// <remarks>This method is only available for complex inputs.</remarks>
     [HlslIntrinsicName("D2DSampleInputAtPosition")]
+    [HlslD2DIntrinsicInputType(D2D1PixelShaderInputType.Complex)]
     public static Float4 SampleInputAtPosition(int index, Float2 uv) => throw new InvalidExecutionContextException($"{typeof(D2D)}.{nameof(SampleInputAtPosition)}({typeof(int)}, {typeof(Float2)})");
 }
