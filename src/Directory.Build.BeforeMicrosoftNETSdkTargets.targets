@@ -40,10 +40,6 @@
   
   <!-- Add a marker value to verify from a later .targets that this .targets has been correctly invoked -->
   <PropertyGroup>
-    <_ComputeSharpCustomBeforeMicrosoftCommonTargetsValid>true</_ComputeSharpCustomBeforeMicrosoftCommonTargetsValid>
+    <_ComputeSharpBeforeMicrosoftNETSdkTargetsValid>true</_ComputeSharpBeforeMicrosoftNETSdkTargetsValid>
   </PropertyGroup>
-
-  <!-- Import the original custom .targets, if it exists -->
-  <Import Project="$(_ComputeSharpCustomBeforeMicrosoftCommonTargets)"
-          Condition="'$(_ComputeSharpCustomBeforeMicrosoftCommonTargets)' != '' AND Exists('$(_ComputeSharpCustomBeforeMicrosoftCommonTargets)')"/>
 </Project>

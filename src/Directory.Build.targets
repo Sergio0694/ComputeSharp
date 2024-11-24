@@ -78,10 +78,10 @@
     </ItemGroup>
   </Target>
 
-  <!-- Emit an error if our custom 'BeforeCommon' .targets file has not been invoked -->
-  <Target Name="_ComputeSharpCheckForInvalidCustomBeforeMicrosoftCommonTargets"
+  <!-- Emit an error if our custom 'BeforeMicrosoftNETSdkTargets' .targets file has not been invoked -->
+  <Target Name="_ComputeSharpCheckForInvalidBeforeMicrosoftNETSdkTargets"
           BeforeTargets="_CheckForInvalidConfigurationAndPlatform;CoreCompile">
-    <Error Condition ="'$(_ComputeSharpCustomBeforeMicrosoftCommonTargetsValid)' != 'true'"
-           Text="The '_ComputeSharpCustomBeforeMicrosoftCommonTargetsValid' marker property is not set."/>
+    <Error Condition ="'$(_ComputeSharpBeforeMicrosoftNETSdkTargetsValid)' != 'true'"
+           Text="The '_ComputeSharpBeforeMicrosoftNETSdkTargetsValid' marker property is not set."/>
   </Target>
 </Project>
