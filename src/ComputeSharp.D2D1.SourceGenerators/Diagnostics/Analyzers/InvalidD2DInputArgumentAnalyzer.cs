@@ -33,7 +33,7 @@ public sealed class InvalidD2DInputArgumentAnalyzer : DiagnosticAnalyzer
         context.RegisterCompilationStartAction(static context =>
         {
             // If we can't get the D2D methods map, we have to stop right away
-            if (!TryBuildMethodSymbolMap(context.Compilation, out ImmutableDictionary<IMethodSymbol, D2D1PixelShaderInputType>? methodSymbols))
+            if (!TryBuildMethodSymbolMap(context.Compilation, out ImmutableDictionary<IMethodSymbol, D2D1PixelShaderInputType?>? methodSymbols))
             {
                 return;
             }
@@ -65,7 +65,7 @@ public sealed class InvalidD2DInputArgumentAnalyzer : DiagnosticAnalyzer
                 }
 
                 // Validate that the target method is one of the ones we care about, and get the target input type
-                if (!methodSymbols.TryGetValue(targetMethodSymbol, out D2D1PixelShaderInputType targetInputType))
+                if (!methodSymbols.TryGetValue(targetMethodSymbol, out D2D1PixelShaderInputType? targetInputType))
                 {
                     return;
                 }
@@ -101,7 +101,7 @@ public sealed class InvalidD2DInputArgumentAnalyzer : DiagnosticAnalyzer
                         typeSymbol,
                         inputCount));
                 }
-                else if ((D2D1PixelShaderInputType)inputTypes[index] != targetInputType)
+                else if (targetInputType is not null && (D2D1PixelShaderInputType)inputTypes[index] != targetInputType)
                 {
                     // Second validation: the input type must match
                     context.ReportDiagnostic(Diagnostic.Create(
@@ -120,7 +120,7 @@ public sealed class InvalidD2DInputArgumentAnalyzer : DiagnosticAnalyzer
     /// <param name="compilation">The <see cref="Compilation"/> to consider for analysis.</param>
     /// <param name="methodSymbols">The resulting mapping of resolved <see cref="IMethodSymbol"/> instances.</param>
     /// <returns>Whether all requested <see cref="IMethodSymbol"/> instances could be resolved.</returns>
-    private static bool TryBuildMethodSymbolMap(Compilation compilation, [NotNullWhen(true)] out ImmutableDictionary<IMethodSymbol, D2D1PixelShaderInputType>? methodSymbols)
+    private static bool TryBuildMethodSymbolMap(Compilation compilation, [NotNullWhen(true)] out ImmutableDictionary<IMethodSymbol, D2D1PixelShaderInputType?>? methodSymbols)
     {
         // Get the 'D2D' symbol, to get methods from it
         if (compilation.GetTypeByMetadataName("ComputeSharp.D2D1.D2D") is not { } d2DSymbol)
@@ -140,7 +140,7 @@ public sealed class InvalidD2DInputArgumentAnalyzer : DiagnosticAnalyzer
             d2DSymbol.GetMethod(nameof(D2D.SampleInputAtPosition))
         ];
 
-        ImmutableDictionary<IMethodSymbol, D2D1PixelShaderInputType>.Builder inputTypeMethodMap = ImmutableDictionary.CreateBuilder<IMethodSymbol, D2D1PixelShaderInputType>(SymbolEqualityComparer.Default);
+        ImmutableDictionary<IMethodSymbol, D2D1PixelShaderInputType?>.Builder inputTypeMethodMap = ImmutableDictionary.CreateBuilder<IMethodSymbol, D2D1PixelShaderInputType?>(SymbolEqualityComparer.Default);
 
         // Validate all methods and build the map
         foreach (IMethodSymbol? d2DMethodSymbol in d2DMethodSymbols)
@@ -154,9 +154,16 @@ public sealed class InvalidD2DInputArgumentAnalyzer : DiagnosticAnalyzer
             }
 
             // Lookup the attribute to get the D2D input type (the attribute only exists on the 'D2D' type loaded in the analyzer)
-            D2D1PixelShaderInputType inputType = typeof(D2D).GetMethod(d2DMethodSymbol.Name).GetCustomAttribute<HlslD2DIntrinsicInputTypeAttribute>()!.InputType;
-
-            inputTypeMethodMap.Add(d2DMethodSymbol, (D2D1PixelShaderInputType)inputType);
+            if (typeof(D2D).GetMethod(d2DMethodSymbol.Name).GetCustomAttribute<HlslD2DIntrinsicInputTypeAttribute>() is { } hlslD2DIntrinsicInputTypeAttribute)
+            {
+                inputTypeMethodMap.Add(d2DMethodSymbol, hlslD2DIntrinsicInputTypeAttribute.InputType);
+            }
+            else
+            {
+                // If the method is not annotated, we stil track it, but we will not indicate any exclusive input type.
+                // This means that the input index validation logic will still work, but we'll skip the input type checks.
+                inputTypeMethodMap.Add(d2DMethodSymbol, null);
+            }
         }
 
         methodSymbols = inputTypeMethodMap.ToImmutable();

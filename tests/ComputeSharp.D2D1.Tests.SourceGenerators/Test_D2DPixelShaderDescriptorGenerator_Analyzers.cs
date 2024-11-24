@@ -1354,6 +1354,7 @@ public class Test_D2DPixelShaderDescriptorGenerator_Analyzers
                 public float4 Execute()
                 {
                     D2D.GetInput(0);
+                    D2D.GetInput(1);
                     D2D.GetInputCoordinate(1);
                     D2D.SampleInput(1, 0);
                     D2D.SampleInputAtOffset(1, 0);
@@ -1381,7 +1382,6 @@ public class Test_D2DPixelShaderDescriptorGenerator_Analyzers
             {
                 public float4 Execute()
                 {
-                    {|CMPSD2D0084:D2D.GetInput(1)|};
                     {|CMPSD2D0084:D2D.GetInputCoordinate(0)|};
                     {|CMPSD2D0084:D2D.SampleInput(0, 0)|};
                     {|CMPSD2D0084:D2D.SampleInputAtOffset(0, 0)|};

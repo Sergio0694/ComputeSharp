@@ -17,9 +17,7 @@ public static class D2D
     /// </summary>
     /// <param name="index">The index of the input texture to get the input from.</param>
     /// <returns>The color from the target input at the current coordinate, in <c>INPUTN</c> format.</returns>
-    /// <remarks>This method is only available for simple inputs.</remarks>
     [HlslIntrinsicName("D2DGetInput")]
-    [HlslD2DIntrinsicInputType(D2D1PixelShaderInputType.Simple)]
     public static Float4 GetInput(int index) => throw new InvalidExecutionContextException($"{typeof(D2D)}.{nameof(GetInput)}({typeof(int)})");
 
     /// <summary>
