@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+
+  <!-- Properties exclusive to .NET 8 projects -->
+  <PropertyGroup Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net8.0'))">
+
+    <!--
+      Enable trimming support. This can't be in a target unlike the other properties
+      set below, because if that is the case the trimmable attribute will be set but
+      the analyzers will not run, so warnings will be skipped.
+    -->
+    <IsAotCompatible>true</IsAotCompatible>
+
+    <!-- Emit the [DisableRuntimeMarshalling] attribute (also enables the associated analyzer) -->
+    <DisableRuntimeMarshalling>true</DisableRuntimeMarshalling>
+  </PropertyGroup>
+
+  <!--
+    Emit the [SupportedOSVersion] attribute if needed. Note that the .NET SDK already emits this attribute
+    automatically, but only when targeting the Windows TFM. We use this custom target to emit the same
+    attribute for projects only targeting plain .NET as well. This makes them easier to consume from
+    projects that are not using the Windows TFM as well. Doing so isn't strictly needed anyway unless
+    you're specifically consuming the Windows SDK projections, which those projects are not doing.
+  -->
+  <Target Name="EmitSupportedOSVersionAttributeForTargetOS"
+          BeforeTargets="PrepareForBuild">
+    <ItemGroup Condition="'$(SupportedOSPlatformVersion)' != '' AND !$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net8.0-windows'))">
+      <AssemblyAttribute Include="System.Runtime.Versioning.SupportedOSPlatformAttribute">
+        <_Parameter1>Windows$(SupportedOSPlatformVersion)</_Parameter1>
+      </AssemblyAttribute>
+    </ItemGroup>
+  </Target>
+
+  <!-- Emit the [ComVisible(false)] attribute for UWP and WinUI targets -->
+  <ItemGroup Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net8.0-windows'))">
+    <AssemblyAttribute Include="System.Runtime.InteropServices.ComVisibleAttribute">
+      <_Parameter1>false</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
+  
+  <!-- Add a marker value to verify from a later .targets that this .targets has been correctly invoked -->
+  <PropertyGroup>
+    <_ComputeSharpBeforeMicrosoftNETSdkTargetsValid>true</_ComputeSharpBeforeMicrosoftNETSdkTargetsValid>
+  </PropertyGroup>
+</Project>

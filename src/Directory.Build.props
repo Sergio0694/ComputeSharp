@@ -83,4 +83,14 @@
     <!-- Pack the license file, if present -->
     <None Condition="$(IsLicenseFileAvailableForPacking)" Include="LICENSE.txt" Pack="true" PackagePath="\" Visible="False" />
   </ItemGroup>
+
+  <!--
+    Setup the custom .targets to run as 'BeforeMicrosoftNETSdkTargets'. This is because we want to be able to read properties
+    that are set in .csproj files, and set properties depending on those before the .NET SDK .targets are imported. This is
+    necessary to ensure that the .NET tooling works correctly with some of them (eg. with 'IsAotCompatible'). Note that the
+    .NET SDK doesn't use 'Exists' here, and '<Import>' supports multiple items, so we can just chain our .targets file directly.
+  -->
+  <PropertyGroup>
+    <BeforeMicrosoftNETSdkTargets>$(BeforeMicrosoftNETSdkTargets);$(MSBuildThisFileDirectory)Directory.Build.BeforeMicrosoftNETSdkTargets.targets</BeforeMicrosoftNETSdkTargets>
+  </PropertyGroup>
 </Project>
