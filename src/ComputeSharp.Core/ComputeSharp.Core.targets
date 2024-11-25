@@ -7,7 +7,7 @@
     </ItemGroup>
   </Target>
 
-  <!-- Remove the analyzer if using Roslyn < 4.9 (ComputeSharp.Core's generators require Roslyn 4.9) -->
+  <!-- Remove the analyzer if using Roslyn < 4.12 (ComputeSharp.Core's generators require it) -->
   <Target Name="_ComputeSharpCoreRemoveAnalyzersForRoslyn3"
           Condition="'$(CSharpCoreTargetsPath)' != ''"
           AfterTargets="ResolvePackageDependenciesForBuild;ResolveNuGetPackageAssets"
@@ -29,10 +29,10 @@
       <ComputeSharpCoreCurrentCompilerVersion>@(ComputeSharpCoreCurrentCompilerAssemblyIdentity->'%(Version)')</ComputeSharpCoreCurrentCompilerVersion>
 
       <!-- The CurrentCompilerVersionIsNotNewEnough property can now be defined based on the Roslyn assembly version -->
-      <ComputeSharpCoreCurrentCompilerVersionIsNotNewEnough Condition="$([MSBuild]::VersionLessThan($(ComputeSharpCoreCurrentCompilerVersion), 4.9))">true</ComputeSharpCoreCurrentCompilerVersionIsNotNewEnough>
+      <ComputeSharpCoreCurrentCompilerVersionIsNotNewEnough Condition="$([MSBuild]::VersionLessThan($(ComputeSharpCoreCurrentCompilerVersion), 4.12))">true</ComputeSharpCoreCurrentCompilerVersionIsNotNewEnough>
     </PropertyGroup>
 
-    <!-- If the Roslyn version is < 4.9, disable the source generators -->
+    <!-- If the Roslyn version is < 4.12, disable the source generators -->
     <ItemGroup Condition ="'$(ComputeSharpCoreCurrentCompilerVersionIsNotNewEnough)' == 'true'">
       <Analyzer Remove="@(_ComputeSharpCoreAnalyzer)"/>
     </ItemGroup>
