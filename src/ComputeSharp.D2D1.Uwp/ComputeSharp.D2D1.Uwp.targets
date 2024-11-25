@@ -7,7 +7,7 @@
     </ItemGroup>
   </Target>
 
-  <!-- Remove the analyzer if using Roslyn < 4.11 (ComputeSharp.D2D1.Uwp's generators require Roslyn 4.11) -->
+  <!-- Remove the analyzer if using Roslyn < 4.12 (ComputeSharp.D2D1.Uwp's generators require it) -->
   <Target Name="_ComputeSharpD2D1UwpRemoveAnalyzersForRoslyn3"
           Condition="'$(CSharpCoreTargetsPath)' != ''"
           AfterTargets="ResolvePackageDependenciesForBuild;ResolveNuGetPackageAssets"
@@ -29,17 +29,17 @@
       <ComputeSharpD2D1UwpCurrentCompilerVersion>@(ComputeSharpD2D1UwpCurrentCompilerAssemblyIdentity->'%(Version)')</ComputeSharpD2D1UwpCurrentCompilerVersion>
 
       <!-- The CurrentCompilerVersionIsNotNewEnough property can now be defined based on the Roslyn assembly version -->
-      <ComputeSharpD2D1UwpCurrentCompilerVersionIsNotNewEnough Condition="$([MSBuild]::VersionLessThan($(ComputeSharpD2D1UwpCurrentCompilerVersion), 4.11))">true</ComputeSharpD2D1UwpCurrentCompilerVersionIsNotNewEnough>
+      <ComputeSharpD2D1UwpCurrentCompilerVersionIsNotNewEnough Condition="$([MSBuild]::VersionLessThan($(ComputeSharpD2D1UwpCurrentCompilerVersion), 4.12))">true</ComputeSharpD2D1UwpCurrentCompilerVersionIsNotNewEnough>
     </PropertyGroup>
 
-    <!-- If the Roslyn version is < 4.11, disable the source generators -->
+    <!-- If the Roslyn version is not high enough, disable the source generators -->
     <ItemGroup Condition ="'$(ComputeSharpD2D1UwpCurrentCompilerVersionIsNotNewEnough)' == 'true'">
       <Analyzer Remove="@(_ComputeSharpD2D1UwpAnalyzer)"/>
     </ItemGroup>
 
     <!-- There is no need to emit a warning here, as this package is always a transitive dependency from ComputeSharp.D2D1, which does emit the warning -->
   </Target>
-  
+
   <!-- Remove the analyzer if Roslyn is missing -->
   <Target Name="_ComputeSharpD2D1UwpRemoveAnalyzersForRosynNotFound"
           Condition="'$(CSharpCoreTargetsPath)' == ''"
