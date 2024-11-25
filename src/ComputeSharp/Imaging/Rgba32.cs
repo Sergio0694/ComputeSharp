@@ -1,9 +1,7 @@
 using System;
-using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Runtime.Intrinsics;
-using System.Runtime.Intrinsics.X86;
 
 namespace ComputeSharp;
 
@@ -85,24 +83,15 @@ public struct Rgba32 : IEquatable<Rgba32>, IPixel<Rgba32, Float4>, ISpanFormatta
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly Float4 ToPixel()
     {
-        if (Sse2.IsSupported)
-        {
-            int pack = Unsafe.As<Rgba32, int>(ref Unsafe.AsRef(in this));
-            Vector128<byte> vZero = Vector128<byte>.Zero;
-            Vector128<byte> vByte = Vector128.CreateScalarUnsafe(pack).AsByte();
-            Vector128<ushort> vUShort = Sse2.UnpackLow(vByte, vZero).AsUInt16();
-            Vector128<int> vInt = Sse2.UnpackLow(vUShort, vZero.AsUInt16()).AsInt32();
-            Vector128<float> vFloat = Sse2.ConvertToVector128Single(vInt);
-            Vector128<float> vMax = Vector128.Create((float)byte.MaxValue);
-            Vector128<float> vNorm = Sse.Divide(vFloat, vMax);
+        int pack = Unsafe.As<Rgba32, int>(ref Unsafe.AsRef(in this));
+        Vector128<byte> vByte = Vector128.CreateScalarUnsafe(pack).AsByte();
+        Vector128<ushort> vUShort = Vector128.WidenLower(vByte);
+        Vector128<int> vInt = Vector128.WidenLower(vUShort).AsInt32();
+        Vector128<float> vFloat = Vector128.ConvertToSingle(vInt);
+        Vector128<float> vMax = Vector128.Create((float)byte.MaxValue);
+        Vector128<float> vNorm = Vector128.Divide(vFloat, vMax);
 
-            return vNorm.AsVector4();
-        }
-
-        Vector4 linear = new(this.R, this.G, this.B, this.A);
-        Vector4 normalized = linear / byte.MaxValue;
-
-        return normalized;
+        return vNorm.AsVector4();
     }
 
     /// <summary>
