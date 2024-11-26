@@ -1292,7 +1292,6 @@ public class Test_D2DPixelShaderDescriptorGenerator_Analyzers
     }
 
     [TestMethod]
-    [DataRow(-1)]
     [DataRow(0)]
     [DataRow(1)]
     [DataRow(16)]
@@ -1316,11 +1315,30 @@ public class Test_D2DPixelShaderDescriptorGenerator_Analyzers
     }
 
     [TestMethod]
-    [DataRow(-1)]
+    public async Task IndexOutOfRangeForD2DIntrinsic_InvalidArgument2_Warns()
+    {
+        const string source = """
+            using ComputeSharp.D2D1;
+            using float4 = ComputeSharp.Float4;
+
+            [D2DInputCount(0)]
+            internal readonly partial struct MyType : ID2D1PixelShader
+            {
+                public float4 Execute()
+                {
+                    return D2D.GetInput({|CMPSD2D0086:{|CMPSD2D0083:-1|}|});
+                }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<InvalidD2DInputArgumentAnalyzer>.VerifyAnalyzerAsync(source);
+    }
+
+    [TestMethod]
     [DataRow(5)]
     [DataRow(6)]
     [DataRow(16)]
-    public async Task IndexOutOfRangeForD2DIntrinsic_InvalidArgument2_Warns(int index)
+    public async Task IndexOutOfRangeForD2DIntrinsic_InvalidArgument3_Warns(int index)
     {
         string source = $$"""
             using ComputeSharp.D2D1;
@@ -1332,6 +1350,26 @@ public class Test_D2DPixelShaderDescriptorGenerator_Analyzers
                 public float4 Execute()
                 {
                     return D2D.GetInput({|CMPSD2D0083:{{index}}|});
+                }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<InvalidD2DInputArgumentAnalyzer>.VerifyAnalyzerAsync(source);
+    }
+
+    [TestMethod]
+    public async Task IndexOutOfRangeForD2DIntrinsic_InvalidArgument4_Warns()
+    {
+        const string source = """
+            using ComputeSharp.D2D1;
+            using float4 = ComputeSharp.Float4;
+
+            [D2DInputCount(5)]
+            internal readonly partial struct MyType : ID2D1PixelShader
+            {
+                public float4 Execute()
+                {
+                    return D2D.GetInput({|CMPSD2D0086:{|CMPSD2D0083:-1|}|});
                 }
             }
             """;
@@ -1386,6 +1424,36 @@ public class Test_D2DPixelShaderDescriptorGenerator_Analyzers
                     D2D.SampleInput({|CMPSD2D0084:0|}, 0);
                     D2D.SampleInputAtOffset({|CMPSD2D0084:0|}, 0);
                     D2D.SampleInputAtPosition({|CMPSD2D0084:0|}, 0);
+
+                    return 0;
+                }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<InvalidD2DInputArgumentAnalyzer>.VerifyAnalyzerAsync(source);
+    }
+
+    [TestMethod]
+    public async Task InvalidInputTypeForD2DIntrinsic_InvalidSyntax_Warns()
+    {
+        const string source = """
+            using ComputeSharp.D2D1;
+            using float4 = ComputeSharp.Float4;
+
+            [D2DInputCount(2)]
+            [D2DInputSimple(0)]
+            [D2DInputComplex(1)]
+            internal readonly partial struct MyType : ID2D1PixelShader
+            {
+                const int BaseIndex = 0;
+
+                public float4 Execute()
+                {
+                    D2D.GetInput({|CMPSD2D0086:+1|});
+                    D2D.GetInput({|CMPSD2D0086:-0|});
+                    D2D.GetInput({|CMPSD2D0086:(1)|});
+                    D2D.GetInput({|CMPSD2D0086:BaseIndex + 1|});
+                    D2D.GetInput({|CMPSD2D0086:0 + 1|});
 
                     return 0;
                 }
