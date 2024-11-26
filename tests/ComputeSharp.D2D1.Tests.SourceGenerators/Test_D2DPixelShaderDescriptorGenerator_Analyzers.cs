@@ -1307,7 +1307,7 @@ public class Test_D2DPixelShaderDescriptorGenerator_Analyzers
             {
                 public float4 Execute()
                 {
-                    return {|CMPSD2D0083:D2D.GetInput({{index}})|};
+                    return D2D.GetInput({|CMPSD2D0083:{{index}}|});
                 }
             }
             """;
@@ -1331,7 +1331,7 @@ public class Test_D2DPixelShaderDescriptorGenerator_Analyzers
             {
                 public float4 Execute()
                 {
-                    return {|CMPSD2D0083:D2D.GetInput({{index}})|};
+                    return D2D.GetInput({|CMPSD2D0083:{{index}}|});
                 }
             }
             """;
@@ -1382,10 +1382,10 @@ public class Test_D2DPixelShaderDescriptorGenerator_Analyzers
             {
                 public float4 Execute()
                 {
-                    {|CMPSD2D0084:D2D.GetInputCoordinate(0)|};
-                    {|CMPSD2D0084:D2D.SampleInput(0, 0)|};
-                    {|CMPSD2D0084:D2D.SampleInputAtOffset(0, 0)|};
-                    {|CMPSD2D0084:D2D.SampleInputAtPosition(0, 0)|};
+                    D2D.GetInputCoordinate({|CMPSD2D0084:0|});
+                    D2D.SampleInput({|CMPSD2D0084:0|}, 0);
+                    D2D.SampleInputAtOffset({|CMPSD2D0084:0|}, 0);
+                    D2D.SampleInputAtPosition({|CMPSD2D0084:0|}, 0);
 
                     return 0;
                 }

@@ -59,7 +59,7 @@ public sealed class InvalidD2DInputArgumentAnalyzer : DiagnosticAnalyzer
 
                 // Second cheap inital filter: we only care about invocations with a constant 'int' argument in first position.
                 // While we're validating this, let's also get the 'index' parameter, since we need to validate it anyway.
-                if (operation.Arguments is not [{ Value.ConstantValue: { HasValue: true, Value: int index } }, ..])
+                if (operation.Arguments is not [{ Value.ConstantValue: { HasValue: true, Value: int index } } firstArgument, ..])
                 {
                     return;
                 }
@@ -95,7 +95,7 @@ public sealed class InvalidD2DInputArgumentAnalyzer : DiagnosticAnalyzer
                 {
                     context.ReportDiagnostic(Diagnostic.Create(
                         IndexOutOfRangeForD2DIntrinsic,
-                        operation.Syntax.GetLocation(),
+                        firstArgument.Syntax.GetLocation(),
                         targetMethodSymbol.Name,
                         index,
                         typeSymbol,
@@ -106,7 +106,7 @@ public sealed class InvalidD2DInputArgumentAnalyzer : DiagnosticAnalyzer
                     // Second validation: the input type must match
                     context.ReportDiagnostic(Diagnostic.Create(
                         InvalidInputTypeForD2DIntrinsic,
-                        operation.Syntax.GetLocation(),
+                        firstArgument.Syntax.GetLocation(),
                         targetMethodSymbol.Name,
                         index));
                 }
