@@ -5,6 +5,7 @@ using ComputeSharp.D2D1.Interop;
 using ComputeSharp.D2D1.Intrinsics;
 using ComputeSharp.SourceGeneration.Extensions;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.Operations;
 using static ComputeSharp.SourceGeneration.Diagnostics.DiagnosticDescriptors;
@@ -21,7 +22,8 @@ public sealed class InvalidD2DInputArgumentAnalyzer : DiagnosticAnalyzer
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } =
     [
         IndexOutOfRangeForD2DIntrinsic,
-        InvalidInputTypeForD2DIntrinsic
+        InvalidInputTypeForD2DIntrinsic,
+        InvalidIndexSyntaxForD2DIntrinsic
     ];
 
     /// <inheritdoc/>
@@ -64,10 +66,37 @@ public sealed class InvalidD2DInputArgumentAnalyzer : DiagnosticAnalyzer
                     return;
                 }
 
+                // We only want to kick in when the target parameter is an 'int' (same as in 'NonConstantD2DInputArgumentAnalyzer')
+                if (firstArgument.Parameter is not { Type.SpecialType: SpecialType.System_Int32 } parameterSymbol)
+                {
+                    return;
+                }
+
                 // Validate that the target method is one of the ones we care about, and get the target input type
                 if (!methodSymbols.TryGetValue(targetMethodSymbol, out D2D1PixelShaderInputType? targetInputType))
                 {
                     return;
+                }
+
+                // Also check that the actual syntax for the index argument is valid (only literals and direct constant field references
+                // are valid). For parenthesized expressions, we need to check the parent syntax node (the operation just ignores it).
+                if (firstArgument.Value is not (ILiteralOperation or IFieldReferenceOperation))
+                {
+                    context.ReportDiagnostic(Diagnostic.Create(
+                        InvalidIndexSyntaxForD2DIntrinsic,
+                        firstArgument.Syntax.GetLocation(),
+                        parameterSymbol.Name,
+                        targetMethodSymbol.Name));
+                }
+                else if (firstArgument.Syntax.Parent.IsKind(SyntaxKind.ParenthesizedExpression))
+                {
+                    // In this case, we pass the parent syntax node for the location, so that we can
+                    // include the parentheses as well. Otherwise we'd just underline the inner value.
+                    context.ReportDiagnostic(Diagnostic.Create(
+                        InvalidIndexSyntaxForD2DIntrinsic,
+                        firstArgument.Syntax.Parent.GetLocation(),
+                        parameterSymbol.Name,
+                        targetMethodSymbol.Name));
                 }
 
                 // We have matched a target symbol, so let's try to get the parent shader
