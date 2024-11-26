@@ -5,6 +5,7 @@ using ComputeSharp.D2D1.Interop;
 using ComputeSharp.D2D1.Intrinsics;
 using ComputeSharp.SourceGeneration.Extensions;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.Operations;
 using static ComputeSharp.SourceGeneration.Diagnostics.DiagnosticDescriptors;
@@ -21,7 +22,8 @@ public sealed class InvalidD2DInputArgumentAnalyzer : DiagnosticAnalyzer
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } =
     [
         IndexOutOfRangeForD2DIntrinsic,
-        InvalidInputTypeForD2DIntrinsic
+        InvalidInputTypeForD2DIntrinsic,
+        InvalidIndexSyntaxForD2DIntrinsic
     ];
 
     /// <inheritdoc/>
@@ -59,7 +61,13 @@ public sealed class InvalidD2DInputArgumentAnalyzer : DiagnosticAnalyzer
 
                 // Second cheap inital filter: we only care about invocations with a constant 'int' argument in first position.
                 // While we're validating this, let's also get the 'index' parameter, since we need to validate it anyway.
-                if (operation.Arguments is not [{ Value.ConstantValue: { HasValue: true, Value: int index } }, ..])
+                if (operation.Arguments is not [{ Value.ConstantValue: { HasValue: true, Value: int index } } firstArgument, ..])
+                {
+                    return;
+                }
+
+                // We only want to kick in when the target parameter is an 'int' (same as in 'NonConstantD2DInputArgumentAnalyzer')
+                if (firstArgument.Parameter is not { Type.SpecialType: SpecialType.System_Int32 } parameterSymbol)
                 {
                     return;
                 }
@@ -68,6 +76,27 @@ public sealed class InvalidD2DInputArgumentAnalyzer : DiagnosticAnalyzer
                 if (!methodSymbols.TryGetValue(targetMethodSymbol, out D2D1PixelShaderInputType? targetInputType))
                 {
                     return;
+                }
+
+                // Also check that the actual syntax for the index argument is valid (only literals and direct constant field references
+                // are valid). For parenthesized expressions, we need to check the parent syntax node (the operation just ignores it).
+                if (firstArgument.Value is not (ILiteralOperation or IFieldReferenceOperation))
+                {
+                    context.ReportDiagnostic(Diagnostic.Create(
+                        InvalidIndexSyntaxForD2DIntrinsic,
+                        firstArgument.Syntax.GetLocation(),
+                        parameterSymbol.Name,
+                        targetMethodSymbol.Name));
+                }
+                else if (firstArgument.Syntax.Parent.IsKind(SyntaxKind.ParenthesizedExpression))
+                {
+                    // In this case, we pass the parent syntax node for the location, so that we can
+                    // include the parentheses as well. Otherwise we'd just underline the inner value.
+                    context.ReportDiagnostic(Diagnostic.Create(
+                        InvalidIndexSyntaxForD2DIntrinsic,
+                        firstArgument.Syntax.Parent.GetLocation(),
+                        parameterSymbol.Name,
+                        targetMethodSymbol.Name));
                 }
 
                 // We have matched a target symbol, so let's try to get the parent shader
@@ -95,7 +124,7 @@ public sealed class InvalidD2DInputArgumentAnalyzer : DiagnosticAnalyzer
                 {
                     context.ReportDiagnostic(Diagnostic.Create(
                         IndexOutOfRangeForD2DIntrinsic,
-                        operation.Syntax.GetLocation(),
+                        firstArgument.Syntax.GetLocation(),
                         targetMethodSymbol.Name,
                         index,
                         typeSymbol,
@@ -106,7 +135,7 @@ public sealed class InvalidD2DInputArgumentAnalyzer : DiagnosticAnalyzer
                     // Second validation: the input type must match
                     context.ReportDiagnostic(Diagnostic.Create(
                         InvalidInputTypeForD2DIntrinsic,
-                        operation.Syntax.GetLocation(),
+                        firstArgument.Syntax.GetLocation(),
                         targetMethodSymbol.Name,
                         index));
                 }
@@ -130,23 +159,23 @@ public sealed class InvalidD2DInputArgumentAnalyzer : DiagnosticAnalyzer
             return false;
         }
 
-        // Get the symbols for all relevant 'D2D' methods
-        IMethodSymbol?[] d2DMethodSymbols =
+        // These are all the 'D2D' intrinsic methods that take a target shader input index
+        string[] d2DMethodNames =
         [
-            d2DSymbol.GetMethod(nameof(D2D.GetInput)),
-            d2DSymbol.GetMethod(nameof(D2D.GetInputCoordinate)),
-            d2DSymbol.GetMethod(nameof(D2D.SampleInput)),
-            d2DSymbol.GetMethod(nameof(D2D.SampleInputAtOffset)),
-            d2DSymbol.GetMethod(nameof(D2D.SampleInputAtPosition))
+            nameof(D2D.GetInput),
+            nameof(D2D.GetInputCoordinate),
+            nameof(D2D.SampleInput),
+            nameof(D2D.SampleInputAtOffset),
+            nameof(D2D.SampleInputAtPosition)
         ];
 
         ImmutableDictionary<IMethodSymbol, D2D1PixelShaderInputType?>.Builder inputTypeMethodMap = ImmutableDictionary.CreateBuilder<IMethodSymbol, D2D1PixelShaderInputType?>(SymbolEqualityComparer.Default);
 
         // Validate all methods and build the map
-        foreach (IMethodSymbol? d2DMethodSymbol in d2DMethodSymbols)
+        foreach (string d2DMethodName in d2DMethodNames)
         {
-            // We failed to find a symbol (shouldn't really ever happen), just stop here
-            if (d2DMethodSymbol is null)
+            // If we can't resolve a symbol (shouldn't really ever happen), just stop here
+            if (d2DSymbol.GetMethod(d2DMethodName) is not { } d2DMethodSymbol)
             {
                 methodSymbols = null;
 

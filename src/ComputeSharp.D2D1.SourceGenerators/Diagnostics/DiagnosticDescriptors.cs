@@ -1269,4 +1269,36 @@ partial class DiagnosticDescriptors
         isEnabledByDefault: true,
         description: "D2D intrinsics must be used with compatible input types (the input type of each shader input can be configured using [D2DInputSimple] and [D2DInputComplex] on the shader type).",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+    /// <summary>
+    /// Gets a <see cref="DiagnosticDescriptor"/> for a D2D intrinsic call with a source input index that is not a constant.
+    /// <para>
+    /// Format: <c>"The argument for parameter '{0}' in the call to the D2D intrinsic '{1}' must be a constant value (for instance, 'D2D.GetInput(0)' is valid, whereas 'D2D.GetInput(x)' is not)"</c>.
+    /// </para>
+    /// </summary>
+    public static readonly DiagnosticDescriptor NonConstantSourceInputIndexForD2DIntrinsic = new(
+        id: "CMPSD2D0085",
+        title: "Non constant input index for D2D intrinsic",
+        messageFormat: "The argument for parameter '{0}' in the call to the D2D intrinsic '{1}' must be a constant value (for instance, 'D2D.GetInput(0)' is valid, whereas 'D2D.GetInput(x)' is not)",
+        category: "ComputeSharp.D2D1.Shaders",
+        defaultSeverity: DiagnosticSeverity.Error,
+        isEnabledByDefault: true,
+        description: "Arguments for parameters indicating the source shader input index in calls to D2D intrinsics must be constant values (for instance, 'D2D.GetInput(0)' is valid, whereas 'D2D.GetInput(x)' is not).",
+        helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+    /// <summary>
+    /// Gets a <see cref="DiagnosticDescriptor"/> for a D2D intrinsic call with a source input index using invalid syntax.
+    /// <para>
+    /// Format: <c>"The argument for parameter '{0}' in the call to the D2D intrinsic '{1}' must be a literal or a constant field reference (for instance, 'D2D.GetInput(0)' and 'D2D.GetInput(TextureIndex)' are valid, whereas 'D2D.GetInput(BaseIndex + 1)' and 'D2D.GetInput(1 + 2)' are not)"</c>.
+    /// </para>
+    /// </summary>
+    public static readonly DiagnosticDescriptor InvalidIndexSyntaxForD2DIntrinsic = new(
+        id: "CMPSD2D0086",
+        title: "Invalid input index syntax for D2D intrinsic",
+        messageFormat: "The argument for parameter '{0}' in the call to the D2D intrinsic '{1}' must be a literal or a constant field reference (for instance, 'D2D.GetInput(0)' and 'D2D.GetInput(TextureIndex)' are valid, whereas 'D2D.GetInput(BaseIndex + 1)' and 'D2D.GetInput(1 + 2)' are not)",
+        category: "ComputeSharp.D2D1.Shaders",
+        defaultSeverity: DiagnosticSeverity.Error,
+        isEnabledByDefault: true,
+        description: "Arguments for parameters indicating the source shader input index in calls to D2D intrinsics must be a literal or constant field references (for instance, 'D2D.GetInput(0)' and 'D2D.GetInput(TextureIndex)' are valid, whereas 'D2D.GetInput(BaseIndex + 1)' and 'D2D.GetInput(1 + 2)' are not).",
+        helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 }
