@@ -174,8 +174,10 @@ partial class CanvasEffectPropertyGenerator
 
                 writer.WriteLine("/// <inheritdoc/>");
                 writer.WriteGeneratedAttributes(GeneratorName);
-                writer.WriteLine($$"""                    
-                    {{GetExpressionWithTrailingSpace(propertyInfo.DeclaredAccessibility)}}partial {{propertyInfo.TypeNameWithNullabilityAnnotations}} {{propertyInfo.PropertyName}}
+                writer.Write(GetExpressionWithTrailingSpace(propertyInfo.DeclaredAccessibility));
+                writer.WriteIf(propertyInfo.IsRequired, "required ");
+                writer.WriteLine($"partial {propertyInfo.TypeNameWithNullabilityAnnotations} {propertyInfo.PropertyName}");
+                writer.WriteLine($$"""
                     {
                         {{GetExpressionWithTrailingSpace(propertyInfo.GetterAccessibility)}}get => field;
                         {{GetExpressionWithTrailingSpace(propertyInfo.SetterAccessibility)}}set

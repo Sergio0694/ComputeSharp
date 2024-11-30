@@ -17,6 +17,7 @@ namespace ComputeSharp.D2D1.WinUI.SourceGenerators.Models;
 /// <param name="SetterAccessibility">The accessibility of the <see langword="set"/> accessor, if available.</param>
 /// <param name="TypeNameWithNullabilityAnnotations">The type name for the generated property, including nullability annotations.</param>
 /// <param name="IsReferenceTypeOrUnconstraindTypeParameter">Indicates whether the property is of a reference type or an unconstrained type parameter.</param>
+/// <param name="IsRequired">Whether or not the generated property should be marked as required.</param>
 /// <param name="InvalidationType">The invalidation type to request.</param>
 internal sealed record CanvasEffectPropertyInfo(
     HierarchyInfo Hierarchy,
@@ -26,4 +27,5 @@ internal sealed record CanvasEffectPropertyInfo(
     Accessibility SetterAccessibility,
     string TypeNameWithNullabilityAnnotations,
     bool IsReferenceTypeOrUnconstraindTypeParameter,
+    bool IsRequired,
     CanvasEffectInvalidationType InvalidationType);
