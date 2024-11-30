@@ -1,3 +1,4 @@
+using CommunityToolkit.WinUI;
 using ComputeSharp.SwapChain.Core.Shaders;
 using Microsoft.Graphics.Canvas;
 using Microsoft.Graphics.Canvas.UI.Xaml;
@@ -12,24 +13,6 @@ namespace ComputeSharp.SwapChain.WinUI.Views;
 [TemplatePart(Name = "PART_CanvasAnimatedControl", Type = typeof(CanvasAnimatedControl))]
 public sealed partial class D2D1AnimatedPixelShaderPanel : Control
 {
-    /// <summary>
-    /// The <see cref="DependencyProperty"/> backing <see cref="PixelShaderEffect"/>.
-    /// </summary>
-    public static readonly DependencyProperty PixelShaderEffectProperty = DependencyProperty.Register(
-        nameof(PixelShaderEffect),
-        typeof(PixelShaderEffect),
-        typeof(D2D1AnimatedPixelShaderPanel),
-        new PropertyMetadata(null, OnPixelShaderEffectPropertyChanged));
-
-    /// <summary>
-    /// The <see cref="DependencyProperty"/> backing <see cref="IsPaused"/>.
-    /// </summary>
-    public static readonly DependencyProperty IsPausedProperty = DependencyProperty.Register(
-        nameof(IsPaused),
-        typeof(bool),
-        typeof(D2D1AnimatedPixelShaderPanel),
-        new PropertyMetadata(false, OnIsPausedPropertyChanged));
-
     /// <summary>
     /// The wrapped <see cref="CanvasAnimatedControl"/> instance used to render frames.
     /// </summary>
@@ -54,20 +37,14 @@ public sealed partial class D2D1AnimatedPixelShaderPanel : Control
     /// <summary>
     /// Gets or sets the <see cref="Core.Shaders.PixelShaderEffect"/> instance to use to render content.
     /// </summary>
-    public PixelShaderEffect? PixelShaderEffect
-    {
-        get => (PixelShaderEffect?)GetValue(PixelShaderEffectProperty);
-        set => SetValue(PixelShaderEffectProperty, value);
-    }
+    [GeneratedDependencyProperty]
+    public partial PixelShaderEffect? PixelShaderEffect { get; set; }
 
     /// <summary>
     /// Gets or sets whether or not the rendering is paused.
     /// </summary>
-    public bool IsPaused
-    {
-        get => (bool)GetValue(IsPausedProperty);
-        set => SetValue(IsPausedProperty, value);
-    }
+    [GeneratedDependencyProperty]
+    public partial bool IsPaused { get; set; }
 
     /// <inheritdoc/>
     protected override void OnApplyTemplate()
@@ -114,33 +91,30 @@ public sealed partial class D2D1AnimatedPixelShaderPanel : Control
         args.DrawingSession.DrawImage(this.pixelShaderEffect);
     }
 
-    /// <inheritdoc cref="DependencyPropertyChangedCallback"/>
-    private static void OnPixelShaderEffectPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    /// <inheritdoc/>
+    partial void OnPixelShaderEffectPropertyChanged(DependencyPropertyChangedEventArgs e)
     {
-        D2D1AnimatedPixelShaderPanel @this = (D2D1AnimatedPixelShaderPanel)d;
         PixelShaderEffect? pixelShaderEffect = (PixelShaderEffect?)e.NewValue;
 
         // Save the new pixel shader effect for later (as the dependency property cannot be accessed by the render thread)
-        @this.pixelShaderEffect = pixelShaderEffect;
+        this.pixelShaderEffect = pixelShaderEffect;
 
         // Pause or start the render thread if an effect is available
-        if (@this.canvasAnimatedControl is { } canvasAnimatedControl)
+        if (this.canvasAnimatedControl is { } canvasAnimatedControl)
         {
-            bool shouldRender = @this.IsLoaded && !@this.IsPaused && pixelShaderEffect is not null;
+            bool shouldRender = IsLoaded && !IsPaused && pixelShaderEffect is not null;
 
             canvasAnimatedControl.Paused = !shouldRender;
         }
     }
 
-    /// <inheritdoc cref="DependencyPropertyChangedCallback"/>
-    private static void OnIsPausedPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    /// <inheritdoc/>
+    partial void OnIsPausedPropertyChanged(DependencyPropertyChangedEventArgs e)
     {
-        D2D1AnimatedPixelShaderPanel @this = (D2D1AnimatedPixelShaderPanel)d;
-        bool isPaused = (bool)e.NewValue;
-
-        if (@this.canvasAnimatedControl is { } canvasAnimatedControl)
+        if (this.canvasAnimatedControl is { } canvasAnimatedControl)
         {
-            bool shouldRender = @this.IsLoaded && !isPaused && @this.PixelShaderEffect is not null;
+            bool isPaused = (bool)e.NewValue;
+            bool shouldRender = IsLoaded && !isPaused && PixelShaderEffect is not null;
 
             canvasAnimatedControl.Paused = !shouldRender;
         }
