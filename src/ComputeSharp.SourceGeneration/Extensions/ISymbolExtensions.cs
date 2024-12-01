@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using Microsoft.CodeAnalysis;
@@ -82,6 +83,17 @@ internal static class ISymbolExtensions
     }
 
     /// <summary>
+    /// Checks whether or not a given symbol has an attribute with the specified type.
+    /// </summary>
+    /// <param name="symbol">The input <see cref="ISymbol"/> instance to check.</param>
+    /// <param name="typeSymbols">The <see cref="ITypeSymbol"/> instance for the attribute type to look for.</param>
+    /// <returns>Whether or not <paramref name="symbol"/> has an attribute with the specified type.</returns>
+    public static bool HasAttributeWithAnyType(this ISymbol symbol, ImmutableArray<INamedTypeSymbol> typeSymbols)
+    {
+        return TryGetAttributeWithAnyType(symbol, typeSymbols, out _);
+    }
+
+    /// <summary>
     /// Tries to get an attribute with the specified type.
     /// </summary>
     /// <param name="symbol">The input <see cref="ISymbol"/> instance to check.</param>
@@ -93,6 +105,30 @@ internal static class ISymbolExtensions
         foreach (AttributeData attribute in symbol.GetAttributes())
         {
             if (SymbolEqualityComparer.Default.Equals(attribute.AttributeClass, typeSymbol))
+            {
+                attributeData = attribute;
+
+                return true;
+            }
+        }
+
+        attributeData = null;
+
+        return false;
+    }
+
+    /// <summary>
+    /// Tries to get an attribute with any of the specified types.
+    /// </summary>
+    /// <param name="symbol">The input <see cref="ISymbol"/> instance to check.</param>
+    /// <param name="typeSymbols">The <see cref="ITypeSymbol"/> instance for the attribute type to look for.</param>
+    /// <param name="attributeData">The first attribute of a type matching any type in <paramref name="typeSymbols"/>, if found.</param>
+    /// <returns>Whether or not <paramref name="symbol"/> has an attribute with the specified type.</returns>
+    public static bool TryGetAttributeWithAnyType(this ISymbol symbol, ImmutableArray<INamedTypeSymbol> typeSymbols, [NotNullWhen(true)] out AttributeData? attributeData)
+    {
+        foreach (AttributeData attribute in symbol.GetAttributes())
+        {
+            if (typeSymbols.Contains(attribute.AttributeClass!, SymbolEqualityComparer.Default))
             {
                 attributeData = attribute;
 

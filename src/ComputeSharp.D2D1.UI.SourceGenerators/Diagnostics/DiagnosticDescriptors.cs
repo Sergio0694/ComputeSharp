@@ -142,4 +142,20 @@ internal static class DiagnosticDescriptors
         isEnabledByDefault: true,
         description: "The C# language version must be set to 'preview' when using [GeneratedComputeShaderDescriptor] for the source generators to emit valid code (the <LangVersion>preview</LangVersion> option must be set in the .csproj/.props file).",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+    /// <summary>
+    /// Gets a <see cref="DiagnosticDescriptor"/> for when a property should generate nullability warnings.
+    /// <para>
+    /// Format: <c>The property '{0}' is not annotated as nullable, but it might contain a null value upon exiting the constructor (consider adding the 'required' modifier, setting a non-null default value if possible, or declaring the property as nullable)</c>.
+    /// </para>
+    /// </summary>
+    public static readonly DiagnosticDescriptor NonNullablePropertyDeclarationIsNotEnforced = new(
+        id: $"{DiagnosticIdPrefix}0008",
+        title: "Non-nullable dependency property is not guaranteed to not be null",
+        messageFormat: """The property "{0}" is not annotated as nullable, but it might contain a null value upon exiting the constructor (consider adding the 'required' modifier, setting a non-null default value if possible, or declaring the property as nullable)""",
+        category: DiagnosticCategory,
+        defaultSeverity: DiagnosticSeverity.Warning,
+        isEnabledByDefault: true,
+        description: "Non-nullable properties annotated with [GeneratedCanvasEffectProperty] should guarantee that their values will not be null upon exiting the constructor. This can be enforced by adding the 'required' modifier, setting a non-null default value if possible, or declaring the property as nullable.",
+        helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 }

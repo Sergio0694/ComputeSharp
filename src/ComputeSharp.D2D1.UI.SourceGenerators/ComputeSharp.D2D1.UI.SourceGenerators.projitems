@@ -15,6 +15,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Diagnostics\Analyzers\InvalidGeneratedCanvasEffectPropertyAccessorsAnalyzer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Diagnostics\Analyzers\InvalidGeneratedCanvasEffectPropertyContainingTypeAnalyzer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Diagnostics\Analyzers\InvalidGeneratedCanvasEffectPropertyDeclarationAnalyzer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Diagnostics\Analyzers\InvalidGeneratedCanvasEffectPropertyNonNullableDeclarationAnalyzer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Diagnostics\Analyzers\RequireCSharpLanguageVersionPreviewAnalyzer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Diagnostics\DiagnosticDescriptors.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\CanvasEffectPropertyInfo.cs" />
