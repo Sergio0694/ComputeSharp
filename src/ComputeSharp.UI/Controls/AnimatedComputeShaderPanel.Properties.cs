@@ -1,4 +1,6 @@
 using System;
+using CommunityToolkit.WinUI;
+
 #if !WINDOWS_UWP
 using Microsoft.UI.Xaml;
 #endif
@@ -16,6 +18,15 @@ namespace ComputeSharp.WinUI;
 /// <inheritdoc cref="AnimatedComputeShaderPanel"/>
 partial class AnimatedComputeShaderPanel
 {
+    /// <summary>
+    /// The <see cref="DependencyProperty"/> backing <see cref="ResolutionScale"/>.
+    /// </summary>
+    public static readonly DependencyProperty ResolutionScaleProperty = DependencyProperty.Register(
+        nameof(ResolutionScale),
+        typeof(double),
+        typeof(AnimatedComputeShaderPanel),
+        new PropertyMetadata(1.0, OnResolutionScalePropertyChanged));
+
     /// <summary>
     /// Raised whenever rendering starts.
     /// </summary>
@@ -55,37 +66,16 @@ partial class AnimatedComputeShaderPanel
     /// <summary>
     /// Gets or sets the <see cref="IShaderRunner"/> instance to use to render content.
     /// </summary>
-    public IShaderRunner? ShaderRunner
-    {
-        get => (IShaderRunner?)GetValue(ShaderRunnerProperty);
-        set => SetValue(ShaderRunnerProperty, value);
-    }
+    [GeneratedDependencyProperty]
+    public partial IShaderRunner? ShaderRunner { get; set; }
 
     /// <summary>
-    /// The <see cref="DependencyProperty"/> backing <see cref="ShaderRunner"/>.
+    /// Gets or sets whether dynamic resolution is enabled. If it is, the internal render
+    /// resolution of the shader being run will be automatically adjusted to reach 60fps.
+    /// <para>The default value for this property is <see langword="true"/>.</para>
     /// </summary>
-    public static readonly DependencyProperty ShaderRunnerProperty = DependencyProperty.Register(
-        nameof(ShaderRunner),
-        typeof(IShaderRunner),
-        typeof(AnimatedComputeShaderPanel),
-        new PropertyMetadata(null, OnShaderRunnerPropertyChanged));
-
-    /// <inheritdoc cref="DependencyPropertyChangedCallback"/>
-    private static void OnShaderRunnerPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-    {
-        AnimatedComputeShaderPanel @this = (AnimatedComputeShaderPanel)d;
-
-        if (@this.IsLoaded &&
-            !@this.IsPaused &&
-            e.NewValue is IShaderRunner shaderRunner)
-        {
-            @this.swapChainManager.StartRenderLoop(null, shaderRunner);
-        }
-        else
-        {
-            @this.swapChainManager.StopRenderLoop();
-        }
-    }
+    [GeneratedDependencyProperty(DefaultValue = true)]
+    public partial bool IsDynamicResolutionEnabled { get; set; }
 
     /// <summary>
     /// Gets or sets the resolution scale to be used to render frames.
@@ -99,13 +89,40 @@ partial class AnimatedComputeShaderPanel
     }
 
     /// <summary>
-    /// The <see cref="DependencyProperty"/> backing <see cref="ResolutionScale"/>.
+    /// Gets or sets whether vertical sync is enabled.
+    /// <para>The default value for this property is <see langword="true"/>.</para>
     /// </summary>
-    public static readonly DependencyProperty ResolutionScaleProperty = DependencyProperty.Register(
-        nameof(ResolutionScale),
-        typeof(double),
-        typeof(AnimatedComputeShaderPanel),
-        new PropertyMetadata(1.0, OnResolutionScalePropertyChanged));
+    [GeneratedDependencyProperty(DefaultValue = true)]
+    public partial bool IsVerticalSyncEnabled { get; set; }
+
+    /// <summary>
+    /// Gets or sets whether or not the rendering is paused.
+    /// </summary>
+    [GeneratedDependencyProperty]
+    public partial bool IsPaused { get; set; }
+
+    /// <inheritdoc/>
+    partial void OnShaderRunnerPropertyChanged(DependencyPropertyChangedEventArgs e)
+    {
+        if (IsLoaded &&
+            !IsPaused &&
+            e.NewValue is IShaderRunner shaderRunner)
+        {
+            this.swapChainManager.StartRenderLoop(null, shaderRunner);
+        }
+        else
+        {
+            this.swapChainManager.StopRenderLoop();
+        }
+    }
+
+    /// <inheritdoc/>
+    partial void OnIsDynamicResolutionEnabledPropertyChanged(DependencyPropertyChangedEventArgs e)
+    {
+        bool isDynamicResolutionEnabled = (bool)e.NewValue;
+
+        this.swapChainManager.QueueDynamicResolutionModeChange(isDynamicResolutionEnabled);
+    }
 
     /// <inheritdoc cref="DependencyPropertyChangedCallback"/>
     private static void OnResolutionScalePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -116,95 +133,26 @@ partial class AnimatedComputeShaderPanel
         @this.swapChainManager.QueueResolutionScaleChange(resolutionScale);
     }
 
-    /// <summary>
-    /// Gets or sets whether dynamic resolution is enabled. If it is, the internal render
-    /// resolution of the shader being run will be automatically adjusted to reach 60fps.
-    /// <para>The default value for this property is <see langword="true"/>.</para>
-    /// </summary>
-    public bool IsDynamicResolutionEnabled
+    /// <inheritdoc/>
+    partial void OnIsVerticalSyncEnabledPropertyChanged(DependencyPropertyChangedEventArgs e)
     {
-        get => (bool)GetValue(IsDynamicResolutionEnabledProperty);
-        set => SetValue(IsDynamicResolutionEnabledProperty, value);
-    }
-
-    /// <summary>
-    /// The <see cref="DependencyProperty"/> backing <see cref="IsDynamicResolutionEnabled"/>.
-    /// </summary>
-    public static readonly DependencyProperty IsDynamicResolutionEnabledProperty = DependencyProperty.Register(
-        nameof(IsDynamicResolutionEnabled),
-        typeof(bool),
-        typeof(AnimatedComputeShaderPanel),
-        new PropertyMetadata(true, OnIsDynamicResolutionEnabledPropertyChanged));
-
-    /// <inheritdoc cref="DependencyPropertyChangedCallback"/>
-    private static void OnIsDynamicResolutionEnabledPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-    {
-        AnimatedComputeShaderPanel @this = (AnimatedComputeShaderPanel)d;
-        bool isDynamicResolutionEnabled = (bool)e.NewValue;
-
-        @this.swapChainManager.QueueDynamicResolutionModeChange(isDynamicResolutionEnabled);
-    }
-
-    /// <summary>
-    /// Gets or sets whether vertical sync is enabled.
-    /// <para>The default value for this property is <see langword="true"/>.</para>
-    /// </summary>
-    public bool IsVerticalSyncEnabled
-    {
-        get => (bool)GetValue(IsVerticalSyncEnabledProperty);
-        set => SetValue(IsVerticalSyncEnabledProperty, value);
-    }
-
-    /// <summary>
-    /// The <see cref="DependencyProperty"/> backing <see cref="IsVerticalSyncEnabled"/>.
-    /// </summary>
-    public static readonly DependencyProperty IsVerticalSyncEnabledProperty = DependencyProperty.Register(
-        nameof(IsVerticalSyncEnabled),
-        typeof(bool),
-        typeof(AnimatedComputeShaderPanel),
-        new PropertyMetadata(true, OnIsVerticalSyncEnabledPropertyChanged));
-
-    /// <inheritdoc cref="DependencyPropertyChangedCallback"/>
-    private static void OnIsVerticalSyncEnabledPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-    {
-        AnimatedComputeShaderPanel @this = (AnimatedComputeShaderPanel)d;
         bool isVerticalSyncEnabled = (bool)e.NewValue;
 
-        @this.swapChainManager.QueueVerticalSyncModeChange(isVerticalSyncEnabled);
+        this.swapChainManager.QueueVerticalSyncModeChange(isVerticalSyncEnabled);
     }
 
-    /// <summary>
-    /// Gets or sets whether or not the rendering is paused.
-    /// </summary>
-    public bool IsPaused
+    /// <inheritdoc/>
+    partial void OnIsPausedPropertyChanged(DependencyPropertyChangedEventArgs e)
     {
-        get => (bool)GetValue(IsPausedProperty);
-        set => SetValue(IsPausedProperty, value);
-    }
-
-    /// <summary>
-    /// The <see cref="DependencyProperty"/> backing <see cref="IsPaused"/>.
-    /// </summary>
-    public static readonly DependencyProperty IsPausedProperty = DependencyProperty.Register(
-        nameof(IsPaused),
-        typeof(bool),
-        typeof(AnimatedComputeShaderPanel),
-        new PropertyMetadata(false, OnIsPausedPropertyChanged));
-
-    /// <inheritdoc cref="DependencyPropertyChangedCallback"/>
-    private static void OnIsPausedPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-    {
-        AnimatedComputeShaderPanel @this = (AnimatedComputeShaderPanel)d;
-
-        if (@this.IsLoaded &&
+        if (IsLoaded &&
             !(bool)e.NewValue &&
-            @this.ShaderRunner is IShaderRunner shaderRunner)
+            ShaderRunner is IShaderRunner shaderRunner)
         {
-            @this.swapChainManager.StartRenderLoop(null, shaderRunner);
+            this.swapChainManager.StartRenderLoop(null, shaderRunner);
         }
         else
         {
-            @this.swapChainManager.StopRenderLoop();
+            this.swapChainManager.StopRenderLoop();
         }
     }
 }

@@ -1,4 +1,6 @@
 using System;
+using CommunityToolkit.WinUI;
+
 #if !WINDOWS_UWP
 using Microsoft.UI.Xaml;
 #endif
@@ -16,6 +18,15 @@ namespace ComputeSharp.WinUI;
 /// <inheritdoc cref="ComputeShaderPanel"/>
 partial class ComputeShaderPanel
 {
+    /// <summary>
+    /// The <see cref="DependencyProperty"/> backing <see cref="ResolutionScale"/>.
+    /// </summary>
+    public static readonly DependencyProperty ResolutionScaleProperty = DependencyProperty.Register(
+        nameof(ResolutionScale),
+        typeof(double),
+        typeof(ComputeShaderPanel),
+        new PropertyMetadata(1.0, OnResolutionScalePropertyChanged));
+
     /// <summary>
     /// Raised whenever rendering starts.
     /// </summary>
@@ -55,72 +66,14 @@ partial class ComputeShaderPanel
     /// <summary>
     /// Gets or sets the <see cref="IFrameRequestQueue"/> instance to use to request new frames.
     /// </summary>
-    public IFrameRequestQueue? FrameRequestQueue
-    {
-        get => (IFrameRequestQueue)GetValue(FrameRequestQueueProperty);
-        set => SetValue(FrameRequestQueueProperty, value);
-    }
-
-    /// <summary>
-    /// The <see cref="DependencyProperty"/> backing <see cref="ShaderRunner"/>.
-    /// </summary>
-    public static readonly DependencyProperty FrameRequestQueueProperty = DependencyProperty.Register(
-        nameof(FrameRequestQueue),
-        typeof(IFrameRequestQueue),
-        typeof(ComputeShaderPanel),
-        new PropertyMetadata(null, OnFrameRequestQueueChanged));
-
-    /// <inheritdoc cref="DependencyPropertyChangedCallback"/>
-    private static void OnFrameRequestQueueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-    {
-        ComputeShaderPanel @this = (ComputeShaderPanel)d;
-
-        if (@this.IsLoaded &&
-            e.NewValue is IFrameRequestQueue frameRequestQueue &&
-            @this.ShaderRunner is IShaderRunner shaderRunner)
-        {
-            @this.swapChainManager.StartRenderLoop(frameRequestQueue, shaderRunner);
-        }
-        else
-        {
-            @this.swapChainManager.StopRenderLoop();
-        }
-    }
+    [GeneratedDependencyProperty]
+    public partial IFrameRequestQueue? FrameRequestQueue { get; set; }
 
     /// <summary>
     /// Gets or sets the <see cref="IShaderRunner"/> instance to use to render content.
     /// </summary>
-    public IShaderRunner? ShaderRunner
-    {
-        get => (IShaderRunner?)GetValue(ShaderRunnerProperty);
-        set => SetValue(ShaderRunnerProperty, value);
-    }
-
-    /// <summary>
-    /// The <see cref="DependencyProperty"/> backing <see cref="ShaderRunner"/>.
-    /// </summary>
-    public static readonly DependencyProperty ShaderRunnerProperty = DependencyProperty.Register(
-        nameof(ShaderRunner),
-        typeof(IShaderRunner),
-        typeof(ComputeShaderPanel),
-        new PropertyMetadata(null, OnShaderRunnerPropertyChanged));
-
-    /// <inheritdoc cref="DependencyPropertyChangedCallback"/>
-    private static void OnShaderRunnerPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-    {
-        ComputeShaderPanel @this = (ComputeShaderPanel)d;
-
-        if (@this.IsLoaded &&
-            @this.FrameRequestQueue is IFrameRequestQueue frameRequestQueue &&
-            e.NewValue is IShaderRunner shaderRunner)
-        {
-            @this.swapChainManager.StartRenderLoop(frameRequestQueue, shaderRunner);
-        }
-        else
-        {
-            @this.swapChainManager.StopRenderLoop();
-        }
-    }
+    [GeneratedDependencyProperty]
+    public partial IShaderRunner? ShaderRunner { get; set; }
 
     /// <summary>
     /// Gets or sets the resolution scale to be used to render frames.
@@ -134,13 +87,49 @@ partial class ComputeShaderPanel
     }
 
     /// <summary>
-    /// The <see cref="DependencyProperty"/> backing <see cref="ResolutionScale"/>.
+    /// Gets or sets whether dynamic resolution is enabled. If it is, the internal render
+    /// resolution of the shader being run will be automatically adjusted to reach 60fps.
+    /// <para>The default value for this property is <see langword="true"/>.</para>
     /// </summary>
-    public static readonly DependencyProperty ResolutionScaleProperty = DependencyProperty.Register(
-        nameof(ResolutionScale),
-        typeof(double),
-        typeof(ComputeShaderPanel),
-        new PropertyMetadata(1.0, OnResolutionScalePropertyChanged));
+    [GeneratedDependencyProperty(DefaultValue = true)]
+    public partial bool IsDynamicResolutionEnabled { get; set; }
+
+    /// <summary>
+    /// Gets or sets whether vertical sync is enabled.
+    /// <para>The default value for this property is <see langword="true"/>.</para>
+    /// </summary>
+    [GeneratedDependencyProperty(DefaultValue = true)]
+    public partial bool IsVerticalSyncEnabled { get; set; }
+
+    /// <inheritdoc/>
+    partial void OnFrameRequestQueuePropertyChanged(DependencyPropertyChangedEventArgs e)
+    {
+        if (IsLoaded &&
+            e.NewValue is IFrameRequestQueue frameRequestQueue &&
+            ShaderRunner is IShaderRunner shaderRunner)
+        {
+            this.swapChainManager.StartRenderLoop(frameRequestQueue, shaderRunner);
+        }
+        else
+        {
+            this.swapChainManager.StopRenderLoop();
+        }
+    }
+
+    /// <inheritdoc/>
+    partial void OnShaderRunnerPropertyChanged(DependencyPropertyChangedEventArgs e)
+    {
+        if (IsLoaded &&
+            FrameRequestQueue is IFrameRequestQueue frameRequestQueue &&
+            e.NewValue is IShaderRunner shaderRunner)
+        {
+            this.swapChainManager.StartRenderLoop(frameRequestQueue, shaderRunner);
+        }
+        else
+        {
+            this.swapChainManager.StopRenderLoop();
+        }
+    }
 
     /// <inheritdoc cref="DependencyPropertyChangedCallback"/>
     private static void OnResolutionScalePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -151,60 +140,19 @@ partial class ComputeShaderPanel
         @this.swapChainManager.QueueResolutionScaleChange(resolutionScale);
     }
 
-    /// <summary>
-    /// Gets or sets whether dynamic resolution is enabled. If it is, the internal render
-    /// resolution of the shader being run will be automatically adjusted to reach 60fps.
-    /// <para>The default value for this property is <see langword="true"/>.</para>
-    /// </summary>
-    public bool IsDynamicResolutionEnabled
+    /// <inheritdoc/>
+    partial void OnIsDynamicResolutionEnabledPropertyChanged(DependencyPropertyChangedEventArgs e)
     {
-        get => (bool)GetValue(IsDynamicResolutionEnabledProperty);
-        set => SetValue(IsDynamicResolutionEnabledProperty, value);
-    }
-
-    /// <summary>
-    /// The <see cref="DependencyProperty"/> backing <see cref="IsDynamicResolutionEnabled"/>.
-    /// </summary>
-    public static readonly DependencyProperty IsDynamicResolutionEnabledProperty = DependencyProperty.Register(
-        nameof(IsDynamicResolutionEnabled),
-        typeof(bool),
-        typeof(ComputeShaderPanel),
-        new PropertyMetadata(true, OnIsDynamicResolutionEnabledPropertyChanged));
-
-    /// <inheritdoc cref="DependencyPropertyChangedCallback"/>
-    private static void OnIsDynamicResolutionEnabledPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-    {
-        ComputeShaderPanel @this = (ComputeShaderPanel)d;
         bool isDynamicResolutionEnabled = (bool)e.NewValue;
 
-        @this.swapChainManager.QueueDynamicResolutionModeChange(isDynamicResolutionEnabled);
+        this.swapChainManager.QueueDynamicResolutionModeChange(isDynamicResolutionEnabled);
     }
 
-    /// <summary>
-    /// Gets or sets whether vertical sync is enabled.
-    /// <para>The default value for this property is <see langword="true"/>.</para>
-    /// </summary>
-    public bool IsVerticalSyncEnabled
+    /// <inheritdoc/>
+    partial void OnIsVerticalSyncEnabledPropertyChanged(DependencyPropertyChangedEventArgs e)
     {
-        get => (bool)GetValue(IsVerticalSyncEnabledProperty);
-        set => SetValue(IsVerticalSyncEnabledProperty, value);
-    }
-
-    /// <summary>
-    /// The <see cref="DependencyProperty"/> backing <see cref="IsVerticalSyncEnabled"/>.
-    /// </summary>
-    public static readonly DependencyProperty IsVerticalSyncEnabledProperty = DependencyProperty.Register(
-        nameof(IsVerticalSyncEnabled),
-        typeof(bool),
-        typeof(ComputeShaderPanel),
-        new PropertyMetadata(true, OnIsVerticalSyncEnabledPropertyChanged));
-
-    /// <inheritdoc cref="DependencyPropertyChangedCallback"/>
-    private static void OnIsVerticalSyncEnabledPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-    {
-        ComputeShaderPanel @this = (ComputeShaderPanel)d;
         bool isVerticalSyncEnabled = (bool)e.NewValue;
 
-        @this.swapChainManager.QueueVerticalSyncModeChange(isVerticalSyncEnabled);
+        this.swapChainManager.QueueVerticalSyncModeChange(isVerticalSyncEnabled);
     }
 }
