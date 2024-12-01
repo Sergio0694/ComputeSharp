@@ -198,7 +198,6 @@ public class Test_CanvasEffectPropertyGenerator_Analyzers
     public async Task RequireCSharpLanguageVersionPreviewAnalyzer_LanguageVersionIsNotPreview_Warns()
     {
         const string source = """
-            using System;
             using ComputeSharp.D2D1.WinUI;
 
             public abstract partial class MyEffect : CanvasEffect
@@ -226,5 +225,115 @@ public class Test_CanvasEffectPropertyGenerator_Analyzers
             """;
 
         await CSharpAnalyzerWithLanguageVersionTest<RequireCSharpLanguageVersionPreviewAnalyzer>.VerifyAnalyzerAsync(source, languageVersion: LanguageVersion.Preview);
+    }
+
+    [TestMethod]
+    public async Task InvalidPropertyNonNullableDeclarationAnalyzer_NoAttribute_DoesNotWarn()
+    {
+        const string source = """
+            using ComputeSharp.D2D1.WinUI;
+
+            #nullable enable
+
+            public abstract partial class MyEffect : CanvasEffect
+            {
+                public string Name { get; set; }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<InvalidGeneratedCanvasEffectPropertyNonNullableDeclarationAnalyzer>.VerifyAnalyzerAsync(source, languageVersion: LanguageVersion.Preview);
+    }
+
+    [TestMethod]
+    [DataRow("int")]
+    [DataRow("int?")]
+    [DataRow("string?")]
+    public async Task InvalidPropertyNonNullableDeclarationAnalyzer_NullableOrNotApplicableType_DoesNotWarn(string propertyType)
+    {
+        string source = $$"""
+            using ComputeSharp.D2D1.WinUI;
+
+            #nullable enable
+
+            public abstract partial class MyEffect : CanvasEffect
+            {
+                [GeneratedCanvasEffectProperty]
+                public partial {{propertyType}} {|CS9248:Name|} { get; set; }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<InvalidGeneratedCanvasEffectPropertyNonNullableDeclarationAnalyzer>.VerifyAnalyzerAsync(source, languageVersion: LanguageVersion.Preview);
+    }
+
+    [TestMethod]
+    public async Task InvalidPropertyNonNullableDeclarationAnalyzer_NotNullableType_WithMaybeNullAttribute_DoesNotWarn()
+    {
+        string source = $$"""
+            using System.Diagnostics.CodeAnalysis;
+            using ComputeSharp.D2D1.WinUI;
+
+            #nullable enable
+
+            public abstract partial class MyEffect : CanvasEffect
+            {
+                [GeneratedCanvasEffectProperty]
+                [MaybeNull]
+                public partial string {|CS9248:Name|} { get; set; }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<InvalidGeneratedCanvasEffectPropertyNonNullableDeclarationAnalyzer>.VerifyAnalyzerAsync(source, languageVersion: LanguageVersion.Preview);
+    }
+
+    [TestMethod]
+    public async Task InvalidPropertyNonNullableDeclarationAnalyzer_NotNullableType_Required_DoesNotWarn()
+    {
+        string source = $$"""
+            using ComputeSharp.D2D1.WinUI;
+
+            #nullable enable
+
+            public abstract partial class MyEffect : CanvasEffect
+            {
+                [GeneratedCanvasEffectProperty]
+                public required partial string {|CS9248:Name|} { get; set; }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<InvalidGeneratedCanvasEffectPropertyNonNullableDeclarationAnalyzer>.VerifyAnalyzerAsync(source, languageVersion: LanguageVersion.Preview);
+    }
+
+    [TestMethod]
+    public async Task InvalidPropertyNonNullableDeclarationAnalyzer_NotNullableType_NullableDisabled_DoesNotWarn()
+    {
+        string source = $$"""
+            using ComputeSharp.D2D1.WinUI;
+
+            public abstract partial class MyEffect : CanvasEffect
+            {
+                [GeneratedCanvasEffectProperty]
+                public required partial string {|CS9248:Name|} { get; set; }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<InvalidGeneratedCanvasEffectPropertyNonNullableDeclarationAnalyzer>.VerifyAnalyzerAsync(source, languageVersion: LanguageVersion.Preview);
+    }
+
+    [TestMethod]
+    public async Task InvalidPropertyNonNullableDeclarationAnalyzer_NotNullableType_Warns()
+    {
+        string source = $$"""
+            using ComputeSharp.D2D1.WinUI;
+
+            #nullable enable
+
+            public abstract partial class MyEffect : CanvasEffect
+            {
+                [{|CMPSD2DWINUI0008:GeneratedCanvasEffectProperty|}]
+                public partial string {|CS9248:Name|} { get; set; }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<InvalidGeneratedCanvasEffectPropertyNonNullableDeclarationAnalyzer>.VerifyAnalyzerAsync(source, languageVersion: LanguageVersion.Preview);
     }
 }
