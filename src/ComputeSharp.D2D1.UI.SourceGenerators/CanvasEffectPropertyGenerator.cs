@@ -63,7 +63,7 @@ public sealed partial class CanvasEffectPropertyGenerator : IIncrementalGenerato
                     }
 
                     // Also ignore all properties that have an invalid declaration
-                    if (propertySymbol.IsStatic || propertySymbol.ReturnsByRef || propertySymbol.ReturnsByRefReadonly || propertySymbol.Type.IsRefLikeType)
+                    if (propertySymbol.ReturnsByRef || propertySymbol.ReturnsByRefReadonly || propertySymbol.Type.IsRefLikeType)
                     {
                         return default;
                     }
@@ -101,6 +101,7 @@ public sealed partial class CanvasEffectPropertyGenerator : IIncrementalGenerato
                     // This will cover both reference types as well T when the constraints are not struct or unmanaged.
                     // If this is true, it means the field storage can potentially be in a null state (even if not annotated).
                     bool isReferenceTypeOrUnconstraindTypeParameter = !propertySymbol.Type.IsValueType;
+                    bool isRequired = propertySymbol.IsRequired;
 
                     // Finally, get the hierarchy too
                     HierarchyInfo hierarchyInfo = HierarchyInfo.From(typeSymbol);
@@ -115,6 +116,7 @@ public sealed partial class CanvasEffectPropertyGenerator : IIncrementalGenerato
                         SetterAccessibility: setterAccessibility,
                         TypeNameWithNullabilityAnnotations: typeNameWithNullabilityAnnotations,
                         IsReferenceTypeOrUnconstraindTypeParameter: isReferenceTypeOrUnconstraindTypeParameter,
+                        IsRequired: isRequired,
                         InvalidationType: invalidationType);
                 })
             .WithTrackingName(WellKnownTrackingNames.Execute)

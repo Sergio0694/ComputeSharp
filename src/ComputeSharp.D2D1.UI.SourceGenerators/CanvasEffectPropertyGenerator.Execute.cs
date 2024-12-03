@@ -46,6 +46,12 @@ partial class CanvasEffectPropertyGenerator
                 return false;
             }
 
+            // Static properties are not supported
+            if (property.Modifiers.Any(SyntaxKind.StaticKeyword))
+            {
+                return false;
+            }
+
             // The accessors must be a get and a set (with any accessibility)
             if (accessors[0].Kind() is not (SyntaxKind.GetAccessorDeclaration or SyntaxKind.SetAccessorDeclaration) ||
                 accessors[1].Kind() is not (SyntaxKind.GetAccessorDeclaration or SyntaxKind.SetAccessorDeclaration))
@@ -128,6 +134,11 @@ partial class CanvasEffectPropertyGenerator
             return CanvasEffectInvalidationType.Update;
         }
 
+        /// <summary>
+        /// Writes all implementations of partial effect property declarations.
+        /// </summary>
+        /// <param name="properties">The input set of declared effect properties.</param>
+        /// <param name="writer">The <see cref="IndentedTextWriter"/> instance to write into.</param>
         public static void WritePropertyDeclarations(EquatableArray<CanvasEffectPropertyInfo> properties, IndentedTextWriter writer)
         {
             // Helper to get the nullable type name for the initial property value
@@ -163,8 +174,10 @@ partial class CanvasEffectPropertyGenerator
 
                 writer.WriteLine("/// <inheritdoc/>");
                 writer.WriteGeneratedAttributes(GeneratorName);
-                writer.WriteLine($$"""                    
-                    {{GetExpressionWithTrailingSpace(propertyInfo.DeclaredAccessibility)}}partial {{propertyInfo.TypeNameWithNullabilityAnnotations}} {{propertyInfo.PropertyName}}
+                writer.Write(GetExpressionWithTrailingSpace(propertyInfo.DeclaredAccessibility));
+                writer.WriteIf(propertyInfo.IsRequired, "required ");
+                writer.WriteLine($"partial {propertyInfo.TypeNameWithNullabilityAnnotations} {propertyInfo.PropertyName}");
+                writer.WriteLine($$"""
                     {
                         {{GetExpressionWithTrailingSpace(propertyInfo.GetterAccessibility)}}get => field;
                         {{GetExpressionWithTrailingSpace(propertyInfo.SetterAccessibility)}}set

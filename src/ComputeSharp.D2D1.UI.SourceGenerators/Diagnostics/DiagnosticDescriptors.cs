@@ -80,7 +80,7 @@ internal static class DiagnosticDescriptors
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 
     /// <summary>
-    /// Gets a <see cref="DiagnosticDescriptor"/> for a CanvasEffect property with invalid accessors.
+    /// Gets a <see cref="DiagnosticDescriptor"/> for a CanvasEffect property that is not an incomplete partial property definition.
     /// <para>
     /// Format: <c>"The property "{0}" is not an incomplete partial definition ([GeneratedCanvasEffectProperty] must be used on partial property definitions with no implementation part)"</c>.
     /// </para>
@@ -92,11 +92,11 @@ internal static class DiagnosticDescriptors
         category: DiagnosticCategory,
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
-        description: "A property using [GeneratedCanvasEffectProperty] is either not partial, or a partial implementation part ([GeneratedCanvasEffectProperty] must be used on partial property definitions with no implementation par).",
+        description: "A property using [GeneratedCanvasEffectProperty] is either not partial, or a partial implementation part ([GeneratedCanvasEffectProperty] must be used on partial property definitions with no implementation part).",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 
     /// <summary>
-    /// Gets a <see cref="DiagnosticDescriptor"/> for a CanvasEffect property with invalid accessors.
+    /// Gets a <see cref="DiagnosticDescriptor"/> for a CanvasEffect property that returns a ref value.
     /// <para>
     /// Format: <c>"The property "{0}" returns a value by reference ([GeneratedCanvasEffectProperty] must be used on properties returning a type by value)"</c>.
     /// </para>
@@ -112,7 +112,7 @@ internal static class DiagnosticDescriptors
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 
     /// <summary>
-    /// Gets a <see cref="DiagnosticDescriptor"/> for a CanvasEffect property with invalid accessors.
+    /// Gets a <see cref="DiagnosticDescriptor"/> for a CanvasEffect property that returns a byref-like value.
     /// <para>
     /// Format: <c>"The property "{0}" returns a ref struct value ([GeneratedCanvasEffectProperty] must be used on properties with a type that is not a ref struct)"</c>.
     /// </para>
@@ -128,7 +128,7 @@ internal static class DiagnosticDescriptors
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 
     /// <summary>
-    /// Gets a <see cref="DiagnosticDescriptor"/> for a CanvasEffect property with invalid accessors.
+    /// Gets a <see cref="DiagnosticDescriptor"/> for when C# is not set to 'preview'.
     /// <para>
     /// Format: <c>"Using [GeneratedCanvasEffectProperty] requires the C# language version to be set to 'preview', as support for the 'field' keyword is needed by the source generators to emit valid code (add &lt;LangVersion&gt;preview&lt;/LangVersion&gt; to your .csproj/.props file)"</c>.
     /// </para>
