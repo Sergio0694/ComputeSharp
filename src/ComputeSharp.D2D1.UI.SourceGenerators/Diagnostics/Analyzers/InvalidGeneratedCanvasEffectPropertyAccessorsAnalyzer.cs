@@ -26,7 +26,7 @@ namespace ComputeSharp.D2D1.WinUI.SourceGenerators;
 public sealed class InvalidGeneratedCanvasEffectPropertyAccessorsAnalyzer : DiagnosticAnalyzer
 {
     /// <inheritdoc/>
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = [InvalidGeneratedCanvasEffectPropertyAccessors];
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = ImmutableArray.Create(InvalidGeneratedCanvasEffectPropertyAccessors);
 
     /// <inheritdoc/>
     public override void Initialize(AnalysisContext context)

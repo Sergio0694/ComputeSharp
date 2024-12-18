@@ -26,7 +26,7 @@ namespace ComputeSharp.D2D1.WinUI.SourceGenerators;
 public sealed class RequireCSharpLanguageVersionPreviewAnalyzer : DiagnosticAnalyzer
 {
     /// <inheritdoc/>
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = [CSharpLanguageVersionIsNotPreview];
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = ImmutableArray.Create(CSharpLanguageVersionIsNotPreview);
 
     /// <inheritdoc/>
     public override void Initialize(AnalysisContext context)

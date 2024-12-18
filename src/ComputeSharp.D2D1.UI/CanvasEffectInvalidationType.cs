@@ -1,4 +1,6 @@
+#if !D2D1_UI_SOURCE_GENERATOR
 using Microsoft.Graphics.Canvas;
+#endif
 
 #if WINDOWS_UWP
 namespace ComputeSharp.D2D1.Uwp;

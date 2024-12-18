@@ -26,13 +26,11 @@ namespace ComputeSharp.D2D1.WinUI.SourceGenerators;
 public sealed class InvalidGeneratedCanvasEffectPropertyDeclarationAnalyzer : DiagnosticAnalyzer
 {
     /// <inheritdoc/>
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } =
-    [
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = ImmutableArray.Create(
         InvalidGeneratedCanvasEffectPropertyDeclarationIsStatic,
         InvalidGeneratedCanvasEffectPropertyDeclarationIsNotIncompletePartialDefinition,
         InvalidGeneratedCanvasEffectPropertyDeclarationReturnsByRef,
-        InvalidGeneratedCanvasEffectPropertyDeclarationReturnsRefLikeType
-    ];
+        InvalidGeneratedCanvasEffectPropertyDeclarationReturnsRefLikeType);
 
     /// <inheritdoc/>
     public override void Initialize(AnalysisContext context)

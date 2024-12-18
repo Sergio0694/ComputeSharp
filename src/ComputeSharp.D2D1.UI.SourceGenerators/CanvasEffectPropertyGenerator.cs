@@ -1,3 +1,4 @@
+using System;
 #if WINDOWS_UWP
 using ComputeSharp.D2D1.Uwp.SourceGenerators.Constants;
 using ComputeSharp.D2D1.Uwp.SourceGenerators.Models;
@@ -136,8 +137,8 @@ public sealed partial class CanvasEffectPropertyGenerator : IIncrementalGenerato
             item.Hierarchy.WriteSyntax(
                 state: item.Properties,
                 writer: writer,
-                baseTypes: [],
-                memberCallbacks: [Execute.WritePropertyDeclarations]);
+                baseTypes: ReadOnlySpan<string>.Empty,
+                memberCallbacks: new IndentedTextWriter.Callback<EquatableArray<CanvasEffectPropertyInfo>>[] { Execute.WritePropertyDeclarations });
 
             context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.g.cs", writer.ToString());
         });

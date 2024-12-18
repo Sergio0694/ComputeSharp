@@ -96,7 +96,7 @@ partial class CanvasEffectPropertyGenerator
             }
 
             // Track the accessors accessibility, if explicitly set
-            foreach (AccessorDeclarationSyntax accessor in node.AccessorList?.Accessors ?? [])
+            foreach (AccessorDeclarationSyntax accessor in node.AccessorList?.Accessors ?? default)
             {
                 if (accessor.Modifiers.Count == 0)
                 {

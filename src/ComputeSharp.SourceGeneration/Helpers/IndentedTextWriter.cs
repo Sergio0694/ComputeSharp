@@ -4,6 +4,7 @@
 
 using System;
 using System.ComponentModel;
+using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Text;
 
@@ -177,10 +178,30 @@ internal sealed class IndentedTextWriter : IDisposable
     }
 
     /// <summary>
+    /// Writes content to the underlying buffer depending on an input condition.
+    /// </summary>
+    /// <param name="condition">The condition to use to decide whether or not to write content.</param>
+    /// <param name="content">The content to write.</param>
+    /// <param name="isMultiline">Whether the input content is multiline.</param>
+    public void WriteIf(bool condition, string content, bool isMultiline = false)
+    {
+        if (condition)
+        {
+            Write(content.AsSpan(), isMultiline);
+        }
+    }
+
+    /// <summary>
     /// Writes a line to the underlying buffer.
     /// </summary>
-    public void WriteLine()
+    /// <param name="skipIfPresent">Indicates whether to skip adding the line if there already is one.</param>
+    public void WriteLine(bool skipIfPresent = false)
     {
+        if (skipIfPresent && this.builder.WrittenSpan is [.., '\n', '\n'])
+        {
+            return;
+        }
+
         this.builder.Add(DefaultNewLine);
     }
 
@@ -342,7 +363,7 @@ internal sealed class IndentedTextWriter : IDisposable
         {
             if (value is IFormattable)
             {
-                this.writer.Write(((IFormattable)value).ToString(format));
+                this.writer.Write(((IFormattable)value).ToString(format, CultureInfo.InvariantCulture));
             }
             else if (value is not null)
             {
