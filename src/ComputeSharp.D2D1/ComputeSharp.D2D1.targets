@@ -42,7 +42,7 @@
       emitting this manually lets us customize the message to inform developers as to why exactly the generators have been
       disabled, and that ComputeSharp will not work at all unless a more up to date IDE or compiler version are used.
     -->
-    <Error Condition ="'$(ComputeSharpD2D1CurrentCompilerVersionIsNotNewEnough)' == 'true'" Text="The ComputeSharp.D2D1 source generators have been disabled on the current configuration, as they need Roslyn 4.9 in order to work. ComputeSharp.D2D1 requires the source generators to run in order to process shaders, so the library cannot be used without a more up to date IDE (eg. VS 2022 17.8 or greater) or .NET SDK version (.NET 8 SDK or greater)."/>  
+    <Error Condition ="'$(ComputeSharpD2D1CurrentCompilerVersionIsNotNewEnough)' == 'true'" Text="The ComputeSharp.D2D1 source generators have been disabled on the current configuration, as they need Roslyn 4.9 in order to work. ComputeSharp.D2D1 requires the source generators to run in order to process shaders, so the library cannot be used without a more up to date IDE (eg. VS 2022 17.8 or greater) or .NET SDK version (.NET 8 SDK or greater)."/>
   </Target>
   
   <!-- Remove the analyzer if Roslyn is missing -->
