@@ -190,7 +190,7 @@
   -->
   <PropertyGroup>
     <IsPolySharpPackageReferenceNeeded>false</IsPolySharpPackageReferenceNeeded>
-    <IsPolySharpPackageReferenceNeeded Condition="'$(IsPublishedProject)' == 'false' OR '$(IsSourceGeneratorProject)' == 'true'">true</IsPolySharpPackageReferenceNeeded>
+    <IsPolySharpPackageReferenceNeeded Condition="'$(IsPublishedProject)' == 'false' OR '$(IsAnalyzersProject)' == 'true'">true</IsPolySharpPackageReferenceNeeded>
   </PropertyGroup>
 
   <!-- Add the package reference, if needed -->

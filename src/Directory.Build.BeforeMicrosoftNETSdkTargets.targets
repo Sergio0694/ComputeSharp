@@ -21,10 +21,13 @@
     attribute for projects only targeting plain .NET as well. This makes them easier to consume from
     projects that are not using the Windows TFM as well. Doing so isn't strictly needed anyway unless
     you're specifically consuming the Windows SDK projections, which those projects are not doing.
+    Skip this for downlevel projects (analyzers), since it's not really needed there anyway.
   -->
   <Target Name="EmitSupportedOSVersionAttributeForTargetOS"
           BeforeTargets="PrepareForBuild">
-    <ItemGroup Condition="'$(SupportedOSPlatformVersion)' != '' AND !$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net8.0-windows'))">
+    <ItemGroup Condition="'$(SupportedOSPlatformVersion)' != '' AND
+                          $([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net8.0')) AND
+                          !$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net8.0-windows'))">
       <AssemblyAttribute Include="System.Runtime.Versioning.SupportedOSPlatformAttribute">
         <_Parameter1>Windows$(SupportedOSPlatformVersion)</_Parameter1>
       </AssemblyAttribute>
