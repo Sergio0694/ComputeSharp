@@ -16,6 +16,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Diagnostics\Analyzers\InvalidGeneratedCanvasEffectPropertyContainingTypeAnalyzer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Diagnostics\Analyzers\InvalidGeneratedCanvasEffectPropertyDeclarationAnalyzer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Diagnostics\Analyzers\RequireCSharpLanguageVersionPreviewAnalyzer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Diagnostics\Analyzers\UseCanvasEffectPropertyOnSemiAutoPropertyAnalyzer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Diagnostics\DiagnosticDescriptors.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\CanvasEffectPropertyInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)..\ComputeSharp.D2D1.UI\CanvasEffectInvalidationType.cs" Link="ComputeSharp.D2D1.UI\CanvasEffectInvalidationType.cs" />
