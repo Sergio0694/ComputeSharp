@@ -22,7 +22,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Win2D.uwp" Version="1.28.0" />
+    <PackageReference Include="Win2D.uwp" Version="1.28.1" />
   </ItemGroup>
 
   <ItemGroup>
