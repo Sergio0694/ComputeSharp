@@ -1780,25 +1780,25 @@ public class Test_D2DPixelShaderDescriptorGenerator
     /// <returns>The task for the operation.</returns>
     private static async Task VerifyGeneratedDiagnosticsAsync(string source, (string Filename, string Source) result)
     {
-        await CSharpAnalyzerWithLanguageVersionTest<D2DEnableRuntimeCompilationOnAssemblyAnalyzer>.VerifyAnalyzerAsync(source);
-        await CSharpAnalyzerWithLanguageVersionTest<D2DEnableRuntimeCompilationOnTypeAnalyzer>.VerifyAnalyzerAsync(source);
-        await CSharpAnalyzerWithLanguageVersionTest<ExceededPixelShaderDispatchDataSizeAnalyzer>.VerifyAnalyzerAsync(source);
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidAssemblyLevelCompileOptionsAnalyzer>.VerifyAnalyzerAsync(source);
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidD2D1PixelOptionsTrivialSamplingOnShaderTypeAnalyzer>.VerifyAnalyzerAsync(source);
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidD2DGeneratedPixelShaderDescriptorAttributeTargetAnalyzer>.VerifyAnalyzerAsync(source);
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidD2DInputDescriptionAttributeUseAnalyzer>.VerifyAnalyzerAsync(source);
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidD2DRequiresDoublePrecisionSupportAnalyzer>.VerifyAnalyzerAsync(source);
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidD2DResourceTextureIndexAttributeLocationAnalyzer>.VerifyAnalyzerAsync(source);
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidD2DResourceTextureIndexAttributeUseAnalyzer>.VerifyAnalyzerAsync(source);
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidEffectIdValueAnalyzer>.VerifyAnalyzerAsync(source);
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidEffectMetadataValueAnalyzer>.VerifyAnalyzerAsync(source);
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidShaderTypeCompileOptionsAnalyzer>.VerifyAnalyzerAsync(source);
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidShaderTypeInputsAnalyzer>.VerifyAnalyzerAsync(source);
-        await CSharpAnalyzerWithLanguageVersionTest<MissingAllowUnsafeBlocksCompilationOptionAnalyzer>.VerifyAnalyzerAsync(source);
-        await CSharpAnalyzerWithLanguageVersionTest<MissingPixelShaderDescriptorOnPixelShaderAnalyzer>.VerifyAnalyzerAsync(source);
-        await CSharpAnalyzerWithLanguageVersionTest<NotAccessibleD2DGeneratedPixelShaderDescriptorAttributeTargetAnalyzer>.VerifyAnalyzerAsync(source);
-        await CSharpAnalyzerWithLanguageVersionTest<NotAccessibleFieldTypeInD2DGeneratedShaderDescriptorAttributeTargetAnalyzer>.VerifyAnalyzerAsync(source);
-        await CSharpAnalyzerWithLanguageVersionTest<NotReadOnlyPixelShaderTypeWithFieldsAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<D2DEnableRuntimeCompilationOnAssemblyAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<D2DEnableRuntimeCompilationOnTypeAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<ExceededPixelShaderDispatchDataSizeAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<InvalidAssemblyLevelCompileOptionsAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<InvalidD2D1PixelOptionsTrivialSamplingOnShaderTypeAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<InvalidD2DGeneratedPixelShaderDescriptorAttributeTargetAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<InvalidD2DInputDescriptionAttributeUseAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<InvalidD2DRequiresDoublePrecisionSupportAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<InvalidD2DResourceTextureIndexAttributeLocationAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<InvalidD2DResourceTextureIndexAttributeUseAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<InvalidEffectIdValueAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<InvalidEffectMetadataValueAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<InvalidShaderTypeCompileOptionsAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<InvalidShaderTypeInputsAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<MissingAllowUnsafeBlocksCompilationOptionAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<MissingPixelShaderDescriptorOnPixelShaderAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<NotAccessibleD2DGeneratedPixelShaderDescriptorAttributeTargetAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<NotAccessibleFieldTypeInD2DGeneratedShaderDescriptorAttributeTargetAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<NotReadOnlyPixelShaderTypeWithFieldsAnalyzer>.VerifyAnalyzerAsync(source);
 
         CSharpGeneratorTest<D2DPixelShaderDescriptorGenerator>.VerifySources(source, result);
     }

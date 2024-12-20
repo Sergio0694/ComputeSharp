@@ -26,7 +26,7 @@ public class Test_ComputeShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<MissingAllowUnsafeBlocksCompilationOptionAnalyzer>.VerifyAnalyzerAsync(source, allowUnsafeBlocks: false);
+        await CSharpAnalyzerTest<MissingAllowUnsafeBlocksCompilationOptionAnalyzer>.VerifyAnalyzerAsync(source, allowUnsafeBlocks: false);
     }
 
     [TestMethod]
@@ -45,7 +45,7 @@ public class Test_ComputeShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<MissingComputeShaderDescriptorOnComputeShaderAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<MissingComputeShaderDescriptorOnComputeShaderAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -64,7 +64,7 @@ public class Test_ComputeShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<MissingComputeShaderDescriptorOnComputeShaderAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<MissingComputeShaderDescriptorOnComputeShaderAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -110,7 +110,7 @@ public class Test_ComputeShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<MissingComputeShaderDescriptorOnComputeShaderAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<MissingComputeShaderDescriptorOnComputeShaderAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -135,7 +135,7 @@ public class Test_ComputeShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<NotAccessibleGeneratedComputeShaderDescriptorAttributeTargetAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<NotAccessibleGeneratedComputeShaderDescriptorAttributeTargetAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -166,7 +166,7 @@ public class Test_ComputeShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<NotAccessibleFieldTypeInGeneratedShaderDescriptorAttributeTargetAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<NotAccessibleFieldTypeInGeneratedShaderDescriptorAttributeTargetAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -187,7 +187,7 @@ public class Test_ComputeShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<NotReadOnlyComputeShaderTypeWithFieldsAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<NotReadOnlyComputeShaderTypeWithFieldsAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -205,7 +205,7 @@ public class Test_ComputeShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidGloballyCoherentFieldDeclarationAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<InvalidGloballyCoherentFieldDeclarationAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -227,7 +227,7 @@ public class Test_ComputeShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidGloballyCoherentFieldDeclarationAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<InvalidGloballyCoherentFieldDeclarationAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -249,7 +249,7 @@ public class Test_ComputeShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidGloballyCoherentFieldDeclarationAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<InvalidGloballyCoherentFieldDeclarationAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -271,7 +271,7 @@ public class Test_ComputeShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidGloballyCoherentFieldDeclarationAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<InvalidGloballyCoherentFieldDeclarationAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -289,7 +289,7 @@ public class Test_ComputeShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidGroupSharedFieldDeclarationAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<InvalidGroupSharedFieldDeclarationAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -311,7 +311,7 @@ public class Test_ComputeShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidGroupSharedFieldDeclarationAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<InvalidGroupSharedFieldDeclarationAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -333,7 +333,7 @@ public class Test_ComputeShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidGroupSharedFieldDeclarationAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<InvalidGroupSharedFieldDeclarationAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -355,7 +355,7 @@ public class Test_ComputeShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidGroupSharedFieldDeclarationAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<InvalidGroupSharedFieldDeclarationAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -370,7 +370,7 @@ public class Test_ComputeShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidGeneratedComputeShaderDescriptorAttributeTargetAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<InvalidGeneratedComputeShaderDescriptorAttributeTargetAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -388,7 +388,7 @@ public class Test_ComputeShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidGeneratedComputeShaderDescriptorAttributeTargetAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<InvalidGeneratedComputeShaderDescriptorAttributeTargetAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -409,7 +409,7 @@ public class Test_ComputeShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidGeneratedComputeShaderDescriptorAttributeTargetAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<InvalidGeneratedComputeShaderDescriptorAttributeTargetAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -432,7 +432,7 @@ public class Test_ComputeShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<MultipleComputeShaderInterfacesOnShaderTypeAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<MultipleComputeShaderInterfacesOnShaderTypeAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -449,7 +449,7 @@ public class Test_ComputeShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidThreadGroupSizeAttributeUseAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<InvalidThreadGroupSizeAttributeUseAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -467,7 +467,7 @@ public class Test_ComputeShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidThreadGroupSizeAttributeUseAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<InvalidThreadGroupSizeAttributeUseAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -485,7 +485,7 @@ public class Test_ComputeShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidThreadGroupSizeAttributeUseAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<InvalidThreadGroupSizeAttributeUseAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -503,7 +503,7 @@ public class Test_ComputeShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidThreadGroupSizeAttributeUseAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<InvalidThreadGroupSizeAttributeUseAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -521,7 +521,7 @@ public class Test_ComputeShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidThreadGroupSizeAttributeUseAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<InvalidThreadGroupSizeAttributeUseAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -546,7 +546,7 @@ public class Test_ComputeShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidThreadGroupSizeAttributeUseAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<InvalidThreadGroupSizeAttributeUseAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -564,7 +564,7 @@ public class Test_ComputeShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidThreadGroupSizeAttributeUseAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<InvalidThreadGroupSizeAttributeUseAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -630,7 +630,7 @@ public class Test_ComputeShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<ExcedeedComputeShaderDispatchDataSizeAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<ExcedeedComputeShaderDispatchDataSizeAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -655,7 +655,7 @@ public class Test_ComputeShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<ExcedeedComputeShaderDispatchDataSizeAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<ExcedeedComputeShaderDispatchDataSizeAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -720,6 +720,6 @@ public class Test_ComputeShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<ExcedeedComputeShaderDispatchDataSizeAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<ExcedeedComputeShaderDispatchDataSizeAnalyzer>.VerifyAnalyzerAsync(source);
     }
 }

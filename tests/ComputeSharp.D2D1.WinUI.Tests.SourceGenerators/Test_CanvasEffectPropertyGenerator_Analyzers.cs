@@ -22,7 +22,7 @@ public class Test_CanvasEffectPropertyGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidGeneratedCanvasEffectPropertyContainingTypeAnalyzer>.VerifyAnalyzerAsync(source, languageVersion: LanguageVersion.Preview);
+        await CSharpAnalyzerTest<InvalidGeneratedCanvasEffectPropertyContainingTypeAnalyzer>.VerifyAnalyzerAsync(source, languageVersion: LanguageVersion.Preview);
     }
 
     [TestMethod]
@@ -38,7 +38,7 @@ public class Test_CanvasEffectPropertyGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidGeneratedCanvasEffectPropertyAccessorsAnalyzer>.VerifyAnalyzerAsync(source, languageVersion: LanguageVersion.Preview);
+        await CSharpAnalyzerTest<InvalidGeneratedCanvasEffectPropertyAccessorsAnalyzer>.VerifyAnalyzerAsync(source, languageVersion: LanguageVersion.Preview);
     }
 
     [TestMethod]
@@ -54,7 +54,7 @@ public class Test_CanvasEffectPropertyGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidGeneratedCanvasEffectPropertyAccessorsAnalyzer>.VerifyAnalyzerAsync(source, languageVersion: LanguageVersion.Preview);
+        await CSharpAnalyzerTest<InvalidGeneratedCanvasEffectPropertyAccessorsAnalyzer>.VerifyAnalyzerAsync(source, languageVersion: LanguageVersion.Preview);
     }
 
     [TestMethod]
@@ -70,7 +70,7 @@ public class Test_CanvasEffectPropertyGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidGeneratedCanvasEffectPropertyDeclarationAnalyzer>.VerifyAnalyzerAsync(source, languageVersion: LanguageVersion.Preview);
+        await CSharpAnalyzerTest<InvalidGeneratedCanvasEffectPropertyDeclarationAnalyzer>.VerifyAnalyzerAsync(source, languageVersion: LanguageVersion.Preview);
     }
 
     [TestMethod]
@@ -86,7 +86,7 @@ public class Test_CanvasEffectPropertyGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidGeneratedCanvasEffectPropertyDeclarationAnalyzer>.VerifyAnalyzerAsync(source, languageVersion: LanguageVersion.Preview);
+        await CSharpAnalyzerTest<InvalidGeneratedCanvasEffectPropertyDeclarationAnalyzer>.VerifyAnalyzerAsync(source, languageVersion: LanguageVersion.Preview);
     }
 
     [TestMethod]
@@ -104,7 +104,7 @@ public class Test_CanvasEffectPropertyGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidGeneratedCanvasEffectPropertyDeclarationAnalyzer>.VerifyAnalyzerAsync(source, languageVersion: LanguageVersion.Preview);
+        await CSharpAnalyzerTest<InvalidGeneratedCanvasEffectPropertyDeclarationAnalyzer>.VerifyAnalyzerAsync(source, languageVersion: LanguageVersion.Preview);
     }
 
     [TestMethod]
@@ -124,7 +124,7 @@ public class Test_CanvasEffectPropertyGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidGeneratedCanvasEffectPropertyDeclarationAnalyzer>.VerifyAnalyzerAsync(source, languageVersion: LanguageVersion.Preview);
+        await CSharpAnalyzerTest<InvalidGeneratedCanvasEffectPropertyDeclarationAnalyzer>.VerifyAnalyzerAsync(source, languageVersion: LanguageVersion.Preview);
     }
 
     [TestMethod]
@@ -142,7 +142,7 @@ public class Test_CanvasEffectPropertyGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidGeneratedCanvasEffectPropertyDeclarationAnalyzer>.VerifyAnalyzerAsync(source, languageVersion: LanguageVersion.Preview);
+        await CSharpAnalyzerTest<InvalidGeneratedCanvasEffectPropertyDeclarationAnalyzer>.VerifyAnalyzerAsync(source, languageVersion: LanguageVersion.Preview);
     }
 
     [TestMethod]
@@ -158,7 +158,7 @@ public class Test_CanvasEffectPropertyGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidGeneratedCanvasEffectPropertyDeclarationAnalyzer>.VerifyAnalyzerAsync(source, languageVersion: LanguageVersion.Preview);
+        await CSharpAnalyzerTest<InvalidGeneratedCanvasEffectPropertyDeclarationAnalyzer>.VerifyAnalyzerAsync(source, languageVersion: LanguageVersion.Preview);
     }
 
     [TestMethod]
@@ -174,7 +174,7 @@ public class Test_CanvasEffectPropertyGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidGeneratedCanvasEffectPropertyDeclarationAnalyzer>.VerifyAnalyzerAsync(source, languageVersion: LanguageVersion.Preview);
+        await CSharpAnalyzerTest<InvalidGeneratedCanvasEffectPropertyDeclarationAnalyzer>.VerifyAnalyzerAsync(source, languageVersion: LanguageVersion.Preview);
     }
 
     [TestMethod]
@@ -191,7 +191,7 @@ public class Test_CanvasEffectPropertyGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidGeneratedCanvasEffectPropertyDeclarationAnalyzer>.VerifyAnalyzerAsync(source, languageVersion: LanguageVersion.Preview);
+        await CSharpAnalyzerTest<InvalidGeneratedCanvasEffectPropertyDeclarationAnalyzer>.VerifyAnalyzerAsync(source, languageVersion: LanguageVersion.Preview);
     }
 
     [TestMethod]
@@ -208,7 +208,7 @@ public class Test_CanvasEffectPropertyGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<RequireCSharpLanguageVersionPreviewAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<RequireCSharpLanguageVersionPreviewAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -225,7 +225,7 @@ public class Test_CanvasEffectPropertyGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<RequireCSharpLanguageVersionPreviewAnalyzer>.VerifyAnalyzerAsync(source, languageVersion: LanguageVersion.Preview);
+        await CSharpAnalyzerTest<RequireCSharpLanguageVersionPreviewAnalyzer>.VerifyAnalyzerAsync(source, languageVersion: LanguageVersion.Preview);
     }
 
     [TestMethod]
@@ -240,7 +240,7 @@ public class Test_CanvasEffectPropertyGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<UseGeneratedCanvasEffectPropertyOnSemiAutoPropertyAnalyzer>.VerifyAnalyzerAsync(source, languageVersion: LanguageVersion.Preview);
+        await CSharpAnalyzerTest<UseGeneratedCanvasEffectPropertyOnSemiAutoPropertyAnalyzer>.VerifyAnalyzerAsync(source, languageVersion: LanguageVersion.Preview);
     }
 
     [TestMethod]
@@ -266,7 +266,7 @@ public class Test_CanvasEffectPropertyGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<UseGeneratedCanvasEffectPropertyOnSemiAutoPropertyAnalyzer>.VerifyAnalyzerAsync(source, languageVersion: LanguageVersion.Preview);
+        await CSharpAnalyzerTest<UseGeneratedCanvasEffectPropertyOnSemiAutoPropertyAnalyzer>.VerifyAnalyzerAsync(source, languageVersion: LanguageVersion.Preview);
     }
 
     [TestMethod]
@@ -284,7 +284,7 @@ public class Test_CanvasEffectPropertyGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<UseGeneratedCanvasEffectPropertyOnSemiAutoPropertyAnalyzer>.VerifyAnalyzerAsync(source, languageVersion: LanguageVersion.Preview);
+        await CSharpAnalyzerTest<UseGeneratedCanvasEffectPropertyOnSemiAutoPropertyAnalyzer>.VerifyAnalyzerAsync(source, languageVersion: LanguageVersion.Preview);
     }
 
     [TestMethod]
@@ -302,7 +302,7 @@ public class Test_CanvasEffectPropertyGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<UseGeneratedCanvasEffectPropertyOnSemiAutoPropertyAnalyzer>.VerifyAnalyzerAsync(source, languageVersion: LanguageVersion.Preview);
+        await CSharpAnalyzerTest<UseGeneratedCanvasEffectPropertyOnSemiAutoPropertyAnalyzer>.VerifyAnalyzerAsync(source, languageVersion: LanguageVersion.Preview);
     }
 
     [TestMethod]
@@ -326,7 +326,7 @@ public class Test_CanvasEffectPropertyGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<UseGeneratedCanvasEffectPropertyOnSemiAutoPropertyAnalyzer>.VerifyAnalyzerAsync(source, languageVersion: LanguageVersion.Preview);
+        await CSharpAnalyzerTest<UseGeneratedCanvasEffectPropertyOnSemiAutoPropertyAnalyzer>.VerifyAnalyzerAsync(source, languageVersion: LanguageVersion.Preview);
     }
 
     [TestMethod]
@@ -350,7 +350,7 @@ public class Test_CanvasEffectPropertyGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<UseGeneratedCanvasEffectPropertyOnSemiAutoPropertyAnalyzer>.VerifyAnalyzerAsync(source, languageVersion: LanguageVersion.Preview);
+        await CSharpAnalyzerTest<UseGeneratedCanvasEffectPropertyOnSemiAutoPropertyAnalyzer>.VerifyAnalyzerAsync(source, languageVersion: LanguageVersion.Preview);
     }
 
     [TestMethod]
@@ -370,7 +370,7 @@ public class Test_CanvasEffectPropertyGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<UseGeneratedCanvasEffectPropertyOnSemiAutoPropertyAnalyzer>.VerifyAnalyzerAsync(source, languageVersion: LanguageVersion.Preview);
+        await CSharpAnalyzerTest<UseGeneratedCanvasEffectPropertyOnSemiAutoPropertyAnalyzer>.VerifyAnalyzerAsync(source, languageVersion: LanguageVersion.Preview);
     }
 
     [TestMethod]
@@ -389,7 +389,7 @@ public class Test_CanvasEffectPropertyGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<UseGeneratedCanvasEffectPropertyOnSemiAutoPropertyAnalyzer>.VerifyAnalyzerAsync(source, languageVersion: LanguageVersion.Preview);
+        await CSharpAnalyzerTest<UseGeneratedCanvasEffectPropertyOnSemiAutoPropertyAnalyzer>.VerifyAnalyzerAsync(source, languageVersion: LanguageVersion.Preview);
     }
 
     [TestMethod]
@@ -408,7 +408,7 @@ public class Test_CanvasEffectPropertyGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<UseGeneratedCanvasEffectPropertyOnSemiAutoPropertyAnalyzer>.VerifyAnalyzerAsync(source, languageVersion: LanguageVersion.Preview);
+        await CSharpAnalyzerTest<UseGeneratedCanvasEffectPropertyOnSemiAutoPropertyAnalyzer>.VerifyAnalyzerAsync(source, languageVersion: LanguageVersion.Preview);
     }
 
     [TestMethod]
@@ -427,7 +427,7 @@ public class Test_CanvasEffectPropertyGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<UseGeneratedCanvasEffectPropertyOnSemiAutoPropertyAnalyzer>.VerifyAnalyzerAsync(source, languageVersion: LanguageVersion.Preview);
+        await CSharpAnalyzerTest<UseGeneratedCanvasEffectPropertyOnSemiAutoPropertyAnalyzer>.VerifyAnalyzerAsync(source, languageVersion: LanguageVersion.Preview);
     }
 
     [TestMethod]
@@ -452,6 +452,6 @@ public class Test_CanvasEffectPropertyGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<UseGeneratedCanvasEffectPropertyOnSemiAutoPropertyAnalyzer>.VerifyAnalyzerAsync(source, languageVersion: LanguageVersion.Preview);
+        await CSharpAnalyzerTest<UseGeneratedCanvasEffectPropertyOnSemiAutoPropertyAnalyzer>.VerifyAnalyzerAsync(source, languageVersion: LanguageVersion.Preview);
     }
 }

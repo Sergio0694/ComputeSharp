@@ -22,7 +22,7 @@ namespace ComputeSharp.Tests.SourceGenerators.Helpers;
 /// A custom <see cref="CSharpAnalyzerTest{TAnalyzer, TVerifier}"/> that uses a specific C# language version to parse code.
 /// </summary>
 /// <typeparam name="TAnalyzer">The type of the analyzer to test.</typeparam>
-internal sealed class CSharpAnalyzerWithLanguageVersionTest<TAnalyzer> : CSharpAnalyzerTest<TAnalyzer, DefaultVerifier>
+internal sealed class CSharpAnalyzerTest<TAnalyzer> : CSharpAnalyzerTest<TAnalyzer, DefaultVerifier>
     where TAnalyzer : DiagnosticAnalyzer, new()
 {
     /// <summary>
@@ -36,11 +36,11 @@ internal sealed class CSharpAnalyzerWithLanguageVersionTest<TAnalyzer> : CSharpA
     private readonly LanguageVersion languageVersion;
 
     /// <summary>
-    /// Creates a new <see cref="CSharpAnalyzerWithLanguageVersionTest{TAnalyzer}"/> instance with the specified paramaters.
+    /// Creates a new <see cref="CSharpAnalyzerTest{TAnalyzer}"/> instance with the specified paramaters.
     /// </summary>
     /// <param name="allowUnsafeBlocks">Whether to enable unsafe blocks.</param>
     /// <param name="languageVersion">The C# language version to use to parse code.</param>
-    private CSharpAnalyzerWithLanguageVersionTest(bool allowUnsafeBlocks, LanguageVersion languageVersion)
+    private CSharpAnalyzerTest(bool allowUnsafeBlocks, LanguageVersion languageVersion)
     {
         this.allowUnsafeBlocks = allowUnsafeBlocks;
         this.languageVersion = languageVersion;
@@ -67,7 +67,7 @@ internal sealed class CSharpAnalyzerWithLanguageVersionTest<TAnalyzer> : CSharpA
         bool allowUnsafeBlocks = true,
         LanguageVersion languageVersion = LanguageVersion.CSharp12)
     {
-        CSharpAnalyzerWithLanguageVersionTest<TAnalyzer> test = new(allowUnsafeBlocks, languageVersion) { TestCode = source };
+        CSharpAnalyzerTest<TAnalyzer> test = new(allowUnsafeBlocks, languageVersion) { TestCode = source };
 
         test.TestState.ReferenceAssemblies = ReferenceAssemblies.Net.Net80;
         test.TestState.AdditionalReferences.Add(MetadataReference.CreateFromFile(typeof(Core::ComputeSharp.Hlsl).Assembly.Location));

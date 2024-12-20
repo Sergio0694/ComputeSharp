@@ -30,7 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="..\ComputeSharp.Tests.SourceGenerators\Helpers\CSharpAnalyzerWithLanguageVersionTest{TAnalyzer}.cs" Link="Helpers\CSharpAnalyzerWithLanguageVersionTest{TAnalyzer}.cs" />
+    <Compile Include="..\ComputeSharp.Tests.SourceGenerators\Helpers\CSharpAnalyzerTest{TAnalyzer}.cs" Link="Helpers\CSharpAnalyzerTest{TAnalyzer}.cs" />
     <Compile Include="..\ComputeSharp.Tests.SourceGenerators\Helpers\CSharpGeneratorTest{TGenerator}.cs" Link="Helpers\CSharpGeneratorTest{TGenerator}.cs" />
   </ItemGroup>
 </Project>

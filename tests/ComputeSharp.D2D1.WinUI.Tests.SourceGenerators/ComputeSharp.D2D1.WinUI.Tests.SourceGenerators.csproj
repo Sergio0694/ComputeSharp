@@ -25,11 +25,12 @@
     <ProjectReference Include="..\..\src\ComputeSharp.Core\ComputeSharp.Core.csproj" Aliases="Core" />
     <ProjectReference Include="..\..\src\ComputeSharp.D2D1\ComputeSharp.D2D1.csproj" Aliases="D2D1" />
     <ProjectReference Include="..\..\src\ComputeSharp.D2D1.WinUI\ComputeSharp.D2D1.WinUI.csproj" Aliases="D2D1_WinUI" />
+    <ProjectReference Include="..\..\src\ComputeSharp.D2D1.WinUI.CodeFixers\ComputeSharp.D2D1.WinUI.CodeFixers.csproj" />
     <ProjectReference Include="..\..\src\ComputeSharp.D2D1.WinUI.SourceGenerators\ComputeSharp.D2D1.WinUI.SourceGenerators.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="..\ComputeSharp.Tests.SourceGenerators\Helpers\CSharpAnalyzerWithLanguageVersionTest{TAnalyzer}.cs" Link="Helpers\CSharpAnalyzerWithLanguageVersionTest{TAnalyzer}.cs" />
+    <Compile Include="..\ComputeSharp.Tests.SourceGenerators\Helpers\CSharpAnalyzerTest{TAnalyzer}.cs" Link="Helpers\CSharpAnalyzerTest{TAnalyzer}.cs" />
     <Compile Include="..\ComputeSharp.Tests.SourceGenerators\Helpers\CSharpGeneratorTest{TGenerator}.cs" Link="Helpers\CSharpGeneratorTest{TGenerator}.cs" />
   </ItemGroup>
 </Project>
