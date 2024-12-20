@@ -58,7 +58,7 @@ public sealed class UseGeneratedCanvasEffectPropertyOnSemiAutoPropertyCodeFixer 
         }
 
         // Retrieve the properties passed by the analyzer
-        if (!int.TryParse(diagnostic.Properties[UseGeneratedCanvasEffectPropertyOnSemiAutoPropertyAnalyzer.InvalidationModePropertyName], out int invalidationMode))
+        if (!int.TryParse(diagnostic.Properties[UseGeneratedCanvasEffectPropertyOnSemiAutoPropertyAnalyzer.InvalidationTypePropertyName], out int invalidationType))
         {
             return;
         }
@@ -80,7 +80,7 @@ public sealed class UseGeneratedCanvasEffectPropertyOnSemiAutoPropertyCodeFixer 
                         semanticModel,
                         root,
                         propertyDeclaration,
-                        invalidationMode),
+                        invalidationType),
                     equivalenceKey: "Use [GeneratedCanvasEffectProperty]"),
                 diagnostic);
         }
@@ -122,18 +122,18 @@ public sealed class UseGeneratedCanvasEffectPropertyOnSemiAutoPropertyCodeFixer 
     /// <param name="document">The original document being fixed.</param>
     /// <param name="semanticModel">The <see cref="SemanticModel"/> instance for the current compilation.</param>
     /// <param name="generatedCanvasEffectPropertyAttributeList">The <see cref="AttributeListSyntax"/> with the attribute to add.</param>
-    /// <param name="invalidationMode">The invalidation mode to use.</param>
+    /// <param name="invalidationType">The invalidation type to use.</param>
     /// <returns>The updated attribute syntax.</returns>
     private static AttributeListSyntax UpdateGeneratedCanvasEffectPropertyAttributeList(
         Document document,
         SemanticModel semanticModel,
         AttributeListSyntax generatedCanvasEffectPropertyAttributeList,
-        int invalidationMode)
+        int invalidationType)
     {
-        // If the invalidation mode is not the default, set it in the attribute.
+        // If the invalidation type is not the default, set it in the attribute.
         // We extract the generated attribute so we can add the new argument.
         // It's important to reuse it, as it has the "add usings" annotation.
-        if (invalidationMode == 1)
+        if (invalidationType == 1)
         {
             // Try to resolve the attribute type, if present (this should always be the case)
             if (semanticModel.Compilation.GetTypeByMetadataName(WellKnownTypeNames.CanvasEffectInvalidationType) is INamedTypeSymbol enumTypeSymbol)
@@ -144,11 +144,11 @@ public sealed class UseGeneratedCanvasEffectPropertyOnSemiAutoPropertyCodeFixer 
                 SyntaxNode enumTypeSyntax = syntaxGenerator.TypeExpression(enumTypeSymbol).WithAdditionalAnnotations(Simplifier.AddImportsAnnotation);
 
                 // Create the member access expression for the target enum type.
-                // We only ever take this path for the 'Creation' invalidation mode.
+                // We only ever take this path for the 'Creation' invalidation type.
                 SyntaxNode enumMemberAccessExpressionSyntax = syntaxGenerator.MemberAccessExpression(enumTypeSyntax, "Creation");
 
                 // Create the attribute argument to insert
-                SyntaxNode attributeArgumentSyntax = syntaxGenerator.AttributeArgument("InvalidationMode", enumMemberAccessExpressionSyntax);
+                SyntaxNode attributeArgumentSyntax = syntaxGenerator.AttributeArgument(enumMemberAccessExpressionSyntax);
 
                 // Actually add the argument to the existing attribute syntax
                 return (AttributeListSyntax)syntaxGenerator.AddAttributeArguments(generatedCanvasEffectPropertyAttributeList, [attributeArgumentSyntax]);
@@ -159,11 +159,11 @@ public sealed class UseGeneratedCanvasEffectPropertyOnSemiAutoPropertyCodeFixer 
                 AttributeList(SingletonSeparatedList(
                     generatedCanvasEffectPropertyAttributeList.Attributes[0]
                     .AddArgumentListArguments(
-                        AttributeArgument(ParseExpression($"global::{WellKnownTypeNames.CanvasEffectInvalidationType}.Creation"))
-                        .WithNameEquals(NameEquals(IdentifierName("InvalidationMode"))))));
+                        AttributeArgument(ParseExpression(
+                            $"global::{WellKnownTypeNames.CanvasEffectInvalidationType}.Creation")))));
         }
 
-        // If we have no custom invalidation mode, we can just reuse the attribute with no changes
+        // If we have no custom invalidation type, we can just reuse the attribute with no changes
         return generatedCanvasEffectPropertyAttributeList;
     }
 
@@ -174,14 +174,14 @@ public sealed class UseGeneratedCanvasEffectPropertyOnSemiAutoPropertyCodeFixer 
     /// <param name="semanticModel">The <see cref="SemanticModel"/> instance for the current compilation.</param>
     /// <param name="root">The original tree root belonging to the current document.</param>
     /// <param name="propertyDeclaration">The <see cref="PropertyDeclarationSyntax"/> for the property being updated.</param>
-    /// <param name="invalidationMode">The invalidation mode to use.</param>
+    /// <param name="invalidationType">The invalidation type to use.</param>
     /// <returns>An updated document with the applied code fix, and <paramref name="propertyDeclaration"/> being replaced with a partial property.</returns>
     private static async Task<Document> ConvertToPartialProperty(
         Document document,
         SemanticModel semanticModel,
         SyntaxNode root,
         PropertyDeclarationSyntax propertyDeclaration,
-        int invalidationMode)
+        int invalidationType)
     {
         await Task.CompletedTask;
 
@@ -200,7 +200,7 @@ public sealed class UseGeneratedCanvasEffectPropertyOnSemiAutoPropertyCodeFixer 
             propertyDeclaration,
             generatedCanvasEffectPropertyAttributeList,
             syntaxEditor,
-            invalidationMode);
+            invalidationType);
 
         // Create the new document with the single change
         return document.WithSyntaxRoot(syntaxEditor.GetChangedRoot());
@@ -214,7 +214,7 @@ public sealed class UseGeneratedCanvasEffectPropertyOnSemiAutoPropertyCodeFixer 
     /// <param name="propertyDeclaration">The <see cref="PropertyDeclarationSyntax"/> for the property being updated.</param>
     /// <param name="generatedCanvasEffectPropertyAttributeList">The <see cref="AttributeListSyntax"/> with the attribute to add.</param>
     /// <param name="syntaxEditor">The <see cref="SyntaxEditor"/> instance to use.</param>
-    /// <param name="invalidationMode">The invalidation mode to use.</param>
+    /// <param name="invalidationType">The invalidation type to use.</param>
     /// <returns>An updated document with the applied code fix, and <paramref name="propertyDeclaration"/> being replaced with a partial property.</returns>
     private static void ConvertToPartialProperty(
         Document document,
@@ -222,14 +222,14 @@ public sealed class UseGeneratedCanvasEffectPropertyOnSemiAutoPropertyCodeFixer 
         PropertyDeclarationSyntax propertyDeclaration,
         AttributeListSyntax generatedCanvasEffectPropertyAttributeList,
         SyntaxEditor syntaxEditor,
-        int invalidationMode)
+        int invalidationType)
     {
-        // Update the attribute to insert with the invalidation mode, if needed
+        // Update the attribute to insert with the invalidation type, if needed
         generatedCanvasEffectPropertyAttributeList = UpdateGeneratedCanvasEffectPropertyAttributeList(
             document,
             semanticModel,
             generatedCanvasEffectPropertyAttributeList,
-            invalidationMode);
+            invalidationType);
 
         // Start setting up the updated attribute lists
         SyntaxList<AttributeListSyntax> attributeLists = propertyDeclaration.AttributeLists;
@@ -330,7 +330,7 @@ public sealed class UseGeneratedCanvasEffectPropertyOnSemiAutoPropertyCodeFixer 
                 }
 
                 // Retrieve the properties passed by the analyzer
-                if (!int.TryParse(diagnostic.Properties[UseGeneratedCanvasEffectPropertyOnSemiAutoPropertyAnalyzer.InvalidationModePropertyName], out int invalidationMode))
+                if (!int.TryParse(diagnostic.Properties[UseGeneratedCanvasEffectPropertyOnSemiAutoPropertyAnalyzer.InvalidationTypePropertyName], out int invalidationType))
                 {
                     continue;
                 }
@@ -341,7 +341,7 @@ public sealed class UseGeneratedCanvasEffectPropertyOnSemiAutoPropertyCodeFixer 
                     propertyDeclaration,
                     generatedCanvasEffectPropertyAttributeList,
                     syntaxEditor,
-                    invalidationMode);
+                    invalidationType);
             }
 
             return document.WithSyntaxRoot(syntaxEditor.GetChangedRoot());

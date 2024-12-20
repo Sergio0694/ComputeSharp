@@ -50,9 +50,9 @@ public sealed class UseGeneratedCanvasEffectPropertyOnSemiAutoPropertyAnalyzer :
     private static readonly ObjectPool<Stack<byte[]>> PropertyFlagsStackPool = new(CreatePropertyFlagsStack);
 
     /// <summary>
-    /// The property name for the serialized invalidation mode.
+    /// The property name for the serialized invalidation type.
     /// </summary>
-    public const string InvalidationModePropertyName = "InvalidationMode";
+    public const string InvalidationTypePropertyName = "InvalidationType";
 
     /// <inheritdoc/>
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = [UseGeneratedCanvasEffectPropertyOnSemiAutoProperty];
@@ -205,7 +205,7 @@ public sealed class UseGeneratedCanvasEffectPropertyOnSemiAutoPropertyAnalyzer :
                         }
 
                         // We matched the method, now let's validate the arguments
-                        if (invocationOperation.Arguments is not [{ } locationArgument, { } valueArgument, { } invalidationModeArgument])
+                        if (invocationOperation.Arguments is not [{ } locationArgument, { } valueArgument, { } invalidationTypeArgument])
                         {
                             return;
                         }
@@ -229,11 +229,11 @@ public sealed class UseGeneratedCanvasEffectPropertyOnSemiAutoPropertyAnalyzer :
                         }
 
                         // The invalidation mode can either be the default value...
-                        if (invalidationModeArgument is { IsImplicit: true, ArgumentKind: ArgumentKind.DefaultValue })
+                        if (invalidationTypeArgument is { IsImplicit: true, ArgumentKind: ArgumentKind.DefaultValue })
                         {
                             validFlags[1] = 1;
                         }
-                        else if (invalidationModeArgument is { ConstantValue: { HasValue: true, Value: byte mode } } && mode is 0 or 1)
+                        else if (invalidationTypeArgument is { Value.ConstantValue: { HasValue: true, Value: byte mode } } && mode is 0 or 1)
                         {
                             // ...Or is has to be set explicitly to one of the two supported values
                             validFlags[1] = (byte)(mode + 1);
@@ -289,7 +289,7 @@ public sealed class UseGeneratedCanvasEffectPropertyOnSemiAutoPropertyAnalyzer :
                             context.ReportDiagnostic(Diagnostic.Create(
                                 UseGeneratedCanvasEffectPropertyOnSemiAutoProperty,
                                 pair.Key.Locations.FirstOrDefault(),
-                                ImmutableDictionary.Create<string, string?>().Add(InvalidationModePropertyName, invalidationType.ToString()),
+                                ImmutableDictionary.Create<string, string?>().Add(InvalidationTypePropertyName, invalidationType.ToString()),
                                 pair.Key));
                         }
                     }

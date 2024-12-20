@@ -30,6 +30,8 @@ internal sealed class CSharpCodeFixTest<TAnalyzer, TCodeFixer> : CSharpCodeFixTe
     public CSharpCodeFixTest(LanguageVersion languageVersion)
     {
         this.languageVersion = languageVersion;
+
+        TestState.AnalyzerConfigFiles.Add(("/.editorconfig", "[*]\nend_of_line = lf"));
     }
 
     /// <inheritdoc/>
