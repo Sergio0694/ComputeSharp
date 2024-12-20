@@ -10,7 +10,7 @@ namespace ComputeSharp.D2D1.WinUI.SourceGenerators.Constants;
 internal static class WellKnownTypeNames
 {
     /// <summary>
-    /// The fully qualified type name for the <c>[GeneratedCanvasEffectPropertyAttribute]</c> type.
+    /// The fully qualified type name for the <c>[GeneratedCanvasEffectProperty]</c> type.
     /// </summary>
     public const string GeneratedCanvasEffectPropertyAttribute =
 #if WINDOWS_UWP

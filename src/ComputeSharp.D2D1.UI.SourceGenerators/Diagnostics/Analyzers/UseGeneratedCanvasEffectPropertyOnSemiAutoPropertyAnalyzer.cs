@@ -28,10 +28,10 @@ namespace ComputeSharp.D2D1.WinUI.SourceGenerators;
 #endif
 
 /// <summary>
-/// A diagnostic analyzer that generates a suggestion whenever <c>[CanvasEffectProperty]</c> is used on a semi-auto property when a partial property could be used instead.
+/// A diagnostic analyzer that generates a suggestion whenever <c>[GeneratedCanvasEffectProperty]</c> is used on a semi-auto property when a partial property could be used instead.
 /// </summary>
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
-public sealed class UseCanvasEffectPropertyOnSemiAutoPropertyAnalyzer : DiagnosticAnalyzer
+public sealed class UseGeneratedCanvasEffectPropertyOnSemiAutoPropertyAnalyzer : DiagnosticAnalyzer
 {
     /// <summary>
     /// The number of pooled flags per stack (ie. how many properties we expect on average per type).
@@ -55,7 +55,7 @@ public sealed class UseCanvasEffectPropertyOnSemiAutoPropertyAnalyzer : Diagnost
     public const string InvalidationModePropertyName = "InvalidationMode";
 
     /// <inheritdoc/>
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = [UseCanvasEffectPropertyOnSemiAutoProperty];
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = [UseGeneratedCanvasEffectPropertyOnSemiAutoProperty];
 
     /// <inheritdoc/>
     public override void Initialize(AnalysisContext context)
@@ -282,10 +282,14 @@ public sealed class UseCanvasEffectPropertyOnSemiAutoPropertyAnalyzer : Diagnost
                     {
                         if (pair.Value is [1, 1 or 2])
                         {
+                            // Shift back the index to match the actual enum values, to simplify the code fixer. Here we're adding 1 to
+                            // signal "the setter is valid", but we want to hide this implementation detail to downstream consumers.
+                            int invalidationType = pair.Value[1] - 1;
+
                             context.ReportDiagnostic(Diagnostic.Create(
-                                UseCanvasEffectPropertyOnSemiAutoProperty,
+                                UseGeneratedCanvasEffectPropertyOnSemiAutoProperty,
                                 pair.Key.Locations.FirstOrDefault(),
-                                ImmutableDictionary.Create<string, string?>().Add(InvalidationModePropertyName, pair.Value[1].ToString()),
+                                ImmutableDictionary.Create<string, string?>().Add(InvalidationModePropertyName, invalidationType.ToString()),
                                 pair.Key));
                         }
                     }

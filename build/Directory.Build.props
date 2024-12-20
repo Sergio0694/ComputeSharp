@@ -186,11 +186,13 @@
   <!--
     We need PolySharp for all .NET Standard 2.0 polyfills. We do not want to use polyfills in published projects,
     as those should just adhere to the available APIs in each LTS release of .NET, so we only enable this reference
-    for projects which are not published (ie. tests and samples), or just for the source generator projects.
+    for projects which are not published (ie. tests and samples), or just for the source generator projects. We are
+    intentionally not adding PolySharp to code fixers, as they always reference source generators projects, and they
+    have 'InternalsVisibleTo' on those projects, as they need that to access analyzer ids and property names.
   -->
   <PropertyGroup>
     <IsPolySharpPackageReferenceNeeded>false</IsPolySharpPackageReferenceNeeded>
-    <IsPolySharpPackageReferenceNeeded Condition="'$(IsPublishedProject)' == 'false' OR '$(IsAnalyzersProject)' == 'true'">true</IsPolySharpPackageReferenceNeeded>
+    <IsPolySharpPackageReferenceNeeded Condition="'$(IsPublishedProject)' == 'false' OR '$(IsSourceGeneratorProject)' == 'true'">true</IsPolySharpPackageReferenceNeeded>
   </PropertyGroup>
 
   <!-- Add the package reference, if needed -->
