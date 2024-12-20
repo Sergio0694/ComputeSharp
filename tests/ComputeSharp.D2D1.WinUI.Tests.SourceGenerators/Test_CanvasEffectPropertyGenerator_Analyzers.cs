@@ -227,4 +227,231 @@ public class Test_CanvasEffectPropertyGenerator_Analyzers
 
         await CSharpAnalyzerWithLanguageVersionTest<RequireCSharpLanguageVersionPreviewAnalyzer>.VerifyAnalyzerAsync(source, languageVersion: LanguageVersion.Preview);
     }
+
+    [TestMethod]
+    public async Task UseGeneratedCanvasEffectPropertyOnSemiAutoPropertyAnalyzer_NormalProperty_DoesNotWarn()
+    {
+        const string source = """
+            using ComputeSharp.D2D1.WinUI;
+
+            public abstract partial class SampleCanvasEffect : CanvasEffect
+            {
+                public string Name { get; set; }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<UseGeneratedCanvasEffectPropertyOnSemiAutoPropertyAnalyzer>.VerifyAnalyzerAsync(source, languageVersion: LanguageVersion.Preview);
+    }
+
+    [TestMethod]
+    public async Task UseGeneratedCanvasEffectPropertyOnSemiAutoPropertyAnalyzer_SimilarProperty_NotObservableObject_DoesNotWarn()
+    {
+        const string source = """
+            using ComputeSharp.D2D1.WinUI;
+
+            public abstract partial class SampleCanvasEffect : MyBaseCanvasEffect
+            {
+                public string Name
+                {
+                    get => field;
+                    set => SetPropertyAndInvalidateEffectGraph(ref field, value);
+                }
+            }
+
+            public abstract class MyBaseCanvasEffect
+            {
+                protected void SetPropertyAndInvalidateEffectGraph<T>(ref T location, T value, CanvasEffectInvalidationType invalidationType = CanvasEffectInvalidationType.Update)
+                {
+                }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<UseGeneratedCanvasEffectPropertyOnSemiAutoPropertyAnalyzer>.VerifyAnalyzerAsync(source, languageVersion: LanguageVersion.Preview);
+    }
+
+    [TestMethod]
+    public async Task UseGeneratedCanvasEffectPropertyOnSemiAutoPropertyAnalyzer_NoGetter_DoesNotWarn()
+    {
+        const string source = """
+            using ComputeSharp.D2D1.WinUI;
+
+            public abstract partial class SampleCanvasEffect : CanvasEffect
+            {
+                public string Name
+                {
+                    set => SetPropertyAndInvalidateEffectGraph(ref field, value);
+                }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<UseGeneratedCanvasEffectPropertyOnSemiAutoPropertyAnalyzer>.VerifyAnalyzerAsync(source, languageVersion: LanguageVersion.Preview);
+    }
+
+    [TestMethod]
+    public async Task UseGeneratedCanvasEffectPropertyOnSemiAutoPropertyAnalyzer_NoSetter_DoesNotWarn()
+    {
+        const string source = """
+            using ComputeSharp.D2D1.WinUI;
+
+            public abstract partial class SampleCanvasEffect : CanvasEffect
+            {
+                public string Name
+                {
+                    get => field;
+                }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<UseGeneratedCanvasEffectPropertyOnSemiAutoPropertyAnalyzer>.VerifyAnalyzerAsync(source, languageVersion: LanguageVersion.Preview);
+    }
+
+    [TestMethod]
+    public async Task UseGeneratedCanvasEffectPropertyOnSemiAutoPropertyAnalyzer_OtherLocation_DoesNotWarn()
+    {
+        const string source = """
+            using ComputeSharp.D2D1.WinUI;
+
+            public abstract partial class SampleCanvasEffect : CanvasEffect
+            {
+                public string Name
+                {
+                    get => field;
+                    set
+                    {
+                        string test = field;
+
+                        SetPropertyAndInvalidateEffectGraph(ref test, value);
+                    }
+                }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<UseGeneratedCanvasEffectPropertyOnSemiAutoPropertyAnalyzer>.VerifyAnalyzerAsync(source, languageVersion: LanguageVersion.Preview);
+    }
+
+    [TestMethod]
+    public async Task UseGeneratedCanvasEffectPropertyOnSemiAutoPropertyAnalyzer_OtherValue_DoesNotWarn()
+    {
+        const string source = """
+            using ComputeSharp.D2D1.WinUI;
+
+            public abstract partial class SampleCanvasEffect : CanvasEffect
+            {
+                public string Name
+                {
+                    get => field;
+                    set
+                    {
+                        string test = "Bob";
+
+                        SetPropertyAndInvalidateEffectGraph(ref field, test);
+                    }
+                }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<UseGeneratedCanvasEffectPropertyOnSemiAutoPropertyAnalyzer>.VerifyAnalyzerAsync(source, languageVersion: LanguageVersion.Preview);
+    }
+
+    [TestMethod]
+    public async Task UseGeneratedCanvasEffectPropertyOnSemiAutoPropertyAnalyzer_ValidProperty_WithGeneratedCanvasEffectProperty_DoesNotWarn()
+    {
+        const string source = """
+            using ComputeSharp.D2D1.WinUI;
+
+            public abstract partial class SampleCanvasEffect : CanvasEffect
+            {
+                [GeneratedCanvasEffectProperty]
+                public string Name
+                {
+                    get => field;
+                    set => SetPropertyAndInvalidateEffectGraph(ref field, value);
+                }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<UseGeneratedCanvasEffectPropertyOnSemiAutoPropertyAnalyzer>.VerifyAnalyzerAsync(source, languageVersion: LanguageVersion.Preview);
+    }
+
+    [TestMethod]
+    public async Task UseGeneratedCanvasEffectPropertyOnSemiAutoPropertyAnalyzer_GetAccessorWithExpressionBody_DoesNotWarn()
+    {
+        const string source = """
+            using ComputeSharp.D2D1.WinUI;
+
+            public abstract partial class SampleCanvasEffect : CanvasEffect
+            {
+                public string Name
+                {
+                    get => "Hello world";
+                    set => SetPropertyAndInvalidateEffectGraph(ref field, value);
+                }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<UseGeneratedCanvasEffectPropertyOnSemiAutoPropertyAnalyzer>.VerifyAnalyzerAsync(source, languageVersion: LanguageVersion.Preview);
+    }
+
+    [TestMethod]
+    public async Task UseGeneratedCanvasEffectPropertyOnSemiAutoPropertyAnalyzer_ValidProperty_Warns()
+    {
+        const string source = """
+            using ComputeSharp.D2D1.WinUI;
+
+            public abstract partial class SampleCanvasEffect : CanvasEffect
+            {
+                public string {|CMPSD2DWINUI0008:Name|}
+                {
+                    get => field;
+                    set => SetPropertyAndInvalidateEffectGraph(ref field, value);
+                }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<UseGeneratedCanvasEffectPropertyOnSemiAutoPropertyAnalyzer>.VerifyAnalyzerAsync(source, languageVersion: LanguageVersion.Preview);
+    }
+
+    [TestMethod]
+    public async Task UseGeneratedCanvasEffectPropertyOnSemiAutoPropertyAnalyzer_ValidProperty_WithModifiers_Warns()
+    {
+        const string source = """
+            using ComputeSharp.D2D1.WinUI;
+
+            public abstract partial class SampleCanvasEffect : CanvasEffect
+            {
+                public new string {|CMPSD2DWINUI0008:Name|}
+                {
+                    get => field;
+                    private set => SetPropertyAndInvalidateEffectGraph(ref field, value);
+                }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<UseGeneratedCanvasEffectPropertyOnSemiAutoPropertyAnalyzer>.VerifyAnalyzerAsync(source, languageVersion: LanguageVersion.Preview);
+    }
+
+    [TestMethod]
+    public async Task UseGeneratedCanvasEffectPropertyOnSemiAutoPropertyAnalyzer_ValidProperty_WithBlocks_Warns()
+    {
+        const string source = """
+            using ComputeSharp.D2D1.WinUI;
+
+            public abstract partial class SampleCanvasEffect : CanvasEffect
+            {
+                public new string {|CMPSD2DWINUI0008:Name|}
+                {
+                    get
+                    {
+                        return field;
+                    }
+                    private set
+                    {
+                        SetPropertyAndInvalidateEffectGraph(ref field, value);
+                    }
+                }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<UseGeneratedCanvasEffectPropertyOnSemiAutoPropertyAnalyzer>.VerifyAnalyzerAsync(source, languageVersion: LanguageVersion.Preview);
+    }
 }

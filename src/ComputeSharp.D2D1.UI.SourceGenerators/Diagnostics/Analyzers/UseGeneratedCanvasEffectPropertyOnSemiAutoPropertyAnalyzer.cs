@@ -229,7 +229,7 @@ public sealed class UseGeneratedCanvasEffectPropertyOnSemiAutoPropertyAnalyzer :
                         }
 
                         // The invalidation mode can either be the default value...
-                        if (invalidationModeArgument is not { IsImplicit: true, ArgumentKind: ArgumentKind.DefaultValue })
+                        if (invalidationModeArgument is { IsImplicit: true, ArgumentKind: ArgumentKind.DefaultValue })
                         {
                             validFlags[1] = 1;
                         }
