@@ -8,5 +8,14 @@
 
     <!-- Ignore platform compatibility warnings -->
     <NoWarn>$(NoWarn);CA1416</NoWarn>
+
+    <!--
+      This ignores the following warning:
+      "WMC1006: Cannot resolve Assembly or Windows Metadata file '[...]\ComputeSharp.[...].dll'".
+      This happens because the XAML compiler tries to build the intermediate assembly before the
+      initial build of the referenced projects has completed, so those files are missing at that
+      time. This is fine, since normal builds will work just fine. Suppress it to remove noise.
+    -->
+    <NoWarn>$(NoWarn);WMC1006</NoWarn>
   </PropertyGroup>
 </Project>
