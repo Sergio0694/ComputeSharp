@@ -11,46 +11,22 @@ namespace ComputeSharp.SwapChain.D2D1.Backend;
 internal abstract partial class PixelShaderEffect : CanvasEffect
 {
     /// <summary>
-    /// The current elapsed time.
-    /// </summary>
-    private TimeSpan elapsedTime;
-
-    /// <summary>
-    /// The current screen width in raw pixels.
-    /// </summary>
-    private int screenWidth;
-
-    /// <summary>
-    /// The current screen height in raw pixels.
-    /// </summary>
-    private int screenHeight;
-
-    /// <summary>
     /// Gets or sets the total elapsed time.
     /// </summary>
-    public TimeSpan ElapsedTime
-    {
-        get => this.elapsedTime;
-        set => SetPropertyAndInvalidateEffectGraph(ref this.elapsedTime, value);
-    }
+    [GeneratedCanvasEffectProperty]
+    public partial TimeSpan ElapsedTime { get; set; }
 
     /// <summary>
     /// Gets or sets the screen width in raw pixels.
     /// </summary>
-    public int ScreenWidth
-    {
-        get => this.screenWidth;
-        set => SetPropertyAndInvalidateEffectGraph(ref this.screenWidth, value);
-    }
+    [GeneratedCanvasEffectProperty]
+    public partial int ScreenWidth { get; set; }
 
     /// <summary>
     /// Gets or sets the screen height in raw pixels.
     /// </summary>
-    public int ScreenHeight
-    {
-        get => this.screenHeight;
-        set => SetPropertyAndInvalidateEffectGraph(ref this.screenHeight, value);
-    }
+    [GeneratedCanvasEffectProperty]
+    public partial int ScreenHeight { get; set; }
 
     /// <summary>
     /// An effect for an animated pixel shader.
