@@ -49,12 +49,12 @@
 
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.2" />
-    <PackageReference Include="CommunityToolkit.Uwp.Controls.Primitives" Version="8.2.240924-local" />
-    <PackageReference Include="CommunityToolkit.Uwp.Media" Version="8.2.240924-local" />
+    <PackageReference Include="CommunityToolkit.Uwp.Controls.Primitives" Version="8.2.241221-build.1360" />
+    <PackageReference Include="CommunityToolkit.Uwp.Media" Version="8.2.241221-build.1360" />
     <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.2.0" />
 
-    <!-- Temporary workaround, see notes in D2D1 UWP sample app -->
-    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.2739.15" IncludeAssets="none" />
+    <!-- Remove all WebView2 assets (transitive from WinUI 2), since we don't need it at all -->
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.2903.40" IncludeAssets="none" />
   </ItemGroup>
 
   <ItemGroup>
