@@ -1,7 +1,11 @@
 using System;
 using System.IO;
 using ComputeSharp.SwapChain.Shaders;
+#if WINDOWS_UWP
+using ComputeSharp.Uwp;
+#else
 using ComputeSharp.WinUI;
+#endif
 using Windows.ApplicationModel;
 
 namespace ComputeSharp.SwapChain.Core.Shaders.Runners;

@@ -1,39 +1,34 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net8.0-windows10.0.22621.0</TargetFramework>
+    <TargetFramework>net8.0-windows10.0.26100.0</TargetFramework>
     <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
-    <WindowsSdkPackageVersion>10.0.22621.57</WindowsSdkPackageVersion>
-    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <WindowsSdkPackageVersion>10.0.26100.57</WindowsSdkPackageVersion>
+    <UseUwp>true</UseUwp>
     <Platforms>x64;ARM64</Platforms>
     <RuntimeIdentifiers>win-x64;win-arm64</RuntimeIdentifiers>
+    <DefineConstants>$(DefineConstants);WINDOWS_UWP</DefineConstants>
+    <DefaultLanguage>en-US</DefaultLanguage>
+    <PublishAot>true</PublishAot>
     <PublishProfile>win-$(Platform).pubxml</PublishProfile>
-    <UseWinUI>true</UseWinUI>
     <EnableMsixTooling>true</EnableMsixTooling>
 
-    <!-- Ignore warnings for the '[Experimental]' attribute ('CanvasAnimatedControl' temporarily has it) -->
-    <NoWarn>$(NoWarn);CS8305;WMC1501</NoWarn>
-
-    <!--
-      WinUI 3 doesn't need support for 'INotifyPropertyChanging', so we can disable it.
-      This avoids all generated code for it and provides a small performance improvement.
-    -->
+    <!-- Disable 'INotifyPropertyChanging' support, same as in the WinUI 3 sample app -->
     <MvvmToolkitEnableINotifyPropertyChangingSupport>false</MvvmToolkitEnableINotifyPropertyChangingSupport>
   </PropertyGroup>
 
-  <!-- Additional CsWinRT properties (temporary, until the .NET SDK is updated) -->
+  <!--
+    Use the Windows SDK from the NuGet-only release, to access early builds with the .NET 9 changes.
+    Can be removed when the new XAML compiler is ingested into Visual Studio and available in the CI.
+  -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Windows.SDK.CPP" Version="10.0.26100.2161" IncludeAssets="build" PrivateAssets="all" IsImplicitlyDefined="true" />
+  </ItemGroup>
+
+  <!-- Same CsWinRT options as the WinUI 3 sample app -->
   <PropertyGroup>
-    
-    <!--
-      We're only referencing CsWinRT for the source generators, we don't need to read any WinRT metadata.
-      CsWinRT is in projection mode by default, so we want to disable it (or it'd need the Windows SDK).
-    -->
     <CsWinRTGenerateProjection>false</CsWinRTGenerateProjection>
-
-    <!-- We'll never have any IIDs to patch in this library -->
     <CsWinRTIIDOptimizerOptOut>true</CsWinRTIIDOptimizerOptOut>
-
-    <!-- Enable AOT warnings for types implementing projected WinRT interfaces mapped to built-in types (eg. 'INotifyPropertyChanged') -->
     <CsWinRTAotWarningLevel>2</CsWinRTAotWarningLevel>
   </PropertyGroup>
 
@@ -54,35 +49,20 @@
 
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.2" />
-    <PackageReference Include="CommunityToolkit.WinUI.Controls.Primitives" Version="8.2.241112-preview1" />
-    <PackageReference Include="CommunityToolkit.WinUI.Media" Version="8.2.241112-preview1" />
+    <PackageReference Include="CommunityToolkit.Uwp.Controls.Primitives" Version="8.2.241221-build.1360" />
+    <PackageReference Include="CommunityToolkit.Uwp.Media" Version="8.2.241221-build.1360" />
     <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.2.0" />
-  </ItemGroup>
 
-  <!-- 
-    Defining the "Msix" ProjectCapability here allows the Single-project MSIX Packaging
-    Tools extension to be activated for this project even if the Windows App SDK Nuget
-    package has not yet been restored.
-  -->
-  <ItemGroup Condition="'$(DisableMsixProjectCapabilityAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
-    <ProjectCapability Include="Msix" />
+    <!-- Remove all WebView2 assets (transitive from WinUI 2), since we don't need it at all -->
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.2903.40" IncludeAssets="none" />
   </ItemGroup>
-
-  <!-- 
-    Defining the "HasPackageAndPublishMenuAddedByProject" property here allows the Solution 
-    Explorer "Package and Publish" context menu entry to be enabled for this project even if 
-    the Windows App SDK Nuget package has not yet been restored.
-  -->
-  <PropertyGroup Condition="'$(DisableHasPackageAndPublishMenuAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
-    <HasPackageAndPublishMenu>true</HasPackageAndPublishMenu>
-  </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\ComputeSharp.Core.SourceGenerators\ComputeSharp.Core.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" PrivateAssets="contentfiles;build" />
-    <ProjectReference Include="..\..\src\ComputeSharp.D2D1.WinUI\ComputeSharp.D2D1.WinUI.csproj" />
+    <ProjectReference Include="..\..\src\ComputeSharp.D2D1.Uwp\ComputeSharp.D2D1.Uwp.csproj" />
     <ProjectReference Include="..\..\src\ComputeSharp.D2D1\ComputeSharp.D2D1.csproj" />
     <ProjectReference Include="..\..\src\ComputeSharp.D2D1.SourceGenerators\ComputeSharp.D2D1.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" PrivateAssets="contentfiles;build" />
-    <ProjectReference Include="..\..\src\ComputeSharp.WinUI\ComputeSharp.WinUI.csproj" />
+    <ProjectReference Include="..\..\src\ComputeSharp.Uwp\ComputeSharp.Uwp.csproj" />
     <ProjectReference Include="..\..\src\ComputeSharp.SourceGenerators\ComputeSharp.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" PrivateAssets="contentfiles;build" />
   </ItemGroup>
 
