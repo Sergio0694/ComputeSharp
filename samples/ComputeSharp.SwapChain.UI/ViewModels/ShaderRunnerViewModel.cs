@@ -38,5 +38,5 @@ public sealed partial class ShaderRunnerViewModel(
     /// Gets or sets whether the current shader is selected.
     /// </summary>
     [ObservableProperty]
-    private bool isSelected;
+    public partial bool IsSelected { get; set; }
 }

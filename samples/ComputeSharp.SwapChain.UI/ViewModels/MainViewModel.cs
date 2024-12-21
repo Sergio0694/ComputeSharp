@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ComputeSharp.SwapChain.Core.Enums;
@@ -25,12 +25,7 @@ public sealed partial class MainViewModel : ObservableObject
     /// </summary>
     public MainViewModel()
     {
-        this.selectedRenderingMode = RenderingMode.DirectX12;
-        this.isVerticalSyncEnabled = true;
-        this.isDynamicResolutionEnabled = true;
-        this.selectedResolutionScale = 100;
-        this.selectedComputeShader = ComputeShaderOptions[0];
-        this.selectedComputeShader.IsSelected = true;
+        SelectedComputeShader = ComputeShaderOptions[0];
     }
 
     /// <summary>
@@ -38,49 +33,49 @@ public sealed partial class MainViewModel : ObservableObject
     /// </summary>
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsResolutionScaleOptionEnabled))]
-    private RenderingMode selectedRenderingMode;
+    public partial RenderingMode SelectedRenderingMode { get; set; } = RenderingMode.DirectX12;
 
     /// <summary>
     /// Gets or sets whether the vertical sync is enabled.
     /// </summary>
     [ObservableProperty]
-    private bool isVerticalSyncEnabled;
+    public partial bool IsVerticalSyncEnabled { get; set; } = true;
 
     /// <summary>
     /// Gets or sets whether the dynamic resolution is enabled.
     /// </summary>
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsResolutionScaleOptionEnabled))]
-    private bool isDynamicResolutionEnabled;
+    public partial bool IsDynamicResolutionEnabled { get; set; } = true;
 
     /// <summary>
     /// Gets the currently selected resolution scale setting (as percentage value).
     /// </summary>
     [ObservableProperty]
-    private int selectedResolutionScale;
+    public partial int SelectedResolutionScale { get; set; } = 100;
 
     /// <summary>
     /// Gets or sets the currently selected compute shader.
     /// </summary>
     [ObservableProperty]
-    private ShaderRunnerViewModel selectedComputeShader;
+    public partial ShaderRunnerViewModel SelectedComputeShader { get; set; }
 
     /// <summary>
     /// Gets or sets whether the rendering is currently paused.
     /// </summary>
     [ObservableProperty]
-    private bool isRenderingPaused;
+    public partial bool IsRenderingPaused { get; set; }
 
     /// <summary>
     /// Gets the available resolution scaling options (as percentage values).
     /// </summary>
-    public IList<int> ResolutionScaleOptions { get; } = new int[] { 25, 50, 75, 100 };
+    public ReadOnlyCollection<int> ResolutionScaleOptions { get; } = new((int[])[25, 50, 75, 100]);
 
     /// <summary>
     /// Gets the collection of available compute shader.
     /// </summary>
-    public IReadOnlyList<ShaderRunnerViewModel> ComputeShaderOptions { get; } = new ShaderRunnerViewModel[]
-    {
+    public ReadOnlyCollection<ShaderRunnerViewModel> ComputeShaderOptions { get; } = new((ShaderRunnerViewModel[])
+    [
         new(
             nameof(ColorfulInfinity),
             new ShaderRunner<ColorfulInfinity>(static time => new((float)time.TotalSeconds)),
@@ -118,7 +113,7 @@ public sealed partial class MainViewModel : ObservableObject
             nameof(TerracedHills),
             new ShaderRunner<TerracedHills>(static time => new((float)time.TotalSeconds)),
             new PixelShaderEffect.For<SwapChain.Shaders.D2D1.TerracedHills>(static (time, width, height) => new((float)time.TotalSeconds, new int2(width, height)))),
-    };
+    ]);
 
     /// <summary>
     /// Checks whether the resolution scale can currently be expliclty set.
@@ -153,9 +148,16 @@ public sealed partial class MainViewModel : ObservableObject
     }
 
     /// <inheritdoc/>
-    partial void OnSelectedComputeShaderChanging(ShaderRunnerViewModel? oldValue, ShaderRunnerViewModel newValue)
+    partial void OnSelectedComputeShaderChanging(ShaderRunnerViewModel oldValue, ShaderRunnerViewModel newValue)
     {
-        oldValue!.IsSelected = false;
+        // Known issue with partial properties: while the property is marked as not nullable, assigning it in the
+        // constructor will suppress the warning but cause the setter to be invoked, with 'field' being 'null'.
+        // As such, as need to check for that scenario here to avoid an exception. Possibly fixed in C# 14.
+        if (oldValue is not null)
+        {
+            oldValue.IsSelected = false;
+        }
+
         newValue.IsSelected = true;
     }
 }
