@@ -14,3 +14,4 @@ CMPSD2DUWP0004 | ComputeSharp.D2D1.Uwp.Effects | Error | [Documentation](https:/
 CMPSD2DUWP0005 | ComputeSharp.D2D1.Uwp.Effects | Error | [Documentation](https://github.com/Sergio0694/ComputeSharp)
 CMPSD2DUWP0006 | ComputeSharp.D2D1.Uwp.Effects | Error | [Documentation](https://github.com/Sergio0694/ComputeSharp)
 CMPSD2DUWP0007 | ComputeSharp.D2D1.Uwp.Effects | Error | [Documentation](https://github.com/Sergio0694/ComputeSharp)
+CMPSD2DUWP0008 | ComputeSharp.D2D1.Uwp.Effects | Info | [Documentation](https://github.com/Sergio0694/ComputeSharp)

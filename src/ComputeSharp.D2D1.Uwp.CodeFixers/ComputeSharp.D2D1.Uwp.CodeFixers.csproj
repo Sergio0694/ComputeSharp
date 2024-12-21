@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <DefineConstants>$(DefineConstants);WINDOWS_UWP;D2D1_UI_SOURCE_GENERATOR</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.12.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ComputeSharp.D2D1.Uwp.SourceGenerators\ComputeSharp.D2D1.Uwp.SourceGenerators.csproj" />
+  </ItemGroup>
+
+  <Import Project="..\ComputeSharp.D2D1.UI.CodeFixers\ComputeSharp.D2D1.UI.CodeFixers.projitems" Label="Shared" />
+</Project>

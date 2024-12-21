@@ -25,7 +25,7 @@ public class Test_D2DPixelShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<MissingAllowUnsafeBlocksCompilationOptionAnalyzer>.VerifyAnalyzerAsync(source, allowUnsafeBlocks: false);
+        await CSharpAnalyzerTest<MissingAllowUnsafeBlocksCompilationOptionAnalyzer>.VerifyAnalyzerAsync(source, allowUnsafeBlocks: false);
     }
 
     [TestMethod]
@@ -44,7 +44,7 @@ public class Test_D2DPixelShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<MissingPixelShaderDescriptorOnPixelShaderAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<MissingPixelShaderDescriptorOnPixelShaderAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -112,7 +112,7 @@ public class Test_D2DPixelShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<MissingPixelShaderDescriptorOnPixelShaderAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<MissingPixelShaderDescriptorOnPixelShaderAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -135,7 +135,7 @@ public class Test_D2DPixelShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<NotReadOnlyPixelShaderTypeWithFieldsAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<NotReadOnlyPixelShaderTypeWithFieldsAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -156,7 +156,7 @@ public class Test_D2DPixelShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<NotReadOnlyPixelShaderTypeWithFieldsAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<NotReadOnlyPixelShaderTypeWithFieldsAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -171,7 +171,7 @@ public class Test_D2DPixelShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidD2DGeneratedPixelShaderDescriptorAttributeTargetAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<InvalidD2DGeneratedPixelShaderDescriptorAttributeTargetAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -191,7 +191,7 @@ public class Test_D2DPixelShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidD2DGeneratedPixelShaderDescriptorAttributeTargetAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<InvalidD2DGeneratedPixelShaderDescriptorAttributeTargetAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -214,7 +214,7 @@ public class Test_D2DPixelShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidD2DGeneratedPixelShaderDescriptorAttributeTargetAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<InvalidD2DGeneratedPixelShaderDescriptorAttributeTargetAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -235,7 +235,7 @@ public class Test_D2DPixelShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<D2DEnableRuntimeCompilationOnTypeAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<D2DEnableRuntimeCompilationOnTypeAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -257,7 +257,7 @@ public class Test_D2DPixelShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<D2DEnableRuntimeCompilationOnTypeAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<D2DEnableRuntimeCompilationOnTypeAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -280,7 +280,7 @@ public class Test_D2DPixelShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<D2DEnableRuntimeCompilationOnTypeAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<D2DEnableRuntimeCompilationOnTypeAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -304,7 +304,7 @@ public class Test_D2DPixelShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<D2DEnableRuntimeCompilationOnTypeAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<D2DEnableRuntimeCompilationOnTypeAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -328,7 +328,7 @@ public class Test_D2DPixelShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<D2DEnableRuntimeCompilationOnTypeAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<D2DEnableRuntimeCompilationOnTypeAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -351,7 +351,7 @@ public class Test_D2DPixelShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<D2DEnableRuntimeCompilationOnTypeAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<D2DEnableRuntimeCompilationOnTypeAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -364,7 +364,7 @@ public class Test_D2DPixelShaderDescriptorGenerator_Analyzers
             [assembly: {|CMPSD2D0079:D2DEnableRuntimeCompilation|}]
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<D2DEnableRuntimeCompilationOnAssemblyAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<D2DEnableRuntimeCompilationOnAssemblyAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -388,7 +388,7 @@ public class Test_D2DPixelShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidD2DRequiresDoublePrecisionSupportAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<InvalidD2DRequiresDoublePrecisionSupportAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -411,7 +411,7 @@ public class Test_D2DPixelShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidD2DRequiresDoublePrecisionSupportAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<InvalidD2DRequiresDoublePrecisionSupportAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -433,7 +433,7 @@ public class Test_D2DPixelShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidD2DRequiresDoublePrecisionSupportAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<InvalidD2DRequiresDoublePrecisionSupportAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -466,7 +466,7 @@ public class Test_D2DPixelShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidD2DResourceTextureIndexAttributeUseAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<InvalidD2DResourceTextureIndexAttributeUseAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -489,7 +489,7 @@ public class Test_D2DPixelShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidD2DResourceTextureIndexAttributeUseAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<InvalidD2DResourceTextureIndexAttributeUseAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -515,7 +515,7 @@ public class Test_D2DPixelShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidD2DResourceTextureIndexAttributeUseAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<InvalidD2DResourceTextureIndexAttributeUseAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -538,7 +538,7 @@ public class Test_D2DPixelShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidD2DResourceTextureIndexAttributeUseAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<InvalidD2DResourceTextureIndexAttributeUseAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -564,7 +564,7 @@ public class Test_D2DPixelShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidD2DResourceTextureIndexAttributeUseAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<InvalidD2DResourceTextureIndexAttributeUseAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -590,7 +590,7 @@ public class Test_D2DPixelShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidD2DResourceTextureIndexAttributeUseAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<InvalidD2DResourceTextureIndexAttributeUseAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -628,7 +628,7 @@ public class Test_D2DPixelShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidD2DResourceTextureIndexAttributeUseAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<InvalidD2DResourceTextureIndexAttributeUseAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -640,7 +640,7 @@ public class Test_D2DPixelShaderDescriptorGenerator_Analyzers
             [assembly: {|CMPSD2D0044:D2DCompileOptions(D2D1CompileOptions.PackMatrixColumnMajor)|}]
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidAssemblyLevelCompileOptionsAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<InvalidAssemblyLevelCompileOptionsAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -661,7 +661,7 @@ public class Test_D2DPixelShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidShaderTypeCompileOptionsAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<InvalidShaderTypeCompileOptionsAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -752,7 +752,7 @@ public class Test_D2DPixelShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<ExceededPixelShaderDispatchDataSizeAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<ExceededPixelShaderDispatchDataSizeAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -773,7 +773,7 @@ public class Test_D2DPixelShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidD2DInputDescriptionAttributeUseAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<InvalidD2DInputDescriptionAttributeUseAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -793,7 +793,7 @@ public class Test_D2DPixelShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidD2DInputDescriptionAttributeUseAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<InvalidD2DInputDescriptionAttributeUseAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -814,7 +814,7 @@ public class Test_D2DPixelShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidD2DInputDescriptionAttributeUseAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<InvalidD2DInputDescriptionAttributeUseAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -837,7 +837,7 @@ public class Test_D2DPixelShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidD2DInputDescriptionAttributeUseAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<InvalidD2DInputDescriptionAttributeUseAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -859,7 +859,7 @@ public class Test_D2DPixelShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidD2DInputDescriptionAttributeUseAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<InvalidD2DInputDescriptionAttributeUseAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -882,7 +882,7 @@ public class Test_D2DPixelShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidD2DInputDescriptionAttributeUseAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<InvalidD2DInputDescriptionAttributeUseAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -910,7 +910,7 @@ public class Test_D2DPixelShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidD2DInputDescriptionAttributeUseAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<InvalidD2DInputDescriptionAttributeUseAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -929,7 +929,7 @@ public class Test_D2DPixelShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidShaderTypeInputsAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<InvalidShaderTypeInputsAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -952,7 +952,7 @@ public class Test_D2DPixelShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidShaderTypeInputsAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<InvalidShaderTypeInputsAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -975,7 +975,7 @@ public class Test_D2DPixelShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidShaderTypeInputsAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<InvalidShaderTypeInputsAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -999,7 +999,7 @@ public class Test_D2DPixelShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidShaderTypeInputsAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<InvalidShaderTypeInputsAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -1029,7 +1029,7 @@ public class Test_D2DPixelShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidShaderTypeInputsAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<InvalidShaderTypeInputsAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -1053,7 +1053,7 @@ public class Test_D2DPixelShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidShaderTypeInputsAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<InvalidShaderTypeInputsAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -1077,7 +1077,7 @@ public class Test_D2DPixelShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidShaderTypeInputsAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<InvalidShaderTypeInputsAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -1103,7 +1103,7 @@ public class Test_D2DPixelShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidShaderTypeInputsAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<InvalidShaderTypeInputsAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -1135,7 +1135,7 @@ public class Test_D2DPixelShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidShaderTypeInputsAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<InvalidShaderTypeInputsAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -1156,7 +1156,7 @@ public class Test_D2DPixelShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidD2D1PixelOptionsTrivialSamplingOnShaderTypeAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<InvalidD2D1PixelOptionsTrivialSamplingOnShaderTypeAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -1178,7 +1178,7 @@ public class Test_D2DPixelShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidD2D1PixelOptionsTrivialSamplingOnShaderTypeAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<InvalidD2D1PixelOptionsTrivialSamplingOnShaderTypeAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -1200,7 +1200,7 @@ public class Test_D2DPixelShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidD2D1PixelOptionsTrivialSamplingOnShaderTypeAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<InvalidD2D1PixelOptionsTrivialSamplingOnShaderTypeAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -1220,7 +1220,7 @@ public class Test_D2DPixelShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidD2DInputArgumentAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<InvalidD2DInputArgumentAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -1239,7 +1239,7 @@ public class Test_D2DPixelShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidD2DInputArgumentAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<InvalidD2DInputArgumentAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -1260,7 +1260,7 @@ public class Test_D2DPixelShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidD2DInputArgumentAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<InvalidD2DInputArgumentAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -1288,7 +1288,7 @@ public class Test_D2DPixelShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidD2DInputArgumentAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<InvalidD2DInputArgumentAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -1311,7 +1311,7 @@ public class Test_D2DPixelShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidD2DInputArgumentAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<InvalidD2DInputArgumentAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -1331,7 +1331,7 @@ public class Test_D2DPixelShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidD2DInputArgumentAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<InvalidD2DInputArgumentAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -1354,7 +1354,7 @@ public class Test_D2DPixelShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidD2DInputArgumentAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<InvalidD2DInputArgumentAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -1374,7 +1374,7 @@ public class Test_D2DPixelShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidD2DInputArgumentAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<InvalidD2DInputArgumentAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -1403,7 +1403,7 @@ public class Test_D2DPixelShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidD2DInputArgumentAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<InvalidD2DInputArgumentAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -1430,7 +1430,7 @@ public class Test_D2DPixelShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidD2DInputArgumentAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<InvalidD2DInputArgumentAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -1460,7 +1460,7 @@ public class Test_D2DPixelShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<InvalidD2DInputArgumentAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<InvalidD2DInputArgumentAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -1481,7 +1481,7 @@ public class Test_D2DPixelShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<NonConstantD2DInputArgumentAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<NonConstantD2DInputArgumentAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -1508,7 +1508,7 @@ public class Test_D2DPixelShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<NonConstantD2DInputArgumentAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<NonConstantD2DInputArgumentAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -1536,7 +1536,7 @@ public class Test_D2DPixelShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<NonConstantD2DInputArgumentAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<NonConstantD2DInputArgumentAnalyzer>.VerifyAnalyzerAsync(source);
     }
 
     [TestMethod]
@@ -1562,6 +1562,6 @@ public class Test_D2DPixelShaderDescriptorGenerator_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<NonConstantD2DInputArgumentAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerTest<NonConstantD2DInputArgumentAnalyzer>.VerifyAnalyzerAsync(source);
     }
 }

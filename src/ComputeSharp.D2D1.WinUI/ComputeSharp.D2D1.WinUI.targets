@@ -7,7 +7,7 @@
     </ItemGroup>
   </Target>
 
-  <!-- Remove the analyzer if using Roslyn < 4.11 (ComputeSharp.D2D1.WinUI's generators require Roslyn 4.11) -->
+  <!-- Remove the analyzer if using Roslyn < 4.12 (ComputeSharp.D2D1.WinUI's generators require Roslyn 4.12) -->
   <Target Name="_ComputeSharpD2D1WinUIRemoveAnalyzersForRoslyn3"
           Condition="'$(CSharpCoreTargetsPath)' != ''"
           AfterTargets="ResolvePackageDependenciesForBuild;ResolveNuGetPackageAssets"
@@ -29,15 +29,16 @@
       <ComputeSharpD2D1WinUICurrentCompilerVersion>@(ComputeSharpD2D1WinUICurrentCompilerAssemblyIdentity->'%(Version)')</ComputeSharpD2D1WinUICurrentCompilerVersion>
 
       <!-- The CurrentCompilerVersionIsNotNewEnough property can now be defined based on the Roslyn assembly version -->
-      <ComputeSharpD2D1WinUICurrentCompilerVersionIsNotNewEnough Condition="$([MSBuild]::VersionLessThan($(ComputeSharpD2D1WinUICurrentCompilerVersion), 4.11))">true</ComputeSharpD2D1WinUICurrentCompilerVersionIsNotNewEnough>
+      <ComputeSharpD2D1WinUICurrentCompilerVersionIsNotNewEnough Condition="$([MSBuild]::VersionLessThan($(ComputeSharpD2D1WinUICurrentCompilerVersion), 4.12))">true</ComputeSharpD2D1WinUICurrentCompilerVersionIsNotNewEnough>
     </PropertyGroup>
 
-    <!-- If the Roslyn version is < 4.11, disable the source generators -->
+    <!-- If the Roslyn version is < 4.12, disable the source generators -->
     <ItemGroup Condition ="'$(ComputeSharpD2D1WinUICurrentCompilerVersionIsNotNewEnough)' == 'true'">
       <Analyzer Remove="@(_ComputeSharpD2D1WinUIAnalyzer)"/>
     </ItemGroup>
 
-    <!-- There is no need to emit a warning here, as this package is always a transitive dependency from ComputeSharp.D2D1, which does emit the warning -->
+    <!-- Emit a warning (see notes in 'ComputeSharp.D2D1') -->
+    <Warning Condition ="'$(ComputeSharpD2D1WinUICurrentCompilerVersionIsNotNewEnough)' == 'true'" Text="The ComputeSharp.D2D1.WinUI source generators have been disabled on the current configuration, as they need Roslyn 4.12 in order to work. ComputeSharp.D2D1.WinUI requires the source generators to run in order for [GeneratedCanvasEffectProperty] to work correctly. If you wish to use that API, you need a more up to date IDE (eg. VS 2022 17.12 or greater) or .NET SDK version (.NET 9 SDK or greater)."/>
   </Target>
   
   <!-- Remove the analyzer if Roslyn is missing -->

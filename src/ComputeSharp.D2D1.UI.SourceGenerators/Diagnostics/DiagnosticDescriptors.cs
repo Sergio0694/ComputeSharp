@@ -32,6 +32,11 @@ internal static class DiagnosticDescriptors
 #endif
 
     /// <summary>
+    /// The diagnostic id for <see cref="UseGeneratedCanvasEffectPropertyOnSemiAutoProperty"/>.
+    /// </summary>
+    public const string UseGeneratedCanvasEffectPropertyOnSemiAutoPropertyId = $"{DiagnosticIdPrefix}0008";
+
+    /// <summary>
     /// Gets a <see cref="DiagnosticDescriptor"/> for an invalid CanvasEffect property.
     /// <para>
     /// Format: <c>"The property "{0}" is not in a type that derives from CanvasEffect ([GeneratedCanvasEffectProperty] must be used in effect types that extend CanvasEffect)"</c>.
@@ -141,5 +146,21 @@ internal static class DiagnosticDescriptors
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
         description: "The C# language version must be set to 'preview' when using [GeneratedComputeShaderDescriptor] for the source generators to emit valid code (the <LangVersion>preview</LangVersion> option must be set in the .csproj/.props file).",
+        helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+    /// <summary>
+    /// Gets a <see cref="DiagnosticDescriptor"/> for when a semi-auto property can be converted to use <c>[GeneratedCanvasEffectProperty]</c> instead.
+    /// <para>
+    /// Format: <c>"The semi-auto property "{0}" can be converted to a partial property using [GeneratedCanvasEffectProperty], which is recommended (doing so makes the code less verbose and results in more optimized code)"</c>.
+    /// </para>
+    /// </summary>
+    public static readonly DiagnosticDescriptor UseGeneratedCanvasEffectPropertyOnSemiAutoProperty = new(
+        id: UseGeneratedCanvasEffectPropertyOnSemiAutoPropertyId,
+        title: "Prefer using [GeneratedCanvasEffectProperty] over semi-auto properties",
+        messageFormat: """The semi-auto property "{0}" can be converted to a partial property using [GeneratedCanvasEffectProperty], which is recommended (doing so makes the code less verbose and results in more optimized code)""",
+        category: DiagnosticCategory,
+        defaultSeverity: DiagnosticSeverity.Info,
+        isEnabledByDefault: true,
+        description: "Semi-auto properties should be converted to partial properties using [GeneratedCanvasEffectProperty] when possible, which is recommended (doing so makes the code less verbose and results in more optimized code).",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 }
