@@ -11,9 +11,6 @@
     <UseWinUI>true</UseWinUI>
     <EnableMsixTooling>true</EnableMsixTooling>
 
-    <!-- Ignore warnings for the '[Experimental]' attribute ('CanvasAnimatedControl' temporarily has it) -->
-    <NoWarn>$(NoWarn);CS8305;WMC1501</NoWarn>
-
     <!--
       WinUI 3 doesn't need support for 'INotifyPropertyChanging', so we can disable it.
       This avoids all generated code for it and provides a small performance improvement.
