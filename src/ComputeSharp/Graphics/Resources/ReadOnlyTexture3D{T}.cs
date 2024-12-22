@@ -4,6 +4,8 @@ using ComputeSharp.Resources;
 using ComputeSharp.Resources.Debug;
 using static ComputeSharp.Win32.D3D12_FORMAT_SUPPORT1;
 
+#pragma warning disable IDE0022
+
 namespace ComputeSharp;
 
 /// <summary>
@@ -12,7 +14,7 @@ namespace ComputeSharp;
 /// <typeparam name="T">The type of items stored on the texture.</typeparam>
 [DebuggerTypeProxy(typeof(Texture3DDebugView<>))]
 [DebuggerDisplay("{ToString(),raw}")]
-public sealed class ReadOnlyTexture3D<T> : Texture3D<T>
+public sealed class ReadOnlyTexture3D<T> : Texture3D<T>, IReadOnlyTexture3D<T>
     where T : unmanaged
 {
     /// <summary>
@@ -28,21 +30,17 @@ public sealed class ReadOnlyTexture3D<T> : Texture3D<T>
     {
     }
 
-    /// <summary>
-    /// Gets a single <typeparamref name="T"/> value from the current readonly texture.
-    /// </summary>
-    /// <param name="x">The horizontal offset of the value to get.</param>
-    /// <param name="y">The vertical offset of the value to get.</param>
-    /// <param name="z">The depthwise offset of the value to get.</param>
-    /// <remarks>This API can only be used from a compute shader, and will always throw if used anywhere else.</remarks>
+    /// <inheritdoc/>
     public ref readonly T this[int x, int y, int z] => throw new InvalidExecutionContextException($"{typeof(ReadOnlyTexture3D<T>)}[{typeof(int)}, {typeof(int)}, {typeof(int)}]");
 
-    /// <summary>
-    /// Gets a single <typeparamref name="T"/> value from the current readonly texture.
-    /// </summary>
-    /// <param name="xyz">The coordinates of the value to get.</param>
-    /// <remarks>This API can only be used from a compute shader, and will always throw if used anywhere else.</remarks>
+    /// <inheritdoc/>
     public ref readonly T this[Int3 xyz] => throw new InvalidExecutionContextException($"{typeof(ReadOnlyTexture3D<T>)}[{typeof(Int3)}]");
+
+    /// <inheritdoc/>
+    public ref readonly T Sample(float u, float v, float w) => throw new InvalidExecutionContextException($"{typeof(ReadOnlyTexture3D<T>)}.{nameof(Sample)}({typeof(float)}, {typeof(float)}, {typeof(float)})");
+
+    /// <inheritdoc/>
+    public ref readonly T Sample(Float3 uvw) => throw new InvalidExecutionContextException($"{typeof(ReadOnlyTexture3D<T>)}.{nameof(Sample)}({typeof(Float3)})");
 
     /// <inheritdoc/>
     public override string ToString()

@@ -4,6 +4,8 @@ using ComputeSharp.Resources;
 using ComputeSharp.Resources.Debug;
 using static ComputeSharp.Win32.D3D12_FORMAT_SUPPORT1;
 
+#pragma warning disable IDE0022
+
 namespace ComputeSharp;
 
 /// <summary>
@@ -12,7 +14,7 @@ namespace ComputeSharp;
 /// <typeparam name="T">The type of items stored on the texture.</typeparam>
 [DebuggerTypeProxy(typeof(Texture1DDebugView<>))]
 [DebuggerDisplay("{ToString(),raw}")]
-public sealed class ReadOnlyTexture1D<T> : Texture1D<T>
+public sealed class ReadOnlyTexture1D<T> : Texture1D<T>, IReadOnlyTexture1D<T>
     where T : unmanaged
 {
     /// <summary>
@@ -26,12 +28,11 @@ public sealed class ReadOnlyTexture1D<T> : Texture1D<T>
     {
     }
 
-    /// <summary>
-    /// Gets a single <typeparamref name="T"/> value from the current readonly texture.
-    /// </summary>
-    /// <param name="x">The horizontal offset of the value to get.</param>
-    /// <remarks>This API can only be used from a compute shader, and will always throw if used anywhere else.</remarks>
+    /// <inheritdoc/>
     public ref readonly T this[int x] => throw new InvalidExecutionContextException($"{typeof(ReadOnlyTexture1D<T>)}[{typeof(int)}]");
+
+    /// <inheritdoc/>
+    public ref readonly T Sample(float u) => throw new InvalidExecutionContextException($"{typeof(ReadOnlyTexture1D<T>)}.{nameof(Sample)}({typeof(float)})");
 
     /// <inheritdoc/>
     public override string ToString()
