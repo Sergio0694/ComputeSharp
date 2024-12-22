@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using ComputeSharp.Resources;
 using ComputeSharp.Tests.Attributes;
@@ -404,6 +405,48 @@ public partial class Texture1DTests
         public void Execute()
         {
             this.destination[ThreadIds.X] = this.source[ThreadIds.X];
+        }
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
+    public void Dispatch_ReadWriteTexture1D_AsInterface_FromReadOnly(Device device)
+    {
+        float[] data = Enumerable.Range(0, 256).Select(static i => (float)i).ToArray();
+
+        using ReadOnlyTexture1D<float> source = device.Get().AllocateReadOnlyTexture1D(data);
+        using ReadWriteBuffer<float> buffer1 = device.Get().AllocateReadWriteBuffer<float>(data.Length);
+        using ReadWriteBuffer<float> buffer2 = device.Get().AllocateReadWriteBuffer<float>(data.Length);
+
+        device.Get().For(source.Width, new InterfaceReadOnlyTexture1DKernel(source, buffer1, buffer2));
+
+        float[] result1 = buffer1.ToArray();
+        float[] result2 = buffer2.ToArray();
+
+        CollectionAssert.AreEqual(
+            expected: data,
+            actual: result1,
+            comparer: Comparer<float>.Create(static (x, y) => Math.Abs(x - y) < 0.000001f ? 0 : x.CompareTo(y)));
+
+        CollectionAssert.AreEqual(
+            expected: data,
+            actual: result2,
+            comparer: Comparer<float>.Create(static (x, y) => Math.Abs(x - y) < 0.000001f ? 0 : x.CompareTo(y)));
+    }
+
+    [AutoConstructor]
+    [ThreadGroupSize(DefaultThreadGroupSizes.X)]
+    [GeneratedComputeShaderDescriptor]
+    internal readonly partial struct InterfaceReadOnlyTexture1DKernel : IComputeShader
+    {
+        public readonly IReadOnlyTexture1D<float> source;
+        public readonly ReadWriteBuffer<float> buffer1;
+        public readonly ReadWriteBuffer<float> buffer2;
+
+        public void Execute()
+        {
+            this.buffer1[ThreadIds.X] = this.source[ThreadIds.X];
+            this.buffer2[ThreadIds.X] = this.source.Sample(ThreadIds.X);
         }
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using CommunityToolkit.HighPerformance;
 using ComputeSharp.Resources;
@@ -469,6 +470,48 @@ public partial class Texture2DTests
         public void Execute()
         {
             this.destination[ThreadIds.XY] = this.source[ThreadIds.XY];
+        }
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
+    public void Dispatch_ReadWriteTexture2D_AsInterface_FromReadOnly(Device device)
+    {
+        float[] data = Enumerable.Range(0, 32 * 32).Select(static i => (float)i).ToArray();
+
+        using ReadOnlyTexture2D<float> source = device.Get().AllocateReadOnlyTexture2D(data, 32, 32);
+        using ReadWriteTexture2D<float> texture1 = device.Get().AllocateReadWriteTexture2D<float>(32, 32);
+        using ReadWriteTexture2D<float> texture2 = device.Get().AllocateReadWriteTexture2D<float>(32, 32);
+
+        device.Get().For(source.Width, new InterfaceReadOnlyTexture2DKernel(source, texture1, texture2));
+
+        float[] result1 = texture1.ToArray().AsSpan().ToArray();
+        float[] result2 = texture2.ToArray().AsSpan().ToArray();
+
+        CollectionAssert.AreEqual(
+            expected: data,
+            actual: result1,
+            comparer: Comparer<float>.Create(static (x, y) => Math.Abs(x - y) < 0.000001f ? 0 : x.CompareTo(y)));
+
+        CollectionAssert.AreEqual(
+            expected: data,
+            actual: result2,
+            comparer: Comparer<float>.Create(static (x, y) => Math.Abs(x - y) < 0.000001f ? 0 : x.CompareTo(y)));
+    }
+
+    [AutoConstructor]
+    [ThreadGroupSize(DefaultThreadGroupSizes.XY)]
+    [GeneratedComputeShaderDescriptor]
+    internal readonly partial struct InterfaceReadOnlyTexture2DKernel : IComputeShader
+    {
+        public readonly IReadOnlyTexture2D<float> source;
+        public readonly ReadWriteTexture2D<float> texture1;
+        public readonly ReadWriteTexture2D<float> texture2;
+
+        public void Execute()
+        {
+            this.texture1[ThreadIds.XY] = this.source[ThreadIds.XY];
+            this.texture2[ThreadIds.XY] = this.source.Sample(ThreadIds.XY);
         }
     }
 }

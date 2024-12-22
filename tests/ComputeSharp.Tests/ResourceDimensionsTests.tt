@@ -37,22 +37,33 @@ var typesMap = new Dictionary<string, string[]>
 var interfacesMap = new Dictionary<string, string>
 {
     ["ReadWriteTexture1D<float>"] = "IReadOnlyTexture1D<float>",
+    ["ReadOnlyTexture1D<float>"] = "IReadOnlyTexture1D<float>",
     ["ReadOnlyTexture1D<Rgba32, float4>"] = "IReadOnlyNormalizedTexture1D<float4>",
     ["ReadWriteTexture1D<Rgba32, float4>"] = "IReadWriteNormalizedTexture1D<float4>",
     ["ReadWriteTexture2D<float>"] = "IReadOnlyTexture2D<float>",
+    ["ReadOnlyTexture2D<float>"] = "IReadOnlyTexture2D<float>",
     ["ReadOnlyTexture2D<Rgba32, float4>"] = "IReadOnlyNormalizedTexture2D<float4>",
     ["ReadWriteTexture2D<Rgba32, float4>"] = "IReadWriteNormalizedTexture2D<float4>",
     ["ReadWriteTexture3D<float>"] = "IReadOnlyTexture3D<float>",
+    ["ReadOnlyTexture3D<float>"] = "IReadOnlyTexture3D<float>",
     ["ReadOnlyTexture3D<Rgba32, float4>"] = "IReadOnlyNormalizedTexture3D<float4>",
     ["ReadWriteTexture3D<Rgba32, float4>"] = "IReadWriteNormalizedTexture3D<float4>"
 };
 
-// Map of all resource that need a readonly wrapper
+// Map of all resource interface types that need a readonly wrapper
 var readonlyWrappersMap = new HashSet<string>
 {
     "IReadOnlyTexture1D<float>",
     "IReadOnlyTexture2D<float>",
     "IReadOnlyTexture3D<float>"
+};
+
+// Map of all resource concrete types that do not need a readonly wrapper
+var explicitReadonlyWrappersMap = new HashSet<string>
+{
+    "ReadOnlyTexture1D<float>",
+    "ReadOnlyTexture2D<float>",
+    "ReadOnlyTexture3D<float>"
 };
 
 // Map of data row items to test multiple dimension combinations
@@ -97,7 +108,7 @@ foreach (var pair in typesMap)
             .Range(0, numberOfDimensions)
             .Select(x => $"axis{x}"));
 
-        bool needsReadonlyWrapper = readonlyWrappersMap.Contains(shaderResourceType);
+        bool needsReadonlyWrapper = readonlyWrappersMap.Contains(shaderResourceType) && !explicitReadonlyWrappersMap.Contains(pair.Key);
 #>
     public void <#=testMethodName#>(Device device, <#=parameters#>)
     {

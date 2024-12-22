@@ -115,6 +115,40 @@ public partial class ResourceDimensionsTests
     [Data(64)]
     [Data(128)]
     [Data(376)]
+    public void ReadOnlyTexture1D_T1_AsIReadOnlyTexture1D(Device device, int axis0)
+    {
+        using ReadOnlyTexture1D<float> resource = device.Get().AllocateReadOnlyTexture1D<float>(axis0);
+        using ReadWriteBuffer<int> result = device.Get().AllocateReadWriteBuffer<int>(1);
+
+        device.Get().For(1, new ReadOnlyTexture1D_T1_AsIReadOnlyTexture1DShader(resource, result));
+
+        int[] dimensions = result.ToArray();
+
+        CollectionAssert.AreEqual(
+            expected: new[] { axis0 },
+            actual: dimensions);
+    }
+
+    [AutoConstructor]
+    [ThreadGroupSize(DefaultThreadGroupSizes.X)]
+    [GeneratedComputeShaderDescriptor]
+    internal readonly partial struct ReadOnlyTexture1D_T1_AsIReadOnlyTexture1DShader : IComputeShader
+    {
+        public readonly IReadOnlyTexture1D<float> source;
+        public readonly ReadWriteBuffer<int> result;
+
+        public void Execute()
+        {
+            result[0] = source.Width;
+        }
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
+    [Data(8)]
+    [Data(64)]
+    [Data(128)]
+    [Data(376)]
     public void ReadWriteTexture1D_T1_AsReadWriteTexture1D(Device device, int axis0)
     {
         using ReadWriteTexture1D<float> resource = device.Get().AllocateReadWriteTexture1D<float>(axis0);
@@ -343,6 +377,41 @@ public partial class ResourceDimensionsTests
     internal readonly partial struct ReadOnlyTexture2D_T1_AsReadOnlyTexture2DShader : IComputeShader
     {
         public readonly ReadOnlyTexture2D<float> source;
+        public readonly ReadWriteBuffer<int> result;
+
+        public void Execute()
+        {
+            result[0] = source.Width;
+            result[1] = source.Height;
+        }
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
+    [Data(8, 12)]
+    [Data(64, 13)]
+    [Data(128, 32)]
+    [Data(376, 112)]
+    public void ReadOnlyTexture2D_T1_AsIReadOnlyTexture2D(Device device, int axis0, int axis1)
+    {
+        using ReadOnlyTexture2D<float> resource = device.Get().AllocateReadOnlyTexture2D<float>(axis0, axis1);
+        using ReadWriteBuffer<int> result = device.Get().AllocateReadWriteBuffer<int>(2);
+
+        device.Get().For(1, new ReadOnlyTexture2D_T1_AsIReadOnlyTexture2DShader(resource, result));
+
+        int[] dimensions = result.ToArray();
+
+        CollectionAssert.AreEqual(
+            expected: new[] { axis0, axis1 },
+            actual: dimensions);
+    }
+
+    [AutoConstructor]
+    [ThreadGroupSize(DefaultThreadGroupSizes.X)]
+    [GeneratedComputeShaderDescriptor]
+    internal readonly partial struct ReadOnlyTexture2D_T1_AsIReadOnlyTexture2DShader : IComputeShader
+    {
+        public readonly IReadOnlyTexture2D<float> source;
         public readonly ReadWriteBuffer<int> result;
 
         public void Execute()
@@ -592,6 +661,42 @@ public partial class ResourceDimensionsTests
     internal readonly partial struct ReadOnlyTexture3D_T1_AsReadOnlyTexture3DShader : IComputeShader
     {
         public readonly ReadOnlyTexture3D<float> source;
+        public readonly ReadWriteBuffer<int> result;
+
+        public void Execute()
+        {
+            result[0] = source.Width;
+            result[1] = source.Height;
+            result[2] = source.Depth;
+        }
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
+    [Data(8, 12, 3)]
+    [Data(64, 24, 4)]
+    [Data(128, 32, 4)]
+    [Data(376, 64, 3)]
+    public void ReadOnlyTexture3D_T1_AsIReadOnlyTexture3D(Device device, int axis0, int axis1, int axis2)
+    {
+        using ReadOnlyTexture3D<float> resource = device.Get().AllocateReadOnlyTexture3D<float>(axis0, axis1, axis2);
+        using ReadWriteBuffer<int> result = device.Get().AllocateReadWriteBuffer<int>(3);
+
+        device.Get().For(1, new ReadOnlyTexture3D_T1_AsIReadOnlyTexture3DShader(resource, result));
+
+        int[] dimensions = result.ToArray();
+
+        CollectionAssert.AreEqual(
+            expected: new[] { axis0, axis1, axis2 },
+            actual: dimensions);
+    }
+
+    [AutoConstructor]
+    [ThreadGroupSize(DefaultThreadGroupSizes.X)]
+    [GeneratedComputeShaderDescriptor]
+    internal readonly partial struct ReadOnlyTexture3D_T1_AsIReadOnlyTexture3DShader : IComputeShader
+    {
+        public readonly IReadOnlyTexture3D<float> source;
         public readonly ReadWriteBuffer<int> result;
 
         public void Execute()
