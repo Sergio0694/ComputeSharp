@@ -86,10 +86,10 @@ partial class ReadWriteTexture1D<T>
         }
 
         /// <inheritdoc/>
-        public ref readonly T this[int x] => throw new InvalidExecutionContextException($"{typeof(ReadWriteTexture1D<T>.ReadOnly)}[{typeof(int)}]");
+        public ref readonly T this[int x] => throw new InvalidExecutionContextException($"{typeof(ReadOnly)}[{typeof(int)}]");
 
         /// <inheritdoc/>
-        public ref readonly T Sample(float u) => throw new InvalidExecutionContextException($"{typeof(ReadWriteTexture1D<T>.ReadOnly)}.{nameof(Sample)}({typeof(float)})");
+        public ref readonly T Sample(float u) => throw new InvalidExecutionContextException($"{typeof(ReadOnly)}.{nameof(Sample)}({typeof(float)})");
 
         /// <inheritdoc/>
         public int Width => this.owner.Width;

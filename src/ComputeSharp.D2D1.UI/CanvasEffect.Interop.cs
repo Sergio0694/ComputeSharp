@@ -38,7 +38,7 @@ partial class CanvasEffect
     /// <inheritdoc/>
     unsafe int ICanvasImageInterop.GetDevice(ICanvasDevice** device, WIN2D_GET_DEVICE_ASSOCIATION_TYPE* type)
     {
-        using ComPtr<global::ABI.Microsoft.Graphics.Canvas.ICanvasImageInterop> canvasImageInterop = default;
+        using ComPtr<ABI.Microsoft.Graphics.Canvas.ICanvasImageInterop> canvasImageInterop = default;
 
         RcwMarshaller.GetNativeInterface(GetCanvasImage(), canvasImageInterop.GetAddressOf()).Assert();
 
@@ -54,7 +54,7 @@ partial class CanvasEffect
         float* realizeDpi,
         ID2D1Image** ppImage)
     {
-        using ComPtr<global::ABI.Microsoft.Graphics.Canvas.ICanvasImageInterop> canvasImageInterop = default;
+        using ComPtr<ABI.Microsoft.Graphics.Canvas.ICanvasImageInterop> canvasImageInterop = default;
 
         RcwMarshaller.GetNativeInterface(GetCanvasImage(), canvasImageInterop.GetAddressOf()).Assert();
 

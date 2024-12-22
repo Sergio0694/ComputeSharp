@@ -89,16 +89,16 @@ partial class ReadWriteTexture2D<T>
         }
 
         /// <inheritdoc/>
-        public ref readonly T this[int x, int y] => throw new InvalidExecutionContextException($"{typeof(ReadWriteTexture2D<T>.ReadOnly)}[{typeof(int)}, {typeof(int)}]");
+        public ref readonly T this[int x, int y] => throw new InvalidExecutionContextException($"{typeof(ReadOnly)}[{typeof(int)}, {typeof(int)}]");
 
         /// <inheritdoc/>
-        public ref readonly T this[Int2 xy] => throw new InvalidExecutionContextException($"{typeof(ReadWriteTexture2D<T>.ReadOnly)}[{typeof(Int2)}]");
+        public ref readonly T this[Int2 xy] => throw new InvalidExecutionContextException($"{typeof(ReadOnly)}[{typeof(Int2)}]");
 
         /// <inheritdoc/>
-        public ref readonly T Sample(float u, float v) => throw new InvalidExecutionContextException($"{typeof(ReadWriteTexture2D<T>.ReadOnly)}.{nameof(Sample)}({typeof(float)}, {typeof(float)})");
+        public ref readonly T Sample(float u, float v) => throw new InvalidExecutionContextException($"{typeof(ReadOnly)}.{nameof(Sample)}({typeof(float)}, {typeof(float)})");
 
         /// <inheritdoc/>
-        public ref readonly T Sample(Float2 uv) => throw new InvalidExecutionContextException($"{typeof(ReadWriteTexture2D<T>.ReadOnly)}.{nameof(Sample)}({typeof(Float2)})");
+        public ref readonly T Sample(Float2 uv) => throw new InvalidExecutionContextException($"{typeof(ReadOnly)}.{nameof(Sample)}({typeof(Float2)})");
 
         /// <inheritdoc/>
         public int Width => this.owner.Width;
