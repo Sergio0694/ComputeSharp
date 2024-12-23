@@ -20,6 +20,16 @@ internal static class ResourceStateHelper
     {
         if (resourceState == ResourceState.ReadOnly)
         {
+            // Transitioning to 'NON_PIXEL_SHADER_RESOURCE' here is intentional, for writeable textures. Non writeable textures
+            // are created as 'D3D12_RESOURCE_STATE_COMMON', which should not be used in this scenario. Writable textures need
+            // a state transition to 'NON_PIXEL_SHADER_RESOURCE' after being used as 'UNORDERED_ACCESS'. Readonly textures can
+            // be created as 'COMMON', which is a shorthand for read-compatible states. The difference is intentional, and it
+            // ensures correct usage and synchronization based on how resources are accessed.
+            //
+            // Transitioning to 'COMMON' instead of 'NON_PIXEL_SHADER_RESOURCE' might "work" due to leniency in the hardware or
+            // driver implementation. However, it's not guaranteed behavior and could lead to undefined results in other
+            // environments or under different conditions. To ensure portability and correctness, explicit and precise resource
+            // states like 'NON_PIXEL_SHADER_RESOURCE' should be preferred, which is why the latter is being used here.
             return D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE;
         }
 
