@@ -30,7 +30,7 @@
     <Application
       Id="App"
       Executable="$targetnametoken$.exe"
-      EntryPoint="$targetentrypoint$">
+      EntryPoint="windows.partialTrustApplication">
       <uap:VisualElements
         DisplayName="ComputeSharp.D2D1.WinUI.Tests"
         Description="ComputeSharp.D2D1.WinUI.Tests"
@@ -43,7 +43,5 @@
     </Application>
   </Applications>
 
-  <Capabilities>
-    <rescap:Capability Name="runFullTrust" />
-  </Capabilities>
+  <Capabilities />
 </Package>
