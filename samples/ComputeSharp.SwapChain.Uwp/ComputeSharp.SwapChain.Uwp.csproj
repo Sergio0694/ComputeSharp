@@ -49,12 +49,12 @@
 
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
-    <PackageReference Include="CommunityToolkit.Uwp.Controls.Primitives" Version="8.2.241223-build.1367" />
-    <PackageReference Include="CommunityToolkit.Uwp.Media" Version="8.2.241223-build.1367" />
+    <PackageReference Include="CommunityToolkit.Uwp.Controls.Primitives" Version="8.2.250106-build.1380" />
+    <PackageReference Include="CommunityToolkit.Uwp.Media" Version="8.2.250106-build.1380" />
     <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.2.0" />
 
     <!-- Remove all WebView2 assets (transitive from WinUI 2), since we don't need it at all -->
-    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.2903.40" IncludeAssets="none" />
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.2957.106" IncludeAssets="none" />
   </ItemGroup>
 
   <ItemGroup>
