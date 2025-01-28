@@ -249,6 +249,10 @@ partial class ConstantBufferSyntaxProcessor
 
                 using ImmutableHashSetBuilder<(string ContainerType, string FieldName)> generatedAccessors = new();
 
+                // The return value of the field accessors only needs to be mutable if we're doing two-way binding.
+                // Otherwise, we're only ever reading the field values, but we don't need to write back to them.
+                string refModifier = ConstantBufferSyntaxProcessor.direction == BindingDirection.TwoWay ? "ref" : "ref readonly";
+
                 // Define all field accessors. Note that these are generated regardless of the accessibility
                 // of the field they're getting the value for. This simplifies the rest of the code, and allows
                 // stripping the readonly-ness of the field references, and has no binary size impact anyway.
@@ -302,7 +306,7 @@ partial class ConstantBufferSyntaxProcessor
                                 /// <param name="value">The input <see cref="{containingTypeName}"/> value.</param>
                                 /// <returns>A mutable reference to <see cref="{containingTypeName}.{pathPart.Name}"/>.</returns>
                                 [UnsafeAccessor(UnsafeAccessorKind.Field)]
-                                private static extern ref {typeName} {pathPart.Name}(this ref readonly {containingTypeName} value);
+                                private static extern {refModifier} {typeName} {pathPart.Name}(this ref readonly {containingTypeName} value);
                                 """, isMultiline: true);
                         }
                         else
@@ -312,7 +316,7 @@ partial class ConstantBufferSyntaxProcessor
                                 /// <param name="value">The input <see cref="{containingTypeName}"/> value.</param>
                                 /// <returns>A mutable reference to the unspeakable field "{pathPart.Name}".</returns>
                                 [UnsafeAccessor(UnsafeAccessorKind.Field, Name = "{pathPart.UnspeakableName}")]
-                                private static extern ref {typeName} {pathPart.Name}(this ref readonly {containingTypeName} value);
+                                private static extern {refModifier} {typeName} {pathPart.Name}(this ref readonly {containingTypeName} value);
                                 """, isMultiline: true);
                         }
                     }

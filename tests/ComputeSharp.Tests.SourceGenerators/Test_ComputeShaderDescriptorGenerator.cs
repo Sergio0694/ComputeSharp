@@ -211,7 +211,7 @@ public class Test_ComputeShaderDescriptorGenerator
                     /// <param name="value">The input <see cref="global::MyNamespace.MyShader"/> value.</param>
                     /// <returns>A mutable reference to <see cref="global::MyNamespace.MyShader.time"/>.</returns>
                     [UnsafeAccessor(UnsafeAccessorKind.Field)]
-                    private static extern ref float time(this ref readonly global::MyNamespace.MyShader value);
+                    private static extern ref readonly float time(this ref readonly global::MyNamespace.MyShader value);
                 }
 
                 /// <summary>
@@ -497,7 +497,7 @@ public class Test_ComputeShaderDescriptorGenerator
                     /// <param name="value">The input <see cref="global::MyNamespace.MyShader"/> value.</param>
                     /// <returns>A mutable reference to <see cref="global::MyNamespace.MyShader.time"/>.</returns>
                     [UnsafeAccessor(UnsafeAccessorKind.Field)]
-                    private static extern ref float time(this ref readonly global::MyNamespace.MyShader value);
+                    private static extern ref readonly float time(this ref readonly global::MyNamespace.MyShader value);
                 }
 
                 /// <summary>
@@ -766,7 +766,7 @@ public class Test_ComputeShaderDescriptorGenerator
                     /// <param name="value">The input <see cref="global::MyNamespace.MyShader"/> value.</param>
                     /// <returns>A mutable reference to the unspeakable field "time".</returns>
                     [UnsafeAccessor(UnsafeAccessorKind.Field, Name = "<time>P")]
-                    private static extern ref float time(this ref readonly global::MyNamespace.MyShader value);
+                    private static extern ref readonly float time(this ref readonly global::MyNamespace.MyShader value);
                 }
 
                 /// <summary>
