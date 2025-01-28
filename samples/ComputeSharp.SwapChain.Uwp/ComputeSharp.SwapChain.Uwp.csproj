@@ -53,7 +53,7 @@
     <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.2.0" />
 
     <!-- Remove all WebView2 assets (transitive from WinUI 2), since we don't need it at all -->
-    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.2903.40" IncludeAssets="none" />
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.2957.106" IncludeAssets="none" />
   </ItemGroup>
 
   <ItemGroup>
