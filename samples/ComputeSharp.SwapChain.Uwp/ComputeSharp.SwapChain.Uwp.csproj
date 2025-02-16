@@ -17,14 +17,6 @@
     <MvvmToolkitEnableINotifyPropertyChangingSupport>false</MvvmToolkitEnableINotifyPropertyChangingSupport>
   </PropertyGroup>
 
-  <!--
-    Use the Windows SDK from the NuGet-only release, to access early builds with the .NET 9 changes.
-    Can be removed when the new XAML compiler is ingested into Visual Studio and available in the CI.
-  -->
-  <ItemGroup>
-    <PackageReference Include="Microsoft.Windows.SDK.CPP" Version="10.0.26100.2161" IncludeAssets="build" PrivateAssets="all" IsImplicitlyDefined="true" />
-  </ItemGroup>
-
   <!-- Same CsWinRT options as the WinUI 3 sample app -->
   <PropertyGroup>
     <CsWinRTGenerateProjection>false</CsWinRTGenerateProjection>
