@@ -59,12 +59,6 @@
       since in order to use these APIs the caller already has to be in an unsafe context.
     -->
     <NoWarn>$(NoWarn);CS8500</NoWarn>
-
-    <!--
-      We are using the UWP support for .NET 9, which is currently in preview. The warning from the .NET 9 SDK
-      about this feature being in preview is unnecessary and it just produces a lot of noise, so we can disable it.
-    -->
-    <NoWarn>$(NoWarn);NETSDK1219</NoWarn>
   </PropertyGroup>
 
   <!-- Centralized location for all generated artifacts -->
