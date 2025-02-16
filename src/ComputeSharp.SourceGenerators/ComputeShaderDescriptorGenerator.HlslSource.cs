@@ -84,7 +84,6 @@ partial class ComputeShaderDescriptorGenerator
             token.ThrowIfCancellationRequested();
 
             ImmutableArray<HlslSharedBuffer> sharedBuffers = GetSharedBuffers(
-                diagnostics,
                 structDeclarationSymbol,
                 discoveredTypes);
 
@@ -323,12 +322,10 @@ partial class ComputeShaderDescriptorGenerator
         /// <summary>
         /// Gets a sequence of captured members and their mapped names.
         /// </summary>
-        /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
         /// <param name="structDeclarationSymbol">The input <see cref="INamedTypeSymbol"/> instance to process.</param>
         /// <param name="types">The collection of currently discovered types.</param>
         /// <returns>A sequence of captured members in <paramref name="structDeclarationSymbol"/>.</returns>
         private static ImmutableArray<HlslSharedBuffer> GetSharedBuffers(
-            ImmutableArrayBuilder<DiagnosticInfo> diagnostics,
             INamedTypeSymbol structDeclarationSymbol,
             ICollection<INamedTypeSymbol> types)
         {

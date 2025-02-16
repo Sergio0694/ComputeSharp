@@ -1003,10 +1003,7 @@ public class Test_D2DPixelShaderDescriptorGenerator_Analyzers
     }
 
     [TestMethod]
-    [DataRow(-1)]
-    [DataRow(6)]
-    [DataRow(int.MaxValue)]
-    public async Task OutOfRangeInputIndex_OutOfRange_BothInputTypes_WarnsOnce(int inputIndex)
+    public async Task OutOfRangeInputIndex_OutOfRange_BothInputTypes_WarnsOnce()
     {
         const string source = """
             using ComputeSharp.D2D1;

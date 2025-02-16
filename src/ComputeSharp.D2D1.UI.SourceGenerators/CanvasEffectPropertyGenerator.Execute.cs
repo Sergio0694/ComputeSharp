@@ -59,6 +59,8 @@ partial class CanvasEffectPropertyGenerator
                 return false;
             }
 
+            token.ThrowIfCancellationRequested();
+
             // The property must be in a type with a base type (as it must derive from CanvasEffect)
             return node.Parent?.IsTypeDeclarationWithOrPotentiallyWithBaseTypes<ClassDeclarationSyntax>() == true;
         }
