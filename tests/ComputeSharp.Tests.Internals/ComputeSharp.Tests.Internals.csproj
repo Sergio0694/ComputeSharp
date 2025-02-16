@@ -5,7 +5,7 @@
 
   <ItemGroup>
     <PackageReference Include="AutoConstructor" Version="5.6.0" PrivateAssets="all" />
-    <PackageReference Include="MSTest" Version="3.7.0" />
+    <PackageReference Include="MSTest" Version="3.8.0" />
   </ItemGroup>
 
   <ItemGroup>
