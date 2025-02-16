@@ -6,6 +6,8 @@ using ComputeSharp.D2D1.Shaders.Interop.Effects.ResourceManagers;
 using ComputeSharp.D2D1.Shaders.Interop.Extensions;
 using ComputeSharp.Win32;
 
+#pragma warning disable IDE0060
+
 namespace ComputeSharp.D2D1.Interop.Effects;
 
 /// <summary>

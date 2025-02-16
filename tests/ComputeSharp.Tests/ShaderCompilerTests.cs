@@ -5,7 +5,7 @@ using ComputeSharp.Interop;
 using ComputeSharp.Tests.Misc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-#pragma warning disable IDE0008, IDE0022, IDE0009, IDE0290
+#pragma warning disable IDE0008, IDE0022, IDE0009, IDE0060, IDE0290
 
 namespace ComputeSharp.Tests
 {
