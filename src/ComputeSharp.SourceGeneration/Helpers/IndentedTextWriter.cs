@@ -8,7 +8,7 @@ using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Text;
 
-#pragma warning disable IDE0290
+#pragma warning disable IDE0060, IDE0290
 
 namespace ComputeSharp.SourceGeneration.Helpers;
 
