@@ -52,8 +52,8 @@
   <ItemGroup>
     <PackageReference Include="AutoConstructor" Version="5.6.0" PrivateAssets="all" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.0-preview-25107-01" />
-    <PackageReference Include="MSTest" Version="3.8.0" />
-    <PackageReference Include="TerraFX.Interop.Windows" Version="10.0.26100.1" />
+    <PackageReference Include="MSTest" Version="3.8.1" />
+    <PackageReference Include="TerraFX.Interop.Windows" Version="10.0.26100.2" />
     <Manifest Include="$(ApplicationManifest)" />
   </ItemGroup>
 
