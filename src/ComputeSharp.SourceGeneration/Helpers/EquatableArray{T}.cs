@@ -81,19 +81,19 @@ internal readonly struct EquatableArray<T>(ImmutableArray<T> array) : IEquatable
         get => AsImmutableArray().Length;
     }
 
-    /// <sinheritdoc/>
+    /// <inheritdoc/>
     public bool Equals(EquatableArray<T> array)
     {
         return AsSpan().SequenceEqual(array.AsSpan());
     }
 
-    /// <sinheritdoc/>
+    /// <inheritdoc/>
     public override bool Equals(object? obj)
     {
         return obj is EquatableArray<T> array && Equals(this, array);
     }
 
-    /// <sinheritdoc/>
+    /// <inheritdoc/>
     public override unsafe int GetHashCode()
     {
         if (this.array is not T[] array)
@@ -174,13 +174,13 @@ internal readonly struct EquatableArray<T>(ImmutableArray<T> array) : IEquatable
         return AsImmutableArray().GetEnumerator();
     }
 
-    /// <sinheritdoc/>
+    /// <inheritdoc/>
     IEnumerator<T> IEnumerable<T>.GetEnumerator()
     {
         return ((IEnumerable<T>)AsImmutableArray()).GetEnumerator();
     }
 
-    /// <sinheritdoc/>
+    /// <inheritdoc/>
     IEnumerator IEnumerable.GetEnumerator()
     {
         return ((IEnumerable)AsImmutableArray()).GetEnumerator();
