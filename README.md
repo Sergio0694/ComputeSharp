@@ -49,6 +49,14 @@ Preview builds are available at https://pkgs.computesharp.dev/index.json (as wel
 
 All the documentation for **ComputeSharp** is available in the [wiki pages](https://github.com/Sergio0694/ComputeSharp/wiki). That includes a recap of everything in this readme, as well as info and detailed samples on all features and APIs from the available packages. Make sure to go through it to get familiar with this library!
 
+# Where can I learn more? 📑
+
+I've written about **ComputeSharp** in my master's thesis in Engineering in Computer Engineering, which you can find in this repo! There, I cover everything there is to know about this project: the basics of COM, WinRT, UWP XAML, and Win2D, the underlying infrastructure for ComputeSharp both in terms of DirectX interop and its source generators (including an extensive breakdown of all generated code and what it does), how HLSL intrinsics are transpiled, how I extended Win2D to add support for custom effects, how **ComputeSharp** leverages this in its `PixelShaderEffect<T>` type to seamlessly integrate with Win2D, and more! I also included a detailed case study on how we implemented several pixel shaders in the Microsoft Store, with an overview of their effect graphs, and some code snippets as well.
+
+<a href="/docs/ComputeSharp.pdf"><img src="https://github.com/user-attachments/assets/2354ce4b-29c8-4a4e-8657-f1220f3a9db6" /></a>
+
+If you're curious, you can read the thesis [here](/docs/ComputeSharp.pdf)!
+
 # Sponsors 🎁
 
 Huge thanks to these sponsors for directly supporting my work on **ComputeSharp**, it means a lot! 🙌
