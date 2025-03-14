@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net8.0-windows10.0.26100.0</TargetFramework>
@@ -44,8 +44,8 @@
 
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
-    <PackageReference Include="CommunityToolkit.Uwp.Controls.Primitives" Version="8.2.241221-build.1360" />
-    <PackageReference Include="CommunityToolkit.Uwp.Media" Version="8.2.241221-build.1360" />
+    <PackageReference Include="CommunityToolkit.Uwp.Controls.Primitives" Version="8.2.250129-preview2" />
+    <PackageReference Include="CommunityToolkit.Uwp.Media" Version="8.2.250129-preview2" />
     <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.2.0" />
 
     <!-- Remove all WebView2 assets (transitive from WinUI 2), since we don't need it at all -->
