@@ -1,6 +1,6 @@
 using ComputeSharp.Core.Intrinsics;
 
-#pragma warning disable IDE0022
+#pragma warning disable IDE0022, IDE0060
 
 namespace ComputeSharp;
 

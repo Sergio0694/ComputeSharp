@@ -69,11 +69,9 @@ dotnet_diagnostic.CA2242.severity = warning
 
 dotnet_diagnostic.IDE0010.severity = none
 dotnet_diagnostic.IDE0130.severity = none
-dotnet_diagnostic.IDE0060.severity = none
 dotnet_diagnostic.IDE1006.severity = warning
 dotnet_diagnostic.IDE0023.severity = none
 dotnet_diagnostic.IDE0024.severity = none
-dotnet_diagnostic.IDE0060.severity = none
 dotnet_diagnostic.IDE0057.severity = none
 dotnet_diagnostic.IDE0046.severity = none
 dotnet_diagnostic.IDE0072.severity = none

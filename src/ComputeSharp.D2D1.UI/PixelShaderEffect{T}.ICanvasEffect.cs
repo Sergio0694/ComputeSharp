@@ -145,7 +145,7 @@ unsafe partial class PixelShaderEffect<T>
         Span<ComPtr<ABI.Microsoft.Graphics.Canvas.Effects.ICanvasEffect>> canvasEffects = sourceEffects.Length <= 16
             ? stackalloc ComPtr<ABI.Microsoft.Graphics.Canvas.Effects.ICanvasEffect>[16]
             : MemoryMarshal.Cast<IntPtr, ComPtr<ABI.Microsoft.Graphics.Canvas.Effects.ICanvasEffect>>(
-                canvasEffectsAbiArray = ArrayPool<IntPtr>.Shared.Rent(sourceEffects.Length));
+                (canvasEffectsAbiArray = ArrayPool<IntPtr>.Shared.Rent(sourceEffects.Length)).AsSpan());
 
         // Clear the span to ensure no false positives are accidentally disposed
         canvasEffects.Clear();

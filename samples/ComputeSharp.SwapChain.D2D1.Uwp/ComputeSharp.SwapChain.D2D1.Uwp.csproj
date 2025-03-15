@@ -11,6 +11,9 @@
     <PublishProfile>win-$(Platform).pubxml</PublishProfile>
     <EnableMsixTooling>true</EnableMsixTooling>
     <EnableXamlCompilerTargetsForUwpApps>false</EnableXamlCompilerTargetsForUwpApps>
+
+    <!-- Temporary workaround until VS 17.14 GA -->
+    <MicrosoftWindowsSdkBuildToolsMSIXPackageVersion>1.3.20250314.1</MicrosoftWindowsSdkBuildToolsMSIXPackageVersion>
   </PropertyGroup>
 
   <!-- NativeAOT settings, and size saving options for unnecessary features (optimize for speed otherwise) -->

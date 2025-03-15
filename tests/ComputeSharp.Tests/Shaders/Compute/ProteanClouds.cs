@@ -74,7 +74,7 @@ internal readonly partial struct ProteanClouds : IComputeShader
         return new float2(d + cl * 0.2f + 0.25f, cl);
     }
 
-    private float4 Render(float3 ro, float3 rd, float time, float prm1, float2 bsMo)
+    private float4 Render(float3 ro, float3 rd, float prm1, float2 bsMo)
     {
         float4 rez = 0;
         float t = 1.5f;
@@ -165,7 +165,7 @@ internal readonly partial struct ProteanClouds : IComputeShader
         rd.XY = Hlsl.Mul(rd.XY, Rotate(-Disp(scaledTime + 3.5f).X * 0.2f + bsMo.X));
 
         float prm1 = Hlsl.SmoothStep(-0.4f, 0.4f, Hlsl.Sin(time * 0.3f));
-        float4 scn = Render(ro, rd, scaledTime, prm1, bsMo);
+        float4 scn = Render(ro, rd, prm1, bsMo);
         float3 col = scn.RGB;
 
         col = ILerp(col.BGR, col.RGB, Hlsl.Clamp(1.0f - prm1, 0.05f, 1.0f));
