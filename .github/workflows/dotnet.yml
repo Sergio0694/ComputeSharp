@@ -98,37 +98,37 @@ jobs:
 
       # DirectX 12 unit tests
     - name: Run ComputeSharp.Tests
-      run: dotnet test tests\ComputeSharp.Tests\ComputeSharp.Tests.csproj -c Release /p:Platform=x64 -v n -l "console;verbosity=detailed"
+      run: dotnet test tests\ComputeSharp.Tests\ComputeSharp.Tests.csproj -c Release /p:Platform=x64 -v n -- --output detailed
     - name: Run ComputeSharp.Tests.DisableDynamicCompilation
-      run: dotnet test tests\ComputeSharp.Tests.DisableDynamicCompilation\ComputeSharp.Tests.DisableDynamicCompilation.csproj -c Release /p:Platform=x64 -v n -l "console;verbosity=detailed"
+      run: dotnet test tests\ComputeSharp.Tests.DisableDynamicCompilation\ComputeSharp.Tests.DisableDynamicCompilation.csproj -c Release /p:Platform=x64 -v n -- --output detailed
     - name: Run ComputeSharp.Tests.GlobalStatements
-      run: dotnet run --project tests\ComputeSharp.Tests.GlobalStatements\ComputeSharp.Tests.GlobalStatements.csproj -c Release /p:Platform=x64 -v n -l "console;verbosity=detailed"
+      run: dotnet run --project tests\ComputeSharp.Tests.GlobalStatements\ComputeSharp.Tests.GlobalStatements.csproj -c Release /p:Platform=x64 -v n -- --output detailed
     - name: Run ComputeSharp.Tests.Internals
-      run: dotnet test tests\ComputeSharp.Tests.Internals\ComputeSharp.Tests.Internals.csproj -c Release /p:Platform=x64 -v n -l "console;verbosity=detailed"
+      run: dotnet test tests\ComputeSharp.Tests.Internals\ComputeSharp.Tests.Internals.csproj -c Release /p:Platform=x64 -v n -- --output detailed
 
       # Run the source generator tests as well (even though they're not really runtime specific)
     - name: Run ComputeSharp.Tests.SourceGenerators
-      run: dotnet test tests\ComputeSharp.Tests.SourceGenerators\ComputeSharp.Tests.SourceGenerators.csproj -v n -l "console;verbosity=detailed"
+      run: dotnet test tests\ComputeSharp.Tests.SourceGenerators\ComputeSharp.Tests.SourceGenerators.csproj -v n -- --output detailed
     
       # DirectX 12 device lost unit tests.
       # These tests are run one class at a time to ensure there's no accidental conflicts between any of them. This is because
       # the code paths being tested in this project are heavily dependent on process-wide mutable state (ie. DirectX 12 devices).
     - name: Run ComputeSharp.Tests.DeviceLost "DeviceDisposal"
-      run: dotnet test tests\ComputeSharp.Tests.DeviceLost\ComputeSharp.Tests.DeviceLost.csproj --filter "TestCategory=DeviceDisposal" -c Release -v n -l "console;verbosity=detailed"
+      run: dotnet test tests\ComputeSharp.Tests.DeviceLost\ComputeSharp.Tests.DeviceLost.csproj --filter "TestCategory=DeviceDisposal" -c Release -v n -- --output detailed
     - name: Run ComputeSharp.Tests.DeviceLost "DeviceLost"
-      run: dotnet test tests\ComputeSharp.Tests.DeviceLost\ComputeSharp.Tests.DeviceLost.csproj --filter "TestCategory=DeviceLost" -c Release -v n -l "console;verbosity=detailed"
+      run: dotnet test tests\ComputeSharp.Tests.DeviceLost\ComputeSharp.Tests.DeviceLost.csproj --filter "TestCategory=DeviceLost" -c Release -v n -- --output detailed
     - name: Run ComputeSharp.Tests.DeviceLost "GetDefaultDevice"
-      run: dotnet test tests\ComputeSharp.Tests.DeviceLost\ComputeSharp.Tests.DeviceLost.csproj --filter "TestCategory=GetDefaultDevice" -c Release -v n -l "console;verbosity=detailed"
+      run: dotnet test tests\ComputeSharp.Tests.DeviceLost\ComputeSharp.Tests.DeviceLost.csproj --filter "TestCategory=GetDefaultDevice" -c Release -v n -- --output detailed
 
       # D2D1 unit tests
     - name: Run ComputeSharp.D2D1.Tests
-      run: dotnet test tests\ComputeSharp.D2D1.Tests\ComputeSharp.D2D1.Tests.csproj -c Release -v n -l "console;verbosity=detailed"
+      run: dotnet test tests\ComputeSharp.D2D1.Tests\ComputeSharp.D2D1.Tests.csproj -c Release -v n -- --output detailed
     - name: Run ComputeSharp.D2D1.Tests.AssemblyLevelAttributes
-      run: dotnet test tests\ComputeSharp.D2D1.Tests.AssemblyLevelAttributes\ComputeSharp.D2D1.Tests.AssemblyLevelAttributes.csproj -c Release -v n -l "console;verbosity=detailed"
+      run: dotnet test tests\ComputeSharp.D2D1.Tests.AssemblyLevelAttributes\ComputeSharp.D2D1.Tests.AssemblyLevelAttributes.csproj -c Release -v n -- --output detailed
 
       # Run the D2D1 source generators tests as well
     - name: Run ComputeSharp.D2D1.Tests.SourceGenerators
-      run: dotnet test tests\ComputeSharp.D2D1.Tests.SourceGenerators\ComputeSharp.D2D1.Tests.SourceGenerators.csproj -v n -l "console;verbosity=detailed"
+      run: dotnet test tests\ComputeSharp.D2D1.Tests.SourceGenerators\ComputeSharp.D2D1.Tests.SourceGenerators.csproj -v n -- --output detailed
 
   # Run all unit tests using D3D12MA
   run-tests-d3d12ma:
@@ -142,13 +142,13 @@ jobs:
 
       # D3D12MA tests (main ComputeSharp tests, as well as the device lost ones)
     - name: Run ComputeSharp.Tests
-      run: dotnet test tests\ComputeSharp.Tests\ComputeSharp.Tests.csproj -c Release /p:Platform=x64 /p:UseD3D12MemoryAllocator=true -v n -l "console;verbosity=detailed"
+      run: dotnet test tests\ComputeSharp.Tests\ComputeSharp.Tests.csproj -c Release /p:Platform=x64 /p:UseD3D12MemoryAllocator=true -v n -- --output detailed
     - name: Run ComputeSharp.Tests.DeviceLost "DeviceDisposal"
-      run: dotnet test tests\ComputeSharp.Tests.DeviceLost\ComputeSharp.Tests.DeviceLost.csproj --filter "TestCategory=DeviceDisposal" -c Release /p:UseD3D12MemoryAllocator=true -v n -l "console;verbosity=detailed"
+      run: dotnet test tests\ComputeSharp.Tests.DeviceLost\ComputeSharp.Tests.DeviceLost.csproj --filter "TestCategory=DeviceDisposal" -c Release /p:UseD3D12MemoryAllocator=true -v n -- --output detailed
     - name: Run ComputeSharp.Tests.DeviceLost "DeviceLost"
-      run: dotnet test tests\ComputeSharp.Tests.DeviceLost\ComputeSharp.Tests.DeviceLost.csproj --filter "TestCategory=DeviceLost" -c Release /p:UseD3D12MemoryAllocator=true -v n -l "console;verbosity=detailed"
+      run: dotnet test tests\ComputeSharp.Tests.DeviceLost\ComputeSharp.Tests.DeviceLost.csproj --filter "TestCategory=DeviceLost" -c Release /p:UseD3D12MemoryAllocator=true -v n -- --output detailed
     - name: Run ComputeSharp.Tests.DeviceLost "GetDefaultDevice"
-      run: dotnet test tests\ComputeSharp.Tests.DeviceLost\ComputeSharp.Tests.DeviceLost.csproj --filter "TestCategory=GetDefaultDevice" -c Release /p:UseD3D12MemoryAllocator=true -v n -l "console;verbosity=detailed"
+      run: dotnet test tests\ComputeSharp.Tests.DeviceLost\ComputeSharp.Tests.DeviceLost.csproj --filter "TestCategory=GetDefaultDevice" -c Release /p:UseD3D12MemoryAllocator=true -v n -- --output detailed
 
   # Run all Win2D tests (separately, as they need VS Test)
   run-tests-win2d:
@@ -387,7 +387,7 @@ jobs:
       # This is used to ensure the native dependencies can always be loaded correctly
       # regardless of whether the app is shipping with R2R, self-contained, etc.
     - name: Run ComputeSharp.Tests.NativeLibrariesResolver
-      run: dotnet test tests\ComputeSharp.Tests.NativeLibrariesResolver\ComputeSharp.Tests.NativeLibrariesResolver.csproj -v n -l "console;verbosity=detailed"
+      run: dotnet test tests\ComputeSharp.Tests.NativeLibrariesResolver\ComputeSharp.Tests.NativeLibrariesResolver.csproj -v n -- --output detailed
     
       # Also run the NativeAOT publishing tests
     - name: Publish and run ComputeSharp.NuGet with NativeAOT
