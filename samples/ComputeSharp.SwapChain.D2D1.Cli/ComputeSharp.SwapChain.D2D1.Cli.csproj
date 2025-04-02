@@ -61,6 +61,7 @@
   <!-- Same optional NativeAOT property group as in ComputeSharp.SwapChain.Cli -->
   <PropertyGroup Condition="'$(COMPUTESHARP_SWAPCHAIN_D2D1_PUBLISH_AOT)' == 'true'">
     <PublishAot>true</PublishAot>
+    <SelfContained>true</SelfContained>
     <UseSystemResourceKeys>true</UseSystemResourceKeys>
     <InvariantGlobalization>true</InvariantGlobalization>
     <StackTraceSupport>false</StackTraceSupport>
