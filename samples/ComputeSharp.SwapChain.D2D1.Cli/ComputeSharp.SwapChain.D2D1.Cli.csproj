@@ -47,6 +47,15 @@
 
     <!-- Using 'PublishSingleFile' requires 'EnableMsixTooling' for embedded resources.pri generation-->
     <EnableMsixTooling>true</EnableMsixTooling>
+
+    <!--
+      Ignore the following warning, as it's from CsWinRT 2.2 missing some .NET 9 annotations:
+      "ILLink : Trim analysis error IL2081: ABI.System.Collections.Generic.KeyValuePair<K,V>.<.cctor>g__InitFallbackCCWVTableIfNeeded|19_0(): 'KAbi' generic argument does not satisfy
+      'DynamicallyAccessedMemberTypes.PublicParameterlessConstructor' in 'ABI.System.Collections.Generic.KeyValuePairMethods<K,KAbi,V,VAbi>'. The field 'WinRT.Marshaler<T>.AbiType'
+      does not have matching annotations. The source value must declare at least the same requirements as those declared on the target location it is assigned to."
+      This can be removed once CsWinRT 2.3 is released.
+    -->
+    <NoWarn>$(NoWarn);IL2081</NoWarn>
   </PropertyGroup>
 
   <!-- Same optional NativeAOT property group as in ComputeSharp.SwapChain.Cli -->
