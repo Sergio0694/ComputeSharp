@@ -1,6 +1,4 @@
 using System;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using ComputeSharp.D2D1.Descriptors;
 using ComputeSharp.Win32;
 
@@ -12,28 +10,10 @@ namespace ComputeSharp.D2D1.Interop.Effects;
 internal unsafe partial struct PixelShaderEffect
 {
     /// <summary>
-    /// A wrapper for an effect factory.
-    /// </summary>
-    /// <param name="effectImpl">The resulting effect factory.</param>
-    /// <returns>The <c>HRESULT</c> for the operation.</returns>
-    /// <remarks>
-    /// The return type is intentionally <see langword="void"/><c>*</c> because delegate targets are considered
-    /// visible for reflection, so not using <see cref="IUnknown"/> avoids metadata for it being rooted unnecessarily.
-    /// </remarks>
-    [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-    public delegate int FactoryDelegate(void** effectImpl);
-
-    /// <summary>
     /// A base type with global values for pixel shader effects.
     /// </summary>
-    /// <param name="effectFactory">The <see cref="FactoryDelegate"/> wrapper for the shader factory.</param>
-    public abstract class Globals(FactoryDelegate effectFactory)
+    public abstract class Globals
     {
-        /// <summary>
-        /// Gets the <see cref="FactoryDelegate"/> wrapper for the shader factory.
-        /// </summary>
-        private readonly FactoryDelegate effectFactory = effectFactory;
-
         /// <inheritdoc cref="ID2D1PixelShaderDescriptor{T}.EffectId"/>
         public abstract ref readonly Guid EffectId { get; }
 
@@ -66,15 +46,6 @@ internal unsafe partial struct PixelShaderEffect
 
         /// <inheritdoc cref="ID2D1PixelShaderDescriptor{T}.HlslBytecode"/>
         public abstract ReadOnlyMemory<byte> HlslBytecode { get; }
-
-        /// <summary>
-        /// Gets the factory for the current effect.
-        /// </summary>
-        public delegate* unmanaged<IUnknown**, HRESULT> Factory
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => (delegate* unmanaged<IUnknown**, HRESULT>)Marshal.GetFunctionPointerForDelegate(this.effectFactory);
-        }
     }
 
     /// <summary>
@@ -93,7 +64,6 @@ internal unsafe partial struct PixelShaderEffect
         /// Creates a new <see cref="Globals"/> instance for shaders of type <typeparamref name="T"/>.
         /// </summary>
         private Globals()
-            : base(CreateEffect)
         {
         }
 
@@ -146,12 +116,6 @@ internal unsafe partial struct PixelShaderEffect
                 // If not, lazily compile the bytecode when requested
                 return this.hlslBytecode = D2D1PixelShader.LoadBytecode<T>();
             }
-        }
-
-        /// <inheritdoc cref="FactoryDelegate"/>
-        private static int CreateEffect(void** effectImpl)
-        {
-            return PixelShaderEffect.Factory(Instance, (IUnknown**)effectImpl);
         }
     }
 }

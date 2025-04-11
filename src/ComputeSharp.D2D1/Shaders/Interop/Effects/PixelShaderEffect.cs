@@ -103,7 +103,7 @@ internal unsafe partial struct PixelShaderEffect
     /// <param name="globals">The <see cref="Globals"/> instance to use.</param>
     /// <param name="effectImpl">The resulting effect instance.</param>
     /// <returns>The <see cref="HRESULT"/> for the operation.</returns>
-    private static int Factory(Globals globals, IUnknown** effectImpl)
+    public static int Factory(Globals globals, IUnknown** effectImpl)
     {
         PixelShaderEffect* @this = null;
         GCHandle globalsHandle = default;
