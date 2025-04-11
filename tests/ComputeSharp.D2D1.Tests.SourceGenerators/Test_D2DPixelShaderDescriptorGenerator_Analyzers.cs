@@ -69,6 +69,8 @@ public class Test_D2DPixelShaderDescriptorGenerator_Analyzers
 
                 public static string? EffectAuthor => throw new NotImplementedException();
 
+                public static nint EffectFactory => throw new NotImplementedException();
+
                 public static int ConstantBufferSize => throw new NotImplementedException();
 
                 public static int InputCount => throw new NotImplementedException();

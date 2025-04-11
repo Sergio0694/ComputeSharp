@@ -106,6 +106,25 @@ public class Test_D2DPixelShaderDescriptorGenerator
                     [global::System.CodeDom.Compiler.GeneratedCode("ComputeSharp.D2D1.D2DPixelShaderDescriptorGenerator", <ASSEMBLY_VERSION>)]
                     [global::System.Diagnostics.DebuggerNonUserCode]
                     [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+                    static unsafe nint global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<MyShader>.EffectFactory
+                    {
+                        [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                        get
+                        {
+                            [global::System.Runtime.InteropServices.UnmanagedCallersOnly(CallConvs = [typeof(global::System.Runtime.CompilerServices.CallConvStdcall)])]
+                            static int EffectFactory(void** effectImpl)
+                            {
+                                return global::ComputeSharp.D2D1.Interop.D2D1PixelShaderEffect.CreateEffectUnsafe<MyShader>(effectImpl);
+                            }
+
+                            return (nint)(delegate* unmanaged[Stdcall]<void**, int>)&EffectFactory;
+                        }
+                    }
+
+                    /// <inheritdoc/>
+                    [global::System.CodeDom.Compiler.GeneratedCode("ComputeSharp.D2D1.D2DPixelShaderDescriptorGenerator", <ASSEMBLY_VERSION>)]
+                    [global::System.Diagnostics.DebuggerNonUserCode]
+                    [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
                     static int global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<MyShader>.ConstantBufferSize => 12;
 
                     /// <inheritdoc/>
@@ -401,6 +420,25 @@ public class Test_D2DPixelShaderDescriptorGenerator
                     [global::System.Diagnostics.DebuggerNonUserCode]
                     [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
                     static string? global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<MyShader>.EffectAuthor => null;
+
+                    /// <inheritdoc/>
+                    [global::System.CodeDom.Compiler.GeneratedCode("ComputeSharp.D2D1.D2DPixelShaderDescriptorGenerator", <ASSEMBLY_VERSION>)]
+                    [global::System.Diagnostics.DebuggerNonUserCode]
+                    [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+                    static unsafe nint global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<MyShader>.EffectFactory
+                    {
+                        [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                        get
+                        {
+                            [global::System.Runtime.InteropServices.UnmanagedCallersOnly(CallConvs = [typeof(global::System.Runtime.CompilerServices.CallConvStdcall)])]
+                            static int EffectFactory(void** effectImpl)
+                            {
+                                return global::ComputeSharp.D2D1.Interop.D2D1PixelShaderEffect.CreateEffectUnsafe<MyShader>(effectImpl);
+                            }
+
+                            return (nint)(delegate* unmanaged[Stdcall]<void**, int>)&EffectFactory;
+                        }
+                    }
 
                     /// <inheritdoc/>
                     [global::System.CodeDom.Compiler.GeneratedCode("ComputeSharp.D2D1.D2DPixelShaderDescriptorGenerator", <ASSEMBLY_VERSION>)]
@@ -758,6 +796,25 @@ public class Test_D2DPixelShaderDescriptorGenerator
                     [global::System.CodeDom.Compiler.GeneratedCode("ComputeSharp.D2D1.D2DPixelShaderDescriptorGenerator", <ASSEMBLY_VERSION>)]
                     [global::System.Diagnostics.DebuggerNonUserCode]
                     [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+                    static unsafe nint global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<MyShader>.EffectFactory
+                    {
+                        [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                        get
+                        {
+                            [global::System.Runtime.InteropServices.UnmanagedCallersOnly(CallConvs = [typeof(global::System.Runtime.CompilerServices.CallConvStdcall)])]
+                            static int EffectFactory(void** effectImpl)
+                            {
+                                return global::ComputeSharp.D2D1.Interop.D2D1PixelShaderEffect.CreateEffectUnsafe<MyShader>(effectImpl);
+                            }
+
+                            return (nint)(delegate* unmanaged[Stdcall]<void**, int>)&EffectFactory;
+                        }
+                    }
+
+                    /// <inheritdoc/>
+                    [global::System.CodeDom.Compiler.GeneratedCode("ComputeSharp.D2D1.D2DPixelShaderDescriptorGenerator", <ASSEMBLY_VERSION>)]
+                    [global::System.Diagnostics.DebuggerNonUserCode]
+                    [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
                     static int global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<MyShader>.ConstantBufferSize => 12;
 
                     /// <inheritdoc/>
@@ -1051,6 +1108,25 @@ public class Test_D2DPixelShaderDescriptorGenerator
                     [global::System.Diagnostics.DebuggerNonUserCode]
                     [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
                     static string? global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<MyShader>.EffectAuthor => null;
+
+                    /// <inheritdoc/>
+                    [global::System.CodeDom.Compiler.GeneratedCode("ComputeSharp.D2D1.D2DPixelShaderDescriptorGenerator", <ASSEMBLY_VERSION>)]
+                    [global::System.Diagnostics.DebuggerNonUserCode]
+                    [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+                    static unsafe nint global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<MyShader>.EffectFactory
+                    {
+                        [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                        get
+                        {
+                            [global::System.Runtime.InteropServices.UnmanagedCallersOnly(CallConvs = [typeof(global::System.Runtime.CompilerServices.CallConvStdcall)])]
+                            static int EffectFactory(void** effectImpl)
+                            {
+                                return global::ComputeSharp.D2D1.Interop.D2D1PixelShaderEffect.CreateEffectUnsafe<MyShader>(effectImpl);
+                            }
+
+                            return (nint)(delegate* unmanaged[Stdcall]<void**, int>)&EffectFactory;
+                        }
+                    }
 
                     /// <inheritdoc/>
                     [global::System.CodeDom.Compiler.GeneratedCode("ComputeSharp.D2D1.D2DPixelShaderDescriptorGenerator", <ASSEMBLY_VERSION>)]
@@ -1351,6 +1427,25 @@ public class Test_D2DPixelShaderDescriptorGenerator
                     [global::System.CodeDom.Compiler.GeneratedCode("ComputeSharp.D2D1.D2DPixelShaderDescriptorGenerator", <ASSEMBLY_VERSION>)]
                     [global::System.Diagnostics.DebuggerNonUserCode]
                     [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+                    static unsafe nint global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<MyShader>.EffectFactory
+                    {
+                        [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                        get
+                        {
+                            [global::System.Runtime.InteropServices.UnmanagedCallersOnly(CallConvs = [typeof(global::System.Runtime.CompilerServices.CallConvStdcall)])]
+                            static int EffectFactory(void** effectImpl)
+                            {
+                                return global::ComputeSharp.D2D1.Interop.D2D1PixelShaderEffect.CreateEffectUnsafe<MyShader>(effectImpl);
+                            }
+
+                            return (nint)(delegate* unmanaged[Stdcall]<void**, int>)&EffectFactory;
+                        }
+                    }
+
+                    /// <inheritdoc/>
+                    [global::System.CodeDom.Compiler.GeneratedCode("ComputeSharp.D2D1.D2DPixelShaderDescriptorGenerator", <ASSEMBLY_VERSION>)]
+                    [global::System.Diagnostics.DebuggerNonUserCode]
+                    [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
                     static int global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<MyShader>.ConstantBufferSize => 0;
 
                     /// <inheritdoc/>
@@ -1629,6 +1724,25 @@ public class Test_D2DPixelShaderDescriptorGenerator
                     [global::System.Diagnostics.DebuggerNonUserCode]
                     [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
                     static string? global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<MyShader>.EffectAuthor => null;
+
+                    /// <inheritdoc/>
+                    [global::System.CodeDom.Compiler.GeneratedCode("ComputeSharp.D2D1.D2DPixelShaderDescriptorGenerator", <ASSEMBLY_VERSION>)]
+                    [global::System.Diagnostics.DebuggerNonUserCode]
+                    [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+                    static unsafe nint global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<MyShader>.EffectFactory
+                    {
+                        [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                        get
+                        {
+                            [global::System.Runtime.InteropServices.UnmanagedCallersOnly(CallConvs = [typeof(global::System.Runtime.CompilerServices.CallConvStdcall)])]
+                            static int EffectFactory(void** effectImpl)
+                            {
+                                return global::ComputeSharp.D2D1.Interop.D2D1PixelShaderEffect.CreateEffectUnsafe<MyShader>(effectImpl);
+                            }
+
+                            return (nint)(delegate* unmanaged[Stdcall]<void**, int>)&EffectFactory;
+                        }
+                    }
 
                     /// <inheritdoc/>
                     [global::System.CodeDom.Compiler.GeneratedCode("ComputeSharp.D2D1.D2DPixelShaderDescriptorGenerator", <ASSEMBLY_VERSION>)]
