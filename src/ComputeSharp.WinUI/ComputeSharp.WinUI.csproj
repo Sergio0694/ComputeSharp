@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.250228001" />
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.7.250401001" />
 
     <!--
       The 'Microsoft.Web.WebView2' package that WindowsAppSDK has a transitive dependency on is an older version, which
@@ -15,7 +15,7 @@
       downstream consumers, as that .dll will not actually exist in the NuGet package (it's from the 'WebView2' package).
       Because we don't even need anything from this package at all anyway, we can fix this by just excluding it entirely.
     -->
-    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3124.44" PrivateAssets="all" IncludeAssets="none" />
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3179.45" PrivateAssets="all" IncludeAssets="none" />
   </ItemGroup>
 
   <ItemGroup>

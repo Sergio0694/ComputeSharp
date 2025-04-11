@@ -12,13 +12,13 @@
 
   <ItemGroup>
     <PackageReference Include="Basic.Reference.Assemblies.Net80" Version="1.8.0" />
-    <PackageReference Include="MSTest" Version="3.8.2" />
+    <PackageReference Include="MSTest" Version="3.8.3" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Analyzer.Testing" Version="1.1.2" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.CodeFix.Testing" Version="1.1.2" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.12.0" />
 
     <!-- Top-level overrides to fix address security vulnerability warnings -->
-    <PackageReference Include="System.Formats.Asn1" Version="9.0.3" />
+    <PackageReference Include="System.Formats.Asn1" Version="9.0.4" />
     <PackageReference Include="System.Private.Uri" Version="4.3.2" />
   </ItemGroup>
 
