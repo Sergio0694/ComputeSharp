@@ -225,6 +225,7 @@ public sealed partial class D2DPixelShaderDescriptorGenerator : IIncrementalGene
             declaredMembers.Add(EffectMetadata.WriteEffectDescriptionSyntax);
             declaredMembers.Add(EffectMetadata.WriteEffectCategorySyntax);
             declaredMembers.Add(EffectMetadata.WriteEffectAuthorSyntax);
+            declaredMembers.Add(EffectFactory.WriteSyntax);
             declaredMembers.Add(NumericProperties.WriteConstantBufferSizeSyntax);
             declaredMembers.Add(NumericProperties.WriteInputCountSyntax);
             declaredMembers.Add(NumericProperties.WriteResourceTextureCountSyntax);
