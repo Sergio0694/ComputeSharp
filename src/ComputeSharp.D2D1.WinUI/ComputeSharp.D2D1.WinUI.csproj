@@ -23,7 +23,7 @@
     <PackageReference Include="Microsoft.Graphics.Win2D" Version="1.3.2" />
 
     <!-- Workaround for 'CoreWebView2' issue (see notes in ComputeSharp.WinUI) -->
-    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3124.44" PrivateAssets="all" IncludeAssets="none" />
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3179.45" PrivateAssets="all" IncludeAssets="none" />
   </ItemGroup>
 
   <ItemGroup>
