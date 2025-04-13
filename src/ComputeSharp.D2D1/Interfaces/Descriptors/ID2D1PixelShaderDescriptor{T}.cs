@@ -53,6 +53,19 @@ public interface ID2D1PixelShaderDescriptor<T>
     static abstract string? EffectAuthor { get; }
 
     /// <summary>
+    /// Gets a pointer to the effect factory for the current shader.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// This only applies to effects created from <see cref="D2D1PixelShaderEffect"/>.
+    /// </para>
+    /// <para>
+    /// The returned function pointer should have a signature matching <a href="https://learn.microsoft.com/windows/win32/api/d2d1_1/nc-d2d1_1-pd2d1_effect_factory"><c>PD2D1_EFFECT_FACTORY</c></a>.
+    /// </para>
+    /// </remarks>
+    static abstract nint EffectFactory { get; }
+
+    /// <summary>
     /// Gets the size in bytes of the constant buffer for the current shader.
     /// </summary>
     static abstract int ConstantBufferSize { get; }

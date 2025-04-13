@@ -73,6 +73,30 @@ public static unsafe class D2D1PixelShaderEffect
     }
 
     /// <summary>
+    /// Creates a D2D effect instance for a given pixel shader type.
+    /// </summary>
+    /// <typeparam name="T">The type of D2D1 pixel shader to create a D2D effect instance for.</typeparam>
+    /// <param name="effectImpl">The effect implementation returned by the factory.</param>
+    /// <returns>The error code for the operation.</returns>
+    /// <remarks>
+    /// <para>
+    /// This method provides the <a href="https://learn.microsoft.com/windows/win32/api/d2d1_1/nc-d2d1_1-pd2d1_effect_factory"><c>PD2D1_EFFECT_FACTORY</c></a>
+    /// implementation for a given pixel shader type <typeparamref name="T"/>. It is only meant to be used to register an effect with this shader type, and
+    /// should only ever be used implicitly by the ComputeSharp infrastructure, or in advanced scenarios where effects are registered manually.
+    /// </para>
+    /// <para>
+    /// This method is guaranteed to never throw an exception, and can be used directly in a method exported to native code.
+    /// The main use case scenario for calling <see cref="CreateEffectUnsafe"/> is to produce the factory for
+    /// <a href="https://learn.microsoft.com/windows/win32/api/d2d1_1/nf-d2d1_1-id2d1factory1-registereffectfromstring"><c>ID2D1Factory1::RegisterEffectFromString</c></a>.
+    /// </para>
+    /// </remarks>
+    public static int CreateEffectUnsafe<T>(void** effectImpl)
+        where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
+    {
+        return PixelShaderEffect.Factory(PixelShaderEffect.Globals<T>.Instance, (IUnknown**)effectImpl);
+    }
+
+    /// <summary>
     /// Registers an effect from an input D2D1 pixel shader, by calling <c>ID2D1Factory1::RegisterEffectFromString</c>.
     /// </summary>
     /// <typeparam name="T">The type of D2D1 pixel shader to register.</typeparam>
@@ -184,7 +208,7 @@ public static unsafe class D2D1PixelShaderEffect
                     propertyXml: (ushort*)pXml,
                     bindings: d2D1PropertyBinding,
                     bindingsCount: (uint)(D2D1PixelShaderEffectProperty.NumberOfAlwaysAvailableProperties + T.ResourceTextureCount),
-                    effectFactory: PixelShaderEffect.Globals<T>.Instance.Factory).Assert();
+                    effectFactory: (delegate* unmanaged<IUnknown**, HRESULT>)T.EffectFactory).Assert();
             }
 
             effectId = T.EffectId;
@@ -376,7 +400,7 @@ public static unsafe class D2D1PixelShaderEffect
         }
 
         // Effect factory
-        writer.Write((nint)PixelShaderEffect.Globals<T>.Instance.Factory);
+        writer.Write(T.EffectFactory);
 
         byte[] registrationBlob = writer.WrittenSpan.ToArray();
 
