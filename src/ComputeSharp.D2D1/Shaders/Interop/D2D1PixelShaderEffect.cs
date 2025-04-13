@@ -86,8 +86,11 @@ public static unsafe class D2D1PixelShaderEffect
     /// </para>
     /// <para>
     /// This method is guaranteed to never throw an exception, and can be used directly in a method exported to native code.
+    /// </para>
+    /// <para>
     /// The main use case scenario for calling <see cref="CreateEffectUnsafe"/> is to produce the factory for
-    /// <a href="https://learn.microsoft.com/windows/win32/api/d2d1_1/nf-d2d1_1-id2d1factory1-registereffectfromstring"><c>ID2D1Factory1::RegisterEffectFromString</c></a>.
+    /// <a href="https://learn.microsoft.com/windows/win32/api/d2d1_1/nf-d2d1_1-id2d1factory1-registereffectfromstring"><c>ID2D1Factory1::RegisterEffectFromString</c></a>,
+    /// which should then be returned from <see cref="ID2D1PixelShaderDescriptor{T}.EffectFactory"/> implementations (either generated or manually authored).
     /// </para>
     /// </remarks>
     public static int CreateEffectUnsafe<T>(void** effectImpl)
