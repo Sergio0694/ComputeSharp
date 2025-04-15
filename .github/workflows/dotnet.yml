@@ -27,7 +27,7 @@ jobs:
       matrix:
         configuration: [Debug, Release]
         platform: [x64, arm64]
-    runs-on: windows-2022
+    runs-on: ${{ matrix.platform == 'x64' && 'windows-2022' || 'windows-11-arm' }}
     steps:
     - name: Git checkout
       uses: actions/checkout@v4
@@ -86,28 +86,32 @@ jobs:
   # Run all unit tests referencing the ComputeSharp projects directly
   run-tests:
     needs: [build-solution]
-    runs-on: windows-2022
+    strategy:
+      matrix:
+        platform: [x64, arm64]
+    runs-on: ${{ matrix.platform == 'x64' && 'windows-2022' || 'windows-11-arm' }}
 
     # Set the environment variable which is then looked up in ComputeSharp.Dxc.
     # This is a workaround for https://github.com/actions/runner-images/issues/6531.
     env:
-      CI_RUNNER_DOTNET_TEST_PLATFORM: x64
+      CI_RUNNER_DOTNET_TEST_PLATFORM: ${{matrix.platform}}
     steps:
     - name: Git checkout
       uses: actions/checkout@v4
 
       # DirectX 12 unit tests
     - name: Run ComputeSharp.Tests
-      run: dotnet test tests\ComputeSharp.Tests\ComputeSharp.Tests.csproj -c Release /p:Platform=x64 -v n -l "console;verbosity=detailed"
+      run: dotnet test tests\ComputeSharp.Tests\ComputeSharp.Tests.csproj -c Release /p:Platform=${{matrix.platform}} -v n -l "console;verbosity=detailed"
     - name: Run ComputeSharp.Tests.DisableDynamicCompilation
-      run: dotnet test tests\ComputeSharp.Tests.DisableDynamicCompilation\ComputeSharp.Tests.DisableDynamicCompilation.csproj -c Release /p:Platform=x64 -v n -l "console;verbosity=detailed"
+      run: dotnet test tests\ComputeSharp.Tests.DisableDynamicCompilation\ComputeSharp.Tests.DisableDynamicCompilation.csproj -c Release /p:Platform=${{matrix.platform}} -v n -l "console;verbosity=detailed"
     - name: Run ComputeSharp.Tests.GlobalStatements
-      run: dotnet run --project tests\ComputeSharp.Tests.GlobalStatements\ComputeSharp.Tests.GlobalStatements.csproj -c Release /p:Platform=x64 -v n -l "console;verbosity=detailed"
+      run: dotnet run --project tests\ComputeSharp.Tests.GlobalStatements\ComputeSharp.Tests.GlobalStatements.csproj -c Release /p:Platform=${{matrix.platform}} -v n -l "console;verbosity=detailed"
     - name: Run ComputeSharp.Tests.Internals
-      run: dotnet test tests\ComputeSharp.Tests.Internals\ComputeSharp.Tests.Internals.csproj -c Release /p:Platform=x64 -v n -l "console;verbosity=detailed"
+      run: dotnet test tests\ComputeSharp.Tests.Internals\ComputeSharp.Tests.Internals.csproj -c Release /p:Platform=${{matrix.platform}} -v n -l "console;verbosity=detailed"
 
       # Run the source generator tests as well (even though they're not really runtime specific)
-    - name: Run ComputeSharp.Tests.SourceGenerators
+    - if: matrix.platform == 'x64'
+      name: Run ComputeSharp.Tests.SourceGenerators
       run: dotnet test tests\ComputeSharp.Tests.SourceGenerators\ComputeSharp.Tests.SourceGenerators.csproj -v n -l "console;verbosity=detailed"
     
       # DirectX 12 device lost unit tests.
@@ -127,22 +131,26 @@ jobs:
       run: dotnet test tests\ComputeSharp.D2D1.Tests.AssemblyLevelAttributes\ComputeSharp.D2D1.Tests.AssemblyLevelAttributes.csproj -c Release -v n -l "console;verbosity=detailed"
 
       # Run the D2D1 source generators tests as well
-    - name: Run ComputeSharp.D2D1.Tests.SourceGenerators
+    - if: matrix.platform == 'x64'
+      name: Run ComputeSharp.D2D1.Tests.SourceGenerators
       run: dotnet test tests\ComputeSharp.D2D1.Tests.SourceGenerators\ComputeSharp.D2D1.Tests.SourceGenerators.csproj -v n -l "console;verbosity=detailed"
 
   # Run all unit tests using D3D12MA
   run-tests-d3d12ma:
     needs: [build-solution]
-    runs-on: windows-2022
+    strategy:
+      matrix:
+        platform: [x64, arm64]
+    runs-on: ${{ matrix.platform == 'x64' && 'windows-2022' || 'windows-11-arm' }}
     env:
-      CI_RUNNER_DOTNET_TEST_PLATFORM: x64
+      CI_RUNNER_DOTNET_TEST_PLATFORM: ${{matrix.platform}}
     steps:
     - name: Git checkout
       uses: actions/checkout@v4
 
       # D3D12MA tests (main ComputeSharp tests, as well as the device lost ones)
     - name: Run ComputeSharp.Tests
-      run: dotnet test tests\ComputeSharp.Tests\ComputeSharp.Tests.csproj -c Release /p:Platform=x64 /p:UseD3D12MemoryAllocator=true -v n -l "console;verbosity=detailed"
+      run: dotnet test tests\ComputeSharp.Tests\ComputeSharp.Tests.csproj -c Release /p:Platform=${{matrix.platform}} /p:UseD3D12MemoryAllocator=true -v n -l "console;verbosity=detailed"
     - name: Run ComputeSharp.Tests.DeviceLost "DeviceDisposal"
       run: dotnet test tests\ComputeSharp.Tests.DeviceLost\ComputeSharp.Tests.DeviceLost.csproj --filter "TestCategory=DeviceDisposal" -c Release /p:UseD3D12MemoryAllocator=true -v n -l "console;verbosity=detailed"
     - name: Run ComputeSharp.Tests.DeviceLost "DeviceLost"
@@ -153,7 +161,10 @@ jobs:
   # Run all Win2D tests (separately, as they need VS Test)
   run-tests-win2d:
     needs: [build-solution]
-    runs-on: windows-2022
+    strategy:
+      matrix:
+        platform: [x64, arm64]
+    runs-on: ${{ matrix.platform == 'x64' && 'windows-2022' || 'windows-11-arm' }}
     steps:
     - name: Git checkout
       uses: actions/checkout@v4
@@ -162,45 +173,48 @@ jobs:
     
       # Build the D2D1 WinAppSDK unit tests
     - name: Build ComputeSharp.D2D1.WinUI.Tests
-      run: msbuild tests\ComputeSharp.D2D1.WinUI.Tests\ComputeSharp.D2D1.WinUI.Tests.csproj /restore -t:build /p:Configuration=Release /p:Platform=x64
+      run: msbuild tests\ComputeSharp.D2D1.WinUI.Tests\ComputeSharp.D2D1.WinUI.Tests.csproj /restore -t:build /p:Configuration=Release /p:Platform=${{matrix.platform}}
 
       # Run the D2D1 WinAppSDK unit tests with VS Test
     - name: Run ComputeSharp.D2D1.WinUI.Tests
       run: >
         $vs_path = vswhere -latest -products * -requires Microsoft.VisualStudio.Workload.ManagedDesktop -requiresAny -property installationPath;
         $vstest_path = join-path $vs_path 'Common7\IDE\CommonExtensions\Microsoft\TestWindow\vstest.console.exe';
-        & $vstest_path /Platform:x64 tests\ComputeSharp.D2D1.WinUI.Tests\bin\x64\Release\net8.0-windows10.0.22621.0\win-x64\ComputeSharp.D2D1.WinUI.Tests.build.appxrecipe
+        & $vstest_path /Platform:${{matrix.platform}} tests\ComputeSharp.D2D1.WinUI.Tests\bin\${{matrix.platform}}\Release\net8.0-windows10.0.22621.0\win-${{matrix.platform}}\ComputeSharp.D2D1.WinUI.Tests.build.appxrecipe
 
       # Build the D2D1 WinAppSDK source generators tests
     - name: Build ComputeSharp.D2D1.WinUI.Tests.SourceGenerators
-      run: msbuild tests\ComputeSharp.D2D1.WinUI.Tests.SourceGenerators\ComputeSharp.D2D1.WinUI.Tests.SourceGenerators.csproj /restore -t:build /p:Configuration=Release /p:Platform=x64
+      run: msbuild tests\ComputeSharp.D2D1.WinUI.Tests.SourceGenerators\ComputeSharp.D2D1.WinUI.Tests.SourceGenerators.csproj /restore -t:build /p:Configuration=Release /p:Platform=${{matrix.platform}}
 
       # Run the D2D1 WinAppSDK source generators tests (same as above)
     - name: Run ComputeSharp.D2D1.WinUI.Tests.SourceGenerators
       run: >
         $vs_path = vswhere -latest -products * -requires Microsoft.VisualStudio.Workload.ManagedDesktop -requiresAny -property installationPath;
         $vstest_path = join-path $vs_path 'Common7\IDE\CommonExtensions\Microsoft\TestWindow\vstest.console.exe';
-        & $vstest_path /Platform:x64 tests\ComputeSharp.D2D1.WinUI.Tests.SourceGenerators\bin\x64\Release\net8.0-windows10.0.22621.0\ComputeSharp.D2D1.WinUI.Tests.SourceGenerators.dll
+        & $vstest_path /Platform:${{matrix.platform}} tests\ComputeSharp.D2D1.WinUI.Tests.SourceGenerators\bin\${{matrix.platform}}\Release\net8.0-windows10.0.22621.0\ComputeSharp.D2D1.WinUI.Tests.SourceGenerators.dll
 
   # Run all the local samples to ensure they build and run with no errors
   run-samples:
     needs: [build-solution]
-    runs-on: windows-2022
+    strategy:
+      matrix:
+        platform: [x64, arm64]
+    runs-on: ${{ matrix.platform == 'x64' && 'windows-2022' || 'windows-11-arm' }}
     steps:
     - name: Git checkout
       uses: actions/checkout@v4
     - name: Build and run ComputeSharp.Sample
       run: >
-        dotnet build samples\ComputeSharp.Sample\ComputeSharp.Sample.csproj -c Release -r win-x64 --no-self-contained -p:Platform=x64 -v n;
-        samples\ComputeSharp.Sample\bin\x64\Release\net8.0\win-x64\ComputeSharp.Sample.exe
+        dotnet build samples\ComputeSharp.Sample\ComputeSharp.Sample.csproj -c Release -r win-${{matrix.platform}} --no-self-contained -p:Platform=${{matrix.platform}} -v n;
+        samples\ComputeSharp.Sample\bin\${{matrix.platform}}\Release\net8.0\win-${{matrix.platform}}\ComputeSharp.Sample.exe
     - name: Build and run ComputeSharp.Sample.FSharp
       run: >
-        dotnet build samples\ComputeSharp.Sample.FSharp\ComputeSharp.Sample.FSharp.fsproj -c Release -r win-x64 --no-self-contained -p:Platform=x64 -v n;
-        samples\ComputeSharp.Sample.FSharp\bin\x64\Release\net8.0\win-x64\ComputeSharp.Sample.FSharp.exe
+        dotnet build samples\ComputeSharp.Sample.FSharp\ComputeSharp.Sample.FSharp.fsproj -c Release -r win-${{matrix.platform}} --no-self-contained -p:Platform=${{matrix.platform}} -v n;
+        samples\ComputeSharp.Sample.FSharp\bin\${{matrix.platform}}\Release\net8.0\win-${{matrix.platform}}\ComputeSharp.Sample.FSharp.exe
     - name: Build and run ComputeSharp.ImageProcessing.csproj
       run: >
-        dotnet build samples\ComputeSharp.ImageProcessing\ComputeSharp.ImageProcessing.csproj -c Release -r win-x64 --no-self-contained -p:Platform=x64 -v n;
-        samples\ComputeSharp.ImageProcessing\bin\x64\Release\net8.0\win-x64\ComputeSharp.ImageProcessing.exe
+        dotnet build samples\ComputeSharp.ImageProcessing\ComputeSharp.ImageProcessing.csproj -c Release -r win-${{matrix.platform}} --no-self-contained -p:Platform=${{matrix.platform}} -v n;
+        samples\ComputeSharp.ImageProcessing\bin\${{matrix.platform}}\Release\net8.0\win-${{matrix.platform}}\ComputeSharp.ImageProcessing.exe
 
   # Run the NativeAOT samples as well
   run-samples-aot:
@@ -208,7 +222,7 @@ jobs:
     strategy:
       matrix:
         platform: [x64, arm64]
-    runs-on: windows-2022
+    runs-on: ${{ matrix.platform == 'x64' && 'windows-2022' || 'windows-11-arm' }}
     env:
       CI_RUNNER_SAMPLES_INTEGRATION_TESTS: true
     steps:
@@ -223,14 +237,12 @@ jobs:
         $env:COMPUTESHARP_SWAPCHAIN_CLI_PUBLISH_AOT='true';
         dotnet publish samples\ComputeSharp.SwapChain.Cli\ComputeSharp.SwapChain.Cli.csproj -r win-${{matrix.platform}} -v n
       
-      # If on x64, also run it (this script will launch it and let it run for 2 seconds, before closing it).
       # Note: for this and all other equivalent tests below, we're only throwing on failures that are not
       # -1073741510 (STATUS_CONTROL_C_EXIT). That error is sometimes thrown when running the test in the CI.
       # We don't want to fail in that case, as it still means the sample has in fact ran with no problems.
-    - if: matrix.platform == 'x64'
-      name: Run ComputeSharp.SwapChain.Cli (speed)
+    - name: Run ComputeSharp.SwapChain.Cli (speed)
       run: >
-        $process = (Start-Process samples\ComputeSharp.SwapChain.Cli\bin\Release\net8.0\win-x64\publish\computesharp.cli.exe -PassThru);
+        $process = (Start-Process samples\ComputeSharp.SwapChain.Cli\bin\Release\net8.0\win-${{matrix.platform}}\publish\computesharp.cli.exe -PassThru);
         sleep -Seconds 2;
         try
         {
@@ -241,12 +253,11 @@ jobs:
         if ($process.ExitCode -ne 0 -and $process.ExitCode -ne -1073741510) { throw $process.ExitCode; }
 
       # Upload the binary (to track binary size trends)
-    - if: matrix.platform == 'x64'
-      name: Upload NativeAOT CLI sample (speed)
+    - name: Upload NativeAOT CLI sample (speed)
       uses: actions/upload-artifact@v4
       with:
-        name: computesharp.cli.opt-speed.exe
-        path: samples\ComputeSharp.SwapChain.Cli\bin\Release\net8.0\win-x64\publish\computesharp.cli.exe
+        name: computesharp.cli.opt-speed.${{matrix.platform}}.exe
+        path: samples\ComputeSharp.SwapChain.Cli\bin\Release\net8.0\win-${{matrix.platform}}\publish\computesharp.cli.exe
         if-no-files-found: error
 
       # Publish the NativeAOT CLI sample (optimized for size, and reflection-free)
@@ -258,11 +269,10 @@ jobs:
         git clean -fdx;
         dotnet publish samples\ComputeSharp.SwapChain.Cli\ComputeSharp.SwapChain.Cli.csproj -r win-${{matrix.platform}} -v n
       
-      # Again only on x64, also run the sample and validate it works correctly
-    - if: matrix.platform == 'x64'
-      name: Run ComputeSharp.SwapChain.Cli (size)
+      # Also run the sample and validate it works correctly
+    - name: Run ComputeSharp.SwapChain.Cli (size)
       run: >
-        $process = (Start-Process samples\ComputeSharp.SwapChain.Cli\bin\Release\net8.0\win-x64\publish\computesharp.cli.exe -PassThru);
+        $process = (Start-Process samples\ComputeSharp.SwapChain.Cli\bin\Release\net8.0\win-${{matrix.platform}}\publish\computesharp.cli.exe -PassThru);
         sleep -Seconds 2;
         try
         {
@@ -273,12 +283,11 @@ jobs:
         if ($process.ExitCode -ne 0 -and $process.ExitCode -ne -1073741510) { throw $process.ExitCode; }
 
       # Upload the binary again (with a different name)
-    - if: matrix.platform == 'x64'
-      name: Upload NativeAOT CLI sample (size)
+    - name: Upload NativeAOT CLI sample (size)
       uses: actions/upload-artifact@v4
       with:
-        name: computesharp.cli.opt-size.exe
-        path: samples\ComputeSharp.SwapChain.Cli\bin\Release\net8.0\win-x64\publish\computesharp.cli.exe
+        name: computesharp.cli.opt-size.${{matrix.platform}}.exe
+        path: samples\ComputeSharp.SwapChain.Cli\bin\Release\net8.0\win-${{matrix.platform}}\publish\computesharp.cli.exe
         if-no-files-found: error
 
       # Also publish the Win2D sample (with R2R)
@@ -290,11 +299,10 @@ jobs:
         msbuild samples\ComputeSharp.SwapChain.D2D1.Cli\ComputeSharp.SwapChain.D2D1.Cli.csproj /restore -t:publish
         /p:Configuration=Release /p:Platform=${{matrix.platform}} /p:RuntimeIdentifier=win-${{matrix.platform}}
       
-      # Just like for the DX12 sample, run it on x64 to validate it works correctly
-    - if: matrix.platform == 'x64'
-      name: Run ComputeSharp.SwapChain.D2D1.Cli (R2R)
+      # Just like for the DX12 sample, validate it works correctly
+    - name: Run ComputeSharp.SwapChain.D2D1.Cli (R2R)
       run: >
-        $process = (Start-Process samples\ComputeSharp.SwapChain.D2D1.Cli\bin\x64\Release\net8.0-windows10.0.22621\win-x64\publish\computesharp.d2d1.cli.exe -PassThru);
+        $process = (Start-Process samples\ComputeSharp.SwapChain.D2D1.Cli\bin\${{matrix.platform}}\Release\net8.0-windows10.0.22621\win-${{matrix.platform}}\publish\computesharp.d2d1.cli.exe -PassThru);
         sleep -Seconds 2;
         try
         {
@@ -314,10 +322,9 @@ jobs:
         /p:Configuration=Release /p:Platform=${{matrix.platform}} /p:RuntimeIdentifier=win-${{matrix.platform}}
         
       # Verify that the Win2D NativeAOT sample also runs correctly
-    - if: matrix.platform == 'x64'
-      name: Run ComputeSharp.SwapChain.D2D1.Cli (NativeAOT)
+    - name: Run ComputeSharp.SwapChain.D2D1.Cli (NativeAOT)
       run: >
-        $process = (Start-Process samples\ComputeSharp.SwapChain.D2D1.Cli\bin\x64\Release\net8.0-windows10.0.22621\win-x64\publish\computesharp.d2d1.cli.exe -PassThru);
+        $process = (Start-Process samples\ComputeSharp.SwapChain.D2D1.Cli\bin\${{matrix.platform}}\Release\net8.0-windows10.0.22621\win-${{matrix.platform}}\publish\computesharp.d2d1.cli.exe -PassThru);
         sleep -Seconds 2;
         try
         {
@@ -332,29 +339,25 @@ jobs:
       run: dotnet publish samples\ComputeSharp.NativeLibrary\ComputeSharp.NativeLibrary.csproj -r win-${{matrix.platform}} -v n
 
       # Publish the WinRT component with NativeAOT as well
-    - if: matrix.platform == 'x64'
-      name: Publish ComputeSharp.NativeLibrary.WinRT
+    - name: Publish ComputeSharp.NativeLibrary.WinRT
       run: >
         msbuild samples\ComputeSharp.NativeLibrary.WinRT\ComputeSharp.NativeLibrary.WinRT.csproj /restore -t:publish
         /p:Configuration=Release /p:Platform=${{matrix.platform}} /p:RuntimeIdentifier=win-${{matrix.platform}}
       
       # Publish the WinUI 3 sample app with NativeAOT
-    - if: matrix.platform == 'x64'
-      name: Publish ComputeSharp.SwapChain.WinUI
+    - name: Publish ComputeSharp.SwapChain.WinUI
       run: >
         msbuild samples\ComputeSharp.SwapChain.WinUI\ComputeSharp.SwapChain.WinUI.csproj /restore -t:publish
         /p:Configuration=Release /p:Platform=${{matrix.platform}} /p:RuntimeIdentifier=win-${{matrix.platform}}
 
       # Publish the D2D1 UWP (CoreApplication) sample app with NativeAOT
-    - if: matrix.platform == 'x64'
-      name: Publish ComputeSharp.SwapChain.D2D1.Uwp
+    - name: Publish ComputeSharp.SwapChain.D2D1.Uwp
       run: >
         msbuild samples\ComputeSharp.SwapChain.D2D1.Uwp\ComputeSharp.SwapChain.D2D1.Uwp.csproj /restore -t:publish
         /p:Configuration=Release /p:Platform=${{matrix.platform}} /p:RuntimeIdentifier=win-${{matrix.platform}}
 
       # Publish the D2D1 UWP sample app again with NativeAOT, with Xbox support
-    - if: matrix.platform == 'x64'
-      name: Publish ComputeSharp.SwapChain.D2D1.Uwp (Xbox)
+    - name: Publish ComputeSharp.SwapChain.D2D1.Uwp (Xbox)
       run: >
         $env:EXPERIMENTAL_XBOX_SUPPORT='true';
         msbuild samples\ComputeSharp.SwapChain.D2D1.Uwp\ComputeSharp.SwapChain.D2D1.Uwp.csproj /restore -t:publish
@@ -365,7 +368,10 @@ jobs:
   # a test to ensure the NuGet packages work in a consuming project.
   verify-packages:
     needs: [build-packages]
-    runs-on: windows-2022
+    strategy:
+      matrix:
+        platform: [x64, arm64]
+    runs-on: ${{ matrix.platform == 'x64' && 'windows-2022' || 'windows-11-arm' }}
     steps:
     - name: Git checkout
       uses: actions/checkout@v4
@@ -377,11 +383,11 @@ jobs:
         name: nuget_packages
         path: artifacts
     - name: Build and run ComputeSharp.NuGet
-      run: dotnet run --project tests\ComputeSharp.NuGet\ComputeSharp.NuGet.csproj -c Release -r win-x64 --no-self-contained -v n
+      run: dotnet run --project tests\ComputeSharp.NuGet\ComputeSharp.NuGet.csproj -c Release -r win-${{matrix.platform}} --no-self-contained -v n
     - name: Build and run ComputeSharp.Dxc.NuGet
-      run: dotnet run --project tests\ComputeSharp.Dxc.NuGet\ComputeSharp.Dxc.NuGet.csproj -c Release -r win-x64 --no-self-contained -v n
+      run: dotnet run --project tests\ComputeSharp.Dxc.NuGet\ComputeSharp.Dxc.NuGet.csproj -c Release -r win-${{matrix.platform}} --no-self-contained -v n
     - name: Build and run ComputeSharp.Pix.NuGet
-      run: dotnet run --project tests\ComputeSharp.Pix.NuGet\ComputeSharp.Pix.NuGet.csproj -c Release -r win-x64 --no-self-contained -v n
+      run: dotnet run --project tests\ComputeSharp.Pix.NuGet\ComputeSharp.Pix.NuGet.csproj -c Release -r win-${{matrix.platform}} --no-self-contained -v n
     
       # Run the extra tests to validate a number of build and publishing configurations.
       # This is used to ensure the native dependencies can always be loaded correctly
@@ -393,18 +399,18 @@ jobs:
     - name: Publish and run ComputeSharp.NuGet with NativeAOT
       run: >
         $env:COMPUTESHARP_NUGET_TESTS_PUBLISH_AOT='true';
-        dotnet publish tests\ComputeSharp.NuGet\ComputeSharp.NuGet.csproj -r win-x64 -v n;
-        tests\ComputeSharp.NuGet\bin\Release\net8.0\win-x64\publish\ComputeSharp.NuGet.exe
+        dotnet publish tests\ComputeSharp.NuGet\ComputeSharp.NuGet.csproj -r win-${{matrix.platform}} -v n;
+        tests\ComputeSharp.NuGet\bin\Release\net8.0\win-${{matrix.platform}}\publish\ComputeSharp.NuGet.exe
     - name: Publish and run ComputeSharp.Dxc.NuGet with NativeAOT
       run: >
         $env:COMPUTESHARP_NUGET_TESTS_PUBLISH_AOT='true';
-        dotnet publish tests\ComputeSharp.Dxc.NuGet\ComputeSharp.Dxc.NuGet.csproj -r win-x64 -v n;
-        tests\ComputeSharp.Dxc.NuGet\bin\Release\net8.0\win-x64\publish\ComputeSharp.Dxc.NuGet.exe
+        dotnet publish tests\ComputeSharp.Dxc.NuGet\ComputeSharp.Dxc.NuGet.csproj -r win-${{matrix.platform}} -v n;
+        tests\ComputeSharp.Dxc.NuGet\bin\Release\net8.0\win-${{matrix.platform}}\publish\ComputeSharp.Dxc.NuGet.exe
     - name: Publish and run ComputeSharp.Pix.NuGet with NativeAOT
       run: >
         $env:COMPUTESHARP_NUGET_TESTS_PUBLISH_AOT='true';
-        dotnet publish tests\ComputeSharp.Pix.NuGet\ComputeSharp.Pix.NuGet.csproj -r win-x64 -v n;
-        tests\ComputeSharp.Pix.NuGet\bin\Release\net8.0\win-x64\publish\ComputeSharp.Pix.NuGet.exe
+        dotnet publish tests\ComputeSharp.Pix.NuGet\ComputeSharp.Pix.NuGet.csproj -r win-${{matrix.platform}} -v n;
+        tests\ComputeSharp.Pix.NuGet\bin\Release\net8.0\win-${{matrix.platform}}\publish\ComputeSharp.Pix.NuGet.exe
 
   # Publish the packages to GitHub packages
   publish-nightlies-github:
