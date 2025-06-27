@@ -18,7 +18,9 @@ partial class DeviceHelper
 #if DEBUG
         DXGI.DXGI_CREATE_FACTORY_DEBUG;
 #else
+#pragma warning disable IDE0004 // See: https://github.com/dotnet/roslyn/issues/79180
         Configuration.IsDebugOutputEnabled ? (uint)DXGI.DXGI_CREATE_FACTORY_DEBUG : 0;
+#pragma warning restore IDE0004
 #endif
 
     /// <summary>
