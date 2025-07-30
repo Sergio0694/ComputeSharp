@@ -144,7 +144,7 @@
 
   <!-- Needed for deterministic builds -->
   <ItemGroup>
-    <SourceRoot Include="$(MSBuildThisFileDirectory)..\"/>
+    <SourceRoot Include="$(MSBuildThisFileDirectory)..\" />
   </ItemGroup>
 
   <!--
