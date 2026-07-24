@@ -6,13 +6,15 @@ namespace ComputeSharp.SourceGeneration.Helpers;
 /// <summary>
 /// A type providing <see cref="SemanticModel"/> instances for nodes.
 /// </summary>
-/// <param name="compilation">The source <see cref="Compilation"/> instance.</param>
-internal sealed class SemanticModelProvider(Compilation compilation)
+/// <param name="baseSemanticModel">A <see cref="SemanticModel"/> whose <see cref="SemanticModel.Compilation"/>
+/// will be used to get <see cref="SemanticModel"/> instances for other syntax trees.</param>
+internal sealed class SemanticModelProvider(SemanticModel baseSemanticModel)
 {
     /// <summary>
-    /// The map of loaded <see cref="SemanticModel"/> instances.
+    /// The map of loaded <see cref="SemanticModel"/> instances for syntax trees other than
+    /// the one for <see cref="baseSemanticModel"/>.
     /// </summary>
-    private readonly Dictionary<SyntaxTree, SemanticModel> semanticModelsMap = [];
+    private Dictionary<SyntaxTree, SemanticModel>? additionalSemanticModels = null;
 
     /// <summary>
     /// Gets a <see cref="SemanticModel"/> instance with info on a given <see cref="SyntaxNode"/>.
@@ -21,11 +23,20 @@ internal sealed class SemanticModelProvider(Compilation compilation)
     /// <returns>A <see cref="SemanticModel"/> instance containing info on <paramref name="syntaxNode"/>.</returns>
     public SemanticModel For(SyntaxNode syntaxNode)
     {
-        if (!this.semanticModelsMap.TryGetValue(syntaxNode.SyntaxTree, out SemanticModel semanticModel))
+        // Reuse the base semantic model if the syntax node belongs to the same tree.
+        // This will avoid creating new semantic models if the entire type's definition is in the same file.
+        if (syntaxNode.SyntaxTree == baseSemanticModel.SyntaxTree)
         {
-            semanticModel = compilation.GetSemanticModel(syntaxNode.SyntaxTree);
+            return baseSemanticModel;
+        }
 
-            this.semanticModelsMap.Add(syntaxNode.SyntaxTree, semanticModel);
+        this.additionalSemanticModels ??= [];
+
+        if (!this.additionalSemanticModels.TryGetValue(syntaxNode.SyntaxTree, out SemanticModel semanticModel))
+        {
+            semanticModel = baseSemanticModel.Compilation.GetSemanticModel(syntaxNode.SyntaxTree);
+
+            this.additionalSemanticModels.Add(syntaxNode.SyntaxTree, semanticModel);
         }
 
         return semanticModel;

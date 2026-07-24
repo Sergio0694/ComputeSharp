@@ -27,7 +27,7 @@ partial class D2DPixelShaderDescriptorGenerator
         /// Gathers all necessary information on a transpiled HLSL source for a given shader type.
         /// </summary>
         /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
-        /// <param name="compilation">The input <see cref="Compilation"/> object currently in use.</param>
+        /// <param name="semanticModelProvider">The <see cref="SemanticModelProvider"/> instance currently in use.</param>
         /// <param name="structDeclarationSymbol">The <see cref="INamedTypeSymbol"/> for the shader type.</param>
         /// <param name="shaderInterfaceType">The shader interface type implemented by the shader type.</param>
         /// <param name="inputCount">The number of inputs for the shader.</param>
@@ -37,7 +37,7 @@ partial class D2DPixelShaderDescriptorGenerator
         /// <returns>The HLSL source for the shader.</returns>
         public static string GetHlslSource(
             ImmutableArrayBuilder<DiagnosticInfo> diagnostics,
-            Compilation compilation,
+            SemanticModelProvider semanticModelProvider,
             INamedTypeSymbol structDeclarationSymbol,
             INamedTypeSymbol shaderInterfaceType,
             int inputCount,
@@ -69,8 +69,6 @@ partial class D2DPixelShaderDescriptorGenerator
                 out ImmutableArray<HlslResourceTextureField> resourceTextureFields);
 
             token.ThrowIfCancellationRequested();
-
-            SemanticModelProvider semanticModelProvider = new(compilation);
 
             // Explore the syntax tree and extract the processed info
             (string entryPoint, ImmutableArray<HlslMethod> processedMethods) = GetProcessedMethods(
