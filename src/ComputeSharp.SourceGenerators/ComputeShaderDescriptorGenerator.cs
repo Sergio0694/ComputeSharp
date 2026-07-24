@@ -90,10 +90,12 @@ public sealed partial class ComputeShaderDescriptorGenerator : IIncrementalGener
 
                     using ImmutableArrayBuilder<DiagnosticInfo> diagnostics = new();
 
+                    SemanticModelProvider semanticModelProvider = new(context.SemanticModel);
+
                     // Transpiled HLSL source info
                     HlslSource.GetInfo(
                         diagnostics,
-                        context.SemanticModel.Compilation,
+                        semanticModelProvider,
                         typeSymbol,
                         shaderInterfaceType,
                         isPixelShaderLike,

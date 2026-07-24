@@ -139,10 +139,12 @@ public sealed partial class D2DPixelShaderDescriptorGenerator : IIncrementalGene
 
                     using ImmutableArrayBuilder<DiagnosticInfo> diagnostics = new();
 
+                    SemanticModelProvider semanticModelProvider = new(context.SemanticModel);
+
                     // Get HLSL source for HlslSource
                     string hlslSource = HlslSource.GetHlslSource(
                         diagnostics,
-                        context.SemanticModel.Compilation,
+                        semanticModelProvider,
                         typeSymbol,
                         shaderInterfaceType,
                         inputCount,

@@ -29,7 +29,7 @@ partial class ComputeShaderDescriptorGenerator
         /// Gathers all necessary information on a transpiled HLSL source for a given shader type.
         /// </summary>
         /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
-        /// <param name="compilation">The input <see cref="Compilation"/> object currently in use.</param>
+        /// <param name="semanticModelProvider">The <see cref="SemanticModelProvider"/> instance currently in use.</param>
         /// <param name="structDeclarationSymbol">The <see cref="INamedTypeSymbol"/> for the shader type.</param>
         /// <param name="shaderInterfaceType">The shader interface type implemented by the shader type.</param>
         /// <param name="isPixelShaderLike">Whether <paramref name="structDeclarationSymbol"/> is a "pixel shader like" type.</param>
@@ -42,7 +42,7 @@ partial class ComputeShaderDescriptorGenerator
         /// <param name="hlslSource">The resulting HLSL source for the current shader.</param>
         public static void GetInfo(
             ImmutableArrayBuilder<DiagnosticInfo> diagnostics,
-            Compilation compilation,
+            SemanticModelProvider semanticModelProvider,
             INamedTypeSymbol structDeclarationSymbol,
             INamedTypeSymbol shaderInterfaceType,
             bool isPixelShaderLike,
@@ -88,8 +88,6 @@ partial class ComputeShaderDescriptorGenerator
                 discoveredTypes);
 
             token.ThrowIfCancellationRequested();
-
-            SemanticModelProvider semanticModelProvider = new(compilation);
 
             (string entryPoint, ImmutableArray<HlslMethod> processedMethods, isSamplerUsed) = GetProcessedMethods(
                 diagnostics,
