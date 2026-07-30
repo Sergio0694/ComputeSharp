@@ -9,6 +9,9 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 #pragma warning disable IDE0044, IDE0059, IDE0161
 
+// Some tests are specifically validating the experimental DeclareMinimumPrecisionSupport option
+#pragma warning disable CMPSEXP0001
+
 [D2DInputCount(0)]
 [D2DGeneratedPixelShaderDescriptor]
 [AutoConstructor]
@@ -700,6 +703,35 @@ namespace ComputeSharp.D2D1.Tests
         [D2DCompileOptions(D2D1CompileOptions.Default | D2D1CompileOptions.StripReflectionData)]
         [D2DGeneratedPixelShaderDescriptor]
         public readonly partial struct ReferenceShaderWithStripReflectionData : ID2D1PixelShader
+        {
+            public float4 Execute()
+            {
+                float4 color = D2D.GetInput(0);
+                float3 rgb = Hlsl.Saturate(1.0f - color.RGB);
+
+                return new(rgb, 1);
+            }
+        }
+
+        [TestMethod]
+        public void LoadBytecode_DeclareMinimumPrecisionSupportIsAppliedCorrectly()
+        {
+            ReadOnlyMemory<byte> hlslBytecode1 = D2D1PixelShader.LoadBytecode<ReferenceShaderWithDefaultCompileOptions>(out _, out D2D1CompileOptions compileOptions1);
+            ReadOnlyMemory<byte> hlslBytecode2 = D2D1PixelShader.LoadBytecode<ReferenceShaderWithDeclareMinimumPrecisionSupport>(out _, out D2D1CompileOptions compileOptions2);
+
+            Assert.AreEqual(D2D1CompileOptions.Default, compileOptions1);
+            Assert.AreEqual(D2D1CompileOptions.Default | D2D1CompileOptions.DeclareMinimumPrecisionSupport, compileOptions2);
+
+            // Same check as in D2D1ShaderCompilerTests.CompileInvertEffectWithDeclareMinimumPrecisionSupport
+            Assert.AreEqual(hlslBytecode1.Length + 20, hlslBytecode2.Length);
+        }
+
+        [D2DInputCount(1)]
+        [D2DInputSimple(0)]
+        [D2DShaderProfile(D2D1ShaderProfile.PixelShader50)]
+        [D2DCompileOptions(D2D1CompileOptions.Default | D2D1CompileOptions.DeclareMinimumPrecisionSupport)]
+        [D2DGeneratedPixelShaderDescriptor]
+        public readonly partial struct ReferenceShaderWithDeclareMinimumPrecisionSupport : ID2D1PixelShader
         {
             public float4 Execute()
             {

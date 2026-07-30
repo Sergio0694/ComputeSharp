@@ -1,6 +1,10 @@
 using System;
+using System.Buffers.Binary;
 using ComputeSharp.D2D1.Interop;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+// These tests are specifically validating the experimental DeclareMinimumPrecisionSupport option
+#pragma warning disable CMPSEXP0001
 
 namespace ComputeSharp.D2D1.Tests;
 
@@ -314,5 +318,98 @@ public partial class D2D1ShaderCompilerTests
             D2D1CompileOptions.Default & ~D2D1CompileOptions.WarningsAreErrors);
 
         Assert.IsTrue(bytecode.Length > 0);
+    }
+
+    [TestMethod]
+    public void CompileInvertEffectWithDeclareMinimumPrecisionSupport()
+    {
+        ReadOnlyMemory<byte> bytecode = D2D1ShaderCompiler.Compile(
+            InvertEffectSource.AsSpan(),
+            "PSMain".AsSpan(),
+            D2D1ShaderProfile.PixelShader40Level93,
+            D2D1CompileOptions.Default);
+
+        ReadOnlyMemory<byte> bytecodeWithRetention = D2D1ShaderCompiler.Compile(
+            InvertEffectSource.AsSpan(),
+            "PSMain".AsSpan(),
+            D2D1ShaderProfile.PixelShader40Level93,
+            D2D1CompileOptions.Default | D2D1CompileOptions.DeclareMinimumPrecisionSupport);
+
+        // The only difference is the appended shader feature info blob: one entry in the table of
+        // blob offsets (4 bytes), the header of the blob (8 bytes), and its payload (8 bytes).
+        Assert.AreEqual(bytecode.Length + 20, bytecodeWithRetention.Length);
+
+        // Compiling succeeds only if D3DSetBlobPart accepted the patched container, and the resulting
+        // bytecode is only usable if the checksum was recomputed over the patched contents.
+        Assert.IsTrue(IsWellFormedDxbcContainer(bytecodeWithRetention.Span));
+    }
+
+    [TestMethod]
+    public void CompileInvertEffectWithDeclareMinimumPrecisionSupportAndNoLinking()
+    {
+        ReadOnlyMemory<byte> bytecode = D2D1ShaderCompiler.Compile(
+            InvertEffectSource.AsSpan(),
+            "PSMain".AsSpan(),
+            D2D1ShaderProfile.PixelShader40Level93,
+            D2D1CompileOptions.Default & ~D2D1CompileOptions.EnableLinking);
+
+        ReadOnlyMemory<byte> bytecodeWithRetention = D2D1ShaderCompiler.Compile(
+            InvertEffectSource.AsSpan(),
+            "PSMain".AsSpan(),
+            D2D1ShaderProfile.PixelShader40Level93,
+            (D2D1CompileOptions.Default & ~D2D1CompileOptions.EnableLinking) | D2D1CompileOptions.DeclareMinimumPrecisionSupport);
+
+        // There is no export function to reach without linking, so the option is ignored
+        CollectionAssert.AreEqual(bytecode.ToArray(), bytecodeWithRetention.ToArray());
+    }
+
+    /// <summary>
+    /// The HLSL source for a simple invert effect, shared by tests comparing compilation options.
+    /// </summary>
+    private const string InvertEffectSource = """
+        #define D2D_INPUT_COUNT 1
+        #define D2D_INPUT0_SIMPLE
+
+        #include "d2d1effecthelpers.hlsli"
+
+        D2D_PS_ENTRY(PSMain)
+        {
+            float4 color = D2DGetInput(0);
+            float3 rgb = saturate(1.0 - color.rgb);
+            return float4(rgb, 1);
+        }
+        """;
+
+    /// <summary>
+    /// Checks that a buffer is a DXBC container with a consistent size and set of blob offsets.
+    /// </summary>
+    /// <param name="bytecode">The DXBC container to inspect.</param>
+    /// <returns>Whether <paramref name="bytecode"/> is a well formed DXBC container.</returns>
+    private static bool IsWellFormedDxbcContainer(ReadOnlySpan<byte> bytecode)
+    {
+        if (bytecode.Length < 32 || !bytecode.StartsWith("DXBC"u8))
+        {
+            return false;
+        }
+
+        if (BinaryPrimitives.ReadUInt32LittleEndian(bytecode.Slice(24)) != (uint)bytecode.Length)
+        {
+            return false;
+        }
+
+        uint blobCount = BinaryPrimitives.ReadUInt32LittleEndian(bytecode.Slice(28));
+
+        for (int i = 0; i < blobCount; i++)
+        {
+            uint blobOffset = BinaryPrimitives.ReadUInt32LittleEndian(bytecode.Slice(32 + (i * 4)));
+            uint blobSize = BinaryPrimitives.ReadUInt32LittleEndian(bytecode.Slice((int)blobOffset + 4));
+
+            if (blobOffset + 8 + blobSize > bytecode.Length)
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
