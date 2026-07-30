@@ -2,6 +2,7 @@ using System;
 #if SOURCE_GENERATOR
 using D3DCOMPILE = Windows.Win32.PInvoke;
 #else
+using System.Diagnostics.CodeAnalysis;
 using ComputeSharp.D2D1.Interop;
 using ComputeSharp.Win32;
 
@@ -154,6 +155,34 @@ public enum D2D1CompileOptions
     /// This flag maps to <c>D3DCOMPILE_WARNINGS_ARE_ERRORS</c> and <c>/WX</c>.
     /// </remarks>
     WarningsAreErrors = (int)D3DCOMPILE.D3DCOMPILE_WARNINGS_ARE_ERRORS,
+
+    /// <summary>
+    /// Declares minimum precision support in the compiled bytecode, which can allow Direct2D to link the
+    /// resulting effect. This flag has no effect unless <see cref="EnableLinking"/> is also set.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Setting <see cref="EnableLinking"/> embeds an export function in the compiled bytecode, but Direct2D
+    /// will generally still not link effects created from it. Additionally declaring minimum precision support
+    /// has been observed to make linking engage, which can remove one rendering pass, and the intermediate
+    /// surface that goes with it, for each effect that ends up being linked.
+    /// </para>
+    /// <para>
+    /// Specifically, this flag appends a shader feature info blob declaring
+    /// <c>D3D_SHADER_FEATURE_MINIMUM_PRECISION</c> to the compiled bytecode. The compiled shader instructions
+    /// are left untouched, so no computation is lowered to a reduced precision. Note that Direct2D may still
+    /// run the bytecode through a minimum precision conversion, depending on the target being rendered to.
+    /// </para>
+    /// <para>
+    /// This relies on behavior that is neither documented nor guaranteed, and that may stop working at any
+    /// time. It should only be used after measuring that it actually improves performance, and shaders using
+    /// it should be validated to still produce correct results.
+    /// </para>
+    /// </remarks>
+#if !SOURCE_GENERATOR
+    [Experimental("CMPSEXP0001", UrlFormat = "https://github.com/Sergio0694/ComputeSharp")]
+#endif
+    DeclareMinimumPrecisionSupport = 1 << 29,
 
     /// <summary>
     /// Strips the reflection data from the generated shader bytecode. The bytecode size will be smaller, but trying

@@ -16,6 +16,9 @@ using ComputeSharp.D2D1.Extensions;
 using ComputeSharp.Win32;
 #endif
 
+// The compiler is responsible for implementing DeclareMinimumPrecisionSupport, so it has to reference it
+#pragma warning disable CMPSEXP0001
+
 namespace ComputeSharp.D2D1.Shaders.Translation;
 
 /// <summary>
@@ -55,9 +58,11 @@ internal static unsafe partial class D3DCompiler
 
         bool enableLinking = (options & D2D1CompileOptions.EnableLinking) == D2D1CompileOptions.EnableLinking;
         bool stripReflectionData = (options & D2D1CompileOptions.StripReflectionData) == D2D1CompileOptions.StripReflectionData;
+        bool declareMinimumPrecisionSupport = (options & D2D1CompileOptions.DeclareMinimumPrecisionSupport) == D2D1CompileOptions.DeclareMinimumPrecisionSupport;
 
         options &= ~D2D1CompileOptions.EnableLinking;
         options &= ~D2D1CompileOptions.StripReflectionData;
+        options &= ~D2D1CompileOptions.DeclareMinimumPrecisionSupport;
 
         try
         {
@@ -95,7 +100,9 @@ internal static unsafe partial class D3DCompiler
                 stripReflectionData: stripReflectionData);
 
             // Embed it as private data if requested
-            using ComPtr<ID3DBlob> d3DBlobLinked = SetD3DPrivateData(d3DBlobFullShader.Get(), d3DBlobFunction.Get());
+            using ComPtr<ID3DBlob> d3DBlobLinked = SetD3DPrivateData(
+                shaderBytecode: GetBytecode(d3DBlobFullShader.Get(), declareMinimumPrecisionSupport),
+                exportBlob: d3DBlobFunction.Get());
 
             return d3DBlobLinked.Move();
         }
@@ -220,29 +227,50 @@ internal static unsafe partial class D3DCompiler
     }
 
     /// <summary>
-    /// Embeds the bytecode for an exported shader as private data into another shader bytecode.
+    /// Gets the bytecode of a full shader, optionally declaring minimum precision support in it.
     /// </summary>
     /// <param name="shaderBlob">The bytecode for the full shader.</param>
-    /// <param name="exportBlob">The bytecode for the shader function to export.</param>
-    /// <returns>An <see cref="ID3DBlob"/> instance with the combined data of <paramref name="shaderBlob"/> and <paramref name="exportBlob"/>.</returns>
-    public static ComPtr<ID3DBlob> SetD3DPrivateData(ID3DBlob* shaderBlob, ID3DBlob* exportBlob)
+    /// <param name="declareMinimumPrecisionSupport">Whether to declare minimum precision support in the bytecode.</param>
+    /// <returns>The bytecode for the full shader.</returns>
+    /// <remarks>
+    /// Patched bytecode is a complete, valid DXBC container with an updated checksum.
+    /// </remarks>
+    public static ReadOnlySpan<byte> GetBytecode(ID3DBlob* shaderBlob, bool declareMinimumPrecisionSupport)
     {
-        void* shaderPtr = shaderBlob->GetBufferPointer();
-        nuint shaderSize = shaderBlob->GetBufferSize();
+        ReadOnlySpan<byte> bytecode = new(shaderBlob->GetBufferPointer(), (int)shaderBlob->GetBufferSize());
 
+        if (declareMinimumPrecisionSupport)
+        {
+            return Dxbc.CreateWithMinimumPrecisionShaderFeatureFlag(bytecode);
+        }
+
+        return bytecode;
+    }
+
+    /// <summary>
+    /// Embeds the bytecode for an exported shader as private data into another shader bytecode.
+    /// </summary>
+    /// <param name="shaderBytecode">The bytecode for the full shader.</param>
+    /// <param name="exportBlob">The bytecode for the shader function to export.</param>
+    /// <returns>An <see cref="ID3DBlob"/> instance with the combined data of <paramref name="shaderBytecode"/> and <paramref name="exportBlob"/>.</returns>
+    public static ComPtr<ID3DBlob> SetD3DPrivateData(ReadOnlySpan<byte> shaderBytecode, ID3DBlob* exportBlob)
+    {
         void* exportPtr = exportBlob->GetBufferPointer();
         nuint exportSize = exportBlob->GetBufferSize();
 
         using ComPtr<ID3DBlob> resultBlob = default;
 
-        DirectX.D3DSetBlobPart(
-            pSrcData: shaderPtr,
-            SrcDataSize: shaderSize,
-            Part: D3D_BLOB_PART.D3D_BLOB_PRIVATE_DATA,
-            Flags: 0,
-            pPart: exportPtr,
-            PartSize: exportSize,
-            ppNewShader: resultBlob.GetAddressOf()).Assert();
+        fixed (byte* shaderPtr = shaderBytecode)
+        {
+            DirectX.D3DSetBlobPart(
+                pSrcData: shaderPtr,
+                SrcDataSize: (nuint)shaderBytecode.Length,
+                Part: D3D_BLOB_PART.D3D_BLOB_PRIVATE_DATA,
+                Flags: 0,
+                pPart: exportPtr,
+                PartSize: exportSize,
+                ppNewShader: resultBlob.GetAddressOf()).Assert();
+        }
 
         return resultBlob.Move();
     }

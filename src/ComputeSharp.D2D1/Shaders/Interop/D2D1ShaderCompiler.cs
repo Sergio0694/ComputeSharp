@@ -4,6 +4,9 @@ using System.Text;
 using ComputeSharp.D2D1.Shaders.Translation;
 using ComputeSharp.Win32;
 
+// The compiler is responsible for implementing DeclareMinimumPrecisionSupport, so it has to reference it
+#pragma warning disable CMPSEXP0001
+
 namespace ComputeSharp.D2D1.Interop;
 
 /// <summary>
@@ -68,10 +71,12 @@ public static class D2D1ShaderCompiler
         // Check the additional compile options (not provided by FXC directly)
         bool enableLinking = (options & D2D1CompileOptions.EnableLinking) == D2D1CompileOptions.EnableLinking;
         bool stripReflectionData = (options & D2D1CompileOptions.StripReflectionData) == D2D1CompileOptions.StripReflectionData;
+        bool declareMinimumPrecisionSupport = (options & D2D1CompileOptions.DeclareMinimumPrecisionSupport) == D2D1CompileOptions.DeclareMinimumPrecisionSupport;
 
         // Remove the additional options to make them blittable to flags
         options &= ~D2D1CompileOptions.EnableLinking;
         options &= ~D2D1CompileOptions.StripReflectionData;
+        options &= ~D2D1CompileOptions.DeclareMinimumPrecisionSupport;
 
         // Compile the standalone D2D1 full shader
         using ComPtr<ID3DBlob> d3DBlobFullShader = D3DCompiler.Compile(
@@ -102,7 +107,9 @@ public static class D2D1ShaderCompiler
             stripReflectionData: stripReflectionData);
 
         // Embed it as private data if requested
-        using ComPtr<ID3DBlob> d3DBlobLinked = D3DCompiler.SetD3DPrivateData(d3DBlobFullShader.Get(), d3DBlobFunction.Get());
+        using ComPtr<ID3DBlob> d3DBlobLinked = D3DCompiler.SetD3DPrivateData(
+            shaderBytecode: D3DCompiler.GetBytecode(d3DBlobFullShader.Get(), declareMinimumPrecisionSupport),
+            exportBlob: d3DBlobFunction.Get());
 
         void* blobLinkedPtr = d3DBlobLinked.Get()->GetBufferPointer();
         nuint blobLinkedSize = d3DBlobLinked.Get()->GetBufferSize();
