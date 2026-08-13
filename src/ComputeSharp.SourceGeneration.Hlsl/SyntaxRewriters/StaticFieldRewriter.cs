@@ -114,6 +114,16 @@ internal sealed partial class StaticFieldRewriter(
                     return namedIntrinsic;
                 }
 
+#if !D3D12_SOURCE_GENERATOR
+                // Parenthesize the coordinate argument for D2D input sampling intrinsics (see ShaderSourceRewriter for more info)
+                if (HlslKnownMethods.NeedsParenthesizedCoordinateArgument(method.GetFullyQualifiedMetadataName()))
+                {
+                    ExpressionSyntax coordinateExpression = updatedNode.ArgumentList.Arguments[1].Expression;
+
+                    updatedNode = updatedNode.ReplaceNode(coordinateExpression, ParenthesizedExpression(coordinateExpression));
+                }
+#endif
+
                 return updatedNode.WithExpression(IdentifierName(mapping!));
             }
         }

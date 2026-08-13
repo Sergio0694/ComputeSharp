@@ -543,6 +543,20 @@ internal sealed partial class ShaderSourceRewriter(
                         return namedIntrinsic;
                     }
 
+#if !D3D12_SOURCE_GENERATOR
+                    // Special case: handle D2D intrinsics that map to function-like macros sampling an input
+                    // texture (eg. 'D2D.SampleInputAtOffset'). These macros paste their coordinate argument
+                    // into an expression without parenthesizing it, so the argument is wrapped in parentheses
+                    // to preserve the original expression semantics (eg. with compound expression arguments).
+                    // See https://github.com/Sergio0694/ComputeSharp/issues/929 for more info.
+                    if (HlslKnownMethods.NeedsParenthesizedCoordinateArgument(metadataName))
+                    {
+                        ExpressionSyntax coordinateExpression = updatedNode.ArgumentList.Arguments[1].Expression;
+
+                        updatedNode = updatedNode.ReplaceNode(coordinateExpression, ParenthesizedExpression(coordinateExpression));
+                    }
+#endif
+
                     return updatedNode.WithExpression(IdentifierName(mapping!));
                 }
 
