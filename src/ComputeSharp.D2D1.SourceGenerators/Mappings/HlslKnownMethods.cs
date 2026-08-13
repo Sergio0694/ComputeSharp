@@ -21,6 +21,22 @@ partial class HlslKnownMethods
         return name is "ComputeSharp.D2D1.D2D.GetScenePosition" or "ComputeSharp.D2D1.D2D.SampleInputAtPosition";
     }
 
+    /// <summary>
+    /// Checks whether or not a method name (previous matched with <see cref="TryGetMappedName(string, out string?)"/>)
+    /// maps to a function-like macro from <c>d2d1effecthelpers.hlsli</c> that requires its coordinate argument (ie. the
+    /// second argument) to be parenthesized. This is needed because those macros paste their arguments into expressions
+    /// without parenthesizing them, which would otherwise break the expression semantics with compound arguments.
+    /// </summary>
+    /// <param name="name">The fully qualified metadata name.</param>
+    /// <returns>Whether the method needs its coordinate argument to be parenthesized.</returns>
+    public static bool NeedsParenthesizedCoordinateArgument(string name)
+    {
+        return name is
+            "ComputeSharp.D2D1.D2D.SampleInput" or
+            "ComputeSharp.D2D1.D2D.SampleInputAtOffset" or
+            "ComputeSharp.D2D1.D2D.SampleInputAtPosition";
+    }
+
     /// <inheritdoc/>
     private static partial Dictionary<string, string?> BuildKnownResourceSamplers()
     {
