@@ -57,4 +57,23 @@
     </ItemGroup>
   </Target>
 
+  <!--
+    Opt-in persistent shader bytecode cache. Setting the 'ComputeSharpCacheShaderBytecode' property to 'true' makes the
+    source generators cache the compiled bytecode for each shader on disk (under the intermediate output path), so that
+    subsequent builds can skip compiling unchanged shaders entirely. This especially benefits command line builds, which
+    otherwise cannot reuse any state across compiler invocations, and would compile all shaders again on every build.
+    Alternatively, the 'ComputeSharpShaderBytecodeCachePath' property can be set to a custom (absolute) directory path
+    directly (eg. to share a single cache across multiple projects), which will also implicitly enable the feature.
+    Note: entries are content-addressed and small, but the cache is not automatically trimmed. It can simply be deleted
+    at any time to reclaim space (the default location is also deleted whenever the intermediate output path is).
+  -->
+  <PropertyGroup Condition="'$(ComputeSharpCacheShaderBytecode)' == 'true' AND '$(ComputeSharpShaderBytecodeCachePath)' == ''">
+    <ComputeSharpShaderBytecodeCachePath>$([MSBuild]::NormalizeDirectory('$(MSBuildProjectDirectory)', '$(IntermediateOutputPath)', 'ComputeSharpShaderCache'))</ComputeSharpShaderBytecodeCachePath>
+  </PropertyGroup>
+
+  <!-- Make the resulting cache path (if any) visible to the source generators -->
+  <ItemGroup>
+    <CompilerVisibleProperty Include="ComputeSharpShaderBytecodeCachePath" />
+  </ItemGroup>
+
 </Project>

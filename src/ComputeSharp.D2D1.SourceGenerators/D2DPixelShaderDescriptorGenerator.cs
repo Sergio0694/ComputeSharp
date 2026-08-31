@@ -197,18 +197,30 @@ public sealed partial class D2DPixelShaderDescriptorGenerator : IIncrementalGene
             .WithTrackingName(WellKnownTrackingNames.Execute)
             .Where(static item => item is not null)!;
 
+        // Get the directory for the persistent bytecode cache, if the opt-in feature is enabled (see
+        // the .targets file in the NuGet package for how this property is populated and made visible)
+        IncrementalValueProvider<string?> bytecodeCacheDirectory =
+            context.AnalyzerConfigOptionsProvider
+            .Select(static (options, _) =>
+                options.GlobalOptions.TryGetValue("build_property.ComputeSharpShaderBytecodeCachePath", out string? cacheDirectory) &&
+                cacheDirectory.Length > 0
+                    ? cacheDirectory
+                    : null);
+
         // Compile all shaders in parallel in a single dedicated node, warming up the shared bytecode
-        // cache. The node produces no meaningful value: it only exists so that the join node below has
-        // an edge ordering it after all compilations are done (its input requires this node's output).
-        IncrementalValueProvider<bool> hlslBytecodeCache =
+        // cache. The node passes through the persistent cache directory for the join node below: it
+        // produces no other meaningful value, and primarily exists so that the join node has an edge
+        // ordering it after all compilations are done (its input requires this node's output).
+        IncrementalValueProvider<string?> hlslBytecodeCache =
             shaderInfoWithNoHlslBytecode
             .Select(static (item, _) => item.HlslInfoKey)
             .Collect()
-            .Select(static (keys, token) =>
+            .Combine(bytecodeCacheDirectory)
+            .Select(static (input, token) =>
             {
-                HlslBytecodeSyntaxProcessor.CompileAllInParallel(keys, token);
+                HlslBytecodeSyntaxProcessor.CompileAllInParallel(input.Left, input.Right, token);
 
-                return true;
+                return input.Right;
             });
 
         // Join each shader with its compiled bytecode (guaranteed to be a cache hit, given the ordering
@@ -223,7 +235,7 @@ public sealed partial class D2DPixelShaderDescriptorGenerator : IIncrementalGene
                 HlslBytecodeInfoKey hlslInfoKey = item.HlslInfoKey;
 
                 // Get the compiled shader from the warmed up cache
-                HlslBytecodeInfo hlslInfo = HlslBytecodeSyntaxProcessor.GetInfo(ref hlslInfoKey, token);
+                HlslBytecodeInfo hlslInfo = HlslBytecodeSyntaxProcessor.GetInfo(ref hlslInfoKey, pair.Right, token);
 
                 token.ThrowIfCancellationRequested();
 

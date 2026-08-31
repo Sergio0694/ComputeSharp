@@ -41,7 +41,19 @@ internal static partial class HlslBytecodeSyntaxProcessor
     /// <returns>The <see cref="HlslBytecodeInfo"/> instance for the current shader.</returns>
     public static HlslBytecodeInfo GetInfo(ref HlslBytecodeInfoKey key, CancellationToken token)
     {
-        static unsafe HlslBytecodeInfo GetInfo(HlslBytecodeInfoKey key, CancellationToken token)
+        return GetInfo(ref key, cacheDirectory: null, token);
+    }
+
+    /// <summary>
+    /// Gets the <see cref="HlslBytecodeInfo"/> instance for the input shader info.
+    /// </summary>
+    /// <param name="key">The <see cref="HlslBytecodeInfoKey"/> instance for the shader to compile.</param>
+    /// <param name="cacheDirectory">The directory for the persistent bytecode cache, if enabled.</param>
+    /// <param name="token">The <see cref="CancellationToken"/> used to cancel the operation, if needed.</param>
+    /// <returns>The <see cref="HlslBytecodeInfo"/> instance for the current shader.</returns>
+    public static HlslBytecodeInfo GetInfo(ref HlslBytecodeInfoKey key, string? cacheDirectory, CancellationToken token)
+    {
+        unsafe HlslBytecodeInfo GetInfo(HlslBytecodeInfoKey key, CancellationToken token)
         {
             // Check if the compilation is not enabled (eg. if there's been errors earlier in the pipeline).
             // In this case, skip the compilation, as diagnostic will be emitted for those anyway.
@@ -49,6 +61,14 @@ internal static partial class HlslBytecodeSyntaxProcessor
             if (!key.IsCompilationEnabled)
             {
                 return HlslBytecodeInfo.Missing.Instance;
+            }
+
+            // If the persistent cache is enabled, also try to load the bytecode from disk before
+            // compiling anything. Entries are content-addressed (see notes in the disk cache logic),
+            // so a valid matching entry is guaranteed to hold exactly the right compiled bytecode.
+            if (TryReadDiskCache(cacheDirectory, key, token, out HlslBytecodeInfo? cachedInfo))
+            {
+                return cachedInfo;
             }
 
             try
@@ -72,7 +92,12 @@ internal static partial class HlslBytecodeSyntaxProcessor
 
                 ImmutableArray<byte> bytecode = Unsafe.As<byte[], ImmutableArray<byte>>(ref array);
 
-                return new HlslBytecodeInfo.Success(bytecode, requiresDoublePrecisionSupport);
+                HlslBytecodeInfo.Success info = new(bytecode, requiresDoublePrecisionSupport);
+
+                // Persist successful compilations to the cache, if enabled (failures are never cached)
+                TryWriteDiskCache(cacheDirectory, key, info);
+
+                return info;
             }
             catch (Win32Exception e)
             {
@@ -92,15 +117,17 @@ internal static partial class HlslBytecodeSyntaxProcessor
 
     /// <summary>
     /// Compiles the shaders for all input keys in parallel, warming up the shared cache.
-    /// After this call, <see cref="GetInfo"/> calls for any of the input keys will be cache hits.
+    /// After this call, <see cref="GetInfo(ref HlslBytecodeInfoKey, string?, CancellationToken)"/>
+    /// calls for any of the input keys will be cache hits.
     /// </summary>
     /// <param name="keys">The <see cref="HlslBytecodeInfoKey"/> instances for the shaders to compile.</param>
+    /// <param name="cacheDirectory">The directory for the persistent bytecode cache, if enabled.</param>
     /// <param name="token">The <see cref="CancellationToken"/> used to cancel the operation, if needed.</param>
-    public static void CompileAllInParallel(ImmutableArray<HlslBytecodeInfoKey> keys, CancellationToken token)
+    public static void CompileAllInParallel(ImmutableArray<HlslBytecodeInfoKey> keys, string? cacheDirectory, CancellationToken token)
     {
-        static void Compile(HlslBytecodeInfoKey key, CancellationToken token)
+        void Compile(HlslBytecodeInfoKey key, CancellationToken token)
         {
-            _ = GetInfo(ref key, token);
+            _ = GetInfo(ref key, cacheDirectory, token);
         }
 
         // Skip the parallel dispatch entirely if there are less than two keys to process

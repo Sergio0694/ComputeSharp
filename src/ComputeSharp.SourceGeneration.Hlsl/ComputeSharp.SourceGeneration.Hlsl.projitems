@@ -27,6 +27,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Mappings\HlslKnownTypes.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\FieldInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\HlslBytecodeDiagnosticsInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SyntaxProcessors\HlslBytecodeSyntaxProcessor.DiskCache.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\HlslBytecodeInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Interfaces\IConstantBufferInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\TypeAliases.cs" />

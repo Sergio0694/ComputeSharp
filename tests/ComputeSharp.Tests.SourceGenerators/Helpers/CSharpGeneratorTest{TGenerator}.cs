@@ -176,7 +176,7 @@ internal static class CSharpGeneratorTest<TGenerator>
     /// <param name="source">The input source to process.</param>
     /// <param name="languageVersion">The language version to use to run the test.</param>
     /// <returns>The resulting <see cref="Compilation"/> object.</returns>
-    private static CSharpCompilation CreateCompilation(string source, LanguageVersion languageVersion = LanguageVersion.CSharp12)
+    public static CSharpCompilation CreateCompilation(string source, LanguageVersion languageVersion = LanguageVersion.CSharp12)
     {
         // Get all assembly references for the .NET TFM and ComputeSharp
         IEnumerable<MetadataReference> metadataReferences =

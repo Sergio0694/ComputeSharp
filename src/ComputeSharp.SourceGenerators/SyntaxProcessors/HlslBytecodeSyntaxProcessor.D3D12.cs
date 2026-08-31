@@ -1,4 +1,5 @@
 using System;
+using System.Security.Cryptography;
 using System.Threading;
 using ComputeSharp.SourceGenerators.Dxc;
 using ComputeSharp.SourceGenerators.Models;
@@ -14,6 +15,13 @@ partial class HlslBytecodeSyntaxProcessor
     private static partial string GetRequiresDoublePrecisionSupportAttributeName()
     {
         return "ComputeSharp.RequiresDoublePrecisionSupportAttribute";
+    }
+
+    /// <inheritdoc/>
+    private static partial void AppendDiskCacheKey(IncrementalHash hash, HlslBytecodeInfoKey key)
+    {
+        hash.AppendData("DXC"u8.ToArray());
+        hash.AppendData(BitConverter.GetBytes((int)key.CompileOptions));
     }
 
     /// <inheritdoc/>

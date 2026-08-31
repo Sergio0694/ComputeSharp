@@ -1,4 +1,5 @@
 using System;
+using System.Security.Cryptography;
 using System.Threading;
 using ComputeSharp.D2D1.Shaders.Translation;
 using ComputeSharp.D2D1.SourceGenerators.Models;
@@ -14,6 +15,14 @@ partial class HlslBytecodeSyntaxProcessor
     private static partial string GetRequiresDoublePrecisionSupportAttributeName()
     {
         return "ComputeSharp.D2D1.D2DRequiresDoublePrecisionSupportAttribute";
+    }
+
+    /// <inheritdoc/>
+    private static partial void AppendDiskCacheKey(IncrementalHash hash, HlslBytecodeInfoKey key)
+    {
+        hash.AppendData("FXC"u8.ToArray());
+        hash.AppendData(BitConverter.GetBytes((int)key.ShaderProfile));
+        hash.AppendData(BitConverter.GetBytes((int)key.CompileOptions));
     }
 
     /// <inheritdoc/>
