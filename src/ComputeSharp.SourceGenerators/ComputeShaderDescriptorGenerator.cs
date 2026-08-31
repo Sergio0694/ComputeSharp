@@ -27,7 +27,8 @@ public sealed partial class ComputeShaderDescriptorGenerator : IIncrementalGener
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
         // Discover all shader types and extract all the necessary info from each of them
-        IncrementalValuesProvider<ShaderInfo> shaderInfo =
+        // (with the exception of the compiled HLSL bytecode, which is processed later)
+        IncrementalValuesProvider<ShaderInfo> shaderInfoWithNoHlslBytecode =
             context.SyntaxProvider
             .ForAttributeWithMetadataName(
                 "ComputeSharp.GeneratedComputeShaderDescriptorAttribute",
@@ -117,16 +118,15 @@ public sealed partial class ComputeShaderDescriptorGenerator : IIncrementalGener
 
                     token.ThrowIfCancellationRequested();
 
-                    // Prepare the lookup key for the HLSL shader bytecode
+                    // Prepare the lookup key for the HLSL shader bytecode. The compilation is deliberately
+                    // deferred to a dedicated node below, so all shaders can be compiled in parallel there
+                    // (the incremental driver invokes transform callbacks sequentially, so compiling here
+                    // would serialize all shader compilations).
                     HlslBytecodeInfoKey hlslInfoKey = new(hlslSource, compileOptions, isCompilationEnabled);
 
-                    // Try to get the HLSL bytecode
-                    HlslBytecodeInfo hlslInfo = HlslBytecodeSyntaxProcessor.GetInfo(ref hlslInfoKey, token);
-
-                    token.ThrowIfCancellationRequested();
-
-                    HlslBytecodeSyntaxProcessor.GetInfoDiagnostics(typeSymbol, hlslInfo, diagnostics);
-                    HlslBytecodeSyntaxProcessor.GetDoublePrecisionSupportDiagnostics(typeSymbol, hlslInfo, diagnostics);
+                    // Capture the info needed to synthesize the diagnostics for the deferred compilation,
+                    // as they cannot be created later (symbols must not be used past the transform node)
+                    HlslBytecodeDiagnosticsInfo hlslDiagnosticsInfo = HlslBytecodeSyntaxProcessor.GetDiagnosticsInfo(typeSymbol);
 
                     token.ThrowIfCancellationRequested();
 
@@ -147,11 +147,62 @@ public sealed partial class ComputeShaderDescriptorGenerator : IIncrementalGener
                         Resources: resourceInfo,
                         ResourceDescriptors: resourceDescriptors,
                         HlslInfoKey: hlslInfoKey,
-                        HlslInfo: hlslInfo,
+                        HlslInfo: HlslBytecodeInfo.Missing.Instance,
+                        HlslDiagnosticsInfo: hlslDiagnosticsInfo,
                         Diagnostcs: diagnostics.ToImmutable());
                 })
             .WithTrackingName(WellKnownTrackingNames.Execute)
             .Where(static item => item is not null)!;
+
+        // Compile all shaders in parallel in a single dedicated node, warming up the shared bytecode
+        // cache (see more notes in the D2D1 generator). The node produces no meaningful value: it only
+        // exists so that the join node below has an edge ordering it after all compilations are done.
+        IncrementalValueProvider<bool> hlslBytecodeCache =
+            shaderInfoWithNoHlslBytecode
+            .Select(static (item, _) => item.HlslInfoKey)
+            .Collect()
+            .Select(static (keys, token) =>
+            {
+                HlslBytecodeSyntaxProcessor.CompileAllInParallel(keys, token);
+
+                return true;
+            });
+
+        // Join each shader with its compiled bytecode (guaranteed to be a cache hit, given the ordering
+        // edge on the node above), and synthesize the deferred diagnostics for the shader compilation
+        IncrementalValuesProvider<ShaderInfo> shaderInfo =
+            shaderInfoWithNoHlslBytecode
+            .Combine(hlslBytecodeCache)
+            .Select(static (pair, token) =>
+            {
+                ShaderInfo item = pair.Left;
+
+                HlslBytecodeInfoKey hlslInfoKey = item.HlslInfoKey;
+
+                // Get the compiled shader from the warmed up cache
+                HlslBytecodeInfo hlslInfo = HlslBytecodeSyntaxProcessor.GetInfo(ref hlslInfoKey, token);
+
+                token.ThrowIfCancellationRequested();
+
+                using ImmutableArrayBuilder<DiagnosticInfo> diagnostics = new();
+
+                diagnostics.AddRange(item.Diagnostcs.AsSpan());
+
+                // Append any diagnostic for the shader compilation
+                HlslBytecodeSyntaxProcessor.GetInfoDiagnostics(item.HlslDiagnosticsInfo!, hlslInfo, diagnostics);
+                HlslBytecodeSyntaxProcessor.GetDoublePrecisionSupportDiagnostics(item.HlslDiagnosticsInfo!, hlslInfo, diagnostics);
+
+                token.ThrowIfCancellationRequested();
+
+                // The diagnostics info is dropped here, as it has served its purpose (see notes in the D2D1 generator)
+                return item with
+                {
+                    HlslInfoKey = hlslInfoKey,
+                    HlslInfo = hlslInfo,
+                    HlslDiagnosticsInfo = null,
+                    Diagnostcs = diagnostics.ToImmutable()
+                };
+            });
 
         // Split the diagnostics, and drop them from the output provider (see more notes in the D2D1 generator)
         IncrementalValuesProvider<EquatableArray<DiagnosticInfo>> diagnosticInfo =

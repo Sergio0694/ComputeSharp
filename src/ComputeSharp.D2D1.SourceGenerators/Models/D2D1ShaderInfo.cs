@@ -22,6 +22,7 @@ namespace ComputeSharp.D2D1.SourceGenerators.Models;
 /// <param name="PixelOptions">The pixel options used by the shader.</param>
 /// <param name="HlslInfoKey">The key with processed info on the shader.</param>
 /// <param name="HlslInfo">The value with processed info on the shader.</param>
+/// <param name="HlslDiagnosticsInfo">The captured info to synthesize diagnostics for the compiled shader (only present until the bytecode is processed).</param>
 /// <param name="Diagnostcs">The discovered diagnostics, if any.</param>
 internal sealed record D2D1ShaderInfo(
     HierarchyInfo Hierarchy,
@@ -40,4 +41,5 @@ internal sealed record D2D1ShaderInfo(
     D2D1PixelOptions PixelOptions,
     HlslBytecodeInfoKey HlslInfoKey,
     HlslBytecodeInfo HlslInfo,
+    HlslBytecodeDiagnosticsInfo? HlslDiagnosticsInfo,
     EquatableArray<DiagnosticInfo> Diagnostcs) : IConstantBufferInfo;
