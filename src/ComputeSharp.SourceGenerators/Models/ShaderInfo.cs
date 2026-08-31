@@ -18,6 +18,7 @@ namespace ComputeSharp.SourceGenerators.Models;
 /// <param name="ResourceDescriptors">The sequence of resource descriptors for the shader.</param>
 /// <param name="HlslInfoKey">The key with processed info on the shader.</param>
 /// <param name="HlslInfo">The value with processed info on the shader.</param>
+/// <param name="HlslDiagnosticsInfo">The captured info to synthesize diagnostics for the compiled shader (only present until the bytecode is processed).</param>
 /// <param name="Diagnostcs">The discovered diagnostics, if any.</param>
 internal sealed record ShaderInfo(
     HierarchyInfo Hierarchy,
@@ -32,4 +33,5 @@ internal sealed record ShaderInfo(
     EquatableArray<ResourceDescriptor> ResourceDescriptors,
     HlslBytecodeInfoKey HlslInfoKey,
     HlslBytecodeInfo HlslInfo,
+    HlslBytecodeDiagnosticsInfo? HlslDiagnosticsInfo,
     EquatableArray<DiagnosticInfo> Diagnostcs) : IConstantBufferInfo;

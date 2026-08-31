@@ -27,7 +27,8 @@ public sealed partial class D2DPixelShaderDescriptorGenerator : IIncrementalGene
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
         // Discover all shader types and extract all the necessary info from each of them
-        IncrementalValuesProvider<D2D1ShaderInfo> shaderInfo =
+        // (with the exception of the compiled HLSL bytecode, which is processed later)
+        IncrementalValuesProvider<D2D1ShaderInfo> shaderInfoWithNoHlslBytecode =
             context.SyntaxProvider
             .ForAttributeWithMetadataName(
                 "ComputeSharp.D2D1.D2DGeneratedPixelShaderDescriptorAttribute",
@@ -152,22 +153,19 @@ public sealed partial class D2DPixelShaderDescriptorGenerator : IIncrementalGene
 
                     token.ThrowIfCancellationRequested();
 
-                    // As the last steps in the pipeline, try to compile the shader if needed.
-                    // This is done last so that it can be skipped if any errors happened before.
+                    // Prepare the key to compile the shader afterwards. The compilation is deliberately not
+                    // done here: the incremental driver invokes transform callbacks sequentially, so compiling
+                    // here would serialize all shader compilations. Instead, compilation is deferred to a
+                    // dedicated node below, which can process all shaders in the compilation in parallel.
                     HlslBytecodeInfoKey hlslInfoKey = new(
                         hlslSource,
                         effectiveShaderProfile,
                         effectiveCompileOptions,
                         isCompilationEnabled);
 
-                    // Get the existing compiled shader, or compile the processed HLSL code
-                    HlslBytecodeInfo hlslInfo = HlslBytecodeSyntaxProcessor.GetInfo(ref hlslInfoKey, token);
-
-                    token.ThrowIfCancellationRequested();
-
-                    // Append any diagnostic for the shader compilation
-                    HlslBytecodeSyntaxProcessor.GetInfoDiagnostics(typeSymbol, hlslInfo, diagnostics);
-                    HlslBytecodeSyntaxProcessor.GetDoublePrecisionSupportDiagnostics(typeSymbol, hlslInfo, diagnostics);
+                    // Capture the info needed to synthesize the diagnostics for the deferred compilation,
+                    // as they cannot be created later (symbols must not be used past the transform node)
+                    HlslBytecodeDiagnosticsInfo hlslDiagnosticsInfo = HlslBytecodeSyntaxProcessor.GetDiagnosticsInfo(typeSymbol);
 
                     token.ThrowIfCancellationRequested();
 
@@ -192,11 +190,64 @@ public sealed partial class D2DPixelShaderDescriptorGenerator : IIncrementalGene
                         ChannelDepth: channelDepth,
                         PixelOptions: pixelOptions,
                         HlslInfoKey: hlslInfoKey,
-                        HlslInfo: hlslInfo,
+                        HlslInfo: HlslBytecodeInfo.Missing.Instance,
+                        HlslDiagnosticsInfo: hlslDiagnosticsInfo,
                         Diagnostcs: diagnostics.ToImmutable());
                 })
             .WithTrackingName(WellKnownTrackingNames.Execute)
             .Where(static item => item is not null)!;
+
+        // Compile all shaders in parallel in a single dedicated node, warming up the shared bytecode
+        // cache. The node produces no meaningful value: it only exists so that the join node below has
+        // an edge ordering it after all compilations are done (its input requires this node's output).
+        IncrementalValueProvider<bool> hlslBytecodeCache =
+            shaderInfoWithNoHlslBytecode
+            .Select(static (item, _) => item.HlslInfoKey)
+            .Collect()
+            .Select(static (keys, token) =>
+            {
+                HlslBytecodeSyntaxProcessor.CompileAllInParallel(keys, token);
+
+                return true;
+            });
+
+        // Join each shader with its compiled bytecode (guaranteed to be a cache hit, given the ordering
+        // edge on the node above), and synthesize the deferred diagnostics for the shader compilation
+        IncrementalValuesProvider<D2D1ShaderInfo> shaderInfo =
+            shaderInfoWithNoHlslBytecode
+            .Combine(hlslBytecodeCache)
+            .Select(static (pair, token) =>
+            {
+                D2D1ShaderInfo item = pair.Left;
+
+                HlslBytecodeInfoKey hlslInfoKey = item.HlslInfoKey;
+
+                // Get the compiled shader from the warmed up cache
+                HlslBytecodeInfo hlslInfo = HlslBytecodeSyntaxProcessor.GetInfo(ref hlslInfoKey, token);
+
+                token.ThrowIfCancellationRequested();
+
+                using ImmutableArrayBuilder<DiagnosticInfo> diagnostics = new();
+
+                diagnostics.AddRange(item.Diagnostcs.AsSpan());
+
+                // Append any diagnostic for the shader compilation
+                HlslBytecodeSyntaxProcessor.GetInfoDiagnostics(item.HlslDiagnosticsInfo!, hlslInfo, diagnostics);
+                HlslBytecodeSyntaxProcessor.GetDoublePrecisionSupportDiagnostics(item.HlslDiagnosticsInfo!, hlslInfo, diagnostics);
+
+                token.ThrowIfCancellationRequested();
+
+                // The diagnostics info is dropped here, as it has served its purpose. This also improves
+                // incrementality, as it holds a reference to the syntax tree of the shader type, which
+                // would otherwise cause spurious changes in the resulting models on unrelated edits.
+                return item with
+                {
+                    HlslInfoKey = hlslInfoKey,
+                    HlslInfo = hlslInfo,
+                    HlslDiagnosticsInfo = null,
+                    Diagnostcs = diagnostics.ToImmutable()
+                };
+            });
 
         // We need to create two more incremental steps to ensure we correctly emit diagnostics and re-generate sources.
         // First, select an incremental provider with just the diagnostics, which will trigger every time any of them changes.

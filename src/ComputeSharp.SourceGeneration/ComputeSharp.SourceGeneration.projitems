@@ -32,6 +32,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\ObjectPool{T}.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\DiagnosticInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\HierarchyInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\LocationInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\TypeInfo.cs" />
   </ItemGroup>
 </Project>
