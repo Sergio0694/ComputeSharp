@@ -17,11 +17,6 @@
     <ProjectReference Include="..\ComputeSharp.Core\ComputeSharp.Core.csproj" />
   </ItemGroup>
 
-  <!-- Include the ILLink file (to properly trim configuration switches in publish builds) -->
-  <ItemGroup>
-    <EmbeddedResource Include="Properties\ILLink.Substitutions.xml" LogicalName="ILLink.Substitutions.xml" />
-  </ItemGroup>
-
   <!-- T4 template generation service (the .tt/.g.cs files are resolved in the .targets file) -->
   <ItemGroup>
     <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
