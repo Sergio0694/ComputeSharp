@@ -23,20 +23,20 @@ internal static class HlslKnownSizes
     {
         Dictionary<string, (int, int)> knownSizes = new()
         {
-            [typeof(bool).FullName] = (4, 4),
-            [typeof(int).FullName] = (4, 4),
-            [typeof(uint).FullName] = (4, 4),
-            [typeof(float).FullName] = (4, 4),
-            [typeof(double).FullName] = (8, 8)
+            [typeof(bool).FullName!] = (4, 4),
+            [typeof(int).FullName!] = (4, 4),
+            [typeof(uint).FullName!] = (4, 4),
+            [typeof(float).FullName!] = (4, 4),
+            [typeof(double).FullName!] = (8, 8)
         };
 
         foreach (
             Type? type in
             from type in Assembly.GetExecutingAssembly().ExportedTypes
-            where Regex.IsMatch(type.FullName, @"^ComputeSharp\.(Bool|Double|Float|Int|UInt)")
+            where Regex.IsMatch(type.FullName!, @"^ComputeSharp\.(Bool|Double|Float|Int|UInt)")
             select type)
         {
-            knownSizes.Add(type.FullName, (type.StructLayoutAttribute.Size, type.StructLayoutAttribute.Pack));
+            knownSizes.Add(type!.FullName!, (type.StructLayoutAttribute!.Size, type.StructLayoutAttribute!.Pack));
         }
 
         return knownSizes;

@@ -21,8 +21,8 @@
     <ProjectReference Include="..\$(MSBuildProjectName).SourceGenerators\$(MSBuildProjectName).SourceGenerators.csproj"
                       ReferenceOutputAssembly="false" />
 
-    <!-- Pack the source generator from its output directory (source generators always use .NET Standard 2.0) -->
-    <None Include="..\$(MSBuildProjectName).SourceGenerators\bin\$(Configuration)\netstandard2.0\$(MSBuildProjectName).SourceGenerators.dll"
+    <!-- Pack the source generator from its output directory -->
+    <None Include="..\$(MSBuildProjectName).SourceGenerators\bin\$(Configuration)\net10.0\$(MSBuildProjectName).SourceGenerators.dll"
           PackagePath="analyzers\dotnet\cs"
           Pack="true"
           Visible="false" />
@@ -36,7 +36,7 @@
                       ReferenceOutputAssembly="false" />
 
     <!-- Pack the code fixers project from its output directory -->
-    <None Include="..\$(MSBuildProjectName).CodeFixers\bin\$(Configuration)\netstandard2.0\$(MSBuildProjectName).CodeFixers.dll"
+    <None Include="..\$(MSBuildProjectName).CodeFixers\bin\$(Configuration)\net10.0\$(MSBuildProjectName).CodeFixers.dll"
           PackagePath="analyzers\dotnet\cs"
           Pack="true"
           Visible="false" />

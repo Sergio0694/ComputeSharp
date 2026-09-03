@@ -92,7 +92,7 @@ internal static partial class HlslKnownMethods
                 // The key is in the format "<METHOD_NAME>(<PARAMETER_TYPES>)", and the intrinsic name is guaranteed to be available
                 knownMethods.Add(
                     $"{method.Name}({string.Join(", ", method.GetParameters().Select(static p => p.ParameterType.Name))})",
-                    method.GetCustomAttribute<HlslIntrinsicNameAttribute>().Name);
+                    method.GetCustomAttribute<HlslIntrinsicNameAttribute>()!.Name);
             }
         }
 

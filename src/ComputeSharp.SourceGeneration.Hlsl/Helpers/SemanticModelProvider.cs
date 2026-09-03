@@ -21,7 +21,7 @@ internal sealed class SemanticModelProvider(Compilation compilation)
     /// <returns>A <see cref="SemanticModel"/> instance containing info on <paramref name="syntaxNode"/>.</returns>
     public SemanticModel For(SyntaxNode syntaxNode)
     {
-        if (!this.semanticModelsMap.TryGetValue(syntaxNode.SyntaxTree, out SemanticModel semanticModel))
+        if (!this.semanticModelsMap.TryGetValue(syntaxNode.SyntaxTree, out SemanticModel? semanticModel))
         {
             semanticModel = compilation.GetSemanticModel(syntaxNode.SyntaxTree);
 

@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <DefineConstants>$(DefineConstants);D2D1_UI_SOURCE_GENERATOR</DefineConstants>
 
     <!-- Ignore warnings for unresolved XML cref attributes (for imported types, same as in the D3D12 generator) -->

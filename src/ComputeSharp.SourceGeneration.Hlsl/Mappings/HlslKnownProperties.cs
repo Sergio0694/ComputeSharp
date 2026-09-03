@@ -169,7 +169,7 @@ internal static partial class HlslKnownProperties
     {
         return new(
             from type in Assembly.GetExecutingAssembly().ExportedTypes
-            where Regex.IsMatch(type.FullName, @"ComputeSharp\.(Bool|Double|Float|Int|UInt)[1-4]x[1-4]")
+            where Regex.IsMatch(type.FullName!, @"ComputeSharp\.(Bool|Double|Float|Int|UInt)[1-4]x[1-4]")
             from property in type.GetProperties()
             let indices = property.GetIndexParameters()
             where indices.Length > 0 &&

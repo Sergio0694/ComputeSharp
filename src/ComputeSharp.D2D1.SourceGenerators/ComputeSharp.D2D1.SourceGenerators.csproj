@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <DefineConstants>$(DefineConstants);D2D1_SOURCE_GENERATOR</DefineConstants>
   </PropertyGroup>
 
@@ -14,6 +14,9 @@
 
     <!-- Ignore warnings for redundant casts (needed in some imported enum types due to CSharpLang/CsWin32 type differences) -->
     <NoWarn>$(NoWarn);IDE0004</NoWarn>
+
+    <!-- Same suppression as in the D3D12 generator, for the COM callable wrappers emitted by CsWin32 -->
+    <NoWarn>$(NoWarn);RS1035</NoWarn>
   </PropertyGroup>
 
   <!-- Same setup as ComputeSharp.Core.SourceGenerators, just with also APIs from ComputeSharp -->

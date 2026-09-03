@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <DefineConstants>$(DefineConstants);WINDOWS_UWP;D2D1_UI_SOURCE_GENERATOR</DefineConstants>
 
     <!-- Same suppression as the WinUI generator -->

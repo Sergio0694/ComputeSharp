@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Threading;
 
 #pragma warning disable RS1035
 
@@ -16,7 +17,7 @@ internal sealed unsafe class DxcLibraryLoader
     /// <summary>
     /// An object to use to synchronize loading the DXC libraries.
     /// </summary>
-    private static readonly object LoadingLock = new();
+    private static readonly Lock LoadingLock = new();
 
     /// <summary>
     /// Indicates whether the required <c>dxcompiler.dll</c> and <c>dxil.dll</c> libraries have been loaded.
@@ -36,9 +37,9 @@ internal sealed unsafe class DxcLibraryLoader
             string sourceFilename = $"ComputeSharp.SourceGenerators.ComputeSharp.Libraries.{rid}.{name}.dll";
             string targetFilename = Path.Combine(folder, rid, $"{name}.dll");
 
-            _ = Directory.CreateDirectory(Path.GetDirectoryName(targetFilename));
+            _ = Directory.CreateDirectory(Path.GetDirectoryName(targetFilename)!);
 
-            using Stream sourceStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(sourceFilename);
+            using Stream sourceStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(sourceFilename)!;
 
             try
             {

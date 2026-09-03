@@ -30,7 +30,7 @@ internal static class IndentedTextWriterExtensions
     {
         // We can use this class to get the assembly, as all files for generators are just included
         // via shared projects. As such, the assembly will be the same as the generator type itself.
-        Version assemblyVersion = typeof(IndentedTextWriterExtensions).Assembly.GetName().Version;
+        Version assemblyVersion = typeof(IndentedTextWriterExtensions).Assembly.GetName().Version!;
 
         if (useFullyQualifiedTypeNames)
         {
