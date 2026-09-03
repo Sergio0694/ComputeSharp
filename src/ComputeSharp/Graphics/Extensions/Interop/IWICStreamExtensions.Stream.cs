@@ -106,7 +106,7 @@ internal static unsafe partial class IWICStreamExtensions
         /// </summary>
         /// <returns>The captured <see cref="Stream"/> instance</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private Stream GetStream()
+        private readonly Stream GetStream()
         {
             return Unsafe.As<Stream>(this.streamHandle.Target!);
         }

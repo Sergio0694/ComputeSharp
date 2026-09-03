@@ -104,7 +104,7 @@ unsafe partial class IWICStreamExtensions
         /// </summary>
         /// <returns>The captured <see cref="IBufferWriter{T}"/> instance</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private IBufferWriter<byte> GetWriter()
+        private readonly IBufferWriter<byte> GetWriter()
         {
             return Unsafe.As<IBufferWriter<byte>>(this.writerHandle.Target!);
         }

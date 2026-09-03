@@ -220,7 +220,7 @@ internal unsafe partial struct PixelShaderEffect
     /// </summary>
     /// <returns>The <see cref="Globals"/> instance for the current effect.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private Globals GetGlobals()
+    private readonly Globals GetGlobals()
     {
         return Unsafe.As<Globals>(this.globalsHandle.Target!);
     }
