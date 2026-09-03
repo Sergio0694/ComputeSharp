@@ -381,7 +381,7 @@ public partial class CanvasEffectTests
         Assert.AreEqual(1, effect.Effects3[2].NumberOfDisposeCalls);
     }
 
-    private sealed class EffectWithNoInputs : CanvasEffect
+    private sealed partial class EffectWithNoInputs : CanvasEffect
     {
         private static readonly CanvasEffectNode<PixelShaderEffect<ShaderWithNoInputs>> Effect = new();
 
@@ -430,7 +430,7 @@ public partial class CanvasEffectTests
         }
     }
 
-    private sealed class EffectSettingNotRegisteredOutputNode : CanvasEffect
+    private sealed partial class EffectSettingNotRegisteredOutputNode : CanvasEffect
     {
         public bool WasConfigureEffectGraphCalled { get; private set; }
 
@@ -448,7 +448,7 @@ public partial class CanvasEffectTests
         }
     }
 
-    private sealed class EffectNotRegisteringAnOutputNode : CanvasEffect
+    private sealed partial class EffectNotRegisteringAnOutputNode : CanvasEffect
     {
         public bool WasConfigureEffectGraphCalled { get; private set; }
 
@@ -465,7 +465,7 @@ public partial class CanvasEffectTests
         }
     }
 
-    private sealed class EffectRegisteringNodesMultipleTimes1 : CanvasEffect
+    private sealed partial class EffectRegisteringNodesMultipleTimes1 : CanvasEffect
     {
         protected override void BuildEffectGraph(CanvasEffectGraph effectGraph)
         {
@@ -481,7 +481,7 @@ public partial class CanvasEffectTests
         }
     }
 
-    private sealed class EffectRegisteringNodesMultipleTimes2 : CanvasEffect
+    private sealed partial class EffectRegisteringNodesMultipleTimes2 : CanvasEffect
     {
         protected override void BuildEffectGraph(CanvasEffectGraph effectGraph)
         {
@@ -498,7 +498,7 @@ public partial class CanvasEffectTests
         }
     }
 
-    private sealed class EffectRegisteringNullObjects : CanvasEffect
+    private sealed partial class EffectRegisteringNullObjects : CanvasEffect
     {
         protected override unsafe void BuildEffectGraph(CanvasEffectGraph effectGraph)
         {
@@ -531,7 +531,7 @@ public partial class CanvasEffectTests
         }
     }
 
-    private sealed class EffectConfiguringGraphIncorrectly : CanvasEffect
+    private sealed partial class EffectConfiguringGraphIncorrectly : CanvasEffect
     {
         private static readonly CanvasEffectNode<ColorSourceEffect> EffectNode1 = new();
         private static readonly CanvasEffectNode<ColorSourceEffect> EffectNode2 = new();
@@ -564,7 +564,7 @@ public partial class CanvasEffectTests
         }
     }
 
-    private sealed class EffectOnlyUsingAnonymousNodes : CanvasEffect
+    private sealed partial class EffectOnlyUsingAnonymousNodes : CanvasEffect
     {
         protected override void BuildEffectGraph(CanvasEffectGraph effectGraph)
         {
@@ -578,7 +578,7 @@ public partial class CanvasEffectTests
         }
     }
 
-    private sealed class EffectUsingEffectGraphInInvalidState : CanvasEffect
+    private sealed partial class EffectUsingEffectGraphInInvalidState : CanvasEffect
     {
         protected override void BuildEffectGraph(CanvasEffectGraph effectGraph)
         {
@@ -596,7 +596,7 @@ public partial class CanvasEffectTests
         }
     }
 
-    private sealed class PixelShaderSwitchEffect : CanvasEffect
+    private sealed partial class PixelShaderSwitchEffect : CanvasEffect
     {
         private static readonly CanvasEffectNode<PixelShaderEffect<HelloWorld>> HelloWorldNode = new();
         private static readonly CanvasEffectNode<PixelShaderEffect<ColorfulInfinity>> ColorfulInfinityNode = new();
@@ -638,7 +638,7 @@ public partial class CanvasEffectTests
         }
     }
 
-    private sealed class EffectTestingDisposal : CanvasEffect
+    private sealed partial class EffectTestingDisposal : CanvasEffect
     {
         private static readonly CanvasEffectNode<DummyCanvasImageTrackingDisposal> EffectNode1 = new();
         private static readonly CanvasEffectNode<DummyCanvasImageTrackingDisposal> EffectNode2 = new();
@@ -673,7 +673,7 @@ public partial class CanvasEffectTests
         }
     }
 
-    private sealed class DummyCanvasImageTrackingDisposal : ICanvasImage
+    private sealed partial class DummyCanvasImageTrackingDisposal : ICanvasImage
     {
         public int NumberOfDisposeCalls { get; private set; }
 

@@ -31,8 +31,6 @@
   
   <!-- CsWinRT size saving options (same as in ComputeSharp.NativeLibrary.WinRT) -->
   <PropertyGroup>
-    <CsWinRTEnableDynamicObjectsSupport>false</CsWinRTEnableDynamicObjectsSupport>
-    <CsWinRTUseExceptionResourceKeys>true</CsWinRTUseExceptionResourceKeys>
     <CsWinRTEnableDefaultCustomTypeMappings>false</CsWinRTEnableDefaultCustomTypeMappings>
     <CsWinRTEnableICustomPropertyProviderSupport>false</CsWinRTEnableICustomPropertyProviderSupport>
     <CsWinRTEnableIDynamicInterfaceCastableSupport>false</CsWinRTEnableIDynamicInterfaceCastableSupport>
@@ -60,12 +58,6 @@
 
   <ItemGroup>
     <PackageReference Include="TerraFX.Interop.Windows" Version="10.0.26100.2" />
-
-    <!--
-      Reference CsWinRT locally for the source generators (see comments in ComputeSharp.D2D1.WinUI).
-      Note that this is an executable and not a library, so we must drop the 'PrivateAssets' here.
-      -->
-    <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.2.0" />
   </ItemGroup>
 
   <!-- Note: using SetPlatform="Platform=AnyCPU" for the analyzers to avoid issues (see https://github.com/dotnet/roslyn/issues/70148) -->

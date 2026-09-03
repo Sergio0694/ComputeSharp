@@ -15,8 +15,6 @@
     <AssemblyName>ComputeSharp.NativeLibrary</AssemblyName>
 
     <!-- CsWinRT size saving options (also disabling some features that aren't needed) -->
-    <CsWinRTEnableDynamicObjectsSupport>false</CsWinRTEnableDynamicObjectsSupport>
-    <CsWinRTUseExceptionResourceKeys>true</CsWinRTUseExceptionResourceKeys>
     <CsWinRTEnableDefaultCustomTypeMappings>false</CsWinRTEnableDefaultCustomTypeMappings>
     <CsWinRTEnableICustomPropertyProviderSupport>false</CsWinRTEnableICustomPropertyProviderSupport>
     <CsWinRTEnableIReferenceSupport>false</CsWinRTEnableIReferenceSupport>
@@ -41,9 +39,6 @@
     <IlcGenerateDgmlFile>false</IlcGenerateDgmlFile>
   </PropertyGroup>
   
-  <ItemGroup>
-    <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.2.0" />
-  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\ComputeSharp.Core.SourceGenerators\ComputeSharp.Core.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" PrivateAssets="contentfiles;build" />

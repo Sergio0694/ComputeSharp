@@ -22,8 +22,6 @@
     <InvariantGlobalization>true</InvariantGlobalization>
     <StackTraceSupport>false</StackTraceSupport>
     <OptimizationPreference>Speed</OptimizationPreference>
-    <CsWinRTEnableDynamicObjectsSupport>false</CsWinRTEnableDynamicObjectsSupport>
-    <CsWinRTUseExceptionResourceKeys>true</CsWinRTUseExceptionResourceKeys>
     <CsWinRTEnableDefaultCustomTypeMappings>false</CsWinRTEnableDefaultCustomTypeMappings>
     <CsWinRTEnableICustomPropertyProviderSupport>false</CsWinRTEnableICustomPropertyProviderSupport>
     <CsWinRTEnableIDynamicInterfaceCastableSupport>false</CsWinRTEnableIDynamicInterfaceCastableSupport>
@@ -37,9 +35,6 @@
     <LinkerArg Include="/APPCONTAINER /DEFAULTLIB:WindowsApp.lib WindowsApp.lib" />
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.2.0" />
-  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\ComputeSharp.Core.SourceGenerators\ComputeSharp.Core.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" PrivateAssets="contentfiles;build" />

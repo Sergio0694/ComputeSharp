@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+
+  <!-- Properties exclusive to Windows-only .NET 10 projects -->
+  <PropertyGroup Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net10.0-windows'))">
+
+    <!-- Manually set the CsWinRT version, so we don't need to depend on .NET SDK updates -->
+    <CsWinRTPackageVersion>2.3.1</CsWinRTPackageVersion>
+
+    <!-- Reference CsWinRT with 'PrivateAssets="all"' if the project is a library, otherwise use the default behavior -->
+    <CsWinRTPrivateAssetsMode Condition="'$(CsWinRTPrivateAssetsMode)' == '' AND '$(OutputType)' == 'Library'">all</CsWinRTPrivateAssetsMode>
+    <CsWinRTPrivateAssetsMode Condition="'$(CsWinRTPrivateAssetsMode)' == ''">contentfiles;analyzers;build</CsWinRTPrivateAssetsMode>
+
+    <!--
+      Set the right defaults for common CsWinRT properties for projects in this solution. CsWinRT is only
+      ever used for its source generators here, so projection mode is turned off by default (enabling it
+      would also require the Windows SDK to be available). Projects can still override any of these.
+    -->
+    <CsWinRTGenerateProjection Condition="'$(CsWinRTGenerateProjection)' == ''">false</CsWinRTGenerateProjection>
+    <CsWinRTComponent Condition="'$(CsWinRTComponent)' == ''">false</CsWinRTComponent>
+    <CsWinRTIIDOptimizerOptOut Condition="'$(CsWinRTIIDOptimizerOptOut)' == ''">true</CsWinRTIIDOptimizerOptOut>
+
+    <!-- Size saving options (none of these features are used by any project in this solution) -->
+    <CsWinRTEnableDynamicObjectsSupport Condition="'$(CsWinRTEnableDynamicObjectsSupport)' == ''">false</CsWinRTEnableDynamicObjectsSupport>
+    <CsWinRTUseExceptionResourceKeys Condition="'$(CsWinRTUseExceptionResourceKeys)' == ''">true</CsWinRTUseExceptionResourceKeys>
+  </PropertyGroup>
+
+  <!--
+    Enable all AOT warnings from CsWinRT, including for built-in types, and additional trim/AOT warnings that
+    might be noisy. Test projects are excluded, as they are never published with trimming or AOT enabled.
+  -->
+  <PropertyGroup Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net10.0-windows')) AND !$(IsTestProject)">
+    <CsWinRTAotWarningLevel>3</CsWinRTAotWarningLevel>
+  </PropertyGroup>
+
+  <!-- Reference CsWinRT in all projects manually, so we can force the latest version specified above -->
+  <ItemGroup Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net10.0-windows'))">
+    <PackageReference
+      Include="Microsoft.Windows.CsWinRT"
+      Version="$(CsWinRTPackageVersion)"
+      PrivateAssets="$(CsWinRTPrivateAssetsMode)"
+      IsImplicitlyDefined="true" />
+  </ItemGroup>
+</Project>

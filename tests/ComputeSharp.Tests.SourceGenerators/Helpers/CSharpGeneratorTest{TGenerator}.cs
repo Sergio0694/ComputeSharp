@@ -97,7 +97,7 @@ internal static class CSharpGeneratorTest<TGenerator>
         Compilation compilation = CreateCompilation(source, languageVersion);
 
         GeneratorDriver driver = CSharpGeneratorDriver.Create(
-            generators: [new TGenerator().AsSourceGenerator()],
+            generators: (ISourceGenerator[])[new TGenerator().AsSourceGenerator()],
             driverOptions: new GeneratorDriverOptions(IncrementalGeneratorOutputKind.None, trackIncrementalGeneratorSteps: true));
 
         // Run the generator on the initial sources
@@ -179,7 +179,7 @@ internal static class CSharpGeneratorTest<TGenerator>
     private static CSharpCompilation CreateCompilation(string source, LanguageVersion languageVersion = LanguageVersion.CSharp14)
     {
         // Get all assembly references for the .NET TFM and ComputeSharp
-        IEnumerable<MetadataReference> metadataReferences =
+        MetadataReference[] metadataReferences =
         [
             .. Net100.References.All,
             MetadataReference.CreateFromFile(typeof(Core::ComputeSharp.Hlsl).Assembly.Location),
@@ -201,7 +201,7 @@ internal static class CSharpGeneratorTest<TGenerator>
         // Create the original compilation
         return CSharpCompilation.Create(
             "original",
-            [sourceTree],
+            (SyntaxTree[])[sourceTree],
             metadataReferences,
             new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary, allowUnsafe: true));
     }
