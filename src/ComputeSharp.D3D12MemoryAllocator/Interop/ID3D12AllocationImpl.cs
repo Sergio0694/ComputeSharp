@@ -15,24 +15,29 @@ namespace ComputeSharp.D3D12MemoryAllocator.Interop;
 internal unsafe struct ID3D12AllocationImpl
 {
     /// <summary>
-    /// The shared method table pointer for all <see cref="ID3D12Allocation"/> instances.
+    /// The shared method table for all <see cref="ID3D12Allocation"/> instances.
     /// </summary>
-    private static readonly void** Vtbl = InitVtbl();
+    [FixedAddressValueType]
+    private static readonly ID3D12AllocationImplVftbl SharedVftbl;
 
     /// <summary>
-    /// Builds the custom method table pointer for <see cref="ID3D12Allocation"/>.
+    /// Initializes <see cref="SharedVftbl"/>.
     /// </summary>
-    /// <returns>The method table pointer for <see cref="ID3D12Allocation"/>.</returns>
-    private static void** InitVtbl()
+    static ID3D12AllocationImpl()
     {
-        void** lpVtbl = (void**)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(ID3D12AllocationImpl), sizeof(void*) * 4);
+        SharedVftbl.QueryInterface = &QueryInterface;
+        SharedVftbl.AddRef = &AddRef;
+        SharedVftbl.Release = &Release;
+        SharedVftbl.GetD3D12Resource = &GetD3D12Resource;
+    }
 
-        lpVtbl[0] = (delegate* unmanaged[MemberFunction]<ID3D12AllocationImpl*, Guid*, void**, int>)&QueryInterface;
-        lpVtbl[1] = (delegate* unmanaged[MemberFunction]<ID3D12AllocationImpl*, uint>)&AddRef;
-        lpVtbl[2] = (delegate* unmanaged[MemberFunction]<ID3D12AllocationImpl*, uint>)&Release;
-        lpVtbl[3] = (delegate* unmanaged[MemberFunction]<ID3D12AllocationImpl*, ID3D12Resource**, int>)&GetD3D12Resource;
-
-        return lpVtbl;
+    /// <summary>
+    /// Gets the shared method table pointer for all <see cref="ID3D12Allocation"/> instances.
+    /// </summary>
+    private static void** Vtbl
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get => (void**)Unsafe.AsPointer(in SharedVftbl);
     }
 
     /// <summary>

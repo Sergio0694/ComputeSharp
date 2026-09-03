@@ -37,37 +37,42 @@ internal static unsafe partial class IWICStreamExtensions
     /// <summary>
     /// A manual CCW implementation for an <see cref="IStream"/> object wrapping a <see cref="Stream"/> instance.
     /// </summary>
-    private unsafe partial struct IStreamWrapper
+    internal unsafe partial struct IStreamWrapper
     {
         /// <summary>
-        /// The shared vtable pointer for <see cref="IStreamWrapper"/> instances.
+        /// The shared vtable for <see cref="IStreamWrapper"/> instances.
         /// </summary>
-        private static readonly void** Vtbl = InitVtbl();
+        [FixedAddressValueType]
+        private static readonly IStreamWrapperVftbl SharedVftbl;
 
         /// <summary>
-        /// Setups the vtable pointer for <see cref="IStreamWrapper"/>.
+        /// Initializes <see cref="SharedVftbl"/>.
         /// </summary>
-        /// <returns>The initialized vtable pointer for <see cref="IStreamWrapper"/>.</returns>
-        private static void** InitVtbl()
+        static IStreamWrapper()
         {
-            void** lpVtbl = (void**)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(IStreamWrapper), sizeof(void*) * 14);
+            SharedVftbl.QueryInterface = &QueryInterface;
+            SharedVftbl.AddRef = &AddRef;
+            SharedVftbl.Release = &Release;
+            SharedVftbl.Read = &Read;
+            SharedVftbl.Write = &Write;
+            SharedVftbl.Seek = &Seek;
+            SharedVftbl.SetSize = &SetSize;
+            SharedVftbl.CopyTo = &CopyTo;
+            SharedVftbl.Commit = &Commit;
+            SharedVftbl.Revert = &Revert;
+            SharedVftbl.LockRegion = &LockRegion;
+            SharedVftbl.UnlockRegion = &UnlockRegion;
+            SharedVftbl.Stat = &Stat;
+            SharedVftbl.Clone = &Clone;
+        }
 
-            lpVtbl[0] = (delegate* unmanaged[MemberFunction]<IStreamWrapper*, Guid*, void**, int>)&QueryInterface;
-            lpVtbl[1] = (delegate* unmanaged[MemberFunction]<IStreamWrapper*, uint>)&AddRef;
-            lpVtbl[2] = (delegate* unmanaged[MemberFunction]<IStreamWrapper*, uint>)&Release;
-            lpVtbl[3] = (delegate* unmanaged[MemberFunction]<IStreamWrapper*, void*, uint, uint*, int>)&Read;
-            lpVtbl[4] = (delegate* unmanaged[MemberFunction]<IStreamWrapper*, void*, uint, uint*, int>)&Write;
-            lpVtbl[5] = (delegate* unmanaged[MemberFunction]<IStreamWrapper*, LARGE_INTEGER, uint, ULARGE_INTEGER*, int>)&Seek;
-            lpVtbl[6] = (delegate* unmanaged[MemberFunction]<IStreamWrapper*, ULARGE_INTEGER, int>)&SetSize;
-            lpVtbl[7] = (delegate* unmanaged[MemberFunction]<IStreamWrapper*, IStream*, ULARGE_INTEGER, ULARGE_INTEGER*, ULARGE_INTEGER*, int>)&CopyTo;
-            lpVtbl[8] = (delegate* unmanaged[MemberFunction]<IStreamWrapper*, uint, int>)&Commit;
-            lpVtbl[9] = (delegate* unmanaged[MemberFunction]<IStreamWrapper*, int>)&Revert;
-            lpVtbl[10] = (delegate* unmanaged[MemberFunction]<IStreamWrapper*, ULARGE_INTEGER, ULARGE_INTEGER, uint, int>)&LockRegion;
-            lpVtbl[11] = (delegate* unmanaged[MemberFunction]<IStreamWrapper*, ULARGE_INTEGER, ULARGE_INTEGER, uint, int>)&UnlockRegion;
-            lpVtbl[12] = (delegate* unmanaged[MemberFunction]<IStreamWrapper*, STATSTG*, uint, int>)&Stat;
-            lpVtbl[13] = (delegate* unmanaged[MemberFunction]<IStreamWrapper*, IStream**, int>)&Clone;
-
-            return lpVtbl;
+        /// <summary>
+        /// Gets the shared vtable pointer for <see cref="IStreamWrapper"/> instances.
+        /// </summary>
+        private static void** Vtbl
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get => (void**)Unsafe.AsPointer(in SharedVftbl);
         }
 
         /// <summary>

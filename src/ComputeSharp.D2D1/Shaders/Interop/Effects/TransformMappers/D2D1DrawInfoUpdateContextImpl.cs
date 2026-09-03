@@ -2,7 +2,6 @@ using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading;
-using ComputeSharp.D2D1.Interop;
 using ComputeSharp.Win32;
 
 namespace ComputeSharp.D2D1.Shaders.Interop.Effects.TransformMappers;
@@ -13,38 +12,51 @@ namespace ComputeSharp.D2D1.Shaders.Interop.Effects.TransformMappers;
 internal unsafe partial struct D2D1DrawInfoUpdateContextImpl
 {
     /// <summary>
-    /// The shared vtable pointer for <see cref="D2D1DrawInfoUpdateContextImpl"/> instance, for <see cref="ID2D1DrawInfoUpdateContext"/>.
+    /// The shared vtable for <see cref="D2D1DrawInfoUpdateContextImpl"/> instances, for <see cref="ID2D1DrawInfoUpdateContext"/>.
     /// </summary>
-    private static readonly void** VtblForID2D1DrawInfoUpdateContext = InitVtblForID2D1DrawInfoUpdateContextAndID2D1DrawInfoUpdateContextInternal();
+    [FixedAddressValueType]
+    private static readonly ID2D1DrawInfoUpdateContextVftbl SharedVftblForID2D1DrawInfoUpdateContext;
 
     /// <summary>
-    /// The shared vtable pointer for <see cref="D2D1DrawInfoUpdateContextImpl"/> instance, for <see cref="ID2D1DrawInfoUpdateContextInternal"/>.
+    /// The shared vtable for <see cref="D2D1DrawInfoUpdateContextImpl"/> instances, for <see cref="ID2D1DrawInfoUpdateContextInternal"/>.
     /// </summary>
-    private static readonly void** VtblForID2D1DrawInfoUpdateContextInternal = &VtblForID2D1DrawInfoUpdateContext[5];
+    [FixedAddressValueType]
+    private static readonly ID2D1DrawInfoUpdateContextInternalVftbl SharedVftblForID2D1DrawInfoUpdateContextInternal;
 
     /// <summary>
-    /// Initializes the combined vtable for <see cref="ID2D1DrawInfoUpdateContext"/> and <see cref="ID2D1DrawInfoUpdateContextInternal"/>.
+    /// Initializes <see cref="SharedVftblForID2D1DrawInfoUpdateContext"/> and <see cref="SharedVftblForID2D1DrawInfoUpdateContextInternal"/>.
     /// </summary>
-    /// <returns>The combined vtable for <see cref="ID2D1DrawInfoUpdateContext"/> and <see cref="ID2D1DrawInfoUpdateContextInternal"/>.</returns>
-    private static void** InitVtblForID2D1DrawInfoUpdateContextAndID2D1DrawInfoUpdateContextInternal()
+    static D2D1DrawInfoUpdateContextImpl()
     {
-        void** lpVtbl = (void**)D2D1AssemblyAssociatedMemory.Allocate(sizeof(void*) * 10);
+        SharedVftblForID2D1DrawInfoUpdateContext.QueryInterface = &ID2D1DrawInfoUpdateContextMethods.QueryInterface;
+        SharedVftblForID2D1DrawInfoUpdateContext.AddRef = &ID2D1DrawInfoUpdateContextMethods.AddRef;
+        SharedVftblForID2D1DrawInfoUpdateContext.Release = &ID2D1DrawInfoUpdateContextMethods.Release;
+        SharedVftblForID2D1DrawInfoUpdateContext.GetConstantBufferSize = &ID2D1DrawInfoUpdateContextMethods.GetConstantBufferSize;
+        SharedVftblForID2D1DrawInfoUpdateContext.GetConstantBuffer = &ID2D1DrawInfoUpdateContextMethods.GetConstantBuffer;
+        SharedVftblForID2D1DrawInfoUpdateContext.SetConstantBuffer = &ID2D1DrawInfoUpdateContextMethods.SetConstantBuffer;
 
-        // ID2D1ResourceTextureManager
-        lpVtbl[0] = (delegate* unmanaged[MemberFunction]<D2D1DrawInfoUpdateContextImpl*, Guid*, void**, int>)&ID2D1DrawInfoUpdateContextMethods.QueryInterface;
-        lpVtbl[1] = (delegate* unmanaged[MemberFunction]<D2D1DrawInfoUpdateContextImpl*, uint>)&ID2D1DrawInfoUpdateContextMethods.AddRef;
-        lpVtbl[2] = (delegate* unmanaged[MemberFunction]<D2D1DrawInfoUpdateContextImpl*, uint>)&ID2D1DrawInfoUpdateContextMethods.Release;
-        lpVtbl[3] = (delegate* unmanaged[MemberFunction]<D2D1DrawInfoUpdateContextImpl*, uint*, int>)&ID2D1DrawInfoUpdateContextMethods.GetConstantBufferSize;
-        lpVtbl[4] = (delegate* unmanaged[MemberFunction]<D2D1DrawInfoUpdateContextImpl*, byte*, uint, int>)&ID2D1DrawInfoUpdateContextMethods.GetConstantBuffer;
-        lpVtbl[5] = (delegate* unmanaged[MemberFunction]<D2D1DrawInfoUpdateContextImpl*, byte*, uint, int>)&ID2D1DrawInfoUpdateContextMethods.SetConstantBuffer;
+        SharedVftblForID2D1DrawInfoUpdateContextInternal.QueryInterface = &ID2D1DrawInfoUpdateContextInternalMethods.QueryInterface;
+        SharedVftblForID2D1DrawInfoUpdateContextInternal.AddRef = &ID2D1DrawInfoUpdateContextInternalMethods.AddRef;
+        SharedVftblForID2D1DrawInfoUpdateContextInternal.Release = &ID2D1DrawInfoUpdateContextInternalMethods.Release;
+        SharedVftblForID2D1DrawInfoUpdateContextInternal.Close = &ID2D1DrawInfoUpdateContextInternalMethods.Close;
+    }
 
-        // ID2D1ResourceTextureManagerInternal
-        lpVtbl[6 + 0] = (delegate* unmanaged[MemberFunction]<D2D1DrawInfoUpdateContextImpl*, Guid*, void**, int>)&ID2D1DrawInfoUpdateContextInternalMethods.QueryInterface;
-        lpVtbl[6 + 1] = (delegate* unmanaged[MemberFunction]<D2D1DrawInfoUpdateContextImpl*, uint>)&ID2D1DrawInfoUpdateContextInternalMethods.AddRef;
-        lpVtbl[6 + 2] = (delegate* unmanaged[MemberFunction]<D2D1DrawInfoUpdateContextImpl*, uint>)&ID2D1DrawInfoUpdateContextInternalMethods.Release;
-        lpVtbl[6 + 3] = (delegate* unmanaged[MemberFunction]<D2D1DrawInfoUpdateContextImpl*, int>)&ID2D1DrawInfoUpdateContextInternalMethods.Close;
+    /// <summary>
+    /// Gets the shared vtable pointer for <see cref="D2D1DrawInfoUpdateContextImpl"/> instances, for <see cref="ID2D1DrawInfoUpdateContext"/>.
+    /// </summary>
+    private static void** VtblForID2D1DrawInfoUpdateContext
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get => (void**)Unsafe.AsPointer(in SharedVftblForID2D1DrawInfoUpdateContext);
+    }
 
-        return lpVtbl;
+    /// <summary>
+    /// Gets the shared vtable pointer for <see cref="D2D1DrawInfoUpdateContextImpl"/> instances, for <see cref="ID2D1DrawInfoUpdateContextInternal"/>.
+    /// </summary>
+    private static void** VtblForID2D1DrawInfoUpdateContextInternal
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get => (void**)Unsafe.AsPointer(in SharedVftblForID2D1DrawInfoUpdateContextInternal);
     }
 
     /// <summary>

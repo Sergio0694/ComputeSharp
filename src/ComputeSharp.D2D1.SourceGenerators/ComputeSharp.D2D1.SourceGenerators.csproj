@@ -67,10 +67,10 @@
     <Compile Include="..\ComputeSharp.D2D1\Intrinsics\Attributes\HlslD2DIntrinsicInputTypeAttribute.cs" Link="ComputeSharp.D2D1\Intrinsics\Attributes\HlslD2DIntrinsicInputTypeAttribute.cs" />
     <Compile Include="..\ComputeSharp.D2D1\Shaders\Exceptions\FxcCompilationException.cs" Link="ComputeSharp.D2D1\Shaders\Exceptions\FxcCompilationException.cs" />
     <Compile Include="..\ComputeSharp.D2D1\Shaders\Interop\D2D1PixelShaderInputType.cs" Link="ComputeSharp.D2D1\Shaders\Interop\D2D1PixelShaderInputType.cs" />
-    <Compile Include="..\ComputeSharp.D2D1\Shaders\Interop\Helpers\D2D1AssemblyAssociatedMemory.cs" Link="ComputeSharp.D2D1\Shaders\Interop\Helpers\D2D1AssemblyAssociatedMemory.cs" />
     <Compile Include="..\ComputeSharp.D2D1\Shaders\Translation\ASCII.cs" Link="ComputeSharp.D2D1\Shaders\Translation\ASCII.cs" />
     <Compile Include="..\ComputeSharp.D2D1\Shaders\Translation\D3DCompiler.cs" Link="ComputeSharp.D2D1\Shaders\Translation\D3DCompiler.cs" />
     <Compile Include="..\ComputeSharp.D2D1\Shaders\Translation\D3DCompiler.ID3DInclude.cs" Link="ComputeSharp.D2D1\Shaders\Translation\D3DCompiler.ID3DInclude.cs" />
+    <Compile Include="..\ComputeSharp.D2D1\Shaders\Translation\Vftbl\ID3DIncludeForD2DHelpersVftbl.cs" Link="ComputeSharp.D2D1\Shaders\Translation\Vftbl\ID3DIncludeForD2DHelpersVftbl.cs" />
     <Compile Include="..\ComputeSharp.D2D1\Shaders\Translation\Headers\D2D1EffectHelpers.cs" Link="ComputeSharp.D2D1\Shaders\Translation\Headers\D2D1EffectHelpers.cs" />
 
     <!-- ComPtr<T> and HRESULT extension from D3D12 generator -->

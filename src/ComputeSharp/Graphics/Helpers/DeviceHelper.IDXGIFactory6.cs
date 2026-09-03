@@ -101,29 +101,61 @@ partial class DeviceHelper
     /// <summary>
     /// A custom <see cref="IDXGIFactory6"/> fallback implementation to use on systems with no support for it.
     /// </summary>
-    private unsafe struct IDXGIFactory4As6Backcompat
+    internal unsafe struct IDXGIFactory4As6Backcompat
     {
         /// <summary>
-        /// The shared method table pointer for all <see cref="IDXGIFactory4As6Backcompat"/> instances.
+        /// The shared method table for all <see cref="IDXGIFactory4As6Backcompat"/> instances.
         /// </summary>
-        private static readonly void** Vtbl = InitVtbl();
+        /// <remarks>
+        /// Only the slots that are actually used are implemented, all others are explicitly set to <see langword="null"/>.
+        /// </remarks>
+        [FixedAddressValueType]
+        private static readonly IDXGIFactory4As6BackcompatVftbl SharedVftbl;
 
         /// <summary>
-        /// Builds the custom method table pointer for <see cref="IDXGIFactory4As6Backcompat"/>.
+        /// Initializes <see cref="SharedVftbl"/>.
         /// </summary>
-        /// <returns>The method table pointer for <see cref="IDXGIFactory4As6Backcompat"/>.</returns>
-        private static void** InitVtbl()
+        static IDXGIFactory4As6Backcompat()
         {
-            void** lpVtbl = (void**)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(IDXGIFactory4As6Backcompat), sizeof(void*) * 30);
+            SharedVftbl.QueryInterface = null;
+            SharedVftbl.AddRef = null;
+            SharedVftbl.Release = &Release;
+            SharedVftbl.SetPrivateData = null;
+            SharedVftbl.SetPrivateDataInterface = null;
+            SharedVftbl.GetPrivateData = null;
+            SharedVftbl.GetParent = null;
+            SharedVftbl.EnumAdapters = &EnumAdapters;
+            SharedVftbl.MakeWindowAssociation = null;
+            SharedVftbl.GetWindowAssociation = null;
+            SharedVftbl.CreateSwapChain = null;
+            SharedVftbl.CreateSoftwareAdapter = null;
+            SharedVftbl.EnumAdapters1 = null;
+            SharedVftbl.IsCurrent = null;
+            SharedVftbl.IsWindowedStereoEnabled = null;
+            SharedVftbl.CreateSwapChainForHwnd = null;
+            SharedVftbl.CreateSwapChainForCoreWindow = null;
+            SharedVftbl.GetSharedResourceAdapterLuid = null;
+            SharedVftbl.RegisterStereoStatusWindow = null;
+            SharedVftbl.RegisterStereoStatusEvent = null;
+            SharedVftbl.UnregisterStereoStatus = null;
+            SharedVftbl.RegisterOcclusionStatusWindow = null;
+            SharedVftbl.RegisterOcclusionStatusEvent = null;
+            SharedVftbl.UnregisterOcclusionStatus = null;
+            SharedVftbl.CreateSwapChainForComposition = null;
+            SharedVftbl.GetCreationFlags = null;
+            SharedVftbl.EnumAdapterByLuid = null;
+            SharedVftbl.EnumWarpAdapter = &EnumWarpAdapter;
+            SharedVftbl.CheckFeatureSupport = null;
+            SharedVftbl.EnumAdapterByGpuPreference = &EnumAdapterByGpuPreference;
+        }
 
-            new Span<IntPtr>(lpVtbl, 30).Clear();
-
-            lpVtbl[2] = (delegate* unmanaged[MemberFunction]<IDXGIFactory4As6Backcompat*, uint>)&Release;
-            lpVtbl[7] = (delegate* unmanaged[MemberFunction]<IDXGIFactory4As6Backcompat*, uint, IDXGIAdapter**, int>)&EnumAdapters;
-            lpVtbl[27] = (delegate* unmanaged[MemberFunction]<IDXGIFactory4As6Backcompat*, Guid*, void**, int>)&EnumWarpAdapter;
-            lpVtbl[29] = (delegate* unmanaged[MemberFunction]<IDXGIFactory4As6Backcompat*, uint, DXGI_GPU_PREFERENCE, Guid*, void**, int>)&EnumAdapterByGpuPreference;
-
-            return lpVtbl;
+        /// <summary>
+        /// Gets the shared method table pointer for all <see cref="IDXGIFactory4As6Backcompat"/> instances.
+        /// </summary>
+        private static void** Vtbl
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get => (void**)Unsafe.AsPointer(in SharedVftbl);
         }
 
         /// <summary>
