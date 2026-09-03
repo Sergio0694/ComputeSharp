@@ -1,7 +1,7 @@
 <Project>
   <PropertyGroup>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <LangVersion>preview</LangVersion>
+    <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 
@@ -122,7 +122,7 @@
     <Authors>Sergio Pedri</Authors>
     <Owners>Sergio Pedri</Owners>
     <Company>Sergio Pedri</Company>
-    <Copyright>Copyright (c) 2024 Sergio Pedri</Copyright>
+    <Copyright>Copyright (c) 2026 Sergio Pedri</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageProjectUrl>https://github.com/Sergio0694/ComputeSharp/</PackageProjectUrl>
