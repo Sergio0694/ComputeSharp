@@ -83,7 +83,7 @@ public sealed partial class D2D1AnimatedPixelShaderPanel : Control
     {
         base.OnApplyTemplate();
 
-        this.canvasAnimatedControl = (CanvasAnimatedControl)GetTemplateChild("PART_CanvasAnimatedControl")!;
+        this.canvasAnimatedControl = (CanvasAnimatedControl)GetTemplateChild("PART_CanvasAnimatedControl");
         this.canvasAnimatedControl.Draw += CanvasAnimatedControl_Draw;
     }
 
