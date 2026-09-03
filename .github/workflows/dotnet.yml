@@ -27,7 +27,7 @@ jobs:
       matrix:
         configuration: [Debug, Release]
         platform: [x64, arm64]
-    runs-on: windows-2022
+    runs-on: windows-2025
     steps:
     - name: Git checkout
       uses: actions/checkout@v4
@@ -48,7 +48,7 @@ jobs:
     if: >-
       github.event_name == 'push' ||
       github.event.pull_request.user.login != github.repository_owner
-    runs-on: windows-2022
+    runs-on: windows-2025
     steps:
     - name: Git checkout
       uses: actions/checkout@v4
@@ -86,7 +86,7 @@ jobs:
   # Run all unit tests referencing the ComputeSharp projects directly
   run-tests:
     needs: [build-solution]
-    runs-on: windows-2022
+    runs-on: windows-2025
 
     # Set the environment variable which is then looked up in ComputeSharp.Dxc.
     # This is a workaround for https://github.com/actions/runner-images/issues/6531.
@@ -133,7 +133,7 @@ jobs:
   # Run all unit tests using D3D12MA
   run-tests-d3d12ma:
     needs: [build-solution]
-    runs-on: windows-2022
+    runs-on: windows-2025
     env:
       CI_RUNNER_DOTNET_TEST_PLATFORM: x64
     steps:
@@ -153,7 +153,7 @@ jobs:
   # Run all Win2D tests (separately, as they need VS Test)
   run-tests-win2d:
     needs: [build-solution]
-    runs-on: windows-2022
+    runs-on: windows-2025
     steps:
     - name: Git checkout
       uses: actions/checkout@v4
@@ -185,7 +185,7 @@ jobs:
   # Run all the local samples to ensure they build and run with no errors
   run-samples:
     needs: [build-solution]
-    runs-on: windows-2022
+    runs-on: windows-2025
     steps:
     - name: Git checkout
       uses: actions/checkout@v4
@@ -208,7 +208,7 @@ jobs:
     strategy:
       matrix:
         platform: [x64, arm64]
-    runs-on: windows-2022
+    runs-on: windows-2025
     env:
       CI_RUNNER_SAMPLES_INTEGRATION_TESTS: true
     steps:
@@ -365,7 +365,7 @@ jobs:
   # a test to ensure the NuGet packages work in a consuming project.
   verify-packages:
     needs: [build-packages]
-    runs-on: windows-2022
+    runs-on: windows-2025
     steps:
     - name: Git checkout
       uses: actions/checkout@v4
@@ -409,7 +409,7 @@ jobs:
   # Publish the packages to GitHub packages
   publish-nightlies-github:
     needs: [run-tests, run-tests-d3d12ma, run-tests-win2d, run-samples, run-samples-aot, verify-packages]
-    runs-on: windows-2022
+    runs-on: windows-2025
     if: ${{github.event_name == 'push'}}
     steps:
     - uses: actions/download-artifact@v4
@@ -423,7 +423,7 @@ jobs:
   # has exceeded the limit. These packages are rarely needed anyway, so that's fine.
   publish-nightlies-azure-devops:
     needs: [run-tests, run-tests-d3d12ma, run-tests-win2d, run-samples, run-samples-aot, verify-packages]
-    runs-on: windows-2022
+    runs-on: windows-2025
     if: ${{github.event_name == 'push'}}
     steps:
     - uses: actions/download-artifact@v4
