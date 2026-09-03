@@ -2,7 +2,7 @@
 <Project>
 
   <!-- Properties exclusive to .NET 8 projects -->
-  <PropertyGroup Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net8.0'))">
+  <PropertyGroup Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net10.0'))">
 
     <!--
       Enable trimming support. This can't be in a target unlike the other properties
@@ -24,7 +24,7 @@
   -->
   <Target Name="EmitSupportedOSVersionAttributeForTargetOS"
           BeforeTargets="PrepareForBuild">
-    <ItemGroup Condition="'$(SupportedOSPlatformVersion)' != '' AND !$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net8.0-windows'))">
+    <ItemGroup Condition="'$(SupportedOSPlatformVersion)' != '' AND !$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net10.0-windows'))">
       <AssemblyAttribute Include="System.Runtime.Versioning.SupportedOSPlatformAttribute">
         <_Parameter1>Windows$(SupportedOSPlatformVersion)</_Parameter1>
       </AssemblyAttribute>
@@ -32,7 +32,7 @@
   </Target>
 
   <!-- Emit the [ComVisible(false)] attribute for UWP and WinUI targets -->
-  <ItemGroup Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net8.0-windows'))">
+  <ItemGroup Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net10.0-windows'))">
     <AssemblyAttribute Include="System.Runtime.InteropServices.ComVisibleAttribute">
       <_Parameter1>false</_Parameter1>
     </AssemblyAttribute>
