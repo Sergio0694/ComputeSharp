@@ -195,40 +195,6 @@ public class Test_CanvasEffectPropertyGenerator_Analyzers
     }
 
     [TestMethod]
-    public async Task RequireCSharpLanguageVersionPreviewAnalyzer_LanguageVersionIsNotPreview_Warns()
-    {
-        const string source = """
-            using System;
-            using ComputeSharp.D2D1.WinUI;
-
-            public abstract partial class MyEffect : CanvasEffect
-            {
-                [{|CMPSD2DWINUI0007:GeneratedCanvasEffectProperty|}]
-                public int Number { get; set; }
-            }
-            """;
-
-        await CSharpAnalyzerTest<RequireCSharpLanguageVersionPreviewAnalyzer>.VerifyAnalyzerAsync(source);
-    }
-
-    [TestMethod]
-    public async Task RequireCSharpLanguageVersionPreviewAnalyzer_LanguageVersionIsPreview_DoesNotWarn()
-    {
-        const string source = """
-            using System;
-            using ComputeSharp.D2D1.WinUI;
-
-            public abstract partial class MyEffect : CanvasEffect
-            {
-                [GeneratedCanvasEffectProperty]
-                public int Number { get; set; }
-            }
-            """;
-
-        await CSharpAnalyzerTest<RequireCSharpLanguageVersionPreviewAnalyzer>.VerifyAnalyzerAsync(source, languageVersion: LanguageVersion.Preview);
-    }
-
-    [TestMethod]
     public async Task UseGeneratedCanvasEffectPropertyOnSemiAutoPropertyAnalyzer_NormalProperty_DoesNotWarn()
     {
         const string source = """
