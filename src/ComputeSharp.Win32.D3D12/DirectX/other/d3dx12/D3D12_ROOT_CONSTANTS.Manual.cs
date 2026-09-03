@@ -5,7 +5,7 @@
 
 namespace ComputeSharp.Win32;
 
-internal unsafe partial struct D3D12_ROOT_CONSTANTS
+internal partial struct D3D12_ROOT_CONSTANTS
 {
     public D3D12_ROOT_CONSTANTS(uint num32BitValues, uint shaderRegister, uint registerSpace = 0)
     {

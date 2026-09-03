@@ -54,7 +54,7 @@ internal sealed unsafe class DxcLibraryLoader
         }
 
         // Loads a target native library
-        static unsafe void LoadLibrary(string filename)
+        static void LoadLibrary(string filename)
         {
             [DllImport("kernel32", ExactSpelling = true, SetLastError = true)]
             static extern void* LoadLibraryW(ushort* lpLibFileName);

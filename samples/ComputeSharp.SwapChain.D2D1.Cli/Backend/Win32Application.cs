@@ -51,7 +51,7 @@ internal sealed class Win32Application
     /// <param name="appWindow">The window to show.</param>
     [MemberNotNull(nameof(canvasDevice))]
     [MemberNotNull(nameof(canvasSwapChain))]
-    public unsafe void OnInitialize(AppWindow appWindow)
+    public void OnInitialize(AppWindow appWindow)
     {
         // Create a new canvas device, which will handle DX11/D2D initialization
         CanvasDevice canvasDevice = new();

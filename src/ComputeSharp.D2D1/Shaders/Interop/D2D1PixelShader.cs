@@ -336,7 +336,7 @@ public static class D2D1PixelShader
     /// <param name="effectiveShaderProfile">The effective shader profile that was used to get the shader bytecode.</param>
     /// <param name="effectiveCompileOptions">The effective compile options that were used to get the shader bytecode.</param>
     /// <returns>A <see cref="ReadOnlyMemory{T}"/> instance with the resulting shader bytecode.</returns>
-    private static unsafe ReadOnlyMemory<byte> LoadOrCompileBytecode<T>(
+    private static ReadOnlyMemory<byte> LoadOrCompileBytecode<T>(
         D2D1ShaderProfile? requestedShaderProfile,
         D2D1CompileOptions? requestedCompileOptions,
         out D2D1ShaderProfile effectiveShaderProfile,

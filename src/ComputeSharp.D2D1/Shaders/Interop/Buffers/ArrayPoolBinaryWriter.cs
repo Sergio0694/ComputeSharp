@@ -144,7 +144,7 @@ internal ref struct ArrayPoolBinaryWriter(int capacity)
     /// </summary>
     /// <param name="sizeHint">The minimum number of items to ensure space for in <see cref="array"/>.</param>
     [MethodImpl(MethodImplOptions.NoInlining)]
-    private unsafe void ResizeBuffer(int sizeHint)
+    private void ResizeBuffer(int sizeHint)
     {
         uint minimumSize = (uint)this.index + (uint)sizeHint;
 

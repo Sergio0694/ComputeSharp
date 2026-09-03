@@ -11,7 +11,7 @@ using static ComputeSharp.Win32.DXGI_FORMAT;
 
 namespace ComputeSharp.Win32;
 
-internal unsafe partial struct D3D12_RESOURCE_DESC : IEquatable<D3D12_RESOURCE_DESC>
+internal partial struct D3D12_RESOURCE_DESC : IEquatable<D3D12_RESOURCE_DESC>
 {
     public D3D12_RESOURCE_DESC(D3D12_RESOURCE_DIMENSION dimension, [NativeTypeName("UINT64")] ulong alignment, [NativeTypeName("UINT64")] ulong width, uint height, [NativeTypeName("UINT16")] ushort depthOrArraySize, [NativeTypeName("UINT16")] ushort mipLevels, DXGI_FORMAT format, uint sampleCount, uint sampleQuality, D3D12_TEXTURE_LAYOUT layout, D3D12_RESOURCE_FLAGS flags)
     {

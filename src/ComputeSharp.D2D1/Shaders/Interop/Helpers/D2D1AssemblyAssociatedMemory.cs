@@ -9,7 +9,7 @@ namespace ComputeSharp.D2D1.Interop;
 /// <summary>
 /// A helper type to allocate memory that's associated with the current assembly.
 /// </summary>
-internal static unsafe class D2D1AssemblyAssociatedMemory
+internal static class D2D1AssemblyAssociatedMemory
 {
     /// <summary>
     /// Allocate memory that is associated with the current assembly, and it will be freed if and when it is unloaded.

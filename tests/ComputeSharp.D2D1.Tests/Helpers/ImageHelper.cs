@@ -19,7 +19,7 @@ internal static class ImageHelper
     /// <param name="width">The resulting image width.</param>
     /// <param name="height">The resulting image height.</param>
     /// <returns>The resulting <see cref="ReadOnlyMemory{T}"/> instance.</returns>
-    public static unsafe ReadOnlyMemory<byte> LoadBitmapFromFile(string filename, out uint width, out uint height)
+    public static ReadOnlyMemory<byte> LoadBitmapFromFile(string filename, out uint width, out uint height)
     {
         using Image<Bgra32> image = Image.Load<Bgra32>(filename);
 

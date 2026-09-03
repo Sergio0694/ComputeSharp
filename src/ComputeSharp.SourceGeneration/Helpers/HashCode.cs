@@ -29,7 +29,7 @@ internal struct HashCode
     /// Initializes the default seed.
     /// </summary>
     /// <returns>A random seed.</returns>
-    private static unsafe uint GenerateGlobalSeed()
+    private static uint GenerateGlobalSeed()
     {
         byte[] bytes = new byte[4];
 
