@@ -4,6 +4,19 @@
   <!-- Properties exclusive to Windows-only .NET 10 projects -->
   <PropertyGroup Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net10.0-windows'))">
 
+    <!-- Get the 'TargetPlatformVersion' property manually, which we need below (this hasn't been parsed by the .NET SDK yet at this point) -->
+    <TargetPlatformVersionForWindowsSdk>$([MSBuild]::GetTargetPlatformVersion('$(TargetFramework)'))</TargetPlatformVersionForWindowsSdk>
+
+    <!-- Prepare the parsed Windows SDK version, without the revision (we specify that below, to control the Windows SDK package version) -->
+    <TargetPlatformVersionForWindowsSdkNoRevision>$([System.Version]::Parse($(TargetPlatformVersionForWindowsSdk)).ToString(3))</TargetPlatformVersionForWindowsSdkNoRevision>
+
+    <!--
+      Manually set the latest Windows SDK version, so we don't need to depend on .NET SDK updates. This also has to be
+      kept in sync with the CsWinRT version below: the projection assemblies in this package are built against a specific
+      version of 'WinRT.Runtime', and mixing the two produces spurious trim analysis warnings when publishing.
+    -->
+    <WindowsSdkPackageVersion>$(TargetPlatformVersionForWindowsSdkNoRevision).87</WindowsSdkPackageVersion>
+
     <!-- Manually set the CsWinRT version, so we don't need to depend on .NET SDK updates -->
     <CsWinRTPackageVersion>2.3.1</CsWinRTPackageVersion>
 
