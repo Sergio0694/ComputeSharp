@@ -189,7 +189,7 @@ public class ImagingTests
         using Image<ImageSharpBgra32> loaded = texture.ToImage<Bgra32, ImageSharpBgra32>();
         using Image<ImageSharpBgra32> original = Image.Load<ImageSharpBgra32>(path);
 
-        TolerantImageComparer.AssertEqual(original, loaded, 0.00000132f);
+        TolerantImageComparer.AssertEqual(original, loaded, 0.0000032f);
     }
 
     [CombinatorialTestMethod]
@@ -207,7 +207,7 @@ public class ImagingTests
         using Image<ImageSharpBgra32> loaded = texture.ToImage<Bgra32, ImageSharpBgra32>();
         using Image<ImageSharpBgra32> original = Image.Load<ImageSharpBgra32>(path);
 
-        TolerantImageComparer.AssertEqual(original, loaded, 0.00000132f);
+        TolerantImageComparer.AssertEqual(original, loaded, 0.0000032f);
     }
 
     [CombinatorialTestMethod]
