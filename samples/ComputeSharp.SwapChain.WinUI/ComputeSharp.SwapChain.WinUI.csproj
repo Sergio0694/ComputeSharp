@@ -28,8 +28,20 @@
 
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
-    <PackageReference Include="CommunityToolkit.WinUI.Controls.Primitives" Version="8.2.250402" />
-    <PackageReference Include="CommunityToolkit.WinUI.Media" Version="8.2.250402" />
+    <PackageReference Include="CommunityToolkit.WinUI.Controls.Primitives" Version="8.3.260402-preview2" />
+    <PackageReference Include="CommunityToolkit.WinUI.Media" Version="8.3.260402-preview2" />
+
+    <!--
+      This app is packaged and uses the framework dependent deployment model, so it needs the Windows App SDK
+      runtime package. That is what adds the 'Microsoft.WindowsAppRuntime' framework package dependency to the
+      generated MSIX manifest. The rest of the Windows App SDK comes in via 'ComputeSharp.WinUI'.
+
+      The runtime package validates that all referenced components match the versions it expects, and it expects
+      a newer 'Microsoft.WindowsAppSDK.InteractiveExperiences' than the one 'Microsoft.WindowsAppSDK.WinUI' pulls
+      in. Reference it explicitly to line the two up, which is also what the aggregate package resolves to.
+    -->
+    <PackageReference Include="Microsoft.WindowsAppSDK.InteractiveExperiences" Version="2.1.6" />
+    <PackageReference Include="Microsoft.WindowsAppSDK.Runtime" Version="2.4.0" />
   </ItemGroup>
 
   <!-- 
