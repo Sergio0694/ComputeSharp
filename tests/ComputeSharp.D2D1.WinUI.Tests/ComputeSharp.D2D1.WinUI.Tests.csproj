@@ -56,10 +56,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AutoConstructor" Version="5.6.0" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.13.0" ExcludeAssets="build" />
-    <PackageReference Include="MSTest" Version="3.8.3" />
-    <PackageReference Include="TerraFX.Interop.Windows" Version="10.0.26100.2" />
+    <PackageReference Include="AutoConstructor" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" ExcludeAssets="build" />
+    <PackageReference Include="MSTest" />
+    <PackageReference Include="TerraFX.Interop.Windows" />
 
     <!--
       Same as in 'ComputeSharp.SwapChain.WinUI': this test app is packaged and framework dependent, so it needs
@@ -67,9 +67,9 @@
       WinUI packages itself (it only gets Win2D through 'ComputeSharp.D2D1.WinUI'), so the components the runtime
       package expects are referenced explicitly here as well.
     -->
-    <PackageReference Include="Microsoft.WindowsAppSDK.InteractiveExperiences" Version="2.1.6" />
-    <PackageReference Include="Microsoft.WindowsAppSDK.Runtime" Version="2.4.0" />
-    <PackageReference Include="Microsoft.WindowsAppSDK.WinUI" Version="2.3.6" />
+    <PackageReference Include="Microsoft.WindowsAppSDK.InteractiveExperiences" />
+    <PackageReference Include="Microsoft.WindowsAppSDK.Runtime" />
+    <PackageReference Include="Microsoft.WindowsAppSDK.WinUI" />
     <Manifest Include="$(ApplicationManifest)" />
   </ItemGroup>
 

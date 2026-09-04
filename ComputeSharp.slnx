@@ -107,6 +107,7 @@
     <File Path=".globalconfig" />
     <File Path="build/Directory.Build.props" />
     <File Path="build/Directory.Build.targets" />
+    <File Path="Directory.Packages.props" />
     <File Path="global.json" />
     <File Path="LICENSE" />
     <File Path="README.md" />

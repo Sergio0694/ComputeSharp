@@ -29,12 +29,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
-    <PackageReference Include="CommunityToolkit.Uwp.Controls.Primitives" Version="8.2.250402" />
-    <PackageReference Include="CommunityToolkit.Uwp.Media" Version="8.2.250402" />
+    <PackageReference Include="CommunityToolkit.Mvvm" />
+    <PackageReference Include="CommunityToolkit.Uwp.Controls.Primitives" />
+    <PackageReference Include="CommunityToolkit.Uwp.Media" />
 
     <!-- Remove all WebView2 assets (transitive from WinUI 2), since we don't need it at all -->
-    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3179.45" IncludeAssets="none" />
+    <PackageReference Include="Microsoft.Web.WebView2" IncludeAssets="none" />
   </ItemGroup>
 
   <ItemGroup>

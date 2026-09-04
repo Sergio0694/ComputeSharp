@@ -27,9 +27,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
-    <PackageReference Include="CommunityToolkit.WinUI.Controls.Primitives" Version="8.3.260402-preview2" />
-    <PackageReference Include="CommunityToolkit.WinUI.Media" Version="8.3.260402-preview2" />
+    <PackageReference Include="CommunityToolkit.Mvvm" />
+    <PackageReference Include="CommunityToolkit.WinUI.Controls.Primitives" />
+    <PackageReference Include="CommunityToolkit.WinUI.Media" />
 
     <!--
       This app is packaged and uses the framework dependent deployment model, so it needs the Windows App SDK
@@ -40,8 +40,8 @@
       a newer 'Microsoft.WindowsAppSDK.InteractiveExperiences' than the one 'Microsoft.WindowsAppSDK.WinUI' pulls
       in. Reference it explicitly to line the two up, which is also what the aggregate package resolves to.
     -->
-    <PackageReference Include="Microsoft.WindowsAppSDK.InteractiveExperiences" Version="2.1.6" />
-    <PackageReference Include="Microsoft.WindowsAppSDK.Runtime" Version="2.4.0" />
+    <PackageReference Include="Microsoft.WindowsAppSDK.InteractiveExperiences" />
+    <PackageReference Include="Microsoft.WindowsAppSDK.Runtime" />
   </ItemGroup>
 
   <!-- 

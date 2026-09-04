@@ -12,7 +12,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ComputeSharp.Core" Version="$(PackageVersion)" />
-    <PackageReference Include="ComputeSharp" Version="$(PackageVersion)" />
+    <PackageReference Include="ComputeSharp.Core" />
+    <PackageReference Include="ComputeSharp" />
   </ItemGroup>
 </Project>
