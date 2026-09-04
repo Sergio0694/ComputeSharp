@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project>
 
+  <!--
+    NativeAOT always produces a self contained binary, but as of .NET 8 the runtime identifier no longer implies
+    that property. It is only set automatically when publishing via 'dotnet publish', so projects published with
+    'msbuild -t:publish' would otherwise fail with NETSDK1102 as soon as any size optimization is also enabled.
+  -->
+  <PropertyGroup Condition="'$(PublishAot)' == 'true'">
+    <SelfContained Condition="'$(SelfContained)' == ''">true</SelfContained>
+  </PropertyGroup>
+
   <!-- Properties exclusive to Windows-only .NET 10 projects -->
   <PropertyGroup Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net10.0-windows'))">
 
