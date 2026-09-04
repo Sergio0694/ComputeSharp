@@ -57,7 +57,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="TerraFX.Interop.Windows" Version="10.0.26100.2" />
+    <PackageReference Include="TerraFX.Interop.Windows" />
   </ItemGroup>
 
   <!-- Note: using SetPlatform="Platform=AnyCPU" for the analyzers to avoid issues (see https://github.com/dotnet/roslyn/issues/70148) -->

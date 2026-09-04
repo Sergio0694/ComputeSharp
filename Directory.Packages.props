@@ -1,0 +1,39 @@
+<Project>
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageVersion Include="AutoConstructor" Version="5.6.0" />
+    <PackageVersion Include="Basic.Reference.Assemblies.Net100" Version="1.8.11" />
+    <PackageVersion Include="BenchmarkDotNet" Version="0.14.0" />
+    <PackageVersion Include="CommunityToolkit.HighPerformance" Version="8.4.0" />
+    <PackageVersion Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+    <PackageVersion Include="CommunityToolkit.Uwp.Controls.Primitives" Version="8.2.250402" />
+    <PackageVersion Include="CommunityToolkit.Uwp.Media" Version="8.2.250402" />
+    <PackageVersion Include="CommunityToolkit.WinUI.Controls.Primitives" Version="8.3.260402-preview2" />
+    <PackageVersion Include="CommunityToolkit.WinUI.Media" Version="8.3.260402-preview2" />
+    <PackageVersion Include="ComputeSharp" Version="$(PackageVersion)" />
+    <PackageVersion Include="ComputeSharp.Core" Version="$(PackageVersion)" />
+    <PackageVersion Include="ComputeSharp.Dxc" Version="$(PackageVersion)" />
+    <PackageVersion Include="ComputeSharp.Pix" Version="$(PackageVersion)" />
+    <PackageVersion Include="FSharp.Core" Version="9.0.202" />
+    <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="5.0.0" />
+    <PackageVersion Include="Microsoft.CodeAnalysis.CSharp.Analyzer.Testing" Version="1.1.4" />
+    <PackageVersion Include="Microsoft.CodeAnalysis.CSharp.CodeFix.Testing" Version="1.1.4" />
+    <PackageVersion Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="5.0.0" />
+    <PackageVersion Include="Microsoft.Graphics.Win2D" Version="1.4.0" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
+    <PackageVersion Include="Microsoft.Web.WebView2" Version="1.0.3179.45" />
+    <PackageVersion Include="Microsoft.Windows.CsWin32" Version="0.3.333" />
+    <PackageVersion Include="Microsoft.WindowsAppSDK.InteractiveExperiences" Version="2.1.6" />
+    <PackageVersion Include="Microsoft.WindowsAppSDK.Runtime" Version="2.4.0" />
+    <PackageVersion Include="Microsoft.WindowsAppSDK.WinUI" Version="2.3.6" />
+    <PackageVersion Include="MSTest" Version="3.8.3" />
+    <PackageVersion Include="PublishAotCompressed" Version="1.0.2" />
+    <PackageVersion Include="SixLabors.ImageSharp" Version="3.1.11" />
+    <PackageVersion Include="TerraFX.Interop.D3D12MemoryAllocator" Version="2.0.1.5" />
+    <PackageVersion Include="TerraFX.Interop.Windows" Version="10.0.26100.2" />
+    <PackageVersion Include="Win2D.uwp" Version="1.28.3" />
+  </ItemGroup>
+</Project>

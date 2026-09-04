@@ -47,7 +47,7 @@
 
   <!-- If requested, also reference the UPX compression package -->
   <ItemGroup Condition="'$(PUBLISH_AOT_COMPRESSED)' == 'true'">
-    <PackageReference Include="PublishAotCompressed" Version="1.0.2" />
+    <PackageReference Include="PublishAotCompressed" />
   </ItemGroup>
 
   <ItemGroup>
@@ -58,7 +58,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="TerraFX.Interop.Windows" Version="10.0.26100.2" />
+    <PackageReference Include="TerraFX.Interop.Windows" />
   </ItemGroup>
 
   <ItemGroup>
