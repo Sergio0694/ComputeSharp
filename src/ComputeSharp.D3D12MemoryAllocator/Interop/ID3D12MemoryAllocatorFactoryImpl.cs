@@ -21,26 +21,17 @@ internal unsafe struct ID3D12MemoryAllocatorFactoryImpl
     /// The shared method table for all <see cref="ID3D12MemoryAllocatorFactory"/> instances.
     /// </summary>
     [FixedAddressValueType]
-    private static readonly ID3D12MemoryAllocatorFactoryImplVftbl SharedVftbl;
+    private static readonly ID3D12MemoryAllocatorFactoryImplVftbl Vftbl;
 
     /// <summary>
-    /// Initializes <see cref="SharedVftbl"/>.
+    /// Initializes <see cref="Vftbl"/>.
     /// </summary>
     static ID3D12MemoryAllocatorFactoryImpl()
     {
-        SharedVftbl.QueryInterface = &QueryInterface;
-        SharedVftbl.AddRef = &AddRef;
-        SharedVftbl.Release = &Release;
-        SharedVftbl.CreateAllocator = &CreateAllocator;
-    }
-
-    /// <summary>
-    /// Gets the shared method table pointer for all <see cref="ID3D12MemoryAllocatorFactory"/> instances.
-    /// </summary>
-    private static void** Vtbl
-    {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        get => (void**)Unsafe.AsPointer(in SharedVftbl);
+        Vftbl.QueryInterface = &QueryInterface;
+        Vftbl.AddRef = &AddRef;
+        Vftbl.Release = &Release;
+        Vftbl.CreateAllocator = &CreateAllocator;
     }
 
     /// <summary>
@@ -73,7 +64,7 @@ internal unsafe struct ID3D12MemoryAllocatorFactoryImpl
             return E.E_OUTOFMEMORY;
         }
 
-        @this->lpVtbl = Vtbl;
+        @this->lpVtbl = (void**)Unsafe.AsPointer(in Vftbl);
         @this->referenceCount = 1;
 
         *allocatorFactoryImpl = @this;

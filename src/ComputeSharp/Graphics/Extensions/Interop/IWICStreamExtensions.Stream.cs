@@ -43,36 +43,27 @@ internal static unsafe partial class IWICStreamExtensions
         /// The shared vtable for <see cref="IStreamWrapper"/> instances.
         /// </summary>
         [FixedAddressValueType]
-        private static readonly IStreamWrapperVftbl SharedVftbl;
+        private static readonly IStreamWrapperVftbl Vftbl;
 
         /// <summary>
-        /// Initializes <see cref="SharedVftbl"/>.
+        /// Initializes <see cref="Vftbl"/>.
         /// </summary>
         static IStreamWrapper()
         {
-            SharedVftbl.QueryInterface = &QueryInterface;
-            SharedVftbl.AddRef = &AddRef;
-            SharedVftbl.Release = &Release;
-            SharedVftbl.Read = &Read;
-            SharedVftbl.Write = &Write;
-            SharedVftbl.Seek = &Seek;
-            SharedVftbl.SetSize = &SetSize;
-            SharedVftbl.CopyTo = &CopyTo;
-            SharedVftbl.Commit = &Commit;
-            SharedVftbl.Revert = &Revert;
-            SharedVftbl.LockRegion = &LockRegion;
-            SharedVftbl.UnlockRegion = &UnlockRegion;
-            SharedVftbl.Stat = &Stat;
-            SharedVftbl.Clone = &Clone;
-        }
-
-        /// <summary>
-        /// Gets the shared vtable pointer for <see cref="IStreamWrapper"/> instances.
-        /// </summary>
-        private static void** Vtbl
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => (void**)Unsafe.AsPointer(in SharedVftbl);
+            Vftbl.QueryInterface = &QueryInterface;
+            Vftbl.AddRef = &AddRef;
+            Vftbl.Release = &Release;
+            Vftbl.Read = &Read;
+            Vftbl.Write = &Write;
+            Vftbl.Seek = &Seek;
+            Vftbl.SetSize = &SetSize;
+            Vftbl.CopyTo = &CopyTo;
+            Vftbl.Commit = &Commit;
+            Vftbl.Revert = &Revert;
+            Vftbl.LockRegion = &LockRegion;
+            Vftbl.UnlockRegion = &UnlockRegion;
+            Vftbl.Stat = &Stat;
+            Vftbl.Clone = &Clone;
         }
 
         /// <summary>
@@ -99,7 +90,7 @@ internal static unsafe partial class IWICStreamExtensions
         {
             IStreamWrapper* @this = (IStreamWrapper*)NativeMemory.Alloc((nuint)sizeof(IStreamWrapper));
 
-            @this->lpVtbl = Vtbl;
+            @this->lpVtbl = (void**)Unsafe.AsPointer(in Vftbl);
             @this->referenceCount = 1;
             @this->streamHandle = GCHandle.Alloc(stream);
 

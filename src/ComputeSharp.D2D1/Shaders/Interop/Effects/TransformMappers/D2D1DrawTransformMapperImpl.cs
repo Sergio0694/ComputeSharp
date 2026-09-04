@@ -16,48 +16,30 @@ internal unsafe partial struct D2D1DrawTransformMapperImpl
     /// The shared vtable pointer for <see cref="D2D1DrawTransformMapperImpl"/> instance, for <see cref="ID2D1DrawTransformMapper"/>.
     /// </summary>
     [FixedAddressValueType]
-    private static readonly ID2D1DrawTransformMapperVftbl SharedVftblForID2D1DrawTransformMapper;
+    private static readonly ID2D1DrawTransformMapperVftbl VftblForID2D1DrawTransformMapper;
 
     /// <summary>
     /// The shared vtable for <see cref="D2D1DrawTransformMapperImpl"/> instances, for <see cref="ID2D1DrawTransformMapperInternal"/>.
     /// </summary>
     [FixedAddressValueType]
-    private static readonly ID2D1DrawTransformMapperInternalVftbl SharedVftblForID2D1DrawTransformMapperInternal;
+    private static readonly ID2D1DrawTransformMapperInternalVftbl VftblForID2D1DrawTransformMapperInternal;
 
     /// <summary>
-    /// Initializes <see cref="SharedVftblForID2D1DrawTransformMapper"/> and <see cref="SharedVftblForID2D1DrawTransformMapperInternal"/>.
+    /// Initializes <see cref="VftblForID2D1DrawTransformMapper"/> and <see cref="VftblForID2D1DrawTransformMapperInternal"/>.
     /// </summary>
     static D2D1DrawTransformMapperImpl()
     {
-        SharedVftblForID2D1DrawTransformMapper.QueryInterface = &ID2D1DrawTransformMapperMethods.QueryInterface;
-        SharedVftblForID2D1DrawTransformMapper.AddRef = &ID2D1DrawTransformMapperMethods.AddRef;
-        SharedVftblForID2D1DrawTransformMapper.Release = &ID2D1DrawTransformMapperMethods.Release;
-        SharedVftblForID2D1DrawTransformMapper.MapInputRectsToOutputRect = &ID2D1DrawTransformMapperMethods.MapInputRectsToOutputRect;
-        SharedVftblForID2D1DrawTransformMapper.MapOutputRectToInputRects = &ID2D1DrawTransformMapperMethods.MapOutputRectToInputRects;
-        SharedVftblForID2D1DrawTransformMapper.MapInvalidRect = &ID2D1DrawTransformMapperMethods.MapInvalidRect;
+        VftblForID2D1DrawTransformMapper.QueryInterface = &ID2D1DrawTransformMapperMethods.QueryInterface;
+        VftblForID2D1DrawTransformMapper.AddRef = &ID2D1DrawTransformMapperMethods.AddRef;
+        VftblForID2D1DrawTransformMapper.Release = &ID2D1DrawTransformMapperMethods.Release;
+        VftblForID2D1DrawTransformMapper.MapInputRectsToOutputRect = &ID2D1DrawTransformMapperMethods.MapInputRectsToOutputRect;
+        VftblForID2D1DrawTransformMapper.MapOutputRectToInputRects = &ID2D1DrawTransformMapperMethods.MapOutputRectToInputRects;
+        VftblForID2D1DrawTransformMapper.MapInvalidRect = &ID2D1DrawTransformMapperMethods.MapInvalidRect;
 
-        SharedVftblForID2D1DrawTransformMapperInternal.QueryInterface = &ID2D1DrawTransformMapperInternalMethods.QueryInterface;
-        SharedVftblForID2D1DrawTransformMapperInternal.AddRef = &ID2D1DrawTransformMapperInternalMethods.AddRef;
-        SharedVftblForID2D1DrawTransformMapperInternal.Release = &ID2D1DrawTransformMapperInternalMethods.Release;
-        SharedVftblForID2D1DrawTransformMapperInternal.GetManagedWrapperHandle = &ID2D1DrawTransformMapperInternalMethods.GetManagedWrapperHandle;
-    }
-
-    /// <summary>
-    /// Gets the shared vtable pointer for <see cref="D2D1DrawTransformMapperImpl"/> instances, for <see cref="ID2D1DrawTransformMapper"/>.
-    /// </summary>
-    private static void** VtblForID2D1DrawTransformMapper
-    {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        get => (void**)Unsafe.AsPointer(in SharedVftblForID2D1DrawTransformMapper);
-    }
-
-    /// <summary>
-    /// Gets the shared vtable pointer for <see cref="D2D1DrawTransformMapperImpl"/> instances, for <see cref="ID2D1DrawTransformMapperInternal"/>.
-    /// </summary>
-    private static void** VtblForID2D1DrawTransformMapperInternal
-    {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        get => (void**)Unsafe.AsPointer(in SharedVftblForID2D1DrawTransformMapperInternal);
+        VftblForID2D1DrawTransformMapperInternal.QueryInterface = &ID2D1DrawTransformMapperInternalMethods.QueryInterface;
+        VftblForID2D1DrawTransformMapperInternal.AddRef = &ID2D1DrawTransformMapperInternalMethods.AddRef;
+        VftblForID2D1DrawTransformMapperInternal.Release = &ID2D1DrawTransformMapperInternalMethods.Release;
+        VftblForID2D1DrawTransformMapperInternal.GetManagedWrapperHandle = &ID2D1DrawTransformMapperInternalMethods.GetManagedWrapperHandle;
     }
 
     /// <summary>
@@ -96,8 +78,8 @@ internal unsafe partial struct D2D1DrawTransformMapperImpl
     {
         D2D1DrawTransformMapperImpl* @this = (D2D1DrawTransformMapperImpl*)NativeMemory.Alloc((nuint)sizeof(D2D1DrawTransformMapperImpl));
 
-        @this->lpVtblForID2D1DrawTransformMapper = VtblForID2D1DrawTransformMapper;
-        @this->lpVtblForID2D1DrawTransformMapperInternal = VtblForID2D1DrawTransformMapperInternal;
+        @this->lpVtblForID2D1DrawTransformMapper = (void**)Unsafe.AsPointer(in VftblForID2D1DrawTransformMapper);
+        @this->lpVtblForID2D1DrawTransformMapperInternal = (void**)Unsafe.AsPointer(in VftblForID2D1DrawTransformMapperInternal);
         @this->referenceCount = 1;
         @this->transformMapperHandle = GCHandle.Alloc(transformMapper);
         @this->spinLock = new SpinLock(enableThreadOwnerTracking: false);

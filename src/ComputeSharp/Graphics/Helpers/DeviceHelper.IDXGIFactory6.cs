@@ -110,52 +110,43 @@ partial class DeviceHelper
         /// Only the slots that are actually used are implemented, all others are explicitly set to <see langword="null"/>.
         /// </remarks>
         [FixedAddressValueType]
-        private static readonly IDXGIFactory4As6BackcompatVftbl SharedVftbl;
+        private static readonly IDXGIFactory4As6BackcompatVftbl Vftbl;
 
         /// <summary>
-        /// Initializes <see cref="SharedVftbl"/>.
+        /// Initializes <see cref="Vftbl"/>.
         /// </summary>
         static IDXGIFactory4As6Backcompat()
         {
-            SharedVftbl.QueryInterface = null;
-            SharedVftbl.AddRef = null;
-            SharedVftbl.Release = &Release;
-            SharedVftbl.SetPrivateData = null;
-            SharedVftbl.SetPrivateDataInterface = null;
-            SharedVftbl.GetPrivateData = null;
-            SharedVftbl.GetParent = null;
-            SharedVftbl.EnumAdapters = &EnumAdapters;
-            SharedVftbl.MakeWindowAssociation = null;
-            SharedVftbl.GetWindowAssociation = null;
-            SharedVftbl.CreateSwapChain = null;
-            SharedVftbl.CreateSoftwareAdapter = null;
-            SharedVftbl.EnumAdapters1 = null;
-            SharedVftbl.IsCurrent = null;
-            SharedVftbl.IsWindowedStereoEnabled = null;
-            SharedVftbl.CreateSwapChainForHwnd = null;
-            SharedVftbl.CreateSwapChainForCoreWindow = null;
-            SharedVftbl.GetSharedResourceAdapterLuid = null;
-            SharedVftbl.RegisterStereoStatusWindow = null;
-            SharedVftbl.RegisterStereoStatusEvent = null;
-            SharedVftbl.UnregisterStereoStatus = null;
-            SharedVftbl.RegisterOcclusionStatusWindow = null;
-            SharedVftbl.RegisterOcclusionStatusEvent = null;
-            SharedVftbl.UnregisterOcclusionStatus = null;
-            SharedVftbl.CreateSwapChainForComposition = null;
-            SharedVftbl.GetCreationFlags = null;
-            SharedVftbl.EnumAdapterByLuid = null;
-            SharedVftbl.EnumWarpAdapter = &EnumWarpAdapter;
-            SharedVftbl.CheckFeatureSupport = null;
-            SharedVftbl.EnumAdapterByGpuPreference = &EnumAdapterByGpuPreference;
-        }
-
-        /// <summary>
-        /// Gets the shared method table pointer for all <see cref="IDXGIFactory4As6Backcompat"/> instances.
-        /// </summary>
-        private static void** Vtbl
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => (void**)Unsafe.AsPointer(in SharedVftbl);
+            Vftbl.QueryInterface = null;
+            Vftbl.AddRef = null;
+            Vftbl.Release = &Release;
+            Vftbl.SetPrivateData = null;
+            Vftbl.SetPrivateDataInterface = null;
+            Vftbl.GetPrivateData = null;
+            Vftbl.GetParent = null;
+            Vftbl.EnumAdapters = &EnumAdapters;
+            Vftbl.MakeWindowAssociation = null;
+            Vftbl.GetWindowAssociation = null;
+            Vftbl.CreateSwapChain = null;
+            Vftbl.CreateSoftwareAdapter = null;
+            Vftbl.EnumAdapters1 = null;
+            Vftbl.IsCurrent = null;
+            Vftbl.IsWindowedStereoEnabled = null;
+            Vftbl.CreateSwapChainForHwnd = null;
+            Vftbl.CreateSwapChainForCoreWindow = null;
+            Vftbl.GetSharedResourceAdapterLuid = null;
+            Vftbl.RegisterStereoStatusWindow = null;
+            Vftbl.RegisterStereoStatusEvent = null;
+            Vftbl.UnregisterStereoStatus = null;
+            Vftbl.RegisterOcclusionStatusWindow = null;
+            Vftbl.RegisterOcclusionStatusEvent = null;
+            Vftbl.UnregisterOcclusionStatus = null;
+            Vftbl.CreateSwapChainForComposition = null;
+            Vftbl.GetCreationFlags = null;
+            Vftbl.EnumAdapterByLuid = null;
+            Vftbl.EnumWarpAdapter = &EnumWarpAdapter;
+            Vftbl.CheckFeatureSupport = null;
+            Vftbl.EnumAdapterByGpuPreference = &EnumAdapterByGpuPreference;
         }
 
         /// <summary>
@@ -177,7 +168,7 @@ partial class DeviceHelper
         {
             IDXGIFactory4As6Backcompat* @this = (IDXGIFactory4As6Backcompat*)NativeMemory.Alloc((nuint)sizeof(IDXGIFactory4As6Backcompat));
 
-            @this->lpVtbl = Vtbl;
+            @this->lpVtbl = (void**)Unsafe.AsPointer(in Vftbl);
             @this->dxgiFactory4 = new ComPtr<IDXGIFactory4>(dxgiFactory4);
 
             *dxgiFactory6 = (IDXGIFactory6*)@this;

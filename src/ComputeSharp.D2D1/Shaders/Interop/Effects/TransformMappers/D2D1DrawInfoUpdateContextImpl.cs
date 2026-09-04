@@ -15,48 +15,30 @@ internal unsafe partial struct D2D1DrawInfoUpdateContextImpl
     /// The shared vtable for <see cref="D2D1DrawInfoUpdateContextImpl"/> instances, for <see cref="ID2D1DrawInfoUpdateContext"/>.
     /// </summary>
     [FixedAddressValueType]
-    private static readonly ID2D1DrawInfoUpdateContextVftbl SharedVftblForID2D1DrawInfoUpdateContext;
+    private static readonly ID2D1DrawInfoUpdateContextVftbl VftblForID2D1DrawInfoUpdateContext;
 
     /// <summary>
     /// The shared vtable for <see cref="D2D1DrawInfoUpdateContextImpl"/> instances, for <see cref="ID2D1DrawInfoUpdateContextInternal"/>.
     /// </summary>
     [FixedAddressValueType]
-    private static readonly ID2D1DrawInfoUpdateContextInternalVftbl SharedVftblForID2D1DrawInfoUpdateContextInternal;
+    private static readonly ID2D1DrawInfoUpdateContextInternalVftbl VftblForID2D1DrawInfoUpdateContextInternal;
 
     /// <summary>
-    /// Initializes <see cref="SharedVftblForID2D1DrawInfoUpdateContext"/> and <see cref="SharedVftblForID2D1DrawInfoUpdateContextInternal"/>.
+    /// Initializes <see cref="VftblForID2D1DrawInfoUpdateContext"/> and <see cref="VftblForID2D1DrawInfoUpdateContextInternal"/>.
     /// </summary>
     static D2D1DrawInfoUpdateContextImpl()
     {
-        SharedVftblForID2D1DrawInfoUpdateContext.QueryInterface = &ID2D1DrawInfoUpdateContextMethods.QueryInterface;
-        SharedVftblForID2D1DrawInfoUpdateContext.AddRef = &ID2D1DrawInfoUpdateContextMethods.AddRef;
-        SharedVftblForID2D1DrawInfoUpdateContext.Release = &ID2D1DrawInfoUpdateContextMethods.Release;
-        SharedVftblForID2D1DrawInfoUpdateContext.GetConstantBufferSize = &ID2D1DrawInfoUpdateContextMethods.GetConstantBufferSize;
-        SharedVftblForID2D1DrawInfoUpdateContext.GetConstantBuffer = &ID2D1DrawInfoUpdateContextMethods.GetConstantBuffer;
-        SharedVftblForID2D1DrawInfoUpdateContext.SetConstantBuffer = &ID2D1DrawInfoUpdateContextMethods.SetConstantBuffer;
+        VftblForID2D1DrawInfoUpdateContext.QueryInterface = &ID2D1DrawInfoUpdateContextMethods.QueryInterface;
+        VftblForID2D1DrawInfoUpdateContext.AddRef = &ID2D1DrawInfoUpdateContextMethods.AddRef;
+        VftblForID2D1DrawInfoUpdateContext.Release = &ID2D1DrawInfoUpdateContextMethods.Release;
+        VftblForID2D1DrawInfoUpdateContext.GetConstantBufferSize = &ID2D1DrawInfoUpdateContextMethods.GetConstantBufferSize;
+        VftblForID2D1DrawInfoUpdateContext.GetConstantBuffer = &ID2D1DrawInfoUpdateContextMethods.GetConstantBuffer;
+        VftblForID2D1DrawInfoUpdateContext.SetConstantBuffer = &ID2D1DrawInfoUpdateContextMethods.SetConstantBuffer;
 
-        SharedVftblForID2D1DrawInfoUpdateContextInternal.QueryInterface = &ID2D1DrawInfoUpdateContextInternalMethods.QueryInterface;
-        SharedVftblForID2D1DrawInfoUpdateContextInternal.AddRef = &ID2D1DrawInfoUpdateContextInternalMethods.AddRef;
-        SharedVftblForID2D1DrawInfoUpdateContextInternal.Release = &ID2D1DrawInfoUpdateContextInternalMethods.Release;
-        SharedVftblForID2D1DrawInfoUpdateContextInternal.Close = &ID2D1DrawInfoUpdateContextInternalMethods.Close;
-    }
-
-    /// <summary>
-    /// Gets the shared vtable pointer for <see cref="D2D1DrawInfoUpdateContextImpl"/> instances, for <see cref="ID2D1DrawInfoUpdateContext"/>.
-    /// </summary>
-    private static void** VtblForID2D1DrawInfoUpdateContext
-    {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        get => (void**)Unsafe.AsPointer(in SharedVftblForID2D1DrawInfoUpdateContext);
-    }
-
-    /// <summary>
-    /// Gets the shared vtable pointer for <see cref="D2D1DrawInfoUpdateContextImpl"/> instances, for <see cref="ID2D1DrawInfoUpdateContextInternal"/>.
-    /// </summary>
-    private static void** VtblForID2D1DrawInfoUpdateContextInternal
-    {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        get => (void**)Unsafe.AsPointer(in SharedVftblForID2D1DrawInfoUpdateContextInternal);
+        VftblForID2D1DrawInfoUpdateContextInternal.QueryInterface = &ID2D1DrawInfoUpdateContextInternalMethods.QueryInterface;
+        VftblForID2D1DrawInfoUpdateContextInternal.AddRef = &ID2D1DrawInfoUpdateContextInternalMethods.AddRef;
+        VftblForID2D1DrawInfoUpdateContextInternal.Release = &ID2D1DrawInfoUpdateContextInternalMethods.Release;
+        VftblForID2D1DrawInfoUpdateContextInternal.Close = &ID2D1DrawInfoUpdateContextInternalMethods.Close;
     }
 
     /// <summary>
@@ -116,8 +98,8 @@ internal unsafe partial struct D2D1DrawInfoUpdateContextImpl
             return E.E_OUTOFMEMORY;
         }
 
-        @this->lpVtblForID2D1DrawInfoUpdateContext = VtblForID2D1DrawInfoUpdateContext;
-        @this->lpVtblForID2D1DrawInfoUpdateContextInternal = VtblForID2D1DrawInfoUpdateContextInternal;
+        @this->lpVtblForID2D1DrawInfoUpdateContext = (void**)Unsafe.AsPointer(in VftblForID2D1DrawInfoUpdateContext);
+        @this->lpVtblForID2D1DrawInfoUpdateContextInternal = (void**)Unsafe.AsPointer(in VftblForID2D1DrawInfoUpdateContextInternal);
         @this->referenceCount = 1;
         @this->constantBuffer = constantBuffer;
         @this->constantBufferSize = constantBufferSize;

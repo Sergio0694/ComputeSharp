@@ -23,24 +23,15 @@ partial class D3DCompiler
         /// The shared method table for all <see cref="ID3DIncludeForD2DHelpers"/> instances.
         /// </summary>
         [FixedAddressValueType]
-        private static readonly ID3DIncludeForD2DHelpersVftbl SharedVftbl;
+        private static readonly ID3DIncludeForD2DHelpersVftbl Vftbl;
 
         /// <summary>
-        /// Initializes <see cref="SharedVftbl"/>.
+        /// Initializes <see cref="Vftbl"/>.
         /// </summary>
         static ID3DIncludeForD2DHelpers()
         {
-            SharedVftbl.Open = &Open;
-            SharedVftbl.Close = &Close;
-        }
-
-        /// <summary>
-        /// Gets the shared method table pointer for all <see cref="ID3DIncludeForD2DHelpers"/> instances.
-        /// </summary>
-        private static void** Vtbl
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => (void**)Unsafe.AsPointer(in SharedVftbl);
+            Vftbl.Open = &Open;
+            Vftbl.Close = &Close;
         }
 
         /// <summary>
@@ -56,7 +47,7 @@ partial class D3DCompiler
         {
             ID3DIncludeForD2DHelpers* @this = (ID3DIncludeForD2DHelpers*)NativeMemory.Alloc((nuint)sizeof(ID3DIncludeForD2DHelpers));
 
-            @this->lpVtbl = Vtbl;
+            @this->lpVtbl = (void**)Unsafe.AsPointer(in Vftbl);
 
             return (ID3DInclude*)@this;
         }

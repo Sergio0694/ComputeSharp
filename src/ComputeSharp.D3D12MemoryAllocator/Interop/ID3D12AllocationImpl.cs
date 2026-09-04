@@ -18,26 +18,17 @@ internal unsafe struct ID3D12AllocationImpl
     /// The shared method table for all <see cref="ID3D12Allocation"/> instances.
     /// </summary>
     [FixedAddressValueType]
-    private static readonly ID3D12AllocationImplVftbl SharedVftbl;
+    private static readonly ID3D12AllocationImplVftbl Vftbl;
 
     /// <summary>
-    /// Initializes <see cref="SharedVftbl"/>.
+    /// Initializes <see cref="Vftbl"/>.
     /// </summary>
     static ID3D12AllocationImpl()
     {
-        SharedVftbl.QueryInterface = &QueryInterface;
-        SharedVftbl.AddRef = &AddRef;
-        SharedVftbl.Release = &Release;
-        SharedVftbl.GetD3D12Resource = &GetD3D12Resource;
-    }
-
-    /// <summary>
-    /// Gets the shared method table pointer for all <see cref="ID3D12Allocation"/> instances.
-    /// </summary>
-    private static void** Vtbl
-    {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        get => (void**)Unsafe.AsPointer(in SharedVftbl);
+        Vftbl.QueryInterface = &QueryInterface;
+        Vftbl.AddRef = &AddRef;
+        Vftbl.Release = &Release;
+        Vftbl.GetD3D12Resource = &GetD3D12Resource;
     }
 
     /// <summary>
@@ -92,7 +83,7 @@ internal unsafe struct ID3D12AllocationImpl
             return E.E_OUTOFMEMORY;
         }
 
-        @this->lpVtbl = Vtbl;
+        @this->lpVtbl = (void**)Unsafe.AsPointer(in Vftbl);
         @this->referenceCount = 1;
         @this->allocatorImpl = new ComPtr<ID3D12MemoryAllocatorImpl>(allocatorImpl);
         @this->allocation = new ComPtr<D3D12MA_Allocation>(allocation);
