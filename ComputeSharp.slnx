@@ -1,0 +1,170 @@
+<Solution>
+  <Configurations>
+    <Platform Name="ARM64" />
+    <Platform Name="x64" />
+  </Configurations>
+  <Folder Name="/Assets/">
+    <File Path="assets/icon.ico" />
+    <File Path="assets/icon.png" />
+    <File Path="assets/icon_highres.png" />
+  </Folder>
+  <Folder Name="/Libraries/" />
+  <Folder Name="/Libraries/arm64/">
+    <File Path="libs/arm64/dxcompiler.dll" />
+    <File Path="libs/arm64/dxil.dll" />
+    <File Path="libs/arm64/WinPixEventRuntime.dll" />
+    <File Path="libs/arm64/WinPixEventRuntime_UAP.dll" />
+  </Folder>
+  <Folder Name="/Libraries/x64/">
+    <File Path="libs/x64/dxcompiler.dll" />
+    <File Path="libs/x64/dxil.dll" />
+    <File Path="libs/x64/WinPixEventRuntime.dll" />
+    <File Path="libs/x64/WinPixEventRuntime_UAP.dll" />
+  </Folder>
+  <Folder Name="/Samples/">
+    <Project Path="samples/ComputeSharp.Benchmark/ComputeSharp.Benchmark.csproj" />
+    <Project Path="samples/ComputeSharp.ImageProcessing/ComputeSharp.ImageProcessing.csproj" />
+    <Project Path="samples/ComputeSharp.NativeLibrary.WinRT/ComputeSharp.NativeLibrary.WinRT.csproj">
+      <Platform Solution="*|ARM64" Project="ARM64" />
+      <Platform Solution="*|x64" Project="x64" />
+    </Project>
+    <Project Path="samples/ComputeSharp.NativeLibrary/ComputeSharp.NativeLibrary.csproj" />
+    <Project Path="samples/ComputeSharp.Sample.FSharp.Shaders/ComputeSharp.Sample.FSharp.Shaders.csproj" />
+    <Project Path="samples/ComputeSharp.Sample.FSharp/ComputeSharp.Sample.FSharp.fsproj" />
+    <Project Path="samples/ComputeSharp.Sample/ComputeSharp.Sample.csproj" />
+    <Project Path="samples/ComputeSharp.SwapChain.Cli/ComputeSharp.SwapChain.Cli.csproj">
+      <Platform Solution="*|ARM64" Project="ARM64" />
+      <Platform Solution="*|x64" Project="x64" />
+    </Project>
+    <Project Path="samples/ComputeSharp.SwapChain.D2D1.Cli/ComputeSharp.SwapChain.D2D1.Cli.csproj">
+      <Platform Solution="*|ARM64" Project="ARM64" />
+      <Platform Solution="*|x64" Project="x64" />
+    </Project>
+    <Project Path="samples/ComputeSharp.SwapChain.D2D1.Uwp/ComputeSharp.SwapChain.D2D1.Uwp.csproj">
+      <Platform Solution="*|ARM64" Project="ARM64" />
+      <Platform Solution="*|x64" Project="x64" />
+      <Deploy />
+    </Project>
+    <Project Path="samples/ComputeSharp.SwapChain.Shaders.D2D1/ComputeSharp.SwapChain.Shaders.D2D1.shproj" />
+    <Project Path="samples/ComputeSharp.SwapChain.Shaders/ComputeSharp.SwapChain.Shaders.shproj" />
+    <Project Path="samples/ComputeSharp.SwapChain.UI/ComputeSharp.SwapChain.UI.shproj" />
+    <Project Path="samples/ComputeSharp.SwapChain.Uwp/ComputeSharp.SwapChain.Uwp.csproj">
+      <Platform Solution="*|ARM64" Project="ARM64" />
+      <Platform Solution="*|x64" Project="x64" />
+      <Deploy />
+    </Project>
+    <Project Path="samples/ComputeSharp.SwapChain.WinUI/ComputeSharp.SwapChain.WinUI.csproj">
+      <Platform Solution="*|ARM64" Project="ARM64" />
+      <Platform Solution="*|x64" Project="x64" />
+      <Deploy />
+    </Project>
+    <Project Path="samples/ComputeSharp.SwapChain/ComputeSharp.SwapChain.csproj">
+      <Platform Solution="*|ARM64" Project="ARM64" />
+      <Platform Solution="*|x64" Project="x64" />
+    </Project>
+  </Folder>
+  <Folder Name="/Tests/">
+    <Project Path="tests/ComputeSharp.D2D1.Tests.AssemblyLevelAttributes/ComputeSharp.D2D1.Tests.AssemblyLevelAttributes.csproj" />
+    <Project Path="tests/ComputeSharp.D2D1.Tests.SourceGenerators/ComputeSharp.D2D1.Tests.SourceGenerators.csproj" />
+    <Project Path="tests/ComputeSharp.D2D1.Tests/ComputeSharp.D2D1.Tests.csproj" />
+    <Project Path="tests/ComputeSharp.D2D1.WinUI.Tests.SourceGenerators/ComputeSharp.D2D1.WinUI.Tests.SourceGenerators.csproj">
+      <Platform Solution="*|ARM64" Project="ARM64" />
+      <Platform Solution="*|x64" Project="x64" />
+    </Project>
+    <Project Path="tests/ComputeSharp.D2D1.WinUI.Tests/ComputeSharp.D2D1.WinUI.Tests.csproj">
+      <Platform Solution="*|ARM64" Project="ARM64" />
+      <Platform Solution="*|x64" Project="x64" />
+      <Deploy />
+    </Project>
+    <Project Path="tests/ComputeSharp.Tests.DeviceLost/ComputeSharp.Tests.DeviceLost.csproj" />
+    <Project Path="tests/ComputeSharp.Tests.DisableDynamicCompilation/ComputeSharp.Tests.DisableDynamicCompilation.csproj" />
+    <Project Path="tests/ComputeSharp.Tests.GlobalStatements/ComputeSharp.Tests.GlobalStatements.csproj" />
+    <Project Path="tests/ComputeSharp.Tests.Internals/ComputeSharp.Tests.Internals.csproj" />
+    <Project Path="tests/ComputeSharp.Tests.NativeLibrariesResolver/ComputeSharp.Tests.NativeLibrariesResolver.csproj" />
+    <Project Path="tests/ComputeSharp.Tests.SourceGenerators/ComputeSharp.Tests.SourceGenerators.csproj" />
+    <Project Path="tests/ComputeSharp.Tests/ComputeSharp.Tests.csproj" />
+  </Folder>
+  <Folder Name="/Tests/ComputeSharp.Dxc.NuGet/">
+    <File Path="tests/ComputeSharp.Dxc.NuGet/ComputeSharp.Dxc.NuGet.csproj" />
+    <File Path="tests/ComputeSharp.Dxc.NuGet/Program.cs" />
+  </Folder>
+  <Folder Name="/Tests/ComputeSharp.NuGet/">
+    <File Path="tests/ComputeSharp.NuGet/ComputeSharp.NuGet.csproj" />
+    <File Path="tests/ComputeSharp.NuGet/Program.cs" />
+  </Folder>
+  <Folder Name="/Tests/ComputeSharp.Pix.NuGet/">
+    <File Path="tests/ComputeSharp.Pix.NuGet/ComputeSharp.Pix.NuGet.csproj" />
+    <File Path="tests/ComputeSharp.Pix.NuGet/Program.cs" />
+  </Folder>
+  <Folder Name="/Win32/">
+    <Project Path="src/ComputeSharp.Win32.D2D1/ComputeSharp.Win32.D2D1.shproj" />
+    <Project Path="src/ComputeSharp.Win32.D3D12/ComputeSharp.Win32.D3D12.shproj" />
+  </Folder>
+  <Folder Name="/_SolutionItems/">
+    <File Path=".editorconfig" />
+    <File Path=".gitattributes" />
+    <File Path=".gitignore" />
+    <File Path=".globalconfig" />
+    <File Path="build/Directory.Build.props" />
+    <File Path="build/Directory.Build.targets" />
+    <File Path="global.json" />
+    <File Path="LICENSE" />
+    <File Path="README.md" />
+    <File Path="ThirdPartyNotices.txt" />
+  </Folder>
+  <Folder Name="/_SolutionItems/samples/">
+    <File Path="samples/Directory.Build.props" />
+    <File Path="samples/Directory.Build.targets" />
+  </Folder>
+  <Folder Name="/_SolutionItems/src/">
+    <File Path="src/Directory.Build.BeforeMicrosoftNETSdkTargets.targets" />
+    <File Path="src/Directory.Build.props" />
+    <File Path="src/Directory.Build.targets" />
+  </Folder>
+  <Folder Name="/_SolutionItems/tests/">
+    <File Path="tests/.editorconfig" />
+    <File Path="tests/Directory.Build.props" />
+    <File Path="tests/Directory.Build.targets" />
+  </Folder>
+  <Project Path="src/ComputeSharp.CodeFixers/ComputeSharp.CodeFixers.csproj" />
+  <Project Path="src/ComputeSharp.CodeFixing/ComputeSharp.CodeFixing.shproj" />
+  <Project Path="src/ComputeSharp.Core.SourceGenerators/ComputeSharp.Core.SourceGenerators.csproj" />
+  <Project Path="src/ComputeSharp.Core/ComputeSharp.Core.csproj" />
+  <Project Path="src/ComputeSharp.D2D1.CodeFixers/ComputeSharp.D2D1.CodeFixers.csproj" />
+  <Project Path="src/ComputeSharp.D2D1.SourceGenerators/ComputeSharp.D2D1.SourceGenerators.csproj" />
+  <Project Path="src/ComputeSharp.D2D1.UI.CodeFixers/ComputeSharp.D2D1.UI.CodeFixers.shproj" />
+  <Project Path="src/ComputeSharp.D2D1.UI.SourceGenerators/ComputeSharp.D2D1.UI.SourceGenerators.shproj" />
+  <Project Path="src/ComputeSharp.D2D1.UI/ComputeSharp.D2D1.UI.shproj" />
+  <Project Path="src/ComputeSharp.D2D1.Uwp.CodeFixers/ComputeSharp.D2D1.Uwp.CodeFixers.csproj" />
+  <Project Path="src/ComputeSharp.D2D1.Uwp.SourceGenerators/ComputeSharp.D2D1.Uwp.SourceGenerators.csproj" />
+  <Project Path="src/ComputeSharp.D2D1.Uwp/ComputeSharp.D2D1.Uwp.csproj">
+    <Platform Solution="*|ARM64" Project="ARM64" />
+    <Platform Solution="*|x64" Project="x64" />
+  </Project>
+  <Project Path="src/ComputeSharp.D2D1.WinUI.CodeFixers/ComputeSharp.D2D1.WinUI.CodeFixers.csproj" />
+  <Project Path="src/ComputeSharp.D2D1.WinUI.SourceGenerators/ComputeSharp.D2D1.WinUI.SourceGenerators.csproj" />
+  <Project Path="src/ComputeSharp.D2D1.WinUI/ComputeSharp.D2D1.WinUI.csproj">
+    <Platform Solution="*|ARM64" Project="ARM64" />
+    <Platform Solution="*|x64" Project="x64" />
+  </Project>
+  <Project Path="src/ComputeSharp.D2D1/ComputeSharp.D2D1.csproj" />
+  <Project Path="src/ComputeSharp.D3D12MemoryAllocator/ComputeSharp.D3D12MemoryAllocator.csproj" />
+  <Project Path="src/ComputeSharp.Dxc/ComputeSharp.Dxc.csproj">
+    <Platform Solution="*|ARM64" Project="ARM64" />
+    <Platform Solution="*|x64" Project="x64" />
+  </Project>
+  <Project Path="src/ComputeSharp.Pix/ComputeSharp.Pix.csproj" />
+  <Project Path="src/ComputeSharp.SourceGeneration.Hlsl/ComputeSharp.SourceGeneration.Hlsl.shproj" />
+  <Project Path="src/ComputeSharp.SourceGeneration/ComputeSharp.SourceGeneration.shproj" />
+  <Project Path="src/ComputeSharp.SourceGenerators/ComputeSharp.SourceGenerators.csproj" />
+  <Project Path="src/ComputeSharp.UI/ComputeSharp.UI.shproj" />
+  <Project Path="src/ComputeSharp.Uwp/ComputeSharp.Uwp.csproj">
+    <Platform Solution="*|ARM64" Project="ARM64" />
+    <Platform Solution="*|x64" Project="x64" />
+  </Project>
+  <Project Path="src/ComputeSharp.WinUI/ComputeSharp.WinUI.csproj">
+    <Platform Solution="*|ARM64" Project="ARM64" />
+    <Platform Solution="*|x64" Project="x64" />
+  </Project>
+  <Project Path="src/ComputeSharp/ComputeSharp.csproj" />
+</Solution>
