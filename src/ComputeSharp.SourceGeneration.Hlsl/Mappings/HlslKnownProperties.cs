@@ -12,6 +12,18 @@ namespace ComputeSharp.SourceGeneration.Mappings;
 internal static partial class HlslKnownProperties
 {
     /// <summary>
+    /// Gets a <see cref="Regex"/> to identify the properties of the known HLSL matrix types.
+    /// </summary>
+    [GeneratedRegex("^M[1-4]{2}$")]
+    private static partial Regex MatrixPropertyNameRegex { get; }
+
+    /// <summary>
+    /// Gets a <see cref="Regex"/> to identify the known HLSL matrix types by their full name.
+    /// </summary>
+    [GeneratedRegex(@"ComputeSharp\.(Bool|Double|Float|Int|UInt)[1-4]x[1-4]")]
+    private static partial Regex MatrixTypeNameRegex { get; }
+
+    /// <summary>
     /// The mapping of supported known properties to HLSL names.
     /// </summary>
     private static readonly Dictionary<string, string> KnownProperties = BuildKnownPropertiesMap();
@@ -147,7 +159,7 @@ internal static partial class HlslKnownProperties
         foreach ((Type Type, PropertyInfo Property) item in
             from type in HlslKnownTypes.EnumerateKnownMatrixTypes()
             from property in type.GetProperties(BindingFlags.Instance | BindingFlags.Public)
-            where Regex.IsMatch(property.Name, "^M[1-4]{2}$")
+            where MatrixPropertyNameRegex.IsMatch(property.Name)
             select (Type: type, Property: property))
         {
             char row = (char)(item.Property.Name[1] - 1);
@@ -169,7 +181,7 @@ internal static partial class HlslKnownProperties
     {
         return new(
             from type in Assembly.GetExecutingAssembly().ExportedTypes
-            where Regex.IsMatch(type.FullName!, @"ComputeSharp\.(Bool|Double|Float|Int|UInt)[1-4]x[1-4]")
+            where MatrixTypeNameRegex.IsMatch(type.FullName!)
             from property in type.GetProperties()
             let indices = property.GetIndexParameters()
             where indices.Length > 0 &&

@@ -9,8 +9,14 @@ namespace ComputeSharp.SourceGeneration.Mappings;
 /// <summary>
 /// A <see langword="class"/> that contains and maps known HLSL types to their alignment sizes.
 /// </summary>
-internal static class HlslKnownSizes
+internal static partial class HlslKnownSizes
 {
+    /// <summary>
+    /// Gets a <see cref="Regex"/> to identify the known HLSL primitive types by their full name.
+    /// </summary>
+    [GeneratedRegex(@"^ComputeSharp\.(Bool|Double|Float|Int|UInt)")]
+    private static partial Regex PrimitiveTypeNameRegex { get; }
+
     /// <summary>
     /// The mapping of supported known sizes to HLSL type names.
     /// </summary>
@@ -33,7 +39,7 @@ internal static class HlslKnownSizes
         foreach (
             Type? type in
             from type in Assembly.GetExecutingAssembly().ExportedTypes
-            where Regex.IsMatch(type.FullName!, @"^ComputeSharp\.(Bool|Double|Float|Int|UInt)")
+            where PrimitiveTypeNameRegex.IsMatch(type.FullName!)
             select type)
         {
             knownSizes.Add(type!.FullName!, (type.StructLayoutAttribute!.Size, type.StructLayoutAttribute!.Pack));
