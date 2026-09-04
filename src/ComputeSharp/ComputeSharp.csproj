@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <SupportedOSPlatformVersion>6.2</SupportedOSPlatformVersion>
   </PropertyGroup>
 
@@ -15,11 +15,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ComputeSharp.Core\ComputeSharp.Core.csproj" />
-  </ItemGroup>
-
-  <!-- Include the ILLink file (to properly trim configuration switches in publish builds) -->
-  <ItemGroup>
-    <EmbeddedResource Include="Properties\ILLink.Substitutions.xml" LogicalName="ILLink.Substitutions.xml" />
   </ItemGroup>
 
   <!-- T4 template generation service (the .tt/.g.cs files are resolved in the .targets file) -->

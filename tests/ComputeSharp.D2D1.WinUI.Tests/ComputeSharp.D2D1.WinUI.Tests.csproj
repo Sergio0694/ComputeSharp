@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net8.0-windows10.0.22621.0</TargetFramework>
+    <TargetFramework>net10.0-windows10.0.26100.0</TargetFramework>
     <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <Platforms>x64;ARM64</Platforms>
@@ -60,6 +60,16 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.13.0" ExcludeAssets="build" />
     <PackageReference Include="MSTest" Version="3.8.3" />
     <PackageReference Include="TerraFX.Interop.Windows" Version="10.0.26100.2" />
+
+    <!--
+      Same as in 'ComputeSharp.SwapChain.WinUI': this test app is packaged and framework dependent, so it needs
+      the Windows App SDK runtime package for the MSIX framework dependency. It does not reference any of the
+      WinUI packages itself (it only gets Win2D through 'ComputeSharp.D2D1.WinUI'), so the components the runtime
+      package expects are referenced explicitly here as well.
+    -->
+    <PackageReference Include="Microsoft.WindowsAppSDK.InteractiveExperiences" Version="2.1.6" />
+    <PackageReference Include="Microsoft.WindowsAppSDK.Runtime" Version="2.4.0" />
+    <PackageReference Include="Microsoft.WindowsAppSDK.WinUI" Version="2.3.6" />
     <Manifest Include="$(ApplicationManifest)" />
   </ItemGroup>
 

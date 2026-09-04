@@ -4,7 +4,7 @@ using System;
 
 namespace ComputeSharp.Win32;
 
-internal readonly unsafe partial struct HRESULT : IComparable, IComparable<HRESULT>, IEquatable<HRESULT>, IFormattable
+internal readonly partial struct HRESULT : IComparable, IComparable<HRESULT>, IEquatable<HRESULT>, IFormattable
 {
     public readonly int Value;
 

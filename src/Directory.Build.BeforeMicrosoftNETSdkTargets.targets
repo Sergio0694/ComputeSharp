@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project>
 
-  <!-- Properties exclusive to .NET 8 projects -->
-  <PropertyGroup Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net8.0'))">
+  <!--
+    Properties exclusive to .NET 10 projects. These are skipped for analyzers, as those are only ever
+    loaded by Roslyn: they are never trimmed or AOT compiled, and they do rely on runtime marshalling.
+  -->
+  <PropertyGroup Condition="!$(IsAnalyzersProject) AND $([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net10.0'))">
 
     <!--
       Enable trimming support. This can't be in a target unlike the other properties
@@ -16,6 +19,18 @@
   </PropertyGroup>
 
   <!--
+    Explicitly turn the publish analyzers off for analyzers. They would otherwise be enabled whenever a
+    consuming project is published with eg. 'PublishTrimmed', as that is a global property, and as such
+    it also flows down to all project references. Analyzers are always loaded by Roslyn as plain .NET
+    assemblies, so none of these analyzers are ever meaningful for them.
+  -->
+  <PropertyGroup Condition="$(IsAnalyzersProject)">
+    <EnableTrimAnalyzer>false</EnableTrimAnalyzer>
+    <EnableAotAnalyzer>false</EnableAotAnalyzer>
+    <EnableSingleFileAnalyzer>false</EnableSingleFileAnalyzer>
+  </PropertyGroup>
+
+  <!--
     Emit the [SupportedOSVersion] attribute if needed. Note that the .NET SDK already emits this attribute
     automatically, but only when targeting the Windows TFM. We use this custom target to emit the same
     attribute for projects only targeting plain .NET as well. This makes them easier to consume from
@@ -24,7 +39,7 @@
   -->
   <Target Name="EmitSupportedOSVersionAttributeForTargetOS"
           BeforeTargets="PrepareForBuild">
-    <ItemGroup Condition="'$(SupportedOSPlatformVersion)' != '' AND !$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net8.0-windows'))">
+    <ItemGroup Condition="'$(SupportedOSPlatformVersion)' != '' AND !$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net10.0-windows'))">
       <AssemblyAttribute Include="System.Runtime.Versioning.SupportedOSPlatformAttribute">
         <_Parameter1>Windows$(SupportedOSPlatformVersion)</_Parameter1>
       </AssemblyAttribute>
@@ -32,7 +47,7 @@
   </Target>
 
   <!-- Emit the [ComVisible(false)] attribute for UWP and WinUI targets -->
-  <ItemGroup Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net8.0-windows'))">
+  <ItemGroup Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net10.0-windows'))">
     <AssemblyAttribute Include="System.Runtime.InteropServices.ComVisibleAttribute">
       <_Parameter1>false</_Parameter1>
     </AssemblyAttribute>

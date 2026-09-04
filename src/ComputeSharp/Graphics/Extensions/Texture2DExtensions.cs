@@ -347,7 +347,7 @@ public static class Texture2DExtensions
     /// <typeparam name="T">The type of items stored on the texture.</typeparam>
     /// <param name="destination">The target <see cref="Texture2D{T}"/> instance to write data to.</param>
     /// <param name="source">The input <typeparamref name="T"/> array to read data from.</param>
-    public static unsafe void CopyFrom<T>(this Texture2D<T> destination, T[,] source)
+    public static void CopyFrom<T>(this Texture2D<T> destination, T[,] source)
         where T : unmanaged
     {
         default(ArgumentNullException).ThrowIfNull(destination);

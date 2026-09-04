@@ -10,12 +10,13 @@ namespace ComputeSharp.D2D1.SourceGenerators.Helpers;
 /// <summary>
 /// A helper class to parse D2D metadata values.
 /// </summary>
-internal static class D2D1EffectMetadataParser
+internal static partial class D2D1EffectMetadataParser
 {
     /// <summary>
-    /// A <see cref="Regex"/> instance to find all newlines.
+    /// Gets a <see cref="Regex"/> instance to find all newlines.
     /// </summary>
-    private static readonly Regex NewLinesRegex = new("[\r\n\v]", RegexOptions.Compiled);
+    [GeneratedRegex("[\r\n\v]")]
+    private static partial Regex NewLinesRegex { get; }
 
     /// <summary>
     /// Checks whether a given <see cref="AttributeData"/> value contains a valid effect metadata name.

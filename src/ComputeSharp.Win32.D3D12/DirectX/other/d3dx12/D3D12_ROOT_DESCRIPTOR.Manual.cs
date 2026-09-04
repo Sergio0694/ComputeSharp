@@ -5,7 +5,7 @@
 
 namespace ComputeSharp.Win32;
 
-internal unsafe partial struct D3D12_ROOT_DESCRIPTOR
+internal partial struct D3D12_ROOT_DESCRIPTOR
 {
     public D3D12_ROOT_DESCRIPTOR(uint shaderRegister, uint registerSpace = 0)
     {

@@ -226,7 +226,7 @@ internal static unsafe class ID3D12GraphicsCommandListExtensions
     /// <param name="d3D12GpuDescriptorHandle">The <see cref="D3D12_GPU_DESCRIPTOR_HANDLE"/> value for the target resource.</param>
     /// <param name="d3D12CpuDescriptorHandle">The <see cref="D3D12_CPU_DESCRIPTOR_HANDLE"/> value for the target resource.</param>
     /// <param name="isNormalized">Indicates whether the target resource uses a normalized format.</param>
-    public static unsafe void ClearUnorderedAccessView(
+    public static void ClearUnorderedAccessView(
         this ref ID3D12GraphicsCommandList d3D12GraphicsCommandList,
         ID3D12Resource* d3D12Resource,
         D3D12_GPU_DESCRIPTOR_HANDLE d3D12GpuDescriptorHandle,
@@ -267,7 +267,7 @@ internal static unsafe class ID3D12GraphicsCommandListExtensions
     /// <param name="d3D12GpuDescriptorHandle">The <see cref="D3D12_GPU_DESCRIPTOR_HANDLE"/> value for the target resource.</param>
     /// <param name="d3D12CpuDescriptorHandle">The <see cref="D3D12_CPU_DESCRIPTOR_HANDLE"/> value for the target resource.</param>
     /// <param name="value">The value to use to fill the view.</param>
-    public static unsafe void FillUnorderedAccessView(
+    public static void FillUnorderedAccessView(
         this ref ID3D12GraphicsCommandList d3D12GraphicsCommandList,
         ID3D12Resource* d3D12Resource,
         D3D12_GPU_DESCRIPTOR_HANDLE d3D12GpuDescriptorHandle,

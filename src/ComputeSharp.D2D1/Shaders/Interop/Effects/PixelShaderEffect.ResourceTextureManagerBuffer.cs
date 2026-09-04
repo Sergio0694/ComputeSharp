@@ -13,7 +13,7 @@ partial struct PixelShaderEffect
     /// A buffer of 16 <see cref="ID2D1ResourceTextureManager"/> objects.
     /// </summary>
     [InlineArray(16)]
-    private unsafe struct ResourceTextureManagerBuffer
+    private struct ResourceTextureManagerBuffer
     {
         /// <summary>
         /// The <see cref="ID2D1ResourceTextureManager"/> instance at index 0.

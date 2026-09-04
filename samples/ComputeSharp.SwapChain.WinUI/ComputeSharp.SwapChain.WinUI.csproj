@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net8.0-windows10.0.22621.0</TargetFramework>
+    <TargetFramework>net10.0-windows10.0.26100.0</TargetFramework>
     <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <Platforms>x64;ARM64</Platforms>
@@ -17,28 +17,6 @@
     <MvvmToolkitEnableINotifyPropertyChangingSupport>false</MvvmToolkitEnableINotifyPropertyChangingSupport>
   </PropertyGroup>
 
-  <!-- Additional CsWinRT properties (temporary, until the .NET SDK is updated) -->
-  <PropertyGroup>
-    
-    <!--
-      We're only referencing CsWinRT for the source generators, we don't need to read any WinRT metadata.
-      CsWinRT is in projection mode by default, so we want to disable it (or it'd need the Windows SDK).
-    -->
-    <CsWinRTGenerateProjection>false</CsWinRTGenerateProjection>
-
-    <!-- We'll never have any IIDs to patch in this library -->
-    <CsWinRTIIDOptimizerOptOut>true</CsWinRTIIDOptimizerOptOut>
-
-    <!-- Enable AOT warnings for types implementing projected WinRT interfaces mapped to built-in types (eg. 'INotifyPropertyChanged') -->
-    <CsWinRTAotWarningLevel>2</CsWinRTAotWarningLevel>
-  </PropertyGroup>
-
-  <!-- CsWinRT size saving options -->
-  <PropertyGroup>
-    <CsWinRTEnableDynamicObjectsSupport>false</CsWinRTEnableDynamicObjectsSupport>
-    <CsWinRTUseExceptionResourceKeys>true</CsWinRTUseExceptionResourceKeys>
-  </PropertyGroup>
-
   <!-- NativeAOT options -->
   <PropertyGroup>
     <PublishAot>true</PublishAot>
@@ -49,10 +27,21 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
-    <PackageReference Include="CommunityToolkit.WinUI.Controls.Primitives" Version="8.2.250402" />
-    <PackageReference Include="CommunityToolkit.WinUI.Media" Version="8.2.250402" />
-    <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.2.0" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+    <PackageReference Include="CommunityToolkit.WinUI.Controls.Primitives" Version="8.3.260402-preview2" />
+    <PackageReference Include="CommunityToolkit.WinUI.Media" Version="8.3.260402-preview2" />
+
+    <!--
+      This app is packaged and uses the framework dependent deployment model, so it needs the Windows App SDK
+      runtime package. That is what adds the 'Microsoft.WindowsAppRuntime' framework package dependency to the
+      generated MSIX manifest. The rest of the Windows App SDK comes in via 'ComputeSharp.WinUI'.
+
+      The runtime package validates that all referenced components match the versions it expects, and it expects
+      a newer 'Microsoft.WindowsAppSDK.InteractiveExperiences' than the one 'Microsoft.WindowsAppSDK.WinUI' pulls
+      in. Reference it explicitly to line the two up, which is also what the aggregate package resolves to.
+    -->
+    <PackageReference Include="Microsoft.WindowsAppSDK.InteractiveExperiences" Version="2.1.6" />
+    <PackageReference Include="Microsoft.WindowsAppSDK.Runtime" Version="2.4.0" />
   </ItemGroup>
 
   <!-- 

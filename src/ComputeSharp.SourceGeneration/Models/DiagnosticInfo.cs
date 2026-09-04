@@ -45,7 +45,7 @@ internal sealed record DiagnosticInfo(
         // The returned DiagnosticInfo instances will be used inside incremental collections. Because of
         // that, we pre-transform all arguments with ToString(), so they are guaranteed to be equatable
         // from the start and not to keep compilations alive (if eg. they happen to be symbol objects).
-        EquatableArray<string> textArgs = args.Select(static arg => arg.ToString()).ToImmutableArray();
+        EquatableArray<string> textArgs = args.Select(static arg => arg.ToString()!).ToImmutableArray();
 
         if (location is null)
         {

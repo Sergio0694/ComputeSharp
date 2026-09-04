@@ -18,24 +18,20 @@ namespace ComputeSharp.D3D12MemoryAllocator.Interop;
 internal unsafe struct ID3D12MemoryAllocatorFactoryImpl
 {
     /// <summary>
-    /// The shared method table pointer for all <see cref="ID3D12MemoryAllocatorFactory"/> instances.
+    /// The shared method table for all <see cref="ID3D12MemoryAllocatorFactory"/> instances.
     /// </summary>
-    private static readonly void** Vtbl = InitVtbl();
+    [FixedAddressValueType]
+    private static readonly ID3D12MemoryAllocatorFactoryImplVftbl Vftbl;
 
     /// <summary>
-    /// Builds the custom method table pointer for <see cref="ID3D12MemoryAllocatorFactory"/>.
+    /// Initializes <see cref="Vftbl"/>.
     /// </summary>
-    /// <returns>The method table pointer for <see cref="ID3D12MemoryAllocatorFactory"/>.</returns>
-    private static void** InitVtbl()
+    static ID3D12MemoryAllocatorFactoryImpl()
     {
-        void** lpVtbl = (void**)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(ID3D12MemoryAllocatorFactoryImpl), sizeof(void*) * 4);
-
-        lpVtbl[0] = (delegate* unmanaged[MemberFunction]<ID3D12MemoryAllocatorFactoryImpl*, Guid*, void**, int>)&QueryInterface;
-        lpVtbl[1] = (delegate* unmanaged[MemberFunction]<ID3D12MemoryAllocatorFactoryImpl*, uint>)&AddRef;
-        lpVtbl[2] = (delegate* unmanaged[MemberFunction]<ID3D12MemoryAllocatorFactoryImpl*, uint>)&Release;
-        lpVtbl[3] = (delegate* unmanaged[MemberFunction]<ID3D12MemoryAllocatorFactoryImpl*, ID3D12Device*, IDXGIAdapter*, ID3D12MemoryAllocator**, int>)&CreateAllocator;
-
-        return lpVtbl;
+        Vftbl.QueryInterface = &QueryInterface;
+        Vftbl.AddRef = &AddRef;
+        Vftbl.Release = &Release;
+        Vftbl.CreateAllocator = &CreateAllocator;
     }
 
     /// <summary>
@@ -68,7 +64,7 @@ internal unsafe struct ID3D12MemoryAllocatorFactoryImpl
             return E.E_OUTOFMEMORY;
         }
 
-        @this->lpVtbl = Vtbl;
+        @this->lpVtbl = (void**)Unsafe.AsPointer(in Vftbl);
         @this->referenceCount = 1;
 
         *allocatorFactoryImpl = @this;

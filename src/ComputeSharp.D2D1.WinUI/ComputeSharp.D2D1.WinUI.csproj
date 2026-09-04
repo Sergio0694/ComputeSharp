@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net8.0-windows10.0.22621.0</TargetFramework>
+    <TargetFramework>net10.0-windows10.0.26100.0</TargetFramework>
     <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
     <Platforms>x64;ARM64</Platforms>
     <RuntimeIdentifiers>win-x64;win-arm64</RuntimeIdentifiers>
@@ -17,13 +17,20 @@
 
     <!-- Ignore warnings for usings outside of a namespace (needed for some WinRT type aliases) -->
     <NoWarn>$(NoWarn);IDE0065</NoWarn>
+
+    <!--
+      This project is a class library, so it only compiles against the Win2D API surface (which is resolved
+      from the reference assembly in the 'lib' folder of the package). It never needs to resolve the native
+      'Microsoft.Graphics.Canvas.dll', as that is the responsibility of the consuming application, which
+      still gets the Win2D build logic transitively. That is also why the library is packed as 'AnyCPU', so
+      that it can be consumed from any architecture. Opt out of the Win2D check assuming an application
+      build, which would otherwise warn that no specific platform has been set.
+    -->
+    <Win2DWarnNoPlatform>false</Win2DWarnNoPlatform>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Graphics.Win2D" Version="1.3.2" />
-
-    <!-- Workaround for 'CoreWebView2' issue (see notes in ComputeSharp.WinUI) -->
-    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3179.45" PrivateAssets="all" IncludeAssets="none" />
+    <PackageReference Include="Microsoft.Graphics.Win2D" Version="1.4.0" />
   </ItemGroup>
 
   <ItemGroup>

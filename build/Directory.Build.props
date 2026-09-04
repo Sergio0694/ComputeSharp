@@ -1,7 +1,7 @@
 <Project>
   <PropertyGroup>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <LangVersion>preview</LangVersion>
+    <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 
@@ -72,7 +72,7 @@
     As such, this needs to be changed before a new release as well.
   -->
   <PropertyGroup>
-    <ComputeSharpPackageVersion>3.2.0</ComputeSharpPackageVersion>
+    <ComputeSharpPackageVersion>4.0.0</ComputeSharpPackageVersion>
     <IsCommitOnReleaseBranch>false</IsCommitOnReleaseBranch>
   </PropertyGroup>
 
@@ -122,7 +122,7 @@
     <Authors>Sergio Pedri</Authors>
     <Owners>Sergio Pedri</Owners>
     <Company>Sergio Pedri</Company>
-    <Copyright>Copyright (c) 2024 Sergio Pedri</Copyright>
+    <Copyright>Copyright (c) 2026 Sergio Pedri</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageProjectUrl>https://github.com/Sergio0694/ComputeSharp/</PackageProjectUrl>
@@ -178,30 +178,12 @@
   </PropertyGroup>
 
   <!--
-    We need PolySharp for all .NET Standard 2.0 polyfills. We do not want to use polyfills in published projects,
-    as those should just adhere to the available APIs in each LTS release of .NET, so we only enable this reference
-    for projects which are not published (ie. tests and samples), or just for the source generator projects. We are
-    intentionally not adding PolySharp to code fixers, as they always reference source generators projects, and they
-    have 'InternalsVisibleTo' on those projects, as they need that to access analyzer ids and property names.
+    Setup the custom .targets to run as 'BeforeMicrosoftNETSdkTargets'. This is because we want to be able to read properties
+    that are set in .csproj files, and set properties depending on those before the .NET SDK .targets are imported. This is
+    necessary to ensure that the .NET tooling works correctly with some of them (eg. with the CsWinRT options). Note that the
+    .NET SDK doesn't use 'Exists' here, and '<Import>' supports multiple items, so we can just chain our .targets file directly.
   -->
   <PropertyGroup>
-    <IsPolySharpPackageReferenceNeeded>false</IsPolySharpPackageReferenceNeeded>
-    <IsPolySharpPackageReferenceNeeded Condition="'$(IsPublishedProject)' == 'false' OR '$(IsSourceGeneratorProject)' == 'true'">true</IsPolySharpPackageReferenceNeeded>
-  </PropertyGroup>
-
-  <!-- Add the package reference, if needed -->
-  <ItemGroup Condition="'$(IsPolySharpPackageReferenceNeeded)' == 'true'">
-    <PackageReference Include="PolySharp" Version="1.15.0" PrivateAssets="all" IsImplicitlyDefined="true" />
-  </ItemGroup>
-
-  <!-- Define the type alias for [UnmanagedCallersOnly] when on the .NET Standard 2.0 target -->
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    <Using Include="System.Runtime.InteropServices2.UnmanagedCallersOnlyAttribute" Alias="UnmanagedCallersOnlyAttribute" />
-  </ItemGroup>
-
-  <!-- Configure PolySharp options -->
-  <PropertyGroup>
-    <PolySharpIncludeRuntimeSupportedAttributes>true</PolySharpIncludeRuntimeSupportedAttributes>
-    <PolySharpUseInteropServices2NamespaceForUnmanagedCallersOnlyAttribute>true</PolySharpUseInteropServices2NamespaceForUnmanagedCallersOnlyAttribute>
+    <BeforeMicrosoftNETSdkTargets>$(BeforeMicrosoftNETSdkTargets);$(MSBuildThisFileDirectory)Directory.Build.BeforeMicrosoftNETSdkTargets.targets</BeforeMicrosoftNETSdkTargets>
   </PropertyGroup>
 </Project>

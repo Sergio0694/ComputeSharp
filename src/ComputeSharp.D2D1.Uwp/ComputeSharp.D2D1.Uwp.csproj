@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net8.0-windows10.0.22621.0</TargetFramework>
+    <TargetFramework>net10.0-windows10.0.26100.0</TargetFramework>
     <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
     <UseUwp>true</UseUwp>
     <Platforms>x64;ARM64</Platforms>
@@ -18,10 +18,13 @@
 
     <!-- Temporary workaround: the Win2D .dll is not strong name signed, ignore the error for now -->
     <WarningsNotAsErrors>$(WarningsNotAsErrors);CS8002</WarningsNotAsErrors>
+
+    <!-- Same rationale as in 'ComputeSharp.D2D1.WinUI', see notes there -->
+    <Win2DWarnNoPlatform>false</Win2DWarnNoPlatform>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Win2D.uwp" Version="1.28.2" />
+    <PackageReference Include="Win2D.uwp" Version="1.28.3" />
   </ItemGroup>
 
   <ItemGroup>

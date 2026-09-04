@@ -69,7 +69,7 @@ public sealed partial class D2DPixelShaderSourceGenerator : IIncrementalGenerato
                     token.ThrowIfCancellationRequested();
 
                     // Finally, get the hierarchy too
-                    HierarchyInfo hierarchyInfo = HierarchyInfo.From(methodSymbol.ContainingType!);
+                    HierarchyInfo hierarchyInfo = HierarchyInfo.From(methodSymbol.ContainingType);
 
                     token.ThrowIfCancellationRequested();
 

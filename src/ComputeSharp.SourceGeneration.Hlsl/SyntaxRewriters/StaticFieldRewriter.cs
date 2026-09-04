@@ -40,7 +40,7 @@ internal sealed partial class StaticFieldRewriter(
     {
         if (node?.Initializer is EqualsValueClauseSyntax fieldInitializer)
         {
-            return ((EqualsValueClauseSyntax)Visit(fieldInitializer))!.Value;
+            return ((EqualsValueClauseSyntax)Visit(fieldInitializer)).Value;
         }
 
         return null;

@@ -2,7 +2,6 @@ using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading;
-using ComputeSharp.D2D1.Interop;
 using ComputeSharp.Win32;
 
 namespace ComputeSharp.D2D1.Shaders.Interop.Effects.ResourceManagers;
@@ -13,38 +12,33 @@ namespace ComputeSharp.D2D1.Shaders.Interop.Effects.ResourceManagers;
 internal unsafe partial struct D2D1ResourceTextureManagerImpl
 {
     /// <summary>
-    /// The shared vtable pointer for <see cref="D2D1ResourceTextureManagerImpl"/> instance, for <see cref="ID2D1ResourceTextureManager"/>.
+    /// The shared vtable for <see cref="D2D1ResourceTextureManagerImpl"/> instances, for <see cref="ID2D1ResourceTextureManager"/>.
     /// </summary>
-    private static readonly void** VtblForID2D1ResourceTextureManager = InitVtblForID2D1ResourceTextureManagerAndID2D1ResourceTextureManagerInternal();
+    [FixedAddressValueType]
+    private static readonly ID2D1ResourceTextureManagerVftbl VftblForID2D1ResourceTextureManager;
 
     /// <summary>
-    /// The shared vtable pointer for <see cref="D2D1ResourceTextureManagerImpl"/> instance, for <see cref="ID2D1ResourceTextureManagerInternal"/>.
+    /// The shared vtable for <see cref="D2D1ResourceTextureManagerImpl"/> instances, for <see cref="ID2D1ResourceTextureManagerInternal"/>.
     /// </summary>
-    private static readonly void** VtblForID2D1ResourceTextureManagerInternal = &VtblForID2D1ResourceTextureManager[5];
+    [FixedAddressValueType]
+    private static readonly ID2D1ResourceTextureManagerInternalVftbl VftblForID2D1ResourceTextureManagerInternal;
 
     /// <summary>
-    /// Initializes the combined vtable for <see cref="ID2D1ResourceTextureManager"/> and <see cref="ID2D1ResourceTextureManagerInternal"/>.
+    /// Initializes <see cref="VftblForID2D1ResourceTextureManager"/> and <see cref="VftblForID2D1ResourceTextureManagerInternal"/>.
     /// </summary>
-    /// <returns>The combined vtable for <see cref="ID2D1ResourceTextureManager"/> and <see cref="ID2D1ResourceTextureManagerInternal"/>.</returns>
-    private static void** InitVtblForID2D1ResourceTextureManagerAndID2D1ResourceTextureManagerInternal()
+    static D2D1ResourceTextureManagerImpl()
     {
-        void** lpVtbl = (void**)D2D1AssemblyAssociatedMemory.Allocate(sizeof(void*) * 10);
+        VftblForID2D1ResourceTextureManager.QueryInterface = &ID2D1ResourceTextureManagerMethods.QueryInterface;
+        VftblForID2D1ResourceTextureManager.AddRef = &ID2D1ResourceTextureManagerMethods.AddRef;
+        VftblForID2D1ResourceTextureManager.Release = &ID2D1ResourceTextureManagerMethods.Release;
+        VftblForID2D1ResourceTextureManager.Initialize = &ID2D1ResourceTextureManagerMethods.Initialize;
+        VftblForID2D1ResourceTextureManager.Update = &ID2D1ResourceTextureManagerMethods.Update;
 
-        // ID2D1ResourceTextureManager
-        lpVtbl[0] = (delegate* unmanaged[MemberFunction]<D2D1ResourceTextureManagerImpl*, Guid*, void**, int>)&ID2D1ResourceTextureManagerMethods.QueryInterface;
-        lpVtbl[1] = (delegate* unmanaged[MemberFunction]<D2D1ResourceTextureManagerImpl*, uint>)&ID2D1ResourceTextureManagerMethods.AddRef;
-        lpVtbl[2] = (delegate* unmanaged[MemberFunction]<D2D1ResourceTextureManagerImpl*, uint>)&ID2D1ResourceTextureManagerMethods.Release;
-        lpVtbl[3] = (delegate* unmanaged[MemberFunction]<D2D1ResourceTextureManagerImpl*, Guid*, D2D1_RESOURCE_TEXTURE_PROPERTIES*, byte*, uint*, uint, int>)&ID2D1ResourceTextureManagerMethods.Initialize;
-        lpVtbl[4] = (delegate* unmanaged[MemberFunction]<D2D1ResourceTextureManagerImpl*, uint*, uint*, uint*, uint, byte*, uint, int>)&ID2D1ResourceTextureManagerMethods.Update;
-
-        // ID2D1ResourceTextureManagerInternal
-        lpVtbl[5 + 0] = (delegate* unmanaged[MemberFunction]<D2D1ResourceTextureManagerImpl*, Guid*, void**, int>)&ID2D1ResourceTextureManagerInternalMethods.QueryInterface;
-        lpVtbl[5 + 1] = (delegate* unmanaged[MemberFunction]<D2D1ResourceTextureManagerImpl*, uint>)&ID2D1ResourceTextureManagerInternalMethods.AddRef;
-        lpVtbl[5 + 2] = (delegate* unmanaged[MemberFunction]<D2D1ResourceTextureManagerImpl*, uint>)&ID2D1ResourceTextureManagerInternalMethods.Release;
-        lpVtbl[5 + 3] = (delegate* unmanaged[MemberFunction]<D2D1ResourceTextureManagerImpl*, ID2D1EffectContext*, uint*, int>)&ID2D1ResourceTextureManagerInternalMethods.Initialize;
-        lpVtbl[5 + 4] = (delegate* unmanaged[MemberFunction]<D2D1ResourceTextureManagerImpl*, ID2D1ResourceTexture**, int>)&ID2D1ResourceTextureManagerInternalMethods.GetResourceTexture;
-
-        return lpVtbl;
+        VftblForID2D1ResourceTextureManagerInternal.QueryInterface = &ID2D1ResourceTextureManagerInternalMethods.QueryInterface;
+        VftblForID2D1ResourceTextureManagerInternal.AddRef = &ID2D1ResourceTextureManagerInternalMethods.AddRef;
+        VftblForID2D1ResourceTextureManagerInternal.Release = &ID2D1ResourceTextureManagerInternalMethods.Release;
+        VftblForID2D1ResourceTextureManagerInternal.Initialize = &ID2D1ResourceTextureManagerInternalMethods.Initialize;
+        VftblForID2D1ResourceTextureManagerInternal.GetResourceTexture = &ID2D1ResourceTextureManagerInternalMethods.GetResourceTexture;
     }
 
     /// <summary>
@@ -139,8 +133,8 @@ internal unsafe partial struct D2D1ResourceTextureManagerImpl
 
         *@this = default;
 
-        @this->lpVtblForID2D1ResourceTextureManager = VtblForID2D1ResourceTextureManager;
-        @this->lpVtblForID2D1ResourceTextureManagerInternal = VtblForID2D1ResourceTextureManagerInternal;
+        @this->lpVtblForID2D1ResourceTextureManager = (void**)Unsafe.AsPointer(in VftblForID2D1ResourceTextureManager);
+        @this->lpVtblForID2D1ResourceTextureManagerInternal = (void**)Unsafe.AsPointer(in VftblForID2D1ResourceTextureManagerInternal);
         @this->referenceCount = 1;
         @this->d2D1EffectContext = default;
         @this->d2D1Multithread = default;

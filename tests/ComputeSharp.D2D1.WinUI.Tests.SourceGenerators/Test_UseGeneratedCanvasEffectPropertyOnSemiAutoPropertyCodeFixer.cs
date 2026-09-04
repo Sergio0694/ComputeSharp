@@ -51,11 +51,11 @@ public class Test_UseGeneratedCanvasEffectPropertyOnSemiAutoPropertyCodeFixer
             }
             """;
 
-        CSharpCodeFixTest test = new(LanguageVersion.Preview)
+        CSharpCodeFixTest test = new(LanguageVersion.CSharp14)
         {
             TestCode = original,
             FixedCode = @fixed,
-            ReferenceAssemblies = ReferenceAssemblies.Net.Net80,
+            ReferenceAssemblies = ReferenceAssemblies.Net.Net100,
             TestState = { AdditionalReferences =
             {
                 MetadataReference.CreateFromFile(typeof(Point).Assembly.Location),
@@ -102,11 +102,11 @@ public class Test_UseGeneratedCanvasEffectPropertyOnSemiAutoPropertyCodeFixer
             }
             """;
 
-        CSharpCodeFixTest test = new(LanguageVersion.Preview)
+        CSharpCodeFixTest test = new(LanguageVersion.CSharp14)
         {
             TestCode = original,
             FixedCode = @fixed,
-            ReferenceAssemblies = ReferenceAssemblies.Net.Net80,
+            ReferenceAssemblies = ReferenceAssemblies.Net.Net100,
             TestState = { AdditionalReferences =
             {
                 MetadataReference.CreateFromFile(typeof(Point).Assembly.Location),
@@ -153,11 +153,11 @@ public class Test_UseGeneratedCanvasEffectPropertyOnSemiAutoPropertyCodeFixer
             }
             """;
 
-        CSharpCodeFixTest test = new(LanguageVersion.Preview)
+        CSharpCodeFixTest test = new(LanguageVersion.CSharp14)
         {
             TestCode = original,
             FixedCode = @fixed,
-            ReferenceAssemblies = ReferenceAssemblies.Net.Net80,
+            ReferenceAssemblies = ReferenceAssemblies.Net.Net100,
             TestState = { AdditionalReferences =
             {
                 MetadataReference.CreateFromFile(typeof(Point).Assembly.Location),
@@ -200,11 +200,11 @@ public class Test_UseGeneratedCanvasEffectPropertyOnSemiAutoPropertyCodeFixer
             }
             """;
 
-        CSharpCodeFixTest test = new(LanguageVersion.Preview)
+        CSharpCodeFixTest test = new(LanguageVersion.CSharp14)
         {
             TestCode = original,
             FixedCode = @fixed,
-            ReferenceAssemblies = ReferenceAssemblies.Net.Net80,
+            ReferenceAssemblies = ReferenceAssemblies.Net.Net100,
             TestState = { AdditionalReferences =
             {
                 MetadataReference.CreateFromFile(typeof(Point).Assembly.Location),
@@ -255,11 +255,11 @@ public class Test_UseGeneratedCanvasEffectPropertyOnSemiAutoPropertyCodeFixer
             }
             """;
 
-        CSharpCodeFixTest test = new(LanguageVersion.Preview)
+        CSharpCodeFixTest test = new(LanguageVersion.CSharp14)
         {
             TestCode = original,
             FixedCode = @fixed,
-            ReferenceAssemblies = ReferenceAssemblies.Net.Net80,
+            ReferenceAssemblies = ReferenceAssemblies.Net.Net100,
             TestState = { AdditionalReferences =
             {
                 MetadataReference.CreateFromFile(typeof(Point).Assembly.Location),
@@ -320,11 +320,11 @@ public class Test_UseGeneratedCanvasEffectPropertyOnSemiAutoPropertyCodeFixer
             public class TestAttribute(string text) : Attribute;
             """;
 
-        CSharpCodeFixTest test = new(LanguageVersion.Preview)
+        CSharpCodeFixTest test = new(LanguageVersion.CSharp14)
         {
             TestCode = original,
             FixedCode = @fixed,
-            ReferenceAssemblies = ReferenceAssemblies.Net.Net80,
+            ReferenceAssemblies = ReferenceAssemblies.Net.Net100,
             TestState = { AdditionalReferences =
             {
                 MetadataReference.CreateFromFile(typeof(Point).Assembly.Location),
@@ -378,11 +378,11 @@ public class Test_UseGeneratedCanvasEffectPropertyOnSemiAutoPropertyCodeFixer
             }
             """;
 
-        CSharpCodeFixTest test = new(LanguageVersion.Preview)
+        CSharpCodeFixTest test = new(LanguageVersion.CSharp14)
         {
             TestCode = original,
             FixedCode = @fixed,
-            ReferenceAssemblies = ReferenceAssemblies.Net.Net80,
+            ReferenceAssemblies = ReferenceAssemblies.Net.Net100,
             TestState = { AdditionalReferences =
             {
                 MetadataReference.CreateFromFile(typeof(Point).Assembly.Location),
@@ -443,11 +443,11 @@ public class Test_UseGeneratedCanvasEffectPropertyOnSemiAutoPropertyCodeFixer
             }
             """;
 
-        CSharpCodeFixTest test = new(LanguageVersion.Preview)
+        CSharpCodeFixTest test = new(LanguageVersion.CSharp14)
         {
             TestCode = original,
             FixedCode = @fixed,
-            ReferenceAssemblies = ReferenceAssemblies.Net.Net80,
+            ReferenceAssemblies = ReferenceAssemblies.Net.Net100,
             TestState = { AdditionalReferences =
             {
                 MetadataReference.CreateFromFile(typeof(Point).Assembly.Location),
@@ -508,11 +508,11 @@ public class Test_UseGeneratedCanvasEffectPropertyOnSemiAutoPropertyCodeFixer
             }
             """;
 
-        CSharpCodeFixTest test = new(LanguageVersion.Preview)
+        CSharpCodeFixTest test = new(LanguageVersion.CSharp14)
         {
             TestCode = original,
             FixedCode = @fixed,
-            ReferenceAssemblies = ReferenceAssemblies.Net.Net80,
+            ReferenceAssemblies = ReferenceAssemblies.Net.Net100,
             TestState = { AdditionalReferences =
             {
                 MetadataReference.CreateFromFile(typeof(Point).Assembly.Location),
@@ -557,11 +557,11 @@ public class Test_UseGeneratedCanvasEffectPropertyOnSemiAutoPropertyCodeFixer
             }
             """;
 
-        CSharpCodeFixTest test = new(LanguageVersion.Preview)
+        CSharpCodeFixTest test = new(LanguageVersion.CSharp14)
         {
             TestCode = original,
             FixedCode = @fixed,
-            ReferenceAssemblies = ReferenceAssemblies.Net.Net80,
+            ReferenceAssemblies = ReferenceAssemblies.Net.Net100,
             TestState = { AdditionalReferences =
             {
                 MetadataReference.CreateFromFile(typeof(Point).Assembly.Location),
@@ -613,11 +613,11 @@ public class Test_UseGeneratedCanvasEffectPropertyOnSemiAutoPropertyCodeFixer
             }
             """;
 
-        CSharpCodeFixTest test = new(LanguageVersion.Preview)
+        CSharpCodeFixTest test = new(LanguageVersion.CSharp14)
         {
             TestCode = original,
             FixedCode = @fixed,
-            ReferenceAssemblies = ReferenceAssemblies.Net.Net80,
+            ReferenceAssemblies = ReferenceAssemblies.Net.Net100,
             TestState = { AdditionalReferences =
             {
                 MetadataReference.CreateFromFile(typeof(Point).Assembly.Location),
@@ -746,11 +746,11 @@ public class Test_UseGeneratedCanvasEffectPropertyOnSemiAutoPropertyCodeFixer
             public class TestAttribute(string text) : Attribute;
             """;
 
-        CSharpCodeFixTest test = new(LanguageVersion.Preview)
+        CSharpCodeFixTest test = new(LanguageVersion.CSharp14)
         {
             TestCode = original,
             FixedCode = @fixed,
-            ReferenceAssemblies = ReferenceAssemblies.Net.Net80,
+            ReferenceAssemblies = ReferenceAssemblies.Net.Net100,
             TestState = { AdditionalReferences =
             {
                 MetadataReference.CreateFromFile(typeof(Point).Assembly.Location),

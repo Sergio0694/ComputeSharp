@@ -37,37 +37,33 @@ internal static unsafe partial class IWICStreamExtensions
     /// <summary>
     /// A manual CCW implementation for an <see cref="IStream"/> object wrapping a <see cref="Stream"/> instance.
     /// </summary>
-    private unsafe partial struct IStreamWrapper
+    internal unsafe partial struct IStreamWrapper
     {
         /// <summary>
-        /// The shared vtable pointer for <see cref="IStreamWrapper"/> instances.
+        /// The shared vtable for <see cref="IStreamWrapper"/> instances.
         /// </summary>
-        private static readonly void** Vtbl = InitVtbl();
+        [FixedAddressValueType]
+        private static readonly IStreamWrapperVftbl Vftbl;
 
         /// <summary>
-        /// Setups the vtable pointer for <see cref="IStreamWrapper"/>.
+        /// Initializes <see cref="Vftbl"/>.
         /// </summary>
-        /// <returns>The initialized vtable pointer for <see cref="IStreamWrapper"/>.</returns>
-        private static void** InitVtbl()
+        static IStreamWrapper()
         {
-            void** lpVtbl = (void**)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(IStreamWrapper), sizeof(void*) * 14);
-
-            lpVtbl[0] = (delegate* unmanaged[MemberFunction]<IStreamWrapper*, Guid*, void**, int>)&QueryInterface;
-            lpVtbl[1] = (delegate* unmanaged[MemberFunction]<IStreamWrapper*, uint>)&AddRef;
-            lpVtbl[2] = (delegate* unmanaged[MemberFunction]<IStreamWrapper*, uint>)&Release;
-            lpVtbl[3] = (delegate* unmanaged[MemberFunction]<IStreamWrapper*, void*, uint, uint*, int>)&Read;
-            lpVtbl[4] = (delegate* unmanaged[MemberFunction]<IStreamWrapper*, void*, uint, uint*, int>)&Write;
-            lpVtbl[5] = (delegate* unmanaged[MemberFunction]<IStreamWrapper*, LARGE_INTEGER, uint, ULARGE_INTEGER*, int>)&Seek;
-            lpVtbl[6] = (delegate* unmanaged[MemberFunction]<IStreamWrapper*, ULARGE_INTEGER, int>)&SetSize;
-            lpVtbl[7] = (delegate* unmanaged[MemberFunction]<IStreamWrapper*, IStream*, ULARGE_INTEGER, ULARGE_INTEGER*, ULARGE_INTEGER*, int>)&CopyTo;
-            lpVtbl[8] = (delegate* unmanaged[MemberFunction]<IStreamWrapper*, uint, int>)&Commit;
-            lpVtbl[9] = (delegate* unmanaged[MemberFunction]<IStreamWrapper*, int>)&Revert;
-            lpVtbl[10] = (delegate* unmanaged[MemberFunction]<IStreamWrapper*, ULARGE_INTEGER, ULARGE_INTEGER, uint, int>)&LockRegion;
-            lpVtbl[11] = (delegate* unmanaged[MemberFunction]<IStreamWrapper*, ULARGE_INTEGER, ULARGE_INTEGER, uint, int>)&UnlockRegion;
-            lpVtbl[12] = (delegate* unmanaged[MemberFunction]<IStreamWrapper*, STATSTG*, uint, int>)&Stat;
-            lpVtbl[13] = (delegate* unmanaged[MemberFunction]<IStreamWrapper*, IStream**, int>)&Clone;
-
-            return lpVtbl;
+            Vftbl.QueryInterface = &QueryInterface;
+            Vftbl.AddRef = &AddRef;
+            Vftbl.Release = &Release;
+            Vftbl.Read = &Read;
+            Vftbl.Write = &Write;
+            Vftbl.Seek = &Seek;
+            Vftbl.SetSize = &SetSize;
+            Vftbl.CopyTo = &CopyTo;
+            Vftbl.Commit = &Commit;
+            Vftbl.Revert = &Revert;
+            Vftbl.LockRegion = &LockRegion;
+            Vftbl.UnlockRegion = &UnlockRegion;
+            Vftbl.Stat = &Stat;
+            Vftbl.Clone = &Clone;
         }
 
         /// <summary>
@@ -94,7 +90,7 @@ internal static unsafe partial class IWICStreamExtensions
         {
             IStreamWrapper* @this = (IStreamWrapper*)NativeMemory.Alloc((nuint)sizeof(IStreamWrapper));
 
-            @this->lpVtbl = Vtbl;
+            @this->lpVtbl = (void**)Unsafe.AsPointer(in Vftbl);
             @this->referenceCount = 1;
             @this->streamHandle = GCHandle.Alloc(stream);
 
@@ -106,7 +102,7 @@ internal static unsafe partial class IWICStreamExtensions
         /// </summary>
         /// <returns>The captured <see cref="Stream"/> instance</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private Stream GetStream()
+        private readonly Stream GetStream()
         {
             return Unsafe.As<Stream>(this.streamHandle.Target!);
         }

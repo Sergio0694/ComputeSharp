@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <DefineConstants>$(DefineConstants);D3D12_SOURCE_GENERATOR</DefineConstants>
   </PropertyGroup>
 
@@ -8,6 +8,15 @@
 
     <!-- Ignore warnings for unresolved XML cref attributes (for imported types from ComputeSharp) -->
     <NoWarn>$(NoWarn);CS1574</NoWarn>
+
+    <!--
+      This ignores the following warning:
+      "RS1035: The symbol 'Environment' is banned for use by analyzers".
+      CsWin32 emits COM callable wrappers calling 'Environment.FailFast' when targeting .NET. That rule is
+      meant to stop analyzers from reading their configuration from environment variables, so it's not an
+      actual issue here. Handwritten code that needs to bypass this rule uses a local '#pragma' instead.
+    -->
+    <NoWarn>$(NoWarn);RS1035</NoWarn>
   </PropertyGroup>
 
   <!-- Same setup as ComputeSharp.Core.SourceGenerators, just with also APIs from ComputeSharp -->
@@ -57,8 +66,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.9.2" PrivateAssets="all" Pack="false" />
-    <PackageReference Include="Microsoft.Windows.CsWin32" Version="0.3.106" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="5.0.0" PrivateAssets="all" Pack="false" />
+    <PackageReference Include="Microsoft.Windows.CsWin32" Version="0.3.333" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>

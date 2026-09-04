@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Threading;
 
 #pragma warning disable RS1035
 
@@ -11,12 +12,12 @@ namespace ComputeSharp.SourceGenerators.Dxc;
 /// <summary>
 /// A <see langword="class"/> that handles loading the DXC libraries.
 /// </summary>
-internal sealed unsafe class DxcLibraryLoader
+internal sealed class DxcLibraryLoader
 {
     /// <summary>
     /// An object to use to synchronize loading the DXC libraries.
     /// </summary>
-    private static readonly object LoadingLock = new();
+    private static readonly Lock LoadingLock = new();
 
     /// <summary>
     /// Indicates whether the required <c>dxcompiler.dll</c> and <c>dxil.dll</c> libraries have been loaded.
@@ -36,9 +37,9 @@ internal sealed unsafe class DxcLibraryLoader
             string sourceFilename = $"ComputeSharp.SourceGenerators.ComputeSharp.Libraries.{rid}.{name}.dll";
             string targetFilename = Path.Combine(folder, rid, $"{name}.dll");
 
-            _ = Directory.CreateDirectory(Path.GetDirectoryName(targetFilename));
+            _ = Directory.CreateDirectory(Path.GetDirectoryName(targetFilename)!);
 
-            using Stream sourceStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(sourceFilename);
+            using Stream sourceStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(sourceFilename)!;
 
             try
             {
@@ -54,19 +55,17 @@ internal sealed unsafe class DxcLibraryLoader
         }
 
         // Loads a target native library
-        static unsafe void LoadLibrary(string filename)
+        static void LoadLibrary(string filename)
         {
-            [DllImport("kernel32", ExactSpelling = true, SetLastError = true)]
-            static extern void* LoadLibraryW(ushort* lpLibFileName);
-
-            fixed (char* p = filename)
+            try
             {
-                if (LoadLibraryW((ushort*)p) is null)
-                {
-                    int hresult = Marshal.GetLastWin32Error();
-
-                    throw new Win32Exception(hresult, $"Failed to load {Path.GetFileName(filename)}.");
-                }
+                _ = NativeLibrary.Load(filename);
+            }
+            catch (DllNotFoundException e)
+            {
+                // Rethrow as a Win32Exception, as that is what callers catch to report a diagnostic
+                // rather than crashing. The message already includes the error from the OS loader.
+                throw new Win32Exception(e.HResult, e.Message);
             }
         }
 

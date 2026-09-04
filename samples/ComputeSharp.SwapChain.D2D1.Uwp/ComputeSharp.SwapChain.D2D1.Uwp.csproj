@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net8.0-windows10.0.22621.0</TargetFramework>
+    <TargetFramework>net10.0-windows10.0.26100.0</TargetFramework>
     <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
     <UseUwp>true</UseUwp>
     <Platforms>x64;ARM64</Platforms>
@@ -22,8 +22,6 @@
     <InvariantGlobalization>true</InvariantGlobalization>
     <StackTraceSupport>false</StackTraceSupport>
     <OptimizationPreference>Speed</OptimizationPreference>
-    <CsWinRTEnableDynamicObjectsSupport>false</CsWinRTEnableDynamicObjectsSupport>
-    <CsWinRTUseExceptionResourceKeys>true</CsWinRTUseExceptionResourceKeys>
     <CsWinRTEnableDefaultCustomTypeMappings>false</CsWinRTEnableDefaultCustomTypeMappings>
     <CsWinRTEnableICustomPropertyProviderSupport>false</CsWinRTEnableICustomPropertyProviderSupport>
     <CsWinRTEnableIDynamicInterfaceCastableSupport>false</CsWinRTEnableIDynamicInterfaceCastableSupport>
@@ -37,9 +35,6 @@
     <LinkerArg Include="/APPCONTAINER /DEFAULTLIB:WindowsApp.lib WindowsApp.lib" />
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.2.0" />
-  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\ComputeSharp.Core.SourceGenerators\ComputeSharp.Core.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" PrivateAssets="contentfiles;build" />

@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using ABI.Microsoft.Graphics.Canvas;
 using ComputeSharp.D2D1.Extensions;
 #if WINDOWS_UWP
@@ -29,7 +30,7 @@ partial class PixelShaderEffect<T>
         /// <summary>
         /// Lock object used to synchronize the registration logic.
         /// </summary>
-        private readonly object lockObject = new();
+        private readonly Lock lockObject = new();
 
         /// <summary>
         /// Indicates whether an effect factory for <see cref="PixelShaderEffect{T}"/> has been registered.
