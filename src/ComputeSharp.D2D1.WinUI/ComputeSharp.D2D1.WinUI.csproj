@@ -17,6 +17,16 @@
 
     <!-- Ignore warnings for usings outside of a namespace (needed for some WinRT type aliases) -->
     <NoWarn>$(NoWarn);IDE0065</NoWarn>
+
+    <!--
+      This project is a class library, so it only compiles against the Win2D API surface (which is resolved
+      from the reference assembly in the 'lib' folder of the package). It never needs to resolve the native
+      'Microsoft.Graphics.Canvas.dll', as that is the responsibility of the consuming application, which
+      still gets the Win2D build logic transitively. That is also why the library is packed as 'AnyCPU', so
+      that it can be consumed from any architecture. Opt out of the Win2D check assuming an application
+      build, which would otherwise warn that no specific platform has been set.
+    -->
+    <Win2DWarnNoPlatform>false</Win2DWarnNoPlatform>
   </PropertyGroup>
 
   <ItemGroup>

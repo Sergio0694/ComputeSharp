@@ -18,6 +18,9 @@
 
     <!-- Temporary workaround: the Win2D .dll is not strong name signed, ignore the error for now -->
     <WarningsNotAsErrors>$(WarningsNotAsErrors);CS8002</WarningsNotAsErrors>
+
+    <!-- Same rationale as in 'ComputeSharp.D2D1.WinUI', see notes there -->
+    <Win2DWarnNoPlatform>false</Win2DWarnNoPlatform>
   </PropertyGroup>
 
   <ItemGroup>
