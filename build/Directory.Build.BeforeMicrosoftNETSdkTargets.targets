@@ -63,4 +63,9 @@
       PrivateAssets="$(CsWinRTPrivateAssetsMode)"
       IsImplicitlyDefined="true" />
   </ItemGroup>
+
+  <!-- Generate AOT-friendly interop and run generation as a build task -->
+  <PropertyGroup>
+    <CsWin32RunAsBuildTask>true</CsWin32RunAsBuildTask>
+  </PropertyGroup>
 </Project>
