@@ -17,5 +17,10 @@
 
     <!-- See notes in .props file in the sample projects directory -->
     <NoWarn>$(NoWarn);WMC1006</NoWarn>
+
+    <EnableMSTestRunner>true</EnableMSTestRunner>
+    <TestingPlatformDotNetTestSupport>true</TestingPlatformDotNetTestSupport>
+    <TestingPlatformCaptureOutput>false</TestingPlatformCaptureOutput>
+    <TestingPlatformShowTestsFailure>true</TestingPlatformShowTestsFailure>
   </PropertyGroup>
 </Project>
