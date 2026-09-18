@@ -1498,7 +1498,7 @@ public class Test_ComputeShaderDescriptorGenerator_Diagnostics
         // The HLSL compilation is expected to fail because recursion is not actually supported:
         //
         // "error: recursive functions not allowed"
-        CSharpGeneratorTest<ComputeShaderDescriptorGenerator>.VerifyDiagnostics(source, "CMPS0046");
+        CSharpGeneratorTest<ComputeShaderDescriptorGenerator>.VerifyDiagnostics(source, ("CMPS0046", "ShaderWithRecursiveMembers"));
     }
 
     [TestMethod]
@@ -1523,7 +1523,7 @@ public class Test_ComputeShaderDescriptorGenerator_Diagnostics
             }
             """;
 
-        CSharpGeneratorTest<ComputeShaderDescriptorGenerator>.VerifyDiagnostics(source, "CMPS0064");
+        CSharpGeneratorTest<ComputeShaderDescriptorGenerator>.VerifyDiagnostics(source, ("CMPS0064", "MyShader"));
     }
 
     [TestMethod]
@@ -1549,6 +1549,6 @@ public class Test_ComputeShaderDescriptorGenerator_Diagnostics
             }
             """;
 
-        CSharpGeneratorTest<ComputeShaderDescriptorGenerator>.VerifyDiagnostics(source, "CMPS0065");
+        CSharpGeneratorTest<ComputeShaderDescriptorGenerator>.VerifyDiagnostics(source, ("CMPS0065", "RequiresDoublePrecisionSupport"));
     }
 }

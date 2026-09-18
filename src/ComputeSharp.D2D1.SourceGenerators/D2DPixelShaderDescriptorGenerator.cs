@@ -26,8 +26,11 @@ public sealed partial class D2DPixelShaderDescriptorGenerator : IIncrementalGene
     /// <inheritdoc/>
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
-        // Discover all shader types and extract all the necessary info from each of them
-        IncrementalValuesProvider<D2D1ShaderInfo> shaderInfo =
+        // Discover all shader types and extract all the necessary info from each of them (with the exception
+        // of the compiled HLSL bytecode, which is processed later). The info needed to synthesize the diagnostics
+        // for the deferred compilation is returned alongside each model (as it holds syntax tree references, it
+        // is intentionally not part of the model itself, so it never affects the equality of the shader models).
+        IncrementalValuesProvider<(D2D1ShaderInfo Info, HlslBytecodeDiagnosticsInfo DiagnosticsInfo)> shaderInfoWithDiagnosticsInfo =
             context.SyntaxProvider
             .ForAttributeWithMetadataName(
                 "ComputeSharp.D2D1.D2DGeneratedPixelShaderDescriptorAttribute",
@@ -152,22 +155,19 @@ public sealed partial class D2DPixelShaderDescriptorGenerator : IIncrementalGene
 
                     token.ThrowIfCancellationRequested();
 
-                    // As the last steps in the pipeline, try to compile the shader if needed.
-                    // This is done last so that it can be skipped if any errors happened before.
+                    // Prepare the key to compile the shader afterwards. The compilation is deliberately not
+                    // done here: the incremental driver invokes transform callbacks sequentially, so compiling
+                    // here would serialize all shader compilations. Instead, compilation is deferred to a
+                    // dedicated node below, which can process all shaders in the compilation in parallel.
                     HlslBytecodeInfoKey hlslInfoKey = new(
                         hlslSource,
                         effectiveShaderProfile,
                         effectiveCompileOptions,
                         isCompilationEnabled);
 
-                    // Get the existing compiled shader, or compile the processed HLSL code
-                    HlslBytecodeInfo hlslInfo = HlslBytecodeSyntaxProcessor.GetInfo(ref hlslInfoKey, token);
-
-                    token.ThrowIfCancellationRequested();
-
-                    // Append any diagnostic for the shader compilation
-                    HlslBytecodeSyntaxProcessor.GetInfoDiagnostics(typeSymbol, hlslInfo, diagnostics);
-                    HlslBytecodeSyntaxProcessor.GetDoublePrecisionSupportDiagnostics(typeSymbol, hlslInfo, diagnostics);
+                    // Capture the info needed to synthesize the diagnostics for the deferred compilation,
+                    // as they cannot be created later (symbols must not be used past the transform node)
+                    HlslBytecodeDiagnosticsInfo hlslDiagnosticsInfo = HlslBytecodeSyntaxProcessor.GetDiagnosticsInfo(typeSymbol);
 
                     token.ThrowIfCancellationRequested();
 
@@ -176,7 +176,7 @@ public sealed partial class D2DPixelShaderDescriptorGenerator : IIncrementalGene
 
                     token.ThrowIfCancellationRequested();
 
-                    return new D2D1ShaderInfo(
+                    D2D1ShaderInfo info = new(
                         Hierarchy: hierarchyInfo,
                         EffectId: effectId,
                         EffectDisplayName: effectDisplayName,
@@ -192,11 +192,62 @@ public sealed partial class D2DPixelShaderDescriptorGenerator : IIncrementalGene
                         ChannelDepth: channelDepth,
                         PixelOptions: pixelOptions,
                         HlslInfoKey: hlslInfoKey,
-                        HlslInfo: hlslInfo,
+                        HlslInfo: HlslBytecodeInfo.Missing.Instance,
                         Diagnostcs: diagnostics.ToImmutable());
+
+                    return (Info: info, DiagnosticsInfo: hlslDiagnosticsInfo);
                 })
-            .WithTrackingName(WellKnownTrackingNames.Execute)
-            .Where(static item => item is not null)!;
+            .Where(static item => item.Info is not null);
+
+        // Compile all shaders in parallel in a single dedicated node, warming up the shared bytecode
+        // cache. The node produces no meaningful value: it only exists so that the join node below has
+        // an edge ordering it after all compilations are done (its input requires this node's output).
+        IncrementalValueProvider<bool> hlslBytecodeCache =
+            shaderInfoWithDiagnosticsInfo
+            .Select(static (item, _) => item.Info.HlslInfoKey)
+            .Collect()
+            .Select(static (keys, token) =>
+            {
+                HlslBytecodeSyntaxProcessor.CompileAllInParallel(keys, token);
+
+                return true;
+            });
+
+        // Join each shader with its compiled bytecode (guaranteed to be a cache hit, given the ordering edge on
+        // the node above), and synthesize the deferred diagnostics for the shader compilation. The resulting
+        // models are the same that used to be produced directly by the transform node (hence the tracking name).
+        IncrementalValuesProvider<D2D1ShaderInfo> shaderInfo =
+            shaderInfoWithDiagnosticsInfo
+            .Combine(hlslBytecodeCache)
+            .Select(static (pair, token) =>
+            {
+                (D2D1ShaderInfo info, HlslBytecodeDiagnosticsInfo diagnosticsInfo) = pair.Left;
+
+                HlslBytecodeInfoKey hlslInfoKey = info.HlslInfoKey;
+
+                // Get the compiled shader from the warmed up cache
+                HlslBytecodeInfo hlslInfo = HlslBytecodeSyntaxProcessor.GetInfo(ref hlslInfoKey, token);
+
+                token.ThrowIfCancellationRequested();
+
+                using ImmutableArrayBuilder<DiagnosticInfo> diagnostics = new();
+
+                diagnostics.AddRange(info.Diagnostcs.AsSpan());
+
+                // Append any diagnostic for the shader compilation
+                HlslBytecodeSyntaxProcessor.GetInfoDiagnostics(diagnosticsInfo, hlslInfo, diagnostics);
+                HlslBytecodeSyntaxProcessor.GetDoublePrecisionSupportDiagnostics(diagnosticsInfo, hlslInfo, diagnostics);
+
+                token.ThrowIfCancellationRequested();
+
+                return info with
+                {
+                    HlslInfoKey = hlslInfoKey,
+                    HlslInfo = hlslInfo,
+                    Diagnostcs = diagnostics.ToImmutable()
+                };
+            })
+            .WithTrackingName(WellKnownTrackingNames.Execute);
 
         // We need to create two more incremental steps to ensure we correctly emit diagnostics and re-generate sources.
         // First, select an incremental provider with just the diagnostics, which will trigger every time any of them changes.
