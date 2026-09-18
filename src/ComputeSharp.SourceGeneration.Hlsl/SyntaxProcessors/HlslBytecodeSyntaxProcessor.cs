@@ -161,7 +161,7 @@ internal static partial class HlslBytecodeSyntaxProcessor
             out AttributeData? attributeData);
 
         return new HlslBytecodeDiagnosticsInfo(
-            TypeName: structDeclarationSymbol.ToString(),
+            TypeName: structDeclarationSymbol.ToDisplayString(),
             TypeLocation: structDeclarationSymbol.Locations.FirstOrDefault(),
             HasRequiresDoublePrecisionSupportAttribute: hasRequiresDoublePrecisionSupportAttribute,
             RequiresDoublePrecisionSupportAttributeLocation: attributeData?.GetLocation());
