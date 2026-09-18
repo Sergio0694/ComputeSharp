@@ -48,7 +48,7 @@ internal sealed class CoreWindowApplication
     /// <param name="window">The <see cref="CoreWindow"/> instance.</param>
     [MemberNotNull(nameof(canvasDevice))]
     [MemberNotNull(nameof(canvasSwapChain))]
-    public unsafe void OnInitialize(CoreWindow window)
+    public void OnInitialize(CoreWindow window)
     {
         // Create a new canvas device, which will handle DX11/D2D initialization
         CanvasDevice canvasDevice = new();

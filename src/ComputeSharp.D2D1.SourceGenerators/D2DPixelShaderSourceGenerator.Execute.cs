@@ -46,7 +46,7 @@ partial class D2DPixelShaderSourceGenerator
         public static string? GetHlslSource(IMethodSymbol methodSymbol)
         {
             if (methodSymbol.TryGetAttributeWithFullyQualifiedMetadataName("ComputeSharp.D2D1.D2DPixelShaderSourceAttribute", out AttributeData? attributeData) &&
-                attributeData!.TryGetConstructorArgument(0, out string? hlslSource))
+                attributeData.TryGetConstructorArgument(0, out string? hlslSource))
             {
                 return hlslSource;
             }

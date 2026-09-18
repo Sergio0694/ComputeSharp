@@ -242,7 +242,7 @@ public abstract unsafe partial class Buffer<T> : IReferenceTrackedObject, IGraph
     }
 
     /// <inheritdoc cref="ID3D12ReadOnlyResource.ValidateAndGetID3D12Resource(GraphicsDevice, out ReferenceTracker.Lease)"/>
-    internal unsafe ID3D12Resource* ValidateAndGetID3D12Resource(GraphicsDevice device, out ReferenceTracker.Lease lease)
+    internal ID3D12Resource* ValidateAndGetID3D12Resource(GraphicsDevice device, out ReferenceTracker.Lease lease)
     {
         lease = GetReferenceTracker().GetLease();
 

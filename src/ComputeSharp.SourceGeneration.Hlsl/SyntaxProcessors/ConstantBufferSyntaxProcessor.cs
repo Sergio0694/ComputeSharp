@@ -16,12 +16,13 @@ namespace ComputeSharp.SourceGeneration.SyntaxProcessors;
 internal static partial class ConstantBufferSyntaxProcessor
 {
     /// <summary>
-    /// A <see cref="Regex"/> to extract the parameter name of a primary constructor capture field.
+    /// Gets a <see cref="Regex"/> to extract the parameter name of a primary constructor capture field.
     /// </summary>
     /// <remarks>
     /// Temporary workaround until <see href="https://github.com/dotnet/roslyn/issues/70208"/> is available.
     /// </remarks>
-    private static readonly Regex PrimaryConstructorNameRegex = new("^<([^>]+)>P$", RegexOptions.Compiled);
+    [GeneratedRegex("^<([^>]+)>P$")]
+    private static partial Regex PrimaryConstructorNameRegex { get; }
 
     /// <summary>
     /// Explores a given type hierarchy and generates statements to load fields.

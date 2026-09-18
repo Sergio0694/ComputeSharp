@@ -10,7 +10,7 @@ namespace ComputeSharp.D2D1.Interop;
 /// <summary>
 /// A factory type to produce effect registration XML blobs.
 /// </summary>
-internal static unsafe class D2D1EffectXmlFactory
+internal static class D2D1EffectXmlFactory
 {
     /// <summary>
     /// The shared <see cref="StringBuilder"/> instance to use to build effect registration XML blobs.

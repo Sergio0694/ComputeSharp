@@ -7,7 +7,7 @@ using System;
 
 namespace ComputeSharp.Win32;
 
-internal unsafe partial struct D3D12_GPU_DESCRIPTOR_HANDLE : IEquatable<D3D12_GPU_DESCRIPTOR_HANDLE>
+internal partial struct D3D12_GPU_DESCRIPTOR_HANDLE : IEquatable<D3D12_GPU_DESCRIPTOR_HANDLE>
 {
     public static D3D12_GPU_DESCRIPTOR_HANDLE DEFAULT => default;
 

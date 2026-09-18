@@ -18,24 +18,20 @@ namespace ComputeSharp.D3D12MemoryAllocator.Interop;
 internal unsafe struct ID3D12MemoryAllocatorImpl
 {
     /// <summary>
-    /// The shared method table pointer for all <see cref="ID3D12MemoryAllocator"/> instances.
+    /// The shared method table for all <see cref="ID3D12MemoryAllocator"/> instances.
     /// </summary>
-    private static readonly void** Vtbl = InitVtbl();
+    [FixedAddressValueType]
+    private static readonly ID3D12MemoryAllocatorImplVftbl Vftbl;
 
     /// <summary>
-    /// Builds the custom method table pointer for <see cref="ID3D12MemoryAllocator"/>.
+    /// Initializes <see cref="Vftbl"/>.
     /// </summary>
-    /// <returns>The method table pointer for <see cref="ID3D12MemoryAllocator"/>.</returns>
-    private static void** InitVtbl()
+    static ID3D12MemoryAllocatorImpl()
     {
-        void** lpVtbl = (void**)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(ID3D12MemoryAllocator), sizeof(void*) * 4);
-
-        lpVtbl[0] = (delegate* unmanaged[MemberFunction]<ID3D12MemoryAllocatorImpl*, Guid*, void**, int>)&QueryInterface;
-        lpVtbl[1] = (delegate* unmanaged[MemberFunction]<ID3D12MemoryAllocatorImpl*, uint>)&AddRef;
-        lpVtbl[2] = (delegate* unmanaged[MemberFunction]<ID3D12MemoryAllocatorImpl*, uint>)&Release;
-        lpVtbl[3] = (delegate* unmanaged[MemberFunction]<ID3D12MemoryAllocatorImpl*, D3D12_RESOURCE_DESC*, D3D12_HEAP_TYPE, D3D12_RESOURCE_STATES, BOOL, ID3D12Allocation**, int>)&AllocateResource;
-
-        return lpVtbl;
+        Vftbl.QueryInterface = &QueryInterface;
+        Vftbl.AddRef = &AddRef;
+        Vftbl.Release = &Release;
+        Vftbl.AllocateResource = &AllocateResource;
     }
 
     /// <summary>
@@ -83,7 +79,7 @@ internal unsafe struct ID3D12MemoryAllocatorImpl
             return E.E_OUTOFMEMORY;
         }
 
-        @this->lpVtbl = Vtbl;
+        @this->lpVtbl = (void**)Unsafe.AsPointer(in Vftbl);
         @this->referenceCount = 1;
         @this->allocator = new ComPtr<D3D12MA_Allocator>(allocator);
         @this->pool = new ComPtr<D3D12MA_Pool>(pool);

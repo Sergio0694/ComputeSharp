@@ -35,37 +35,33 @@ unsafe partial class IWICStreamExtensions
     /// <summary>
     /// A manual CCW implementation for an <see cref="IStream"/> object wrapping an <see cref="IBufferWriter{T}"/> instance.
     /// </summary>
-    private unsafe partial struct IBufferWriterWrapper
+    internal unsafe partial struct IBufferWriterWrapper
     {
         /// <summary>
-        /// The shared vtable pointer for <see cref="IBufferWriterWrapper"/> instances.
+        /// The shared vtable for <see cref="IBufferWriterWrapper"/> instances.
         /// </summary>
-        private static readonly void** Vtbl = InitVtbl();
+        [FixedAddressValueType]
+        private static readonly IBufferWriterWrapperVftbl Vftbl;
 
         /// <summary>
-        /// Setups the vtable pointer for <see cref="IBufferWriterWrapper"/>.
+        /// Initializes <see cref="Vftbl"/>.
         /// </summary>
-        /// <returns>The initialized vtable pointer for <see cref="IBufferWriterWrapper"/>.</returns>
-        private static void** InitVtbl()
+        static IBufferWriterWrapper()
         {
-            void** lpVtbl = (void**)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(IBufferWriterWrapper), sizeof(void*) * 14);
-
-            lpVtbl[0] = (delegate* unmanaged[MemberFunction]<IBufferWriterWrapper*, Guid*, void**, int>)&QueryInterface;
-            lpVtbl[1] = (delegate* unmanaged[MemberFunction]<IBufferWriterWrapper*, uint>)&AddRef;
-            lpVtbl[2] = (delegate* unmanaged[MemberFunction]<IBufferWriterWrapper*, uint>)&Release;
-            lpVtbl[3] = (delegate* unmanaged[MemberFunction]<IBufferWriterWrapper*, void*, uint, uint*, int>)&Read;
-            lpVtbl[4] = (delegate* unmanaged[MemberFunction]<IBufferWriterWrapper*, void*, uint, uint*, int>)&Write;
-            lpVtbl[5] = (delegate* unmanaged[MemberFunction]<IBufferWriterWrapper*, LARGE_INTEGER, uint, ULARGE_INTEGER*, int>)&Seek;
-            lpVtbl[6] = (delegate* unmanaged[MemberFunction]<IBufferWriterWrapper*, ULARGE_INTEGER, int>)&SetSize;
-            lpVtbl[7] = (delegate* unmanaged[MemberFunction]<IBufferWriterWrapper*, IStream*, ULARGE_INTEGER, ULARGE_INTEGER*, ULARGE_INTEGER*, int>)&CopyTo;
-            lpVtbl[8] = (delegate* unmanaged[MemberFunction]<IBufferWriterWrapper*, uint, int>)&Commit;
-            lpVtbl[9] = (delegate* unmanaged[MemberFunction]<IBufferWriterWrapper*, int>)&Revert;
-            lpVtbl[10] = (delegate* unmanaged[MemberFunction]<IBufferWriterWrapper*, ULARGE_INTEGER, ULARGE_INTEGER, uint, int>)&LockRegion;
-            lpVtbl[11] = (delegate* unmanaged[MemberFunction]<IBufferWriterWrapper*, ULARGE_INTEGER, ULARGE_INTEGER, uint, int>)&UnlockRegion;
-            lpVtbl[12] = (delegate* unmanaged[MemberFunction]<IBufferWriterWrapper*, STATSTG*, uint, int>)&Stat;
-            lpVtbl[13] = (delegate* unmanaged[MemberFunction]<IBufferWriterWrapper*, IStream**, int>)&Clone;
-
-            return lpVtbl;
+            Vftbl.QueryInterface = &QueryInterface;
+            Vftbl.AddRef = &AddRef;
+            Vftbl.Release = &Release;
+            Vftbl.Read = &Read;
+            Vftbl.Write = &Write;
+            Vftbl.Seek = &Seek;
+            Vftbl.SetSize = &SetSize;
+            Vftbl.CopyTo = &CopyTo;
+            Vftbl.Commit = &Commit;
+            Vftbl.Revert = &Revert;
+            Vftbl.LockRegion = &LockRegion;
+            Vftbl.UnlockRegion = &UnlockRegion;
+            Vftbl.Stat = &Stat;
+            Vftbl.Clone = &Clone;
         }
 
         /// <summary>
@@ -92,7 +88,7 @@ unsafe partial class IWICStreamExtensions
         {
             IBufferWriterWrapper* @this = (IBufferWriterWrapper*)NativeMemory.Alloc((nuint)sizeof(IBufferWriterWrapper));
 
-            @this->lpVtbl = Vtbl;
+            @this->lpVtbl = (void**)Unsafe.AsPointer(in Vftbl);
             @this->referenceCount = 1;
             @this->writerHandle = GCHandle.Alloc(writer);
 
@@ -104,7 +100,7 @@ unsafe partial class IWICStreamExtensions
         /// </summary>
         /// <returns>The captured <see cref="IBufferWriter{T}"/> instance</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private IBufferWriter<byte> GetWriter()
+        private readonly IBufferWriter<byte> GetWriter()
         {
             return Unsafe.As<IBufferWriter<byte>>(this.writerHandle.Target!);
         }

@@ -65,11 +65,11 @@ internal sealed class CSharpAnalyzerTest<TAnalyzer> : CSharpAnalyzerTest<TAnalyz
     public static Task VerifyAnalyzerAsync(
         string source,
         bool allowUnsafeBlocks = true,
-        LanguageVersion languageVersion = LanguageVersion.CSharp12)
+        LanguageVersion languageVersion = LanguageVersion.CSharp14)
     {
         CSharpAnalyzerTest<TAnalyzer> test = new(allowUnsafeBlocks, languageVersion) { TestCode = source };
 
-        test.TestState.ReferenceAssemblies = ReferenceAssemblies.Net.Net80;
+        test.TestState.ReferenceAssemblies = ReferenceAssemblies.Net.Net100;
         test.TestState.AdditionalReferences.Add(MetadataReference.CreateFromFile(typeof(Core::ComputeSharp.Hlsl).Assembly.Location));
 #if D2D1_TESTS || D2D1_WINUI_TESTS
 #if D2D1_WINUI_TESTS

@@ -121,7 +121,7 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
     /// </summary>
     /// <param name="x">The number of iterations to run on the X axis.</param>
     /// <param name="shader">The input <typeparamref name="T"/> instance representing the compute shader to run.</param>
-    internal readonly unsafe void Run<T>(int x, in T shader)
+    internal readonly void Run<T>(int x, in T shader)
         where T : struct, IComputeShader, IComputeShaderDescriptor<T>
     {
         Run(x, 1, 1, in shader);
@@ -133,7 +133,7 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
     /// <param name="x">The number of iterations to run on the X axis.</param>
     /// <param name="y">The number of iterations to run on the Y axis.</param>
     /// <param name="shader">The input <typeparamref name="T"/> instance representing the compute shader to run.</param>
-    internal readonly unsafe void Run<T>(int x, int y, in T shader)
+    internal readonly void Run<T>(int x, int y, in T shader)
         where T : struct, IComputeShader, IComputeShaderDescriptor<T>
     {
         Run(x, y, 1, in shader);
@@ -302,7 +302,7 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
     /// <exception cref="InvalidOperationException">Thrown if the <see cref="CommandList"/> has not been initialized yet.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [UnscopedRef]
-    private readonly unsafe ref CommandList GetCommandList()
+    private readonly ref CommandList GetCommandList()
     {
         // This method has to take the context by readonly reference to allow callers to be marked as readonly.
         // This is needed to skip the hidden copies done by Roslyn, which would break the dispatching, as the

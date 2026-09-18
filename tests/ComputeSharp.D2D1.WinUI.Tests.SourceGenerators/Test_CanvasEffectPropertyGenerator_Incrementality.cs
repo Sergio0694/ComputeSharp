@@ -1,7 +1,6 @@
 using ComputeSharp.D2D1.WinUI.SourceGenerators;
 using ComputeSharp.Tests.SourceGenerators.Helpers;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ComputeSharp.D2D1.WinUI.Tests.SourceGenerators;
@@ -39,8 +38,7 @@ public class Test_CanvasEffectPropertyGenerator_Incrementality
             diagnosticsReason: null,
             outputReason: IncrementalStepRunReason.Modified,
             diagnosticsSourceReason: null,
-            sourceReason: IncrementalStepRunReason.Modified,
-            languageVersion: LanguageVersion.Preview);
+            sourceReason: IncrementalStepRunReason.Modified);
     }
 
     [TestMethod]
@@ -76,8 +74,7 @@ public class Test_CanvasEffectPropertyGenerator_Incrementality
             diagnosticsReason: null,
             outputReason: IncrementalStepRunReason.Cached,
             diagnosticsSourceReason: null,
-            sourceReason: IncrementalStepRunReason.Cached,
-            languageVersion: LanguageVersion.Preview);
+            sourceReason: IncrementalStepRunReason.Cached);
     }
 
     [TestMethod]
@@ -114,7 +111,6 @@ public class Test_CanvasEffectPropertyGenerator_Incrementality
             diagnosticsReason: null,
             outputReason: IncrementalStepRunReason.Cached,
             diagnosticsSourceReason: null,
-            sourceReason: IncrementalStepRunReason.Cached,
-            languageVersion: LanguageVersion.Preview);
+            sourceReason: IncrementalStepRunReason.Cached);
     }
 }

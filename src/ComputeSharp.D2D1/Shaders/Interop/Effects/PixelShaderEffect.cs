@@ -16,40 +16,35 @@ internal unsafe partial struct PixelShaderEffect
     /// <summary>
     /// The shared vtable pointer for <see cref="PixelShaderEffect"/> instance, for <see cref="ID2D1EffectImplMethods"/>.
     /// </summary>
-    private static readonly void** VtblForID2D1EffectImpl = InitVtblForID2D1EffectImplAndID2D1DrawTransform();
+    [FixedAddressValueType]
+    private static readonly ID2D1EffectImplVftbl VftblForID2D1EffectImpl;
 
     /// <summary>
-    /// The shared vtable pointer for <see cref="PixelShaderEffect"/> instance, for <see cref="ID2D1DrawTransform"/>.
+    /// The shared vtable for <see cref="PixelShaderEffect"/> instances, for <see cref="ID2D1DrawTransform"/>.
     /// </summary>
-    private static readonly void** VtblForID2D1DrawTransform = &VtblForID2D1EffectImpl[6];
+    [FixedAddressValueType]
+    private static readonly ID2D1DrawTransformVftbl VftblForID2D1DrawTransform;
 
     /// <summary>
-    /// Initializes the combined vtable for <see cref="ID2D1EffectImpl"/> and <see cref="ID2D1DrawTransform"/>.
+    /// Initializes <see cref="VftblForID2D1EffectImpl"/> and <see cref="VftblForID2D1DrawTransform"/>.
     /// </summary>
-    /// <returns>The combined vtable for <see cref="ID2D1EffectImpl"/> and <see cref="ID2D1DrawTransform"/>.</returns>
-    private static void** InitVtblForID2D1EffectImplAndID2D1DrawTransform()
+    static PixelShaderEffect()
     {
-        void** lpVtbl = (void**)D2D1AssemblyAssociatedMemory.Allocate(sizeof(void*) * 14);
+        VftblForID2D1EffectImpl.QueryInterface = &ID2D1EffectImplMethods.QueryInterface;
+        VftblForID2D1EffectImpl.AddRef = &ID2D1EffectImplMethods.AddRef;
+        VftblForID2D1EffectImpl.Release = &ID2D1EffectImplMethods.Release;
+        VftblForID2D1EffectImpl.Initialize = &ID2D1EffectImplMethods.Initialize;
+        VftblForID2D1EffectImpl.PrepareForRender = &ID2D1EffectImplMethods.PrepareForRender;
+        VftblForID2D1EffectImpl.SetGraph = &ID2D1EffectImplMethods.SetGraph;
 
-        // ID2D1EffectImpl
-        lpVtbl[0] = (delegate* unmanaged[MemberFunction]<PixelShaderEffect*, Guid*, void**, int>)&ID2D1EffectImplMethods.QueryInterface;
-        lpVtbl[1] = (delegate* unmanaged[MemberFunction]<PixelShaderEffect*, uint>)&ID2D1EffectImplMethods.AddRef;
-        lpVtbl[2] = (delegate* unmanaged[MemberFunction]<PixelShaderEffect*, uint>)&ID2D1EffectImplMethods.Release;
-        lpVtbl[3] = (delegate* unmanaged[MemberFunction]<PixelShaderEffect*, ID2D1EffectContext*, ID2D1TransformGraph*, int>)&ID2D1EffectImplMethods.Initialize;
-        lpVtbl[4] = (delegate* unmanaged[MemberFunction]<PixelShaderEffect*, D2D1_CHANGE_TYPE, int>)&ID2D1EffectImplMethods.PrepareForRender;
-        lpVtbl[5] = (delegate* unmanaged[MemberFunction]<PixelShaderEffect*, ID2D1TransformGraph*, int>)&ID2D1EffectImplMethods.SetGraph;
-
-        // ID2D1DrawTransform
-        lpVtbl[6 + 0] = (delegate* unmanaged[MemberFunction]<PixelShaderEffect*, Guid*, void**, int>)&ID2D1DrawTransformMethods.QueryInterface;
-        lpVtbl[6 + 1] = (delegate* unmanaged[MemberFunction]<PixelShaderEffect*, uint>)&ID2D1DrawTransformMethods.AddRef;
-        lpVtbl[6 + 2] = (delegate* unmanaged[MemberFunction]<PixelShaderEffect*, uint>)&ID2D1DrawTransformMethods.Release;
-        lpVtbl[6 + 3] = (delegate* unmanaged[MemberFunction]<PixelShaderEffect*, uint>)&ID2D1DrawTransformMethods.GetInputCount;
-        lpVtbl[6 + 4] = (delegate* unmanaged[MemberFunction]<PixelShaderEffect*, RECT*, RECT*, uint, int>)&ID2D1DrawTransformMethods.MapOutputRectToInputRects;
-        lpVtbl[6 + 5] = (delegate* unmanaged[MemberFunction]<PixelShaderEffect*, RECT*, RECT*, uint, RECT*, RECT*, int>)&ID2D1DrawTransformMethods.MapInputRectsToOutputRect;
-        lpVtbl[6 + 6] = (delegate* unmanaged[MemberFunction]<PixelShaderEffect*, uint, RECT, RECT*, int>)&ID2D1DrawTransformMethods.MapInvalidRect;
-        lpVtbl[6 + 7] = (delegate* unmanaged[MemberFunction]<PixelShaderEffect*, ID2D1DrawInfo*, int>)&ID2D1DrawTransformMethods.SetDrawInfo;
-
-        return lpVtbl;
+        VftblForID2D1DrawTransform.QueryInterface = &ID2D1DrawTransformMethods.QueryInterface;
+        VftblForID2D1DrawTransform.AddRef = &ID2D1DrawTransformMethods.AddRef;
+        VftblForID2D1DrawTransform.Release = &ID2D1DrawTransformMethods.Release;
+        VftblForID2D1DrawTransform.GetInputCount = &ID2D1DrawTransformMethods.GetInputCount;
+        VftblForID2D1DrawTransform.MapOutputRectToInputRects = &ID2D1DrawTransformMethods.MapOutputRectToInputRects;
+        VftblForID2D1DrawTransform.MapInputRectsToOutputRect = &ID2D1DrawTransformMethods.MapInputRectsToOutputRect;
+        VftblForID2D1DrawTransform.MapInvalidRect = &ID2D1DrawTransformMethods.MapInvalidRect;
+        VftblForID2D1DrawTransform.SetDrawInfo = &ID2D1DrawTransformMethods.SetDrawInfo;
     }
 
     /// <summary>
@@ -113,8 +108,8 @@ internal unsafe partial struct PixelShaderEffect
             @this = (PixelShaderEffect*)NativeMemory.Alloc((nuint)sizeof(PixelShaderEffect));
             globalsHandle = GCHandle.Alloc(globals);
 
-            @this->lpVtblForID2D1EffectImpl = VtblForID2D1EffectImpl;
-            @this->lpVtblForID2D1DrawTransform = VtblForID2D1DrawTransform;
+            @this->lpVtblForID2D1EffectImpl = (void**)Unsafe.AsPointer(in VftblForID2D1EffectImpl);
+            @this->lpVtblForID2D1DrawTransform = (void**)Unsafe.AsPointer(in VftblForID2D1DrawTransform);
             @this->referenceCount = 1;
             @this->globalsHandle = globalsHandle;
             @this->constantBuffer = null;
@@ -220,7 +215,7 @@ internal unsafe partial struct PixelShaderEffect
     /// </summary>
     /// <returns>The <see cref="Globals"/> instance for the current effect.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private Globals GetGlobals()
+    private readonly Globals GetGlobals()
     {
         return Unsafe.As<Globals>(this.globalsHandle.Target!);
     }

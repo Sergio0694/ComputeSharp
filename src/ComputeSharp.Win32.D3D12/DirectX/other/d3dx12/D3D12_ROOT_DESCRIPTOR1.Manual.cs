@@ -7,7 +7,7 @@ using static ComputeSharp.Win32.D3D12_ROOT_DESCRIPTOR_FLAGS;
 
 namespace ComputeSharp.Win32;
 
-internal unsafe partial struct D3D12_ROOT_DESCRIPTOR1
+internal partial struct D3D12_ROOT_DESCRIPTOR1
 {
     public D3D12_ROOT_DESCRIPTOR1(uint shaderRegister, uint registerSpace = 0, D3D12_ROOT_DESCRIPTOR_FLAGS flags = D3D12_ROOT_DESCRIPTOR_FLAG_NONE)
     {

@@ -133,22 +133,6 @@ internal static class DiagnosticDescriptors
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 
     /// <summary>
-    /// Gets a <see cref="DiagnosticDescriptor"/> for when C# is not set to 'preview'.
-    /// <para>
-    /// Format: <c>"Using [GeneratedCanvasEffectProperty] requires the C# language version to be set to 'preview', as support for the 'field' keyword is needed by the source generators to emit valid code (add &lt;LangVersion&gt;preview&lt;/LangVersion&gt; to your .csproj/.props file)"</c>.
-    /// </para>
-    /// </summary>
-    public static readonly DiagnosticDescriptor CSharpLanguageVersionIsNotPreview = new(
-        id: $"{DiagnosticIdPrefix}0007",
-        title: "C# language version is not 'preview'",
-        messageFormat: """Using [GeneratedCanvasEffectProperty] requires the C# language version to be set to 'preview', as support for the 'field' keyword is needed by the source generators to emit valid code (add <LangVersion>preview</LangVersion> to your .csproj/.props file)""",
-        category: DiagnosticCategory,
-        defaultSeverity: DiagnosticSeverity.Error,
-        isEnabledByDefault: true,
-        description: "The C# language version must be set to 'preview' when using [GeneratedComputeShaderDescriptor] for the source generators to emit valid code (the <LangVersion>preview</LangVersion> option must be set in the .csproj/.props file).",
-        helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
-
-    /// <summary>
     /// Gets a <see cref="DiagnosticDescriptor"/> for when a semi-auto property can be converted to use <c>[GeneratedCanvasEffectProperty]</c> instead.
     /// <para>
     /// Format: <c>"The semi-auto property "{0}" can be converted to a partial property using [GeneratedCanvasEffectProperty], which is recommended (doing so makes the code less verbose and results in more optimized code)"</c>.

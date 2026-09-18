@@ -162,7 +162,7 @@ unsafe partial struct PixelShaderEffect
     /// <param name="dataSize">The number of bytes in the property to retrieve.</param>
     /// <param name="actualSize">A optional pointer to a variable that stores the actual number of bytes retrieved on the property.</param>
     /// <returns>The <see cref="HRESULT"/> for the operation.</returns>
-    private int GetResourceTextureManagerAtIndex(int index, byte* data, uint dataSize, uint* actualSize)
+    private readonly int GetResourceTextureManagerAtIndex(int index, byte* data, uint dataSize, uint* actualSize)
     {
         try
         {

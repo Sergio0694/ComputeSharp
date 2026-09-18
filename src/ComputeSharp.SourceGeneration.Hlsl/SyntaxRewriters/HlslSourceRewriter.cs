@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+#if !D3D12_SOURCE_GENERATOR
+using System.Runtime.CompilerServices;
+#endif
 using System.Threading;
 using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Helpers;
@@ -196,7 +199,7 @@ internal abstract partial class HlslSourceRewriter(
     }
 
     /// <inheritdoc/>
-    public sealed override unsafe SyntaxNode? VisitLiteralExpression(LiteralExpressionSyntax node)
+    public sealed override SyntaxNode? VisitLiteralExpression(LiteralExpressionSyntax node)
     {
         CancellationToken.ThrowIfCancellationRequested();
 
@@ -238,7 +241,7 @@ internal abstract partial class HlslSourceRewriter(
                 // C#:   3.14f
                 // HLSL: asfloat(1078523331)
                 float literalValue = (float)operation.ConstantValue.Value!;
-                uint literalValueAsUInt = *(uint*)&literalValue;
+                uint literalValueAsUInt = Unsafe.BitCast<float, uint>(literalValue);
 
                 return
                     InvocationExpression(IdentifierName("asfloat"))

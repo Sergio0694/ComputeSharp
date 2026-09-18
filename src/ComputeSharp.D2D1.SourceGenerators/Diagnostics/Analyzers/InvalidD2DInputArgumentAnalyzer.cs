@@ -183,7 +183,7 @@ public sealed class InvalidD2DInputArgumentAnalyzer : DiagnosticAnalyzer
             }
 
             // Lookup the attribute to get the D2D input type (the attribute only exists on the 'D2D' type loaded in the analyzer)
-            if (typeof(D2D).GetMethod(d2DMethodSymbol.Name).GetCustomAttribute<HlslD2DIntrinsicInputTypeAttribute>() is { } hlslD2DIntrinsicInputTypeAttribute)
+            if (typeof(D2D).GetMethod(d2DMethodSymbol.Name)!.GetCustomAttribute<HlslD2DIntrinsicInputTypeAttribute>() is { } hlslD2DIntrinsicInputTypeAttribute)
             {
                 inputTypeMethodMap.Add(d2DMethodSymbol, hlslD2DIntrinsicInputTypeAttribute.InputType);
             }

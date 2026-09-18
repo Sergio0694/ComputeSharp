@@ -4,6 +4,9 @@ using Windows.Win32.Graphics.Direct3D;
 using Windows.Win32.Graphics.Direct3D11;
 using DirectX = Windows.Win32.PInvoke;
 
+// The generator invokes FXC to compile shaders, so it only ever runs on Windows
+#pragma warning disable CA1416
+
 namespace ComputeSharp.D2D1.Shaders.Translation;
 
 /// <inheritdoc/>

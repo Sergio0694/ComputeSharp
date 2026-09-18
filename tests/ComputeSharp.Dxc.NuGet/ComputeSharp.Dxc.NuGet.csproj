@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
     <NoWarn>$(NoWarn);IL2026</NoWarn>
     <PublishAot Condition="'$(COMPUTESHARP_NUGET_TESTS_PUBLISH_AOT)' == 'true'">true</PublishAot>
@@ -12,8 +12,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ComputeSharp.Core" Version="$(PackageVersion)" />
-    <PackageReference Include="ComputeSharp" Version="$(PackageVersion)" />
-    <PackageReference Include="ComputeSharp.Dxc" Version="$(PackageVersion)" />
+    <PackageReference Include="ComputeSharp.Core" />
+    <PackageReference Include="ComputeSharp" />
+    <PackageReference Include="ComputeSharp.Dxc" />
   </ItemGroup>
 </Project>

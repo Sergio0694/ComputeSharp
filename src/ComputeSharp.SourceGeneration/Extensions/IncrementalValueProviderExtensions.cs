@@ -38,7 +38,7 @@ internal static class IncrementalValuesProviderExtensions
                 TKey key = keySelector(value);
                 TElement element = elementSelector(value);
 
-                if (!map.TryGetValue(key, out ImmutableArray<TElement>.Builder builder))
+                if (!map.TryGetValue(key, out ImmutableArray<TElement>.Builder? builder))
                 {
                     builder = ImmutableArray.CreateBuilder<TElement>();
 

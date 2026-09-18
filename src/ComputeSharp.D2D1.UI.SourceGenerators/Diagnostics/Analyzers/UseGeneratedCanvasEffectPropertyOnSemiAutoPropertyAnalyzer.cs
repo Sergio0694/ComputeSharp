@@ -65,13 +65,6 @@ public sealed class UseGeneratedCanvasEffectPropertyOnSemiAutoPropertyAnalyzer :
 
         context.RegisterCompilationStartAction(static context =>
         {
-            // Using [GeneratedCanvasEffectProperty] on partial properties is only supported when using C# preview.
-            // As such, if that is not the case, return immediately, as no diagnostic should be produced.
-            if (!context.Compilation.IsLanguageVersionPreview())
-            {
-                return;
-            }
-
             // Get the [GeneratedCanvasEffectProperty] and CanvasEffect symbols
             if (context.Compilation.GetTypeByMetadataName(WellKnownTypeNames.GeneratedCanvasEffectPropertyAttribute) is not { } generatedCanvasEffectPropertyAttributeSymbol ||
                 context.Compilation.GetTypeByMetadataName(WellKnownTypeNames.CanvasEffect) is not { } canvasEffectSymbol)

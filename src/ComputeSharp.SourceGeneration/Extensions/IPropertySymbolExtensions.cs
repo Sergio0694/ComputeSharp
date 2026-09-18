@@ -18,7 +18,7 @@ internal static class IPropertySymbolExtensions
     {
         using ImmutableArrayBuilder<char> builder = new();
 
-        symbol.ContainingType!.AppendFullyQualifiedMetadataName(in builder);
+        symbol.ContainingType.AppendFullyQualifiedMetadataName(in builder);
 
         if (symbol.IsIndexer)
         {

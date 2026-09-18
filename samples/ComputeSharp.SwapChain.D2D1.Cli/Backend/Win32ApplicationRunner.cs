@@ -10,7 +10,7 @@ namespace ComputeSharp.SwapChain.D2D1.Backend;
 /// <summary>
 /// A helper class to manage the creation and execution of Win32 applications.
 /// </summary>
-internal static unsafe class Win32ApplicationRunner
+internal static class Win32ApplicationRunner
 {
     /// <summary>
     /// Runs a specified application and starts the main loop to update its state. This is the entry point for a given application,

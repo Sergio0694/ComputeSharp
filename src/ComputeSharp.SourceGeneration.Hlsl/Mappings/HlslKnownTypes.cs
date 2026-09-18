@@ -81,7 +81,7 @@ internal static partial class HlslKnownTypes
     private static Dictionary<string, string> BuildKnownVectorTypeMetadataNames()
     {
         return KnownVectorTypes.ToDictionary(
-            keySelector: static type => type.FullName,
+            keySelector: static type => type.FullName!,
             elementSelector: static type => type.Name.ToLowerInvariant());
     }
 
@@ -92,7 +92,7 @@ internal static partial class HlslKnownTypes
     private static Dictionary<string, string> BuildKnownMatrixTypeMetadataNames()
     {
         return KnownMatrixTypes.ToDictionary(
-            keySelector: static type => type.FullName,
+            keySelector: static type => type.FullName!,
             elementSelector: static type => type.Name.ToLowerInvariant());
     }
 
@@ -104,12 +104,12 @@ internal static partial class HlslKnownTypes
     {
         Dictionary<string, string> knownTypes = new()
         {
-            [typeof(bool).FullName] = "bool",
-            [typeof(Bool).FullName] = "bool",
-            [typeof(int).FullName] = "int",
-            [typeof(uint).FullName] = "uint",
-            [typeof(float).FullName] = "float",
-            [typeof(double).FullName] = "double"
+            [typeof(bool).FullName!] = "bool",
+            [typeof(Bool).FullName!] = "bool",
+            [typeof(int).FullName!] = "int",
+            [typeof(uint).FullName!] = "uint",
+            [typeof(float).FullName!] = "float",
+            [typeof(double).FullName!] = "double"
         };
 
         IEnumerable<KeyValuePair<string, string>> metadataNames =
@@ -160,7 +160,7 @@ internal static partial class HlslKnownTypes
         }
 
         return knownTypes.ToDictionary(
-            keySelector: static type => type.FullName,
+            keySelector: static type => type.FullName!,
             elementSelector: CreateTypeInfo);
     }
 

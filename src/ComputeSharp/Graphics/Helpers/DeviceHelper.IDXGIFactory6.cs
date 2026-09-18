@@ -101,29 +101,52 @@ partial class DeviceHelper
     /// <summary>
     /// A custom <see cref="IDXGIFactory6"/> fallback implementation to use on systems with no support for it.
     /// </summary>
-    private unsafe struct IDXGIFactory4As6Backcompat
+    internal unsafe struct IDXGIFactory4As6Backcompat
     {
         /// <summary>
-        /// The shared method table pointer for all <see cref="IDXGIFactory4As6Backcompat"/> instances.
+        /// The shared method table for all <see cref="IDXGIFactory4As6Backcompat"/> instances.
         /// </summary>
-        private static readonly void** Vtbl = InitVtbl();
+        /// <remarks>
+        /// Only the slots that are actually used are implemented, all others are explicitly set to <see langword="null"/>.
+        /// </remarks>
+        [FixedAddressValueType]
+        private static readonly IDXGIFactory4As6BackcompatVftbl Vftbl;
 
         /// <summary>
-        /// Builds the custom method table pointer for <see cref="IDXGIFactory4As6Backcompat"/>.
+        /// Initializes <see cref="Vftbl"/>.
         /// </summary>
-        /// <returns>The method table pointer for <see cref="IDXGIFactory4As6Backcompat"/>.</returns>
-        private static void** InitVtbl()
+        static IDXGIFactory4As6Backcompat()
         {
-            void** lpVtbl = (void**)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(IDXGIFactory4As6Backcompat), sizeof(void*) * 30);
-
-            new Span<IntPtr>(lpVtbl, 30).Clear();
-
-            lpVtbl[2] = (delegate* unmanaged[MemberFunction]<IDXGIFactory4As6Backcompat*, uint>)&Release;
-            lpVtbl[7] = (delegate* unmanaged[MemberFunction]<IDXGIFactory4As6Backcompat*, uint, IDXGIAdapter**, int>)&EnumAdapters;
-            lpVtbl[27] = (delegate* unmanaged[MemberFunction]<IDXGIFactory4As6Backcompat*, Guid*, void**, int>)&EnumWarpAdapter;
-            lpVtbl[29] = (delegate* unmanaged[MemberFunction]<IDXGIFactory4As6Backcompat*, uint, DXGI_GPU_PREFERENCE, Guid*, void**, int>)&EnumAdapterByGpuPreference;
-
-            return lpVtbl;
+            Vftbl.QueryInterface = null;
+            Vftbl.AddRef = null;
+            Vftbl.Release = &Release;
+            Vftbl.SetPrivateData = null;
+            Vftbl.SetPrivateDataInterface = null;
+            Vftbl.GetPrivateData = null;
+            Vftbl.GetParent = null;
+            Vftbl.EnumAdapters = &EnumAdapters;
+            Vftbl.MakeWindowAssociation = null;
+            Vftbl.GetWindowAssociation = null;
+            Vftbl.CreateSwapChain = null;
+            Vftbl.CreateSoftwareAdapter = null;
+            Vftbl.EnumAdapters1 = null;
+            Vftbl.IsCurrent = null;
+            Vftbl.IsWindowedStereoEnabled = null;
+            Vftbl.CreateSwapChainForHwnd = null;
+            Vftbl.CreateSwapChainForCoreWindow = null;
+            Vftbl.GetSharedResourceAdapterLuid = null;
+            Vftbl.RegisterStereoStatusWindow = null;
+            Vftbl.RegisterStereoStatusEvent = null;
+            Vftbl.UnregisterStereoStatus = null;
+            Vftbl.RegisterOcclusionStatusWindow = null;
+            Vftbl.RegisterOcclusionStatusEvent = null;
+            Vftbl.UnregisterOcclusionStatus = null;
+            Vftbl.CreateSwapChainForComposition = null;
+            Vftbl.GetCreationFlags = null;
+            Vftbl.EnumAdapterByLuid = null;
+            Vftbl.EnumWarpAdapter = &EnumWarpAdapter;
+            Vftbl.CheckFeatureSupport = null;
+            Vftbl.EnumAdapterByGpuPreference = &EnumAdapterByGpuPreference;
         }
 
         /// <summary>
@@ -145,7 +168,7 @@ partial class DeviceHelper
         {
             IDXGIFactory4As6Backcompat* @this = (IDXGIFactory4As6Backcompat*)NativeMemory.Alloc((nuint)sizeof(IDXGIFactory4As6Backcompat));
 
-            @this->lpVtbl = Vtbl;
+            @this->lpVtbl = (void**)Unsafe.AsPointer(in Vftbl);
             @this->dxgiFactory4 = new ComPtr<IDXGIFactory4>(dxgiFactory4);
 
             *dxgiFactory6 = (IDXGIFactory6*)@this;

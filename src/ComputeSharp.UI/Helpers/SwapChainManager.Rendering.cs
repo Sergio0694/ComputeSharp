@@ -262,13 +262,13 @@ partial class SwapChainManager<TOwner>
     /// Gets the <see cref="DynamicResolutionManager"/> instance to use in <see cref="RenderLoopWithDynamicResolution"/>.
     /// </summary>
     /// <param name="resolutionManager">The <see cref="DynamicResolutionManager"/> instance to use.</param>
-    private unsafe partial void OnGetDynamicResolutionManager(out DynamicResolutionManager resolutionManager);
+    private partial void OnGetDynamicResolutionManager(out DynamicResolutionManager resolutionManager);
 
     /// <summary>
     /// The core render loop with dynamic resolution.
     /// </summary>
     [MethodImpl(MethodImplOptions.NoInlining)]
-    private unsafe void RenderLoopWithDynamicResolution()
+    private void RenderLoopWithDynamicResolution()
     {
         Stopwatch renderStopwatch = this.renderStopwatch ??= new();
         Stopwatch frameStopwatch = new();
@@ -390,12 +390,12 @@ partial class SwapChainManager<TOwner>
     /// <summary>
     /// Waits for the panel to be ready to present a new frame for the current application.
     /// </summary>
-    private unsafe partial void OnWaitForPresent();
+    private partial void OnWaitForPresent();
 
     /// <summary>
     /// Presents the last rendered frame for the current application.
     /// </summary>
-    private unsafe partial void OnPresent();
+    private partial void OnPresent();
 
     /// <summary>
     /// Raises <see cref="RenderingStarted"/>.

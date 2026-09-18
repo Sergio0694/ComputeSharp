@@ -15,8 +15,32 @@ namespace ComputeSharp.SourceGenerators.Dxc;
 /// <summary>
 /// A <see langword="class"/> that uses the DXC APIs to compile compute shaders.
 /// </summary>
-internal sealed unsafe class DxcShaderCompiler
+internal sealed unsafe partial class DxcShaderCompiler
 {
+    /// <summary>
+    /// Gets a <see cref="Regex"/> to identify the error and warning headers in a compilation message.
+    /// </summary>
+    [GeneratedRegex(@"^(error|warning):", RegexOptions.Multiline)]
+    private static partial Regex ErrorHeaderRegex { get; }
+
+    /// <summary>
+    /// Gets a <see cref="Regex"/> to identify the note lines in a compilation message.
+    /// </summary>
+    [GeneratedRegex(@"^note:.+", RegexOptions.Multiline)]
+    private static partial Regex NoteLineRegex { get; }
+
+    /// <summary>
+    /// Gets a <see cref="Regex"/> to identify the syntax error indicators in a compilation message.
+    /// </summary>
+    [GeneratedRegex(@"^ +\^", RegexOptions.Multiline)]
+    private static partial Regex SyntaxErrorIndicatorRegex { get; }
+
+    /// <summary>
+    /// Gets a <see cref="Regex"/> to identify the source location headers in a compilation message.
+    /// </summary>
+    [GeneratedRegex(@"^hlsl\.hlsl:\d+:\d+: (\w+:)", RegexOptions.Multiline)]
+    private static partial Regex SourceLocationHeaderRegex { get; }
+
     /// <summary>
     /// The thread local <see cref="DxcShaderCompiler"/> instance.
     /// This is necessary because the DXC library is strictly single-threaded.
@@ -283,13 +307,13 @@ internal sealed unsafe class DxcShaderCompiler
     public static string FixupExceptionMessage(string message)
     {
         // Add square brackets around error headers
-        message = Regex.Replace(message, @"^(error|warning):", static m => $"[{m.Groups[1].Value}]:", RegexOptions.Multiline);
+        message = ErrorHeaderRegex.Replace(message, static m => $"[{m.Groups[1].Value}]:");
 
         // Remove lines with notes
-        message = Regex.Replace(message, @"^note:.+", string.Empty, RegexOptions.Multiline);
+        message = NoteLineRegex.Replace(message, string.Empty);
 
         // Remove syntax error indicators
-        message = Regex.Replace(message, @"^ +\^", string.Empty, RegexOptions.Multiline);
+        message = SyntaxErrorIndicatorRegex.Replace(message, string.Empty);
 
         return message.NormalizeToSingleLine();
     }
@@ -316,7 +340,7 @@ internal sealed unsafe class DxcShaderCompiler
         // note: previous definition is here"
         // These regex-s try to match the unnecessary headers and remove them, if present.
         // This doesn't need to be bulletproof, and these regex-s should match all cases anyway.
-        message = Regex.Replace(message.Trim(), @"^hlsl\.hlsl:\d+:\d+: (\w+:)", static m => m.Groups[1].Value, RegexOptions.Multiline).Trim();
+        message = SourceLocationHeaderRegex.Replace(message.Trim(), static m => m.Groups[1].Value).Trim();
 
         // Add a trailing '.' if not present
         if (message is [.., not '.'])

@@ -1,6 +1,7 @@
 using ComputeSharp.SwapChain.Core.Shaders;
 using Microsoft.Graphics.Canvas;
 using Microsoft.Graphics.Canvas.UI.Xaml;
+using WinRT;
 #if WINDOWS_UWP
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -79,11 +80,12 @@ public sealed partial class D2D1AnimatedPixelShaderPanel : Control
     }
 
     /// <inheritdoc/>
+    [DynamicWindowsRuntimeCast(typeof(CanvasAnimatedControl))]
     protected override void OnApplyTemplate()
     {
         base.OnApplyTemplate();
 
-        this.canvasAnimatedControl = (CanvasAnimatedControl)GetTemplateChild("PART_CanvasAnimatedControl")!;
+        this.canvasAnimatedControl = (CanvasAnimatedControl)GetTemplateChild("PART_CanvasAnimatedControl");
         this.canvasAnimatedControl.Draw += CanvasAnimatedControl_Draw;
     }
 

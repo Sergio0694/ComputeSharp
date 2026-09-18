@@ -16,7 +16,7 @@ partial class ReflectionServices
         // Register a custom library resolver for the two DXC libraries. We need to either manually load the two
         // libraries from the NuGet directory, if an RID is not in use, or we need to ensure that dxil.dll is
         // loaded correctly in case the program was executed with the host being in another directory.
-        // This happens when doing eg. "dotnet bin\Debug\net8.0\MyApp.dll", which would crash at runtime.
+        // This happens when doing eg. "dotnet bin\Debug\net10.0\MyApp.dll", which would crash at runtime.
         NativeLibrary.SetDllImportResolver(typeof(ReflectionServices).Assembly, OnDllImport);
     }
 

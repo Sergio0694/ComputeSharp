@@ -338,7 +338,7 @@ internal sealed unsafe partial class SwapChainManager<TOwner> : ReferenceTracked
     /// <summary>
     /// Applies the actual resize logic that was scheduled from <see cref="OnResize"/>, if needed.
     /// </summary>
-    private unsafe void ApplyResize()
+    private void ApplyResize()
     {
         // The target resolution scale is either the dynamic resolution scale, being updated by the render thread,
         // or the fixed resolution scale set by the user. If dynamic resolution is enabled, the latter is ignored.
@@ -417,13 +417,13 @@ internal sealed unsafe partial class SwapChainManager<TOwner> : ReferenceTracked
     }
 
     /// <inheritdoc/>
-    private unsafe partial void OnWaitForPresent()
+    private partial void OnWaitForPresent()
     {
         _ = Win32.Windows.WaitForSingleObjectEx(this.frameLatencyWaitableObject, Win32.Windows.INFINITE, true);
     }
 
     /// <inheritdoc/>
-    private unsafe partial void OnPresent()
+    private partial void OnPresent()
     {
         using ComPtr<ID3D12Resource> d3D12Resource = default;
 
@@ -499,7 +499,7 @@ internal sealed unsafe partial class SwapChainManager<TOwner> : ReferenceTracked
     }
 
     /// <inheritdoc/>
-    private unsafe partial void OnGetDynamicResolutionManager(out DynamicResolutionManager resolutionManager)
+    private partial void OnGetDynamicResolutionManager(out DynamicResolutionManager resolutionManager)
     {
         using ComPtr<IDXGIFactory6> dxgiFactory6 = default;
 

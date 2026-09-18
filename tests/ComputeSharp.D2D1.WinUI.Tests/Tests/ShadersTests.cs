@@ -13,7 +13,7 @@ using Windows.UI;
 namespace ComputeSharp.D2D1.WinUI.Tests;
 
 [TestClass]
-public class ShadersTests
+public partial class ShadersTests
 {
     [TestMethod]
     [DataRow(WrapperType.PixelShaderEffect)]
@@ -110,7 +110,7 @@ public class ShadersTests
         TolerantImageComparer.AssertEqual(expected, actual, threshold);
     }
 
-    private sealed class TestCanvasEffect<T> : CanvasEffect
+    private sealed partial class TestCanvasEffect<T> : CanvasEffect
         where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
     {
         private static readonly CanvasEffectNode<PixelShaderEffect<T>> Effect = new();

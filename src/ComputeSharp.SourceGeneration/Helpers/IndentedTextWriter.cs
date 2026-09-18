@@ -428,7 +428,7 @@ internal sealed class IndentedTextWriter : IDisposable
         {
             if (value is not null)
             {
-                this.writer.Write(value.ToString());
+                this.writer.Write(value.ToString()!);
             }
         }
 
@@ -444,7 +444,7 @@ internal sealed class IndentedTextWriter : IDisposable
             }
             else if (value is not null)
             {
-                this.writer.Write(value.ToString());
+                this.writer.Write(value.ToString()!);
             }
         }
     }

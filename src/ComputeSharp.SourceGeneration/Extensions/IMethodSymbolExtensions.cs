@@ -19,7 +19,7 @@ internal static class IMethodSymbolExtensions
     {
         using ImmutableArrayBuilder<char> builder = new();
 
-        symbol.ContainingType!.AppendFullyQualifiedMetadataName(in builder);
+        symbol.ContainingType.AppendFullyQualifiedMetadataName(in builder);
 
         // Always add the method name after the containing type
         builder.Add('.');

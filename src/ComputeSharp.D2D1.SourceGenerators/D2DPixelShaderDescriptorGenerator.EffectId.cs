@@ -76,7 +76,7 @@ partial class D2DPixelShaderDescriptorGenerator
         /// </summary>
         /// <param name="typeSymbol">The input <see cref="INamedTypeSymbol"/> instance.</param>
         /// <returns>The resulting effect id.</returns>
-        private static unsafe ImmutableArray<byte> CreateDefaultEffectId(INamedTypeSymbol typeSymbol)
+        private static ImmutableArray<byte> CreateDefaultEffectId(INamedTypeSymbol typeSymbol)
         {
             try
             {

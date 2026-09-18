@@ -1,6 +1,5 @@
 using ComputeSharp.D2D1.WinUI.SourceGenerators;
 using ComputeSharp.Tests.SourceGenerators.Helpers;
-using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ComputeSharp.D2D1.WinUI.Tests.SourceGenerators;
@@ -579,6 +578,6 @@ public class Test_CanvasEffectPropertyGenerator
     {
         // We cannot run the analyzers on the input source, because they'd report unwanted dsiagnostics due to the
         // partial properties missing an implementation part. For this generator, we just test analyzers individually.
-        CSharpGeneratorTest<CanvasEffectPropertyGenerator>.VerifySources(source, result, languageVersion: LanguageVersion.Preview);
+        CSharpGeneratorTest<CanvasEffectPropertyGenerator>.VerifySources(source, result);
     }
 }

@@ -73,7 +73,7 @@ partial class HlslKnownProperties
     static partial void AddKnownProperties(IDictionary<string, string> knownProperties)
     {
         // Store GroupIds.Index for a quicker comparison afterwards
-        PropertyInfo groupindexProperty = typeof(GroupIds).GetProperty(nameof(GroupIds.Index), BindingFlags.Static | BindingFlags.Public);
+        PropertyInfo groupindexProperty = typeof(GroupIds).GetProperty(nameof(GroupIds.Index), BindingFlags.Static | BindingFlags.Public)!;
 
         // Programmatically load mappings for the dispatch types
         foreach ((Type Type, PropertyInfo Property) item in

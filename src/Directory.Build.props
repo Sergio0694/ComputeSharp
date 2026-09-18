@@ -54,6 +54,16 @@
     <!-- Enable extended analyzer rules for all analyzers -->
     <EnforceExtendedAnalyzerRules Condition="$(IsAnalyzersProject)">true</EnforceExtendedAnalyzerRules>
 
+    <!--
+      This ignores the following warning:
+      "RS1041: This compiler extension should not be implemented in an assembly with target framework '.NET'".
+      That warning exists because analyzers targeting .NET cannot be loaded by a .NET Framework compiler host.
+      ComputeSharp requires the .NET 10 SDK, which always uses the .NET hosted compiler for SDK-style projects
+      (see https://github.com/dotnet/sdk/blob/main/documentation/general/decouple-vs-and-net-sdk.md), so this
+      does not apply here. Targeting .NET directly allows sharing much more code with the runtime libraries.
+    -->
+    <NoWarn Condition="$(IsAnalyzersProject)">$(NoWarn);RS1041</NoWarn>
+
     <!-- Check whether the project has a .targets file to bundle -->
     <IsTargetsFileAvailableForPacking>false</IsTargetsFileAvailableForPacking>
     <IsTargetsFileAvailableForPacking Condition="$(IsPackagedProject) AND Exists('$(MSBuildProjectName).targets')">true</IsTargetsFileAvailableForPacking>

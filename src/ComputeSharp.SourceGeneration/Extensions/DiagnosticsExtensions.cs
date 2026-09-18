@@ -5,7 +5,7 @@ using Microsoft.CodeAnalysis;
 namespace ComputeSharp.SourceGeneration.Extensions;
 
 /// <summary>
-/// Extension methods for <see cref="GeneratorExecutionContext"/>, specifically for reporting diagnostics.
+/// Extension methods to create and report diagnostics.
 /// </summary>
 internal static class DiagnosticsExtensions
 {

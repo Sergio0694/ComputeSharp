@@ -18,7 +18,7 @@ internal static class IFieldSymbolExtensions
     {
         using ImmutableArrayBuilder<char> builder = new();
 
-        symbol.ContainingType!.AppendFullyQualifiedMetadataName(in builder);
+        symbol.ContainingType.AppendFullyQualifiedMetadataName(in builder);
 
         builder.Add('.');
         builder.AddRange(symbol.Name.AsSpan());

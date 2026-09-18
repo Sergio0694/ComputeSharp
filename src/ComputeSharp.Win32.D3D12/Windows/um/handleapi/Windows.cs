@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 
 namespace ComputeSharp.Win32;
 
-internal static unsafe partial class Windows
+internal static partial class Windows
 {
     [DllImport("kernel32", ExactSpelling = true)]
     public static extern BOOL CloseHandle(HANDLE hObject);

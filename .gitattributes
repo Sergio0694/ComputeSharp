@@ -22,7 +22,7 @@
 *.resx         text      eol=lf
 *.sh           text      eol=lf
 *.shprroj      text      eol=lf
-*.sln          text      eol=lf
+*.slnx         text      eol=lf
 *.slnf         text      eol=lf
 *.targets      text      eol=lf
 *.xaml         text      eol=lf
