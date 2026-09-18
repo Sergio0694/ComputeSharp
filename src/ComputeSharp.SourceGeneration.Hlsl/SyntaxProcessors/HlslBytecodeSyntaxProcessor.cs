@@ -3,6 +3,7 @@ using System.Collections.Immutable;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Runtime.ExceptionServices;
 using System.Threading;
 using System.Threading.Tasks;
 using ComputeSharp.SourceGeneration.Extensions;
@@ -128,12 +129,19 @@ internal static partial class HlslBytecodeSyntaxProcessor
                 new ParallelOptions { CancellationToken = token },
                 key => Compile(key, token));
         }
-        catch (AggregateException)
+        catch (AggregateException e)
         {
             // If cancellation is requested, normalize to an OperationCanceledException for the incremental
             // driver (a cancellation from the callbacks may be wrapped, depending on interleaving). Other
             // exceptions cannot really occur, as the compilation callback catches all expected exceptions.
             token.ThrowIfCancellationRequested();
+
+            // If there is a single unexpected exception, unwrap it and rethrow it (preserving its stack
+            // trace), so that the failure reported by the compiler names the actual exception type.
+            if (e.InnerExceptions.Count == 1)
+            {
+                ExceptionDispatchInfo.Capture(e.InnerExceptions[0]).Throw();
+            }
 
             throw;
         }
@@ -154,9 +162,9 @@ internal static partial class HlslBytecodeSyntaxProcessor
 
         return new HlslBytecodeDiagnosticsInfo(
             TypeName: structDeclarationSymbol.ToString(),
-            TypeLocation: LocationInfo.From(structDeclarationSymbol),
+            TypeLocation: structDeclarationSymbol.Locations.FirstOrDefault(),
             HasRequiresDoublePrecisionSupportAttribute: hasRequiresDoublePrecisionSupportAttribute,
-            RequiresDoublePrecisionSupportAttributeLocation: LocationInfo.From(attributeData?.GetLocation()));
+            RequiresDoublePrecisionSupportAttributeLocation: attributeData?.GetLocation());
     }
 
     /// <summary>
@@ -176,7 +184,7 @@ internal static partial class HlslBytecodeSyntaxProcessor
         {
             diagnostic = DiagnosticInfo.Create(
                 HlslBytecodeFailedWithWin32Exception,
-                diagnosticsInfo.TypeLocation?.ToLocation(),
+                diagnosticsInfo.TypeLocation,
                 diagnosticsInfo.TypeName,
                 win32Error.HResult,
                 win32Error.Message);
@@ -185,7 +193,7 @@ internal static partial class HlslBytecodeSyntaxProcessor
         {
             diagnostic = DiagnosticInfo.Create(
                 HlslBytecodeFailedWithCompilationException,
-                diagnosticsInfo.TypeLocation?.ToLocation(),
+                diagnosticsInfo.TypeLocation,
                 diagnosticsInfo.TypeName,
                 fxcError.Message);
         }
@@ -220,14 +228,14 @@ internal static partial class HlslBytecodeSyntaxProcessor
         {
             diagnostics.Add(DiagnosticInfo.Create(
                 MissingRequiresDoublePrecisionSupportAttribute,
-                diagnosticsInfo.TypeLocation?.ToLocation(),
+                diagnosticsInfo.TypeLocation,
                 diagnosticsInfo.TypeName));
         }
         else if (diagnosticsInfo.HasRequiresDoublePrecisionSupportAttribute && !success.RequiresDoublePrecisionSupport)
         {
             diagnostics.Add(DiagnosticInfo.Create(
                 UnnecessaryRequiresDoublePrecisionSupportAttribute,
-                (diagnosticsInfo.RequiresDoublePrecisionSupportAttributeLocation ?? diagnosticsInfo.TypeLocation)?.ToLocation(),
+                diagnosticsInfo.RequiresDoublePrecisionSupportAttributeLocation,
                 diagnosticsInfo.TypeName));
         }
     }

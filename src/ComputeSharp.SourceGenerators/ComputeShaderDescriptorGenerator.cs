@@ -26,9 +26,9 @@ public sealed partial class ComputeShaderDescriptorGenerator : IIncrementalGener
     /// <inheritdoc/>
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
-        // Discover all shader types and extract all the necessary info from each of them
-        // (with the exception of the compiled HLSL bytecode, which is processed later)
-        IncrementalValuesProvider<ShaderInfo> shaderInfoWithNoHlslBytecode =
+        // Discover all shader types and extract all the necessary info from each of them (with the exception
+        // of the compiled HLSL bytecode, which is processed later). See more notes in the D2D1 generator.
+        IncrementalValuesProvider<(ShaderInfo Info, HlslBytecodeDiagnosticsInfo DiagnosticsInfo)> shaderInfoWithDiagnosticsInfo =
             context.SyntaxProvider
             .ForAttributeWithMetadataName(
                 "ComputeSharp.GeneratedComputeShaderDescriptorAttribute",
@@ -135,7 +135,7 @@ public sealed partial class ComputeShaderDescriptorGenerator : IIncrementalGener
 
                     token.ThrowIfCancellationRequested();
 
-                    return new ShaderInfo(
+                    ShaderInfo info = new(
                         Hierarchy: hierarchyInfo,
                         ThreadsX: threadsX,
                         ThreadsY: threadsY,
@@ -148,18 +148,18 @@ public sealed partial class ComputeShaderDescriptorGenerator : IIncrementalGener
                         ResourceDescriptors: resourceDescriptors,
                         HlslInfoKey: hlslInfoKey,
                         HlslInfo: HlslBytecodeInfo.Missing.Instance,
-                        HlslDiagnosticsInfo: hlslDiagnosticsInfo,
                         Diagnostcs: diagnostics.ToImmutable());
+
+                    return (Info: info, DiagnosticsInfo: hlslDiagnosticsInfo);
                 })
-            .WithTrackingName(WellKnownTrackingNames.Execute)
-            .Where(static item => item is not null)!;
+            .Where(static item => item.Info is not null);
 
         // Compile all shaders in parallel in a single dedicated node, warming up the shared bytecode
         // cache (see more notes in the D2D1 generator). The node produces no meaningful value: it only
         // exists so that the join node below has an edge ordering it after all compilations are done.
         IncrementalValueProvider<bool> hlslBytecodeCache =
-            shaderInfoWithNoHlslBytecode
-            .Select(static (item, _) => item.HlslInfoKey)
+            shaderInfoWithDiagnosticsInfo
+            .Select(static (item, _) => item.Info.HlslInfoKey)
             .Collect()
             .Select(static (keys, token) =>
             {
@@ -171,13 +171,13 @@ public sealed partial class ComputeShaderDescriptorGenerator : IIncrementalGener
         // Join each shader with its compiled bytecode (guaranteed to be a cache hit, given the ordering
         // edge on the node above), and synthesize the deferred diagnostics for the shader compilation
         IncrementalValuesProvider<ShaderInfo> shaderInfo =
-            shaderInfoWithNoHlslBytecode
+            shaderInfoWithDiagnosticsInfo
             .Combine(hlslBytecodeCache)
             .Select(static (pair, token) =>
             {
-                ShaderInfo item = pair.Left;
+                (ShaderInfo info, HlslBytecodeDiagnosticsInfo diagnosticsInfo) = pair.Left;
 
-                HlslBytecodeInfoKey hlslInfoKey = item.HlslInfoKey;
+                HlslBytecodeInfoKey hlslInfoKey = info.HlslInfoKey;
 
                 // Get the compiled shader from the warmed up cache
                 HlslBytecodeInfo hlslInfo = HlslBytecodeSyntaxProcessor.GetInfo(ref hlslInfoKey, token);
@@ -186,23 +186,22 @@ public sealed partial class ComputeShaderDescriptorGenerator : IIncrementalGener
 
                 using ImmutableArrayBuilder<DiagnosticInfo> diagnostics = new();
 
-                diagnostics.AddRange(item.Diagnostcs.AsSpan());
+                diagnostics.AddRange(info.Diagnostcs.AsSpan());
 
                 // Append any diagnostic for the shader compilation
-                HlslBytecodeSyntaxProcessor.GetInfoDiagnostics(item.HlslDiagnosticsInfo!, hlslInfo, diagnostics);
-                HlslBytecodeSyntaxProcessor.GetDoublePrecisionSupportDiagnostics(item.HlslDiagnosticsInfo!, hlslInfo, diagnostics);
+                HlslBytecodeSyntaxProcessor.GetInfoDiagnostics(diagnosticsInfo, hlslInfo, diagnostics);
+                HlslBytecodeSyntaxProcessor.GetDoublePrecisionSupportDiagnostics(diagnosticsInfo, hlslInfo, diagnostics);
 
                 token.ThrowIfCancellationRequested();
 
-                // The diagnostics info is dropped here, as it has served its purpose (see notes in the D2D1 generator)
-                return item with
+                return info with
                 {
                     HlslInfoKey = hlslInfoKey,
                     HlslInfo = hlslInfo,
-                    HlslDiagnosticsInfo = null,
                     Diagnostcs = diagnostics.ToImmutable()
                 };
-            });
+            })
+            .WithTrackingName(WellKnownTrackingNames.Execute);
 
         // Split the diagnostics, and drop them from the output provider (see more notes in the D2D1 generator)
         IncrementalValuesProvider<EquatableArray<DiagnosticInfo>> diagnosticInfo =

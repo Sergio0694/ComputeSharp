@@ -17,6 +17,7 @@ using System.Linq;
 using Basic.Reference.Assemblies;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ComputeSharp.Tests.SourceGenerators.Helpers;
@@ -49,6 +50,35 @@ internal static class CSharpGeneratorTest<TGenerator>
             List<Diagnostic> outputCompilationDiagnostics = compilation.GetDiagnostics().Where(diagnostic => diagnostic.Severity == DiagnosticSeverity.Error).ToList();
 
             Assert.IsTrue(outputCompilationDiagnostics.Count == 0, $"resultingIds: {string.Join(", ", outputCompilationDiagnostics)}");
+        }
+    }
+
+    /// <summary>
+    /// Verifies the resulting diagnostics from a source generator, including their locations.
+    /// </summary>
+    /// <param name="source">The input source to process.</param>
+    /// <param name="diagnostics">The expected diagnostics, as pairs of ids and the (unique) text in <paramref name="source"/> they should be reported on.</param>
+    public static void VerifyDiagnostics(string source, params (string Id, string LocationText)[] diagnostics)
+    {
+        RunGenerator(source, out _, out ImmutableArray<Diagnostic> actualDiagnostics);
+
+        Dictionary<string, Diagnostic> diagnosticMap = actualDiagnostics.DistinctBy(diagnostic => diagnostic.Id).ToDictionary(diagnostic => diagnostic.Id);
+
+        // Check that the diagnostics match
+        Assert.IsTrue(diagnosticMap.Keys.ToHashSet().SetEquals(diagnostics.Select(diagnostic => diagnostic.Id)), $"Diagnostics didn't match. {string.Join(", ", diagnosticMap.Values)}");
+
+        // Check that each diagnostic has the expected source location
+        foreach ((string id, string locationText) in diagnostics)
+        {
+            int index = source.IndexOf(locationText, StringComparison.Ordinal);
+
+            Assert.IsTrue(index >= 0, $"The text '{locationText}' was not found in the source.");
+            Assert.IsTrue(source.IndexOf(locationText, index + 1, StringComparison.Ordinal) < 0, $"The text '{locationText}' must appear exactly once in the source.");
+
+            Location location = diagnosticMap[id].Location;
+
+            Assert.IsTrue(location.IsInSource, $"Diagnostic '{id}' has no source location (kind: {location.Kind}).");
+            Assert.AreEqual(new TextSpan(index, locationText.Length), location.SourceSpan, $"Diagnostic '{id}' has an unexpected location.");
         }
     }
 
