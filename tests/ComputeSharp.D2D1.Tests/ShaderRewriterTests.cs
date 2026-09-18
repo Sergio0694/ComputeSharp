@@ -237,4 +237,51 @@ public partial class ShaderRewriterTests
             return default;
         }
     }
+
+    // See https://github.com/Sergio0694/ComputeSharp/issues/929
+    [TestMethod]
+    public void D2DSampleInputIntrinsics_WithCompoundExpressions_AreRewrittenCorrectly()
+    {
+        D2D1ShaderInfo shaderInfo = D2D1ReflectionServices.GetShaderInfo<D2DSampleInputIntrinsicsWithCompoundExpressionsShader>();
+
+        Assert.AreEqual("""
+            #define D2D_INPUT_COUNT 1
+            #define D2D_INPUT0_COMPLEX
+            #define D2D_REQUIRES_SCENE_POSITION
+
+            #include "d2d1effecthelpers.hlsli"
+
+            float2 samplePosition;
+
+            D2D_PS_ENTRY(Execute)
+            {
+                float2 scenePosition = D2DGetScenePosition().xy;
+                float4 uv = D2DGetInputCoordinate(0);
+                float4 a = D2DSampleInput(0, (uv.xy + samplePosition));
+                float4 b = D2DSampleInputAtOffset(0, (samplePosition - scenePosition));
+                float4 c = D2DSampleInputAtPosition(0, (samplePosition - scenePosition));
+                return a + b + c;
+            }
+            """, shaderInfo.HlslSource);
+    }
+
+    [D2DInputCount(1)]
+    [D2DInputComplex(0)]
+    [D2DRequiresScenePosition]
+    [D2DShaderProfile(D2D1ShaderProfile.PixelShader50)]
+    [D2DGeneratedPixelShaderDescriptor]
+    internal readonly partial struct D2DSampleInputIntrinsicsWithCompoundExpressionsShader(float2 samplePosition) : ID2D1PixelShader
+    {
+        public float4 Execute()
+        {
+            float2 scenePosition = D2D.GetScenePosition().XY;
+            float4 uv = D2D.GetInputCoordinate(0);
+
+            float4 a = D2D.SampleInput(0, uv.XY + samplePosition);
+            float4 b = D2D.SampleInputAtOffset(0, samplePosition - scenePosition);
+            float4 c = D2D.SampleInputAtPosition(0, samplePosition - scenePosition);
+
+            return a + b + c;
+        }
+    }
 }
