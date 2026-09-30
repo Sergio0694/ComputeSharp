@@ -134,6 +134,10 @@ unsafe partial class GraphicsDevice
         /// The event handle set when the target fence value is reached.
         /// </summary>
         public HANDLE EventHandle;
+
+        public HANDLE WaitHandle;
+
+        public FenceWaitPublication Publication;
     }
 
     /// <summary>
@@ -151,39 +155,93 @@ unsafe partial class GraphicsDevice
         ID3D12GraphicsCommandList* d3D12GraphicsCommandList,
         ID3D12CommandAllocator* d3D12CommandAllocator)
     {
-        HANDLE eventHandle = Windows.CreateEventW(null, Windows.FALSE, Windows.FALSE, null);
-
-        device.d3D12ComputeFence.Get()->SetEventOnCompletion(d3D12FenceValue, eventHandle).Assert();
-
-        WaitForFenceValueTaskSource waitForFenceValueTaskSource = WaitForFenceValueTaskSource.Rent();
-        CallbackContext* callbackContext = (CallbackContext*)NativeMemory.Alloc((nuint)sizeof(CallbackContext));
-
-        callbackContext->WaitForFenceValueTaskSourceHandle = GCHandle.Alloc(waitForFenceValueTaskSource);
-        callbackContext->GraphicsDeviceHandle = GCHandle.Alloc(device);
-        callbackContext->D3D12GraphicsCommandList = d3D12GraphicsCommandList;
-        callbackContext->D3D12CommandAllocator = d3D12CommandAllocator;
-        callbackContext->EventHandle = eventHandle;
-
-        HANDLE waitHandle;
-
-        device.GetReferenceTracker().DangerousAddRef();
-
-        int result = Windows.RegisterWaitForSingleObject(
-            phNewWaitObject: &waitHandle,
-            hObject: eventHandle,
-            Callback: &WaitForSingleObjectCallbackForWaitForFenceAsync,
-            Context: callbackContext,
-            dwMilliseconds: Windows.INFINITE,
-            dwFlags: 0);
-
-        // The register is successful if the return value is nonzero
-        if (result == 0)
+        WaitForFenceValueTaskSource? waitForFenceValueTaskSource = null;
+        CallbackContext* callbackContext = null;
+        bool referenceHeld = false;
+        try
         {
-            device.GetReferenceTracker().DangerousRelease();
+            waitForFenceValueTaskSource = WaitForFenceValueTaskSource.Rent();
+            callbackContext = (CallbackContext*)NativeMemory.AllocZeroed((nuint)sizeof(CallbackContext));
+            if (callbackContext is null)
+            {
+                throw new OutOfMemoryException();
+            }
 
-            NativeMemory.Free(callbackContext);
+            callbackContext->WaitForFenceValueTaskSourceHandle = GCHandle.Alloc(waitForFenceValueTaskSource);
+            callbackContext->GraphicsDeviceHandle = GCHandle.Alloc(device);
+            callbackContext->D3D12GraphicsCommandList = d3D12GraphicsCommandList;
+            callbackContext->D3D12CommandAllocator = d3D12CommandAllocator;
+            device.GetReferenceTracker().DangerousAddRef();
+            referenceHeld = true;
 
-            default(Win32Exception).Throw(E.E_FAIL);
+            callbackContext->EventHandle = Windows.CreateEventW(null, Windows.FALSE, Windows.FALSE, null);
+            if (callbackContext->EventHandle == default)
+            {
+                throw new Win32Exception(Marshal.GetLastPInvokeError());
+            }
+
+            device.d3D12ComputeFence.Get()->SetEventOnCompletion(d3D12FenceValue, callbackContext->EventHandle).Assert();
+
+            HANDLE waitHandle;
+            int result = Windows.RegisterWaitForSingleObject(
+                phNewWaitObject: &waitHandle,
+                hObject: callbackContext->EventHandle,
+                Callback: &WaitForSingleObjectCallbackForWaitForFenceAsync,
+                Context: callbackContext,
+                dwMilliseconds: Windows.INFINITE,
+                dwFlags: 0x00000008); // WT_EXECUTEONLYONCE
+            if (result == 0)
+            {
+                throw new Win32Exception(Marshal.GetLastPInvokeError());
+            }
+
+            // Publish the handle before allowing cleanup. A callback arriving
+            // early records completion and returns without touching it again.
+            callbackContext->WaitHandle = waitHandle;
+        }
+        catch
+        {
+            // The command list was already submitted/detached. Drain it before
+            // closing an event registered with the fence or recycling its allocator.
+            try
+            {
+                device.d3D12ComputeFence.Get()->SetEventOnCompletion(d3D12FenceValue, default).Assert();
+                device.computeCommandListPool.Return(d3D12GraphicsCommandList, d3D12CommandAllocator);
+            }
+            finally
+            {
+                if (callbackContext is not null)
+                {
+                    if (callbackContext->WaitForFenceValueTaskSourceHandle.IsAllocated)
+                    {
+                        callbackContext->WaitForFenceValueTaskSourceHandle.Free();
+                    }
+
+                    if (callbackContext->GraphicsDeviceHandle.IsAllocated)
+                    {
+                        callbackContext->GraphicsDeviceHandle.Free();
+                    }
+
+                    if (callbackContext->EventHandle != default)
+                    {
+                        _ = Windows.CloseHandle(callbackContext->EventHandle);
+                    }
+
+                    NativeMemory.Free(callbackContext);
+                }
+
+                if (referenceHeld)
+                {
+                    device.GetReferenceTracker().DangerousRelease();
+                }
+            }
+
+            throw;
+        }
+
+        if (callbackContext->Publication.OnRegistered())
+        {
+            CompleteFenceWait(callbackContext, insideCallback: false);
         }
 
         return waitForFenceValueTaskSource;
@@ -199,7 +257,32 @@ unsafe partial class GraphicsDevice
     {
         CallbackContext* callbackContext = (CallbackContext*)pContext;
 
+        if (callbackContext->Publication.OnSignaled())
+        {
+            CompleteFenceWait(callbackContext, insideCallback: true);
+        }
+    }
+
+    private static void CompleteFenceWait(CallbackContext* callbackContext, bool insideCallback)
+    {
+        // Never block on our own callback. The early-callback/publisher path
+        // runs outside the callback and joins it before freeing its context.
+        int unregistered = Windows.UnregisterWaitEx(callbackContext->WaitHandle,
+            insideCallback ? default : (HANDLE)(-1));
+        int error = unregistered == 0 ? Marshal.GetLastPInvokeError() : 0;
+        Exception? failure = FenceWaitPublication.UnregisterAccepted(unregistered != 0, error, insideCallback)
+            ? null : new Win32Exception(error);
+
         WaitForFenceValueTaskSource waitForFenceValueTaskSource = Unsafe.As<WaitForFenceValueTaskSource>(callbackContext->WaitForFenceValueTaskSourceHandle.Target)!;
+        if (failure is not null)
+        {
+            // Cancellation did not establish that the OS released the wait.
+            // Quarantine its resources and fault the caller rather than free
+            // a context/event whose native ownership is now uncertain.
+            waitForFenceValueTaskSource.Fail(failure);
+            return;
+        }
+
         GraphicsDevice device = Unsafe.As<GraphicsDevice>(callbackContext->GraphicsDeviceHandle.Target)!;
         ID3D12GraphicsCommandList* d3D12GraphicsCommandList = callbackContext->D3D12GraphicsCommandList;
         ID3D12CommandAllocator* d3D12CommandAllocator = callbackContext->D3D12CommandAllocator;
@@ -275,6 +358,11 @@ unsafe partial class GraphicsDevice
         public void Complete()
         {
             this.manualResetValueTaskSource.SetResult(null);
+        }
+
+        public void Fail(Exception error)
+        {
+            this.manualResetValueTaskSource.SetException(error);
         }
 
         /// <inheritdoc/>

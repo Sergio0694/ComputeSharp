@@ -9,8 +9,11 @@ namespace ComputeSharp.Win32;
 
 internal static unsafe partial class Windows
 {
-    [DllImport("kernel32", ExactSpelling = true)]
-    public static extern BOOL RegisterWaitForSingleObject([NativeTypeName("PHANDLE")] HANDLE* phNewWaitObject, HANDLE hObject, [NativeTypeName("WAITORTIMERCALLBACK")] delegate* unmanaged<void*, byte, void> Callback, [NativeTypeName("PVOID")] void* Context, [NativeTypeName("ULONG")] uint dwMilliseconds, [NativeTypeName("ULONG")] uint dwFlags);
+    [LibraryImport("kernel32.dll", SetLastError = true)]
+    public static partial BOOL RegisterWaitForSingleObject([NativeTypeName("PHANDLE")] HANDLE* phNewWaitObject, HANDLE hObject, [NativeTypeName("WAITORTIMERCALLBACK")] delegate* unmanaged<void*, byte, void> Callback, [NativeTypeName("PVOID")] void* Context, [NativeTypeName("ULONG")] uint dwMilliseconds, [NativeTypeName("ULONG")] uint dwFlags);
+
+    [LibraryImport("kernel32.dll", SetLastError = true)]
+    public static partial BOOL UnregisterWaitEx(HANDLE WaitHandle, HANDLE CompletionEvent);
 
     [DllImport("kernel32", ExactSpelling = true)]
     public static extern BOOL UnregisterWait(HANDLE WaitHandle);

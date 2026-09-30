@@ -9,8 +9,8 @@ namespace ComputeSharp.Win32;
 
 internal static unsafe partial class Windows
 {
-    [DllImport("kernel32", ExactSpelling = true)]
-    public static extern HANDLE CreateEventW([NativeTypeName("LPSECURITY_ATTRIBUTES")] SECURITY_ATTRIBUTES* lpEventAttributes, BOOL bManualReset, BOOL bInitialState, [NativeTypeName("LPCWSTR")] ushort* lpName);
+    [LibraryImport("kernel32.dll", SetLastError = true)]
+    public static partial HANDLE CreateEventW([NativeTypeName("LPSECURITY_ATTRIBUTES")] SECURITY_ATTRIBUTES* lpEventAttributes, BOOL bManualReset, BOOL bInitialState, [NativeTypeName("LPCWSTR")] ushort* lpName);
 
     [DllImport("kernel32", ExactSpelling = true)]
     [return: NativeTypeName("DWORD")]
