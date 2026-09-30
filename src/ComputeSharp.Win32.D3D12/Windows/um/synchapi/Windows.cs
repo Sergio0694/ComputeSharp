@@ -9,6 +9,8 @@ namespace ComputeSharp.Win32;
 
 internal static unsafe partial class Windows
 {
+    // Source-generated last-error capture works with DisableRuntimeMarshalling
+    // and lets fence-wait setup report the native error if event creation fails.
     [LibraryImport("kernel32.dll", SetLastError = true)]
     public static partial HANDLE CreateEventW([NativeTypeName("LPSECURITY_ATTRIBUTES")] SECURITY_ATTRIBUTES* lpEventAttributes, BOOL bManualReset, BOOL bInitialState, [NativeTypeName("LPCWSTR")] ushort* lpName);
 

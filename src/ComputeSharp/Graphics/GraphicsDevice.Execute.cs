@@ -135,8 +135,15 @@ unsafe partial class GraphicsDevice
         /// </summary>
         public HANDLE EventHandle;
 
+        /// <summary>
+        /// The registration to cancel before releasing the event and callback context.
+        /// A one-shot wait still requires explicit unregistration.
+        /// </summary>
         public HANDLE WaitHandle;
 
+        /// <summary>
+        /// Coordinates cleanup when the callback races publication of the registration handle.
+        /// </summary>
         public FenceWaitPublication Publication;
     }
 
@@ -161,6 +168,8 @@ unsafe partial class GraphicsDevice
         try
         {
             waitForFenceValueTaskSource = WaitForFenceValueTaskSource.Rent();
+            // Zero initialization supplies the handshake's initial state and lets
+            // failure cleanup distinguish acquired resources from uninitialized fields.
             callbackContext = (CallbackContext*)NativeMemory.AllocZeroed((nuint)sizeof(CallbackContext));
             if (callbackContext is null)
             {
@@ -175,6 +184,8 @@ unsafe partial class GraphicsDevice
             referenceHeld = true;
 
             callbackContext->EventHandle = Windows.CreateEventW(null, Windows.FALSE, Windows.FALSE, null);
+            // Do not pass a failed event allocation to SetEventOnCompletion:
+            // a null event has the distinct meaning of a synchronous fence wait.
             if (callbackContext->EventHandle == default)
             {
                 throw new Win32Exception(Marshal.GetLastPInvokeError());
@@ -182,6 +193,8 @@ unsafe partial class GraphicsDevice
 
             device.d3D12ComputeFence.Get()->SetEventOnCompletion(d3D12FenceValue, callbackContext->EventHandle).Assert();
 
+            // Queue at most one callback so that cleanup cannot race a second
+            // invocation. WT_EXECUTEONLYONCE does not release the registration.
             HANDLE waitHandle;
             int result = Windows.RegisterWaitForSingleObject(
                 phNewWaitObject: &waitHandle,
@@ -239,6 +252,8 @@ unsafe partial class GraphicsDevice
             throw;
         }
 
+        // Keep completion outside the setup-failure handler: after publication,
+        // the callback may own cleanup and may already have freed the context.
         if (callbackContext->Publication.OnRegistered())
         {
             CompleteFenceWait(callbackContext, insideCallback: false);
@@ -265,8 +280,9 @@ unsafe partial class GraphicsDevice
 
     private static void CompleteFenceWait(CallbackContext* callbackContext, bool insideCallback)
     {
-        // Never block on our own callback. The early-callback/publisher path
-        // runs outside the callback and joins it before freeing its context.
+        // Never block on our own callback: NULL requests nonblocking cancellation.
+        // The early-callback/publisher path uses INVALID_HANDLE_VALUE to join the
+        // callback before freeing its context. Neither path closes the event first.
         int unregistered = Windows.UnregisterWaitEx(callbackContext->WaitHandle,
             insideCallback ? default : (HANDLE)(-1));
         int error = unregistered == 0 ? Marshal.GetLastPInvokeError() : 0;
