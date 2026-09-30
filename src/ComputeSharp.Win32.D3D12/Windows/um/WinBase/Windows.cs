@@ -9,8 +9,16 @@ namespace ComputeSharp.Win32;
 
 internal static unsafe partial class Windows
 {
-    [DllImport("kernel32", ExactSpelling = true)]
-    public static extern BOOL RegisterWaitForSingleObject([NativeTypeName("PHANDLE")] HANDLE* phNewWaitObject, HANDLE hObject, [NativeTypeName("WAITORTIMERCALLBACK")] delegate* unmanaged<void*, byte, void> Callback, [NativeTypeName("PVOID")] void* Context, [NativeTypeName("ULONG")] uint dwMilliseconds, [NativeTypeName("ULONG")] uint dwFlags);
+    // Runtime marshalling is disabled for this assembly. LibraryImport generates
+    // the last-error capture needed by Marshal.GetLastPInvokeError; adding
+    // SetLastError to DllImport would rely on disabled runtime support.
+    [LibraryImport("kernel32.dll", SetLastError = true)]
+    public static partial BOOL RegisterWaitForSingleObject([NativeTypeName("PHANDLE")] HANDLE* phNewWaitObject, HANDLE hObject, [NativeTypeName("WAITORTIMERCALLBACK")] delegate* unmanaged<void*, byte, void> Callback, [NativeTypeName("PVOID")] void* Context, [NativeTypeName("ULONG")] uint dwMilliseconds, [NativeTypeName("ULONG")] uint dwFlags);
+
+    // The completion argument selects blocking or nonblocking cancellation.
+    // Capture last error to distinguish ERROR_IO_PENDING from cancellation failure.
+    [LibraryImport("kernel32.dll", SetLastError = true)]
+    public static partial BOOL UnregisterWaitEx(HANDLE WaitHandle, HANDLE CompletionEvent);
 
     [DllImport("kernel32", ExactSpelling = true)]
     public static extern BOOL UnregisterWait(HANDLE WaitHandle);
